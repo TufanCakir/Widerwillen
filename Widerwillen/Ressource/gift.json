@@ -1,0 +1,48 @@
+{
+    "gifts": [
+        {
+            "id": "starter_pack",
+            "title": "Starter Pack",
+            "category": "Available",
+            "imageName": "icon_pixel_box",
+            "rewards": [
+                {
+                    "resource": "coins",
+                    "amount": 1000
+                },
+                {
+                    "resource": "crystals",
+                    "amount": 25
+                }
+            ]
+        },
+        {
+            "id": "relic_launch_gift",
+            "title": "Relic Launch Gift",
+            "category": "Available",
+            "imageName": "icon_pixel_relic",
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 12
+                }
+            ]
+        },
+        {
+            "id": "update_bonus",
+            "title": "Update Bonus",
+            "category": "Available",
+            "imageName": "icon_pixel_crystal",
+            "rewards": [
+                {
+                    "resource": "coins",
+                    "amount": 500
+                },
+                {
+                    "resource": "crystals",
+                    "amount": 10
+                }
+            ]
+        }
+    ]
+}

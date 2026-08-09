@@ -1,0 +1,212 @@
+//
+//  TradeView.swift
+//  Widerwillen
+//
+//  Created by Tufan Cakir on 10.08.26.
+//
+
+import SwiftUI
+
+struct TradeView: View {
+    let progress: GameProgressStore
+
+    private let configuration: TradeConfiguration
+
+    @State private var selectedCategory = ""
+    @State private var message = ""
+
+    init(
+        progress: GameProgressStore,
+        configuration: TradeConfiguration = try! TradeConfiguration.load()
+    ) {
+        self.progress = progress
+        self.configuration = configuration
+        _selectedCategory = State(
+            initialValue: configuration.offers.first?.category ?? ""
+        )
+    }
+
+    var body: some View {
+        ZStack {
+            AppBackground()
+
+            VStack(spacing: 20) {
+                GameHeader(progress: progress)
+
+                categoryBar
+
+                if !message.isEmpty {
+                    Text(message)
+                        .font(.system(size: 13, weight: .heavy))
+                        .foregroundStyle(.white.opacity(0.82))
+                        .shadow(
+                            color: .black.opacity(0.9),
+                            radius: 3,
+                            x: 0,
+                            y: 2
+                        )
+                }
+
+                TabView(selection: $selectedCategory) {
+                    ForEach(categories, id: \.self) { category in
+                        offerPage(for: category)
+                            .tag(category)
+                    }
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+            }
+            .padding(.top, 18)
+        }
+    }
+
+    private var categories: [String] {
+        var values: [String] = []
+
+        for offer in configuration.offers where !values.contains(offer.category)
+        {
+            values.append(offer.category)
+        }
+
+        return values
+    }
+
+    private var categoryBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 10) {
+                ForEach(categories, id: \.self) { category in
+                    Button {
+                        selectedCategory = category
+                    } label: {
+                        Text(category)
+                            .font(.system(size: 13, weight: .heavy))
+                            .foregroundStyle(.white)
+                            .lineLimit(1)
+                            .padding(.horizontal, 14)
+                            .frame(height: 34)
+                            .background {
+                                Capsule()
+                                    .fill(
+                                        selectedCategory == category
+                                            ? .white.opacity(0.24)
+                                            : .black.opacity(0.28)
+                                    )
+                            }
+                            .overlay {
+                                Capsule()
+                                    .stroke(.white.opacity(0.7), lineWidth: 1)
+                            }
+                            .shadow(
+                                color: .black.opacity(0.9),
+                                radius: 3,
+                                x: 0,
+                                y: 2
+                            )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal, 16)
+        }
+    }
+
+    private func offerPage(for category: String) -> some View {
+        ScrollView {
+            LazyVStack(spacing: 14) {
+                ForEach(configuration.offers.filter { $0.category == category })
+                { offer in
+                    offerCard(offer)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 110)
+        }
+    }
+
+    private func offerCard(_ offer: TradeOffer) -> some View {
+        let canBuy = progress.canApplyTradeOffer(offer)
+
+        return VStack(spacing: 14) {
+            HStack(spacing: 14) {
+                Image(offer.imageName)
+                    .resizable()
+                    .interpolation(.none)
+                    .scaledToFit()
+                    .frame(width: 54, height: 54)
+                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(offer.title)
+                        .font(.system(size: 18, weight: .heavy))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+
+                    HStack(spacing: 8) {
+                        resourceRow(offer.costs, prefix: "-")
+                        Image("icon_pixel_trade")
+                            .resizable()
+                            .interpolation(.none)
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                        resourceRow(offer.rewards, prefix: "+")
+                    }
+                }
+
+                Spacer()
+            }
+
+            Button {
+                apply(offer)
+            } label: {
+                Image(canBuy ? "icon_pixel_box" : "icon_pixel_trade")
+                    .resizable()
+                    .interpolation(.none)
+                    .scaledToFit()
+                    .frame(width: 48, height: 48)
+                    .opacity(canBuy ? 1 : 0.45)
+                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+            }
+            .buttonStyle(.plain)
+            .disabled(!canBuy)
+        }
+        .padding(14)
+        .background(.black.opacity(0.24))
+        .overlay {
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(.white.opacity(0.55), lineWidth: 1)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private func resourceRow(
+        _ amounts: [TradeResourceAmount],
+        prefix: String
+    ) -> some View {
+        HStack(spacing: 6) {
+            ForEach(amounts) { amount in
+                AppResourceLabel(
+                    imageName: amount.resource.imageName,
+                    value: amount.amount,
+                    prefix: prefix,
+                    iconSize: 20,
+                    fontSize: 12
+                )
+            }
+        }
+    }
+
+    private func apply(_ offer: TradeOffer) {
+        let didApply = progress.applyTradeOffer(offer)
+        message = didApply ? "Trade complete" : "Not enough resources"
+
+        Task {
+            try? await Task.sleep(for: .seconds(1.2))
+            await MainActor.run {
+                message = ""
+            }
+        }
+    }
+}
+
+#Preview {
+    TradeView(progress: GameProgressStore())
+}

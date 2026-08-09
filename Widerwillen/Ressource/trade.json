@@ -1,0 +1,98 @@
+{
+    "offers": [
+        {
+            "id": "coin_pack_small",
+            "title": "Coin Pack",
+            "category": "Buy",
+            "imageName": "icon_pixel_coin",
+            "costs": [
+                {
+                    "resource": "crystals",
+                    "amount": 5
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "coins",
+                    "amount": 500
+                }
+            ]
+        },
+        {
+            "id": "coin_pack_large",
+            "title": "Large Coin Pack",
+            "category": "Buy",
+            "imageName": "icon_pixel_coin",
+            "costs": [
+                {
+                    "resource": "crystals",
+                    "amount": 18
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "coins",
+                    "amount": 2200
+                }
+            ]
+        },
+        {
+            "id": "crystal_exchange",
+            "title": "Crystal Exchange",
+            "category": "Exchange",
+            "imageName": "icon_pixel_crystal",
+            "costs": [
+                {
+                    "resource": "coins",
+                    "amount": 1200
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "crystals",
+                    "amount": 8
+                }
+            ]
+        },
+        {
+            "id": "relic_exchange",
+            "title": "Relic Exchange",
+            "category": "Exchange",
+            "imageName": "icon_pixel_relic",
+            "costs": [
+                {
+                    "resource": "crystals",
+                    "amount": 12
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 6
+                }
+            ]
+        },
+        {
+            "id": "relic_cache",
+            "title": "Relic Cache",
+            "category": "Relics",
+            "imageName": "icon_pixel_box",
+            "costs": [
+                {
+                    "resource": "coins",
+                    "amount": 2500
+                },
+                {
+                    "resource": "crystals",
+                    "amount": 8
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 10
+                }
+            ]
+        }
+    ]
+}

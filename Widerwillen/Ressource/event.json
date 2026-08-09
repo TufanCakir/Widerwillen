@@ -1,0 +1,116 @@
+{
+    "events": [
+        {
+            "id": "crytal_hunt",
+            "title": "Crytal Hunt",
+            "category": "Daily",
+            "bannerImageName": "icon_pixel_crystal",
+            "currencyName": "Moon Shards",
+            "currencyImageName": "icon_pixel_crystal",
+            "dailyLimit": 5,
+            "hp": 120,
+            "rewards": {
+                "eventCurrency": 25,
+                "coins": 100,
+                "crystals": 5,
+                "relics": 1
+            }
+        },
+        {
+            "id": "coin_hunt",
+            "title": "Coin Hunt",
+            "category": "Daily",
+            "bannerImageName": "icon_pixel_coin",
+            "currencyName": "Boss Tokens",
+            "currencyImageName": "icon_pixel_coin",
+            "dailyLimit": 5,
+            "hp": 260,
+            "rewards": {
+                "eventCurrency": 40,
+                "coins": 500,
+                "crystals": 1,
+                "relics": 1
+            }
+        },
+        {
+            "id": "relic_hunt",
+            "title": "Relic Hunt",
+            "category": "Relic",
+            "bannerImageName": "icon_pixel_relic",
+            "currencyName": "Relic Dust",
+            "currencyImageName": "icon_pixel_relic",
+            "dailyLimit": 3,
+            "hp": 420,
+            "rewards": {
+                "eventCurrency": 55,
+                "coins": 50,
+                "crystals": 1,
+                "relics": 5
+            }
+        },
+        {
+            "id": "crystal_cavern",
+            "title": "Crystal Cavern",
+            "category": "Daily",
+            "bannerImageName": "icon_pixel_crystal",
+            "currencyName": "Cavern Gems",
+            "currencyImageName": "icon_pixel_crystal",
+            "dailyLimit": 3,
+            "hp": 620,
+            "rewards": {
+                "eventCurrency": 75,
+                "coins": 120,
+                "crystals": 8,
+                "relics": 1
+            }
+        },
+        {
+            "id": "coin_cavern",
+            "title": "Coin Cavern",
+            "category": "Daily",
+            "bannerImageName": "icon_pixel_coin",
+            "currencyName": "Cavern Gems",
+            "currencyImageName": "icon_pixel_coin",
+            "dailyLimit": 3,
+            "hp": 620,
+            "rewards": {
+                "eventCurrency": 75,
+                "coins": 320,
+                "crystals": 1,
+                "relics": 1
+            }
+        },
+        {
+            "id": "treasure_rush",
+            "title": "Treasure Rush",
+            "category": "Treasure",
+            "bannerImageName": "icon_pixel_box",
+            "currencyName": "Treasure Keys",
+            "currencyImageName": "icon_pixel_box",
+            "dailyLimit": 3,
+            "hp": 180,
+            "rewards": {
+                "eventCurrency": 30,
+                "coins": 650,
+                "crystals": 1,
+                "relics": 1
+            }
+        },
+        {
+            "id": "void_trial",
+            "title": "Void Trial",
+            "category": "Boss",
+            "bannerImageName": "sprite_cookieman",
+            "currencyName": "Void Marks",
+            "currencyImageName": "icon_pixel_relic",
+            "dailyLimit": 1,
+            "hp": 900,
+            "rewards": {
+                "eventCurrency": 120,
+                "coins": 1000,
+                "crystals": 5,
+                "relics": 8
+            }
+        }
+    ]
+}

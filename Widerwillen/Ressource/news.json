@@ -1,0 +1,40 @@
+{
+    "news": [
+        {
+            "id": "launch_001",
+            "title": "Widerwillen Launch",
+            "category": "Announcement",
+            "imageName": "widerwillen_logo",
+            "date": "2026-08-09",
+            "body":
+                "Welcome to Widerwillen. Battle stages, collect rewards, summon units, and grow your account."
+        },
+        {
+            "id": "update_events",
+            "title": "Event Battles Added",
+            "category": "Update",
+            "imageName": "icon_pixel_news",
+            "date": "2026-08-09",
+            "body":
+                "Events now use real battle scenes with victory rewards and account-level scaling."
+        },
+        {
+            "id": "update_trade_shop",
+            "title": "Trade Shop Open",
+            "category": "Update",
+            "imageName": "icon_pixel_trade",
+            "date": "2026-08-09",
+            "body":
+                "Use the Trade Shop to exchange coins, crystals, and relics through rotating offer categories."
+        },
+        {
+            "id": "maintenance_note",
+            "title": "Daily Login Rewards",
+            "category": "Announcement",
+            "imageName": "icon_pixel_calendar",
+            "date": "2026-08-09",
+            "body":
+                "Daily login rewards are now available. Check in once per day to claim your reward."
+        }
+    ]
+}

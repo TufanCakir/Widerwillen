@@ -1,0 +1,44 @@
+{
+    "banner": {
+        "id": "prestige_relics",
+        "title": "Prestige Relics",
+        "bannerImageName": "icon_pixel_relic",
+        "singleCost": 5,
+        "multiCost": 50,
+        "multiCount": 100,
+        "entries": [
+            {
+                "id": "coin_core",
+                "name": "Coin Core",
+                "imageName": "icon_pixel_coin",
+                "rarity": "common",
+                "damageBonus": 1,
+                "weight": 55
+            },
+            {
+                "id": "crystal_edge",
+                "name": "Crystal Edge",
+                "imageName": "icon_pixel_crystal",
+                "rarity": "rare",
+                "damageBonus": 3,
+                "weight": 30
+            },
+            {
+                "id": "moon_box",
+                "name": "Moon Box",
+                "imageName": "icon_pixel_box",
+                "rarity": "epic",
+                "damageBonus": 8,
+                "weight": 12
+            },
+            {
+                "id": "beast_mark",
+                "name": "Beast Mark",
+                "imageName": "sprite_cookieman",
+                "rarity": "legendary",
+                "damageBonus": 20,
+                "weight": 3
+            }
+        ]
+    }
+}

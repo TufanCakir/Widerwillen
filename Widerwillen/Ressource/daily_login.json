@@ -1,0 +1,89 @@
+{
+    "rewards": [
+        {
+            "day": 1,
+            "title": "Day 1",
+            "imageName": "icon_pixel_coin",
+            "rewards": [
+                {
+                    "resource": "coins",
+                    "amount": 250
+                }
+            ]
+        },
+        {
+            "day": 2,
+            "title": "Day 2",
+            "imageName": "icon_pixel_crystal",
+            "rewards": [
+                {
+                    "resource": "crystals",
+                    "amount": 5
+                }
+            ]
+        },
+        {
+            "day": 3,
+            "title": "Day 3",
+            "imageName": "icon_pixel_relic",
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 3
+                }
+            ]
+        },
+        {
+            "day": 4,
+            "title": "Day 4",
+            "imageName": "icon_pixel_coin",
+            "rewards": [
+                {
+                    "resource": "coins",
+                    "amount": 750
+                }
+            ]
+        },
+        {
+            "day": 5,
+            "title": "Day 5",
+            "imageName": "icon_pixel_crystal",
+            "rewards": [
+                {
+                    "resource": "crystals",
+                    "amount": 12
+                }
+            ]
+        },
+        {
+            "day": 6,
+            "title": "Day 6",
+            "imageName": "icon_pixel_relic",
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 8
+                }
+            ]
+        },
+        {
+            "day": 7,
+            "title": "Day 7",
+            "imageName": "icon_pixel_box",
+            "rewards": [
+                {
+                    "resource": "coins",
+                    "amount": 1500
+                },
+                {
+                    "resource": "crystals",
+                    "amount": 20
+                },
+                {
+                    "resource": "relics",
+                    "amount": 10
+                }
+            ]
+        }
+    ]
+}

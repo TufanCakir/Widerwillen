@@ -1,0 +1,40 @@
+{
+    "icons": [
+        #{
+            "id": "widerwillen",
+            "title": "Widerwillen",
+            "imageName": "widerwillen_logo"
+        },
+        ,
+        {
+            "id": "cookieman",
+            "title": "Cookieman",
+            "imageName": "sprite_cookieman"
+        },
+        {
+            "id": "klempi",
+            "title": "Klempi",
+            "imageName": "icon_klempi"
+        },
+        {
+            "id": "dompi",
+            "title": "Dompi",
+            "imageName": "icon_dompi"
+        },
+        {
+            "id": "sprite",
+            "title": "Sprite",
+            "imageName": "icon_pixel_sprite"
+        },
+        {
+            "id": "sword",
+            "title": "Sword",
+            "imageName": "icon_pixel_sword"
+        },
+        {
+            "id": "relic",
+            "title": "Relic",
+            "imageName": "icon_pixel_relic"
+        }
+    ]
+}

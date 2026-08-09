@@ -1,0 +1,118 @@
+{
+    "banners": [
+        {
+            "id": "moon_beast_starter",
+            "title": "Moon Beast Gate",
+            "category": "Sprites",
+            "kind": "sprite",
+            "bannerImageName": "sprite_cookieman",
+            "currencyImageName": "icon_pixel_crystal",
+            "singleCost": 8,
+            "multiCost": 70,
+            "multiCount": 10,
+            "entries": [
+                {
+                    "id": "cookieman_front",
+                    "name": "Cookieman",
+                    "spriteIndex": 0,
+                    "imageName": "sprite_cookieman",
+                    "rarity": "common",
+                    "damageBonus": 1,
+                    "weight": 60
+                },
+                {
+                    "id": "klempi_front",
+                    "name": "Klempi",
+                    "spriteIndex": 1,
+                    "imageName": "sprite_klempi",
+                    "rarity": "rare",
+                    "damageBonus": 3,
+                    "weight": 30
+                },
+                {
+                    "id": "dompi_front",
+                    "name": "Dompi",
+                    "spriteIndex": 2,
+                    "imageName": "sprite_dompi",
+                    "rarity": "epic",
+                    "damageBonus": 8,
+                    "weight": 10
+                }
+            ]
+        },
+        {
+            "id": "ancient_relics",
+            "title": "Ancient Relics",
+            "category": "Relics",
+            "kind": "relic",
+            "bannerImageName": "icon_pixel_relic",
+            "currencyImageName": "icon_pixel_relic",
+            "singleCost": 6,
+            "multiCost": 50,
+            "multiCount": 10,
+            "entries": [
+                {
+                    "id": "moon_totem",
+                    "name": "Moon Totem",
+                    "imageName": "icon_pixel_relic",
+                    "rarity": "common",
+                    "damageBonus": 2,
+                    "weight": 55
+                },
+                {
+                    "id": "void_core",
+                    "name": "Void Core",
+                    "imageName": "icon_pixel_crystal",
+                    "rarity": "rare",
+                    "damageBonus": 5,
+                    "weight": 32
+                },
+                {
+                    "id": "slayken_crown",
+                    "name": "Slayken Crown",
+                    "imageName": "moon_beast_logo",
+                    "rarity": "legendary",
+                    "damageBonus": 18,
+                    "weight": 13
+                }
+            ]
+        },
+        {
+            "id": "weapon_cache",
+            "title": "Weapon Cache",
+            "category": "Items",
+            "kind": "item",
+            "bannerImageName": "icon_pixel_sword",
+            "currencyImageName": "icon_pixel_crystal",
+            "singleCost": 10,
+            "multiCost": 85,
+            "multiCount": 10,
+            "entries": [
+                {
+                    "id": "training_sword",
+                    "name": "Training Sword",
+                    "imageName": "icon_pixel_sword",
+                    "rarity": "common",
+                    "damageBonus": 2,
+                    "weight": 58
+                },
+                {
+                    "id": "moon_blade",
+                    "name": "Moon Blade",
+                    "imageName": "icon_pixel_sword",
+                    "rarity": "rare",
+                    "damageBonus": 6,
+                    "weight": 31
+                },
+                {
+                    "id": "slayken_edge",
+                    "name": "Slayken Edge",
+                    "imageName": "icon_pixel_sword",
+                    "rarity": "epic",
+                    "damageBonus": 14,
+                    "weight": 11
+                }
+            ]
+        }
+    ]
+}
