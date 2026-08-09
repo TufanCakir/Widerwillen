@@ -1,11 +1,10 @@
 {
     "icons": [
-        #{
+        {
             "id": "widerwillen",
             "title": "Widerwillen",
             "imageName": "widerwillen_logo"
         },
-        ,
         {
             "id": "cookieman",
             "title": "Cookieman",
