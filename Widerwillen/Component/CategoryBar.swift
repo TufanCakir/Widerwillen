@@ -21,6 +21,12 @@ struct CategoryBar: View {
                         Text(category)
                             .font(.system(size: 13, weight: .heavy))
                             .foregroundStyle(.white)
+                            .shadow(
+                                color: .black.opacity(0.9),
+                                radius: 3,
+                                x: 0,
+                                y: 0
+                            )
                             .lineLimit(1)
                             .padding(.horizontal, 14)
                             .frame(height: 34)

@@ -1,0 +1,25 @@
+{
+    "tracks": [
+        {
+            "id": "music_01",
+            "resourceName": "aigainst_my_will",
+            "fileExtension": "mp3"
+        },
+        {
+            "id": "music_02",
+            "resourceName": "aigainst_my_will2",
+            "fileExtension": "mp3"
+        },
+        {
+            "id": "music_03",
+            "resourceName": "widerwillen",
+            "fileExtension": "mp3"
+        },
+        {
+            "id": "music_04",
+            "resourceName": "widerwillen2",
+            "fileExtension": "mp3"
+        }
+    ]
+}
+

@@ -75,14 +75,32 @@ struct NewsView: View {
                 Text(post.title)
                     .font(.system(size: 18, weight: .heavy))
                     .foregroundStyle(.white)
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
 
                 Text(post.date)
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(.white.opacity(0.68))
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
 
                 Text(post.body)
                     .font(.system(size: 13, weight: .bold))
                     .foregroundStyle(.white.opacity(0.82))
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
             }
 
             Spacer()

@@ -84,6 +84,12 @@ struct SummonView: View {
                         Text(category)
                             .font(.system(size: 13, weight: .heavy))
                             .foregroundStyle(.white)
+                            .shadow(
+                                color: .black.opacity(0.9),
+                                radius: 3,
+                                x: 0,
+                                y: 0
+                            )
                             .lineLimit(1)
                             .padding(.horizontal, 14)
                             .frame(height: 34)
@@ -202,6 +208,12 @@ struct SummonView: View {
             HStack(spacing: 6) {
                 Text(title)
                     .font(.system(size: 14, weight: .heavy))
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
 
                 Image(imageName)
                     .resizable()
@@ -211,6 +223,12 @@ struct SummonView: View {
 
                 Text("\(cost)")
                     .font(.system(size: 13, weight: .heavy))
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
             }
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
@@ -260,10 +278,22 @@ struct SummonView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(name)
                     .font(.system(size: 14, weight: .heavy))
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
 
                 Text(detail)
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(.white.opacity(0.75))
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
             }
 
             Spacer()
@@ -271,6 +301,12 @@ struct SummonView: View {
             Text(rarity.title)
                 .font(.system(size: 11, weight: .heavy))
                 .foregroundStyle(rarity.color)
+                .shadow(
+                    color: .black.opacity(0.9),
+                    radius: 3,
+                    x: 0,
+                    y: 0
+                )
         }
         .foregroundStyle(.white)
         .padding(8)
@@ -287,6 +323,12 @@ struct SummonView: View {
                 HStack {
                     Text("Rates")
                         .font(.system(size: 22, weight: .heavy))
+                        .shadow(
+                            color: .black.opacity(0.9),
+                            radius: 3,
+                            x: 0,
+                            y: 0
+                        )
 
                     Spacer()
 
@@ -308,11 +350,29 @@ struct SummonView: View {
                             .frame(width: 28, height: 28)
 
                         Text(entry.name)
+                            .shadow(
+                                color: .black.opacity(0.9),
+                                radius: 3,
+                                x: 0,
+                                y: 0
+                            )
                         Spacer()
                         Text(entry.rarity.title)
                             .foregroundStyle(entry.rarity.color)
+                            .shadow(
+                                color: .black.opacity(0.9),
+                                radius: 3,
+                                x: 0,
+                                y: 0
+                            )
                         Text("\(Int(entry.weight))%")
                             .frame(width: 42, alignment: .trailing)
+                            .shadow(
+                                color: .black.opacity(0.9),
+                                radius: 3,
+                                x: 0,
+                                y: 0
+                            )
                     }
                     .font(.system(size: 13, weight: .bold))
                 }
@@ -333,6 +393,12 @@ struct SummonView: View {
             VStack(spacing: 16) {
                 Text("Summon?")
                     .font(.system(size: 24, weight: .heavy))
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
 
                 AppResourceLabel(
                     imageName: pending.banner.currencyImageName,
@@ -367,6 +433,12 @@ struct SummonView: View {
             Text(message)
                 .font(.system(size: 14, weight: .heavy))
                 .foregroundStyle(.white)
+                .shadow(
+                    color: .black.opacity(0.9),
+                    radius: 3,
+                    x: 0,
+                    y: 0
+                )
                 .padding(.horizontal, 18)
                 .padding(.vertical, 12)
                 .background(.black.opacity(0.78))

@@ -53,6 +53,12 @@ struct EventView: View {
                 Text(message)
                     .font(.system(size: 13, weight: .heavy))
                     .foregroundStyle(.white.opacity(0.8))
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
             }
 
             TabView(selection: $selectedCategory) {
@@ -90,6 +96,12 @@ struct EventView: View {
                         Text(category)
                             .font(.system(size: 13, weight: .heavy))
                             .foregroundStyle(.white)
+                            .shadow(
+                                color: .black.opacity(0.9),
+                                radius: 3,
+                                x: 0,
+                                y: 0
+                            )
                             .lineLimit(1)
                             .padding(.horizontal, 14)
                             .frame(height: 34)
@@ -163,11 +175,23 @@ struct EventView: View {
                             Text(event.title)
                                 .font(.system(size: 20, weight: .heavy))
                                 .lineLimit(1)
+                                .shadow(
+                                    color: .black.opacity(0.9),
+                                    radius: 3,
+                                    x: 0,
+                                    y: 0
+                                )
 
                             Spacer()
 
                             Text("\(remainingRuns)/\(event.dailyLimit)")
                                 .font(.system(size: 13, weight: .heavy))
+                                .shadow(
+                                    color: .black.opacity(0.9),
+                                    radius: 3,
+                                    x: 0,
+                                    y: 0
+                                )
                         }
 
                         HStack(spacing: 12) {
@@ -205,11 +229,23 @@ struct EventView: View {
                             Text("\(event.currencyName): \(eventCurrency)")
                                 .font(.system(size: 12, weight: .bold))
                                 .lineLimit(1)
+                                .shadow(
+                                    color: .black.opacity(0.9),
+                                    radius: 3,
+                                    x: 0,
+                                    y: 0
+                                )
 
                             Spacer()
 
                             Text("HP \(event.hp)")
                                 .font(.system(size: 12, weight: .bold))
+                                .shadow(
+                                    color: .black.opacity(0.9),
+                                    radius: 3,
+                                    x: 0,
+                                    y: 0
+                                )
                         }
                         .foregroundStyle(.white.opacity(0.78))
                     }
@@ -322,9 +358,21 @@ private struct EventBattleView: View {
             VStack(spacing: 18) {
                 Text("Victory")
                     .font(.system(size: 34, weight: .heavy))
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
 
                 Text("Damage: \(summary.damageDealt)")
                     .font(.system(size: 14, weight: .bold))
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
 
                 HStack(spacing: 12) {
                     AppResourceLabel(

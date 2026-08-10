@@ -14,8 +14,8 @@ final class GameProgressStore {
     private static let saveKey = "moonBeastGameProgress"
 
     private(set) var stage = 0
-    private(set) var stageHP = 40
-    private(set) var maxStageHP = 40
+    private(set) var stageHP = 12
+    private(set) var maxStageHP = 12
     private(set) var accountLevel = 1
     private(set) var accountXP = 0
     private(set) var accountXPToNextLevel = 100
@@ -65,8 +65,13 @@ final class GameProgressStore {
         let itemPower = ownedItems.values.reduce(0) {
             $0 + Self.scaledPower(base: $1.damageBonus, level: $1.level)
         }
-        let prestigePower = prestigeCount * 2
-        return max(1, spritePower + artifactPower + itemPower + prestigePower)
+        let accountPower = max(accountLevel - 1, 0) * 2
+        let prestigePower = prestigeCount * 5
+        return max(
+            1,
+            spritePower + artifactPower + itemPower + accountPower
+                + prestigePower
+        )
     }
 
     var hasPendingRewards: Bool {
@@ -136,7 +141,7 @@ final class GameProgressStore {
     }
 
     func eventMaxHP(for event: GameEvent) -> Int {
-        let levelMultiplier = pow(1.08, Double(max(accountLevel - 1, 0)))
+        let levelMultiplier = pow(1.12, Double(max(accountLevel - 1, 0)))
         return max(
             event.hp,
             Int((Double(event.hp) * levelMultiplier).rounded())
@@ -654,30 +659,30 @@ final class GameProgressStore {
     private static func maxHP(for stage: Int, accountLevel: Int) -> Int {
         let stageValue = max(stage, 0)
         let levelValue = max(accountLevel, 1)
-        let baseHP = 70.0 * pow(1.18, Double(stageValue))
-        let levelMultiplier = pow(1.08, Double(levelValue - 1))
-        return max(40, Int((baseHP * levelMultiplier).rounded()))
+        let baseHP = 12.0 * pow(1.24, Double(stageValue))
+        let levelMultiplier = pow(1.10, Double(levelValue - 1))
+        return max(12, Int((baseHP * levelMultiplier).rounded()))
     }
 
     private static func xpToNextLevel(for level: Int) -> Int {
-        Int((160.0 * pow(1.22, Double(max(level - 1, 0)))).rounded())
+        Int((90.0 * pow(1.24, Double(max(level - 1, 0)))).rounded())
     }
 
     private static func rarityPower(_ rarity: SpriteRarity) -> Int {
         switch rarity {
         case .common:
-            1
+            6
         case .rare:
-            3
+            14
         case .epic:
-            8
+            34
         case .legendary:
-            20
+            82
         }
     }
 
     private static func scaledPower(base: Int, level: Int) -> Int {
-        let multiplier = pow(1.38, Double(max(level - 1, 0)))
+        let multiplier = pow(1.46, Double(max(level - 1, 0)))
         return max(base, Int((Double(max(base, 1)) * multiplier).rounded()))
     }
 

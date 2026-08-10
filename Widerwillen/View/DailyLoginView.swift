@@ -80,6 +80,12 @@ struct DailyLoginView: View {
             Text(reward.title)
                 .font(.system(size: 13, weight: .heavy))
                 .foregroundStyle(.white)
+                .shadow(
+                    color: .black.opacity(0.9),
+                    radius: 3,
+                    x: 0,
+                    y: 0
+                )
 
             ResourceAmountRow(amounts: reward.rewards, prefix: "+")
         }

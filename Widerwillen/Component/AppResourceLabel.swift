@@ -31,9 +31,9 @@ struct AppResourceLabel: View {
         .foregroundStyle(color)
         .shadow(
             color: .black.opacity(0.9),
-            radius: 0,
-            x: 1,
-            y: 1
+            radius: 3,
+            x: 0,
+            y: 0
         )
     }
 }

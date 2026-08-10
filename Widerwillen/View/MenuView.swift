@@ -36,9 +36,9 @@ struct MenuView: View {
                             .foregroundStyle(.white)
                             .shadow(
                                 color: .black.opacity(0.9),
-                                radius: 0,
-                                x: 1,
-                                y: 1
+                                radius: 3,
+                                x: 0,
+                                y: 0
                             )
                             .frame(maxWidth: .infinity)
                             .frame(height: 72)
@@ -54,6 +54,8 @@ struct MenuView: View {
 
                     shortcutGrid
                 }
+                .frame(maxWidth: 420)
+                .padding(.horizontal, 24)
 
                 Spacer()
             }
@@ -86,7 +88,6 @@ struct MenuView: View {
                 openMode(.dailyLogin)
             }
         }
-        .padding(.horizontal)
         .padding(.top, 50)
     }
 
@@ -118,21 +119,27 @@ struct MenuView: View {
         .buttonStyle(.plain)
         .shadow(
             color: .black.opacity(0.9),
-            radius: 0,
-            x: 1,
-            y: 1
+            radius: 3,
+            x: 0,
+            y: 0
         )
     }
 
     private var modePickerOverlay: some View {
         ZStack {
-            Color.black.opacity(0.45)
-                .ignoresSafeArea()
-                .onTapGesture {
+            Button {
+                withAnimation(.snappy(duration: 0.2)) {
                     isModePickerPresented = false
                 }
+            } label: {
+                Color.black.opacity(0.45)
+                    .ignoresSafeArea()
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .zIndex(0)
 
-            VStack(spacing: 50) {
+            VStack(spacing: 22) {
                 popupButton(
                     title: "Battle",
                     iconImage: "icon_pixel_sword",
@@ -146,15 +153,26 @@ struct MenuView: View {
                     mode: .event
                 )
             }
-            .padding(.horizontal, 50)
-            .padding(.vertical, 50)
+            .padding(18)
+            .frame(maxWidth: 360)
             .background {
-                AppBackground()
+                Image("bg")
+                    .resizable()
+                    .interpolation(.none)
+                    .scaledToFill()
+                    .opacity(0.88)
+                    .allowsHitTesting(false)
             }
-
-            .clipShape(RoundedRectangle(cornerRadius: 42))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.white.opacity(0.72), lineWidth: 2)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 4)
             .padding(.horizontal, 36)
+            .zIndex(1)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func popupButton(
@@ -176,7 +194,7 @@ struct MenuView: View {
 
                 Text(title)
                     .font(.system(size: 24, weight: .bold))
-                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
             }
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
@@ -193,6 +211,7 @@ struct MenuView: View {
                     .stroke(.white, lineWidth: 2)
             }
             .clipShape(Capsule())
+            .contentShape(Capsule())
         }
         .buttonStyle(.plain)
     }

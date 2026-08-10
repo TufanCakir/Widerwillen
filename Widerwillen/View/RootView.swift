@@ -10,7 +10,10 @@ import SwiftUI
 struct RootView: View {
     @Environment(\.scenePhase) private var scenePhase
 
+    @AppStorage("isMusicEnabled") private var isMusicEnabled = true
+
     @State private var progress = GameProgressStore()
+    @State private var musicPlayer = MusicPlayer()
     @State private var selectedTab: AppTab = .home
     @State private var activeMode: MenuMode?
     @State private var hasStartedGame = false
@@ -20,11 +23,15 @@ struct RootView: View {
             .statusBarHidden(true)
             .onAppear {
                 progress.refreshIdleRewards()
+                musicPlayer.setEnabled(isMusicEnabled)
             }
             .onChange(of: scenePhase) { _, newPhase in
                 if newPhase == .active {
                     progress.refreshIdleRewards()
                 }
+            }
+            .onChange(of: isMusicEnabled) { _, newValue in
+                musicPlayer.setEnabled(newValue)
             }
     }
 

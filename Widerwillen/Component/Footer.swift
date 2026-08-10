@@ -19,7 +19,7 @@ enum AppTab: CaseIterable {
         case .home: "Home"
         case .sprites: "Sprite"
         case .summon: "Summon"
-        case .shop: "Shop"
+        case .shop: "Warehouse"
         case .trade: "Trade"
         }
     }
@@ -56,7 +56,7 @@ struct Footer: View {
                                 color: .black.opacity(0.9),
                                 radius: 3,
                                 x: 0,
-                                y: 1
+                                y: 0
                             )
 
                     }

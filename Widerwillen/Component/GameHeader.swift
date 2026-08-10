@@ -114,6 +114,12 @@ struct GameHeader: View {
                 Text("Profile Icon")
                     .font(.system(size: 15, weight: .heavy))
                     .foregroundStyle(.white)
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
 
                 Spacer()
 
@@ -175,6 +181,12 @@ struct GameHeader: View {
                     .foregroundStyle(.white.opacity(0.86))
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
             }
             .frame(width: 68, height: 68)
             .background(.white.opacity(isSelected ? 0.2 : 0.08))

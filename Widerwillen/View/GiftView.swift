@@ -91,6 +91,12 @@ struct GiftView: View {
             Text("Claim All")
                 .font(.system(size: 18, weight: .heavy))
                 .foregroundStyle(.white)
+                .shadow(
+                    color: .black.opacity(0.9),
+                    radius: 3,
+                    x: 0,
+                    y: 0
+                )
                 .frame(maxWidth: .infinity)
                 .frame(height: 56)
                 .background(.black.opacity(hasGifts ? 0.54 : 0.28))
@@ -142,6 +148,12 @@ struct GiftView: View {
                 Text(gift.title)
                     .font(.system(size: 18, weight: .heavy))
                     .foregroundStyle(.white)
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
 
                 ResourceAmountRow(amounts: gift.rewards, prefix: "+")
             }
@@ -180,6 +192,12 @@ struct GiftView: View {
             Text("No gifts")
                 .font(.system(size: 16, weight: .heavy))
                 .foregroundStyle(.white.opacity(0.72))
+                .shadow(
+                    color: .black.opacity(0.9),
+                    radius: 3,
+                    x: 0,
+                    y: 0
+                )
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 42)

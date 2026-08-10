@@ -83,10 +83,22 @@ struct SpriteListView: View {
                 .font(.system(size: 11, weight: .heavy))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
+                .shadow(
+                    color: .black.opacity(0.9),
+                    radius: 3,
+                    x: 0,
+                    y: 0
+                )
 
             Text(item.levelTitle)
                 .font(.system(size: 10, weight: .bold))
                 .foregroundStyle(item.rarity.color)
+                .shadow(
+                    color: .black.opacity(0.9),
+                    radius: 3,
+                    x: 0,
+                    y: 0
+                )
         }
         .foregroundStyle(.white)
         .frame(maxWidth: .infinity)
