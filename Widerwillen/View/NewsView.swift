@@ -65,10 +65,7 @@ struct NewsView: View {
 
     private func newsCard(_ post: NewsPost) -> some View {
         HStack(alignment: .top, spacing: 14) {
-            Image(post.imageName)
-                .resizable()
-                .interpolation(.none)
-                .scaledToFit()
+            RemoteImage(name: post.imageName)
                 .frame(width: 54, height: 54)
 
             VStack(alignment: .leading, spacing: 8) {

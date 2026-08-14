@@ -1,0 +1,29 @@
+{
+    "characters": [
+        {
+            "id": "nimbi",
+            "name": "Nimbi",
+            "rarity": "legendary",
+            "baseTapDamage": 6,
+            "maxStars": 14,
+            "defaultSkinID": "nimbi_default",
+            "isDefault": true,
+            "skins": [
+                {
+                    "id": "nimbi_default",
+                    "name": "Nimbi",
+                    "imageName": "icon_nimpi",
+                    "animationID": "sprite_nimbi",
+                    "unlockSource": "default"
+                },
+                {
+                    "id": "nimbi_night_skin",
+                    "name": "Night Skin",
+                    "imageName": "icon_nimbi_night",
+                    "animationID": "sprite_nimbi_night",
+                    "unlockSource": "shop"
+                }
+            ]
+        }
+    ]
+}

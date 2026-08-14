@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EventView: View {
     let progress: GameProgressStore
+    let onBattleStateChange: (Bool) -> Void
 
     private let configuration: EventConfiguration
     @State private var message = ""
@@ -17,9 +18,11 @@ struct EventView: View {
 
     init(
         progress: GameProgressStore,
-        configuration: EventConfiguration = try! EventConfiguration.load()
+        configuration: EventConfiguration = try! EventConfiguration.load(),
+        onBattleStateChange: @escaping (Bool) -> Void = { _ in }
     ) {
         self.progress = progress
+        self.onBattleStateChange = onBattleStateChange
         self.configuration = configuration
         _selectedCategory = State(
             initialValue: configuration.events.first?.category ?? ""
@@ -42,6 +45,13 @@ struct EventView: View {
         }
         .onAppear {
             progress.refreshDailyEventLimits(for: configuration.events)
+            onBattleStateChange(selectedEvent != nil)
+        }
+        .onChange(of: selectedEvent?.id) { _, eventID in
+            onBattleStateChange(eventID != nil)
+        }
+        .onDisappear {
+            onBattleStateChange(false)
         }
     }
 
@@ -157,11 +167,9 @@ struct EventView: View {
         } label: {
             VStack(spacing: 0) {
                 ZStack(alignment: .bottomLeading) {
-                    Image(event.bannerImageName)
-                        .resizable()
-                        .interpolation(.none)
-                        .scaledToFit()
+                    RemoteImage(name: event.bannerImageName)
                         .frame(maxWidth: .infinity)
+                        .frame(height: 132)
                         .clipped()
 
                     LinearGradient(
@@ -271,7 +279,6 @@ private struct EventBattleView: View {
 
     @State private var currentHP: Int
     @State private var message = ""
-    @State private var isAutoBattleEnabled = true
     @State private var damageDealt = 0
     @State private var victorySummary: EventVictorySummary?
 
@@ -295,9 +302,18 @@ private struct EventBattleView: View {
                 currentHP: currentHP,
                 maxHP: eventMaxHP,
                 lookIndex: eventLookIndex,
-                isAutoBattleEnabled: isAutoBattleEnabled,
-                onAttack: {
-                    attackEvent()
+                heroAnimationID: progress.battleHeroAnimationID,
+                companionAnimationIDs: progress.battleCompanionAnimationIDs,
+                spriteAttackInterval: progress.spriteAttackInterval,
+                onTapAttack: {
+                    attackEvent(damage: progress.tapDamage)
+                },
+                onSpriteAttack: {
+                    guard progress.hasCompanionSprites else {
+                        return BattleAttackResult(damageDealt: 0)
+                    }
+
+                    return attackEvent(damage: progress.spriteDamage)
                 }
             )
 
@@ -323,20 +339,25 @@ private struct EventBattleView: View {
         progress.eventMaxHP(for: event)
     }
 
-    private func attackEvent() {
-        guard victorySummary == nil else { return }
+    private func attackEvent(damage: Int) -> BattleAttackResult {
+        guard victorySummary == nil else {
+            return BattleAttackResult(damageDealt: 0)
+        }
 
         guard progress.remainingRuns(for: event) > 0 else {
             currentHP = eventMaxHP
             message = "Daily limit reached"
-            return
+            return BattleAttackResult(damageDealt: 0)
         }
 
-        let damage = min(progress.battlePower, currentHP)
-        damageDealt += damage
-        currentHP = max(currentHP - damage, 0)
+        let damageValue = max(damage, 1)
+        let actualDamage = min(damageValue, currentHP)
+        damageDealt += actualDamage
+        currentHP = max(currentHP - damageValue, 0)
 
-        guard currentHP == 0 else { return }
+        guard currentHP == 0 else {
+            return BattleAttackResult(damageDealt: actualDamage)
+        }
 
         let didClear = progress.fightEvent(event)
         if didClear {
@@ -348,6 +369,8 @@ private struct EventBattleView: View {
             message = "Daily limit reached"
             currentHP = eventMaxHP
         }
+
+        return BattleAttackResult(damageDealt: actualDamage)
     }
 
     private func victoryOverlay(_ summary: EventVictorySummary) -> some View {
@@ -412,10 +435,7 @@ private struct EventBattleView: View {
             .padding(.horizontal, 28)
             .padding(.vertical, 26)
             .background {
-                Image("bg")
-                    .resizable()
-                    .interpolation(.none)
-                    .scaledToFill()
+                RemoteImage(name: "bg_app", contentMode: .fill)
                     .opacity(0.9)
             }
             .overlay {

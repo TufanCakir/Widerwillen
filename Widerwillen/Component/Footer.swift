@@ -19,7 +19,7 @@ enum AppTab: CaseIterable {
         case .home: "Home"
         case .sprites: "Sprite"
         case .summon: "Summon"
-        case .shop: "Warehouse"
+        case .shop: "Shop"
         case .trade: "Trade"
         }
     }
@@ -29,7 +29,7 @@ enum AppTab: CaseIterable {
         case .home: "icon_pixel_house"
         case .sprites: "icon_pixel_sprite"
         case .summon: "icon_pixel_crystal"
-        case .shop: "icon_pixel_box"
+        case .shop: "icon_pixel_shop"
         case .trade: "icon_pixel_trade"
         }
     }
@@ -39,19 +39,20 @@ struct Footer: View {
     @Binding var selectedTab: AppTab
 
     var body: some View {
-        HStack(spacing: 20) {
+        HStack(spacing: 0) {
             ForEach(AppTab.allCases, id: \.self) { tab in
                 Button {
                     selectedTab = tab
                 } label: {
-                    VStack(spacing: 0) {
-                        Image(tab.imageName)
-                            .resizable()
-                            .interpolation(.none)
-                            .scaledToFit()
+                    VStack(spacing: 5) {
+                        RemoteImage(name: tab.imageName)
+                            .frame(width: 44, height: 44)
+                            .clipped()
 
                         Text(tab.title)
                             .font(.system(size: 10, weight: .bold))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.65)
                             .shadow(
                                 color: .black.opacity(0.9),
                                 radius: 3,
@@ -62,6 +63,8 @@ struct Footer: View {
                     }
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
+                    .frame(height: 62)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
             }

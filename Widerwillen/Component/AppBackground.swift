@@ -9,11 +9,13 @@ import SwiftUI
 
 struct AppBackground: View {
     var body: some View {
-        ZStack {
-            Image("bg")
-                .resizable()
+        GeometryReader { proxy in
+            ZStack {
+                RemoteImage(name: "bg_app", contentMode: .fill)
+                    .frame(width: proxy.size.width, height: proxy.size.height)
 
-            Color.black.opacity(0.20)
+                Color.black.opacity(0.20)
+            }
         }
         .ignoresSafeArea()
     }

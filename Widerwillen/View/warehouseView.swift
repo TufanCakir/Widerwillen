@@ -42,10 +42,7 @@ struct warehouseView: View {
                     Button {
                         progress.claimIdleRewards()
                     } label: {
-                        Image("icon_pixel_box")
-                            .resizable()
-                            .interpolation(.none)
-                            .scaledToFit()
+                        RemoteImage(name: "icon_pixel_box")
                             .frame(width: 76, height: 76)
                             .opacity(progress.hasPendingRewards ? 1 : 0.45)
                             .shadow(

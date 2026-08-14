@@ -12,13 +12,17 @@ final class SpriteAnimationScene: SKScene {
     private let arena: ArenaConfiguration
     private let spriteSheets: [SpriteSheet]
     private var characters: [CharacterInstance] = []
-    private var unlockedSpriteIndices: Set<Int> = []
+    private var heroAnimationID = "sprite_nimbi"
+    private var companionAnimationIDs: Set<String> = []
     private let gridColumns = 5
     private let gridCellWidthRatio: CGFloat = 0.15
     private let gridCellHeightRatio: CGFloat = 0.18
     private let gridCenterXRatio: CGFloat = 0.5
     private let gridRowOffsetRatio: CGFloat = 0.065
     private let gridBaseYRatio: CGFloat = 0.30
+    private let heroXRatio: CGFloat = 0.38
+    private let heroYRatio: CGFloat = 0.12
+    private let heroScale: CGFloat = 0.32
 
     private var floorHeight: CGFloat {
         size.height * arena.floorHeightRatio
@@ -50,9 +54,25 @@ final class SpriteAnimationScene: SKScene {
         layoutCharacters()
     }
 
-    func updateUnlockedSpriteIndices(_ indices: Set<Int>) {
-        unlockedSpriteIndices = indices
+    func updateBattleSprites(
+        heroAnimationID: String,
+        companionAnimationIDs: Set<String>
+    ) {
+        self.heroAnimationID = heroAnimationID
+        self.companionAnimationIDs = companionAnimationIDs
         updateCharacterVisibility()
+        layoutCharacters()
+    }
+
+    func playHeroAttackAnimation() {
+        guard
+            let hero = characters.first(where: { $0.id == heroAnimationID }),
+            !hero.node.isHidden
+        else {
+            return
+        }
+
+        hero.animation.playOnce(on: hero.node)
     }
 
     override func didChangeSize(_ oldSize: CGSize) {
@@ -75,17 +95,19 @@ final class SpriteAnimationScene: SKScene {
 
             let shadow = makeShadow()
             shadow.zPosition = 1
-            shadow.isHidden = !unlockedSpriteIndices.contains(index)
+            let isVisible = isVisibleAnimation(id: sheet.id)
+            shadow.isHidden = !isVisible
 
-            node.isHidden = !unlockedSpriteIndices.contains(index)
+            node.isHidden = !isVisible
             addChild(shadow)
             addChild(node)
 
-            if unlockedSpriteIndices.contains(index) {
-                animation.start(on: node)
+            if isVisible {
+                startAnimation(for: sheet.id, animation: animation, node: node)
             }
 
             return CharacterInstance(
+                id: sheet.id,
                 index: index,
                 config: sheet,
                 animation: animation,
@@ -98,7 +120,10 @@ final class SpriteAnimationScene: SKScene {
     private func layoutCharacters() {
         for index in characters.indices {
             let character = characters[index]
-            let scale = character.config.scale ?? arena.characterScale
+            let scale =
+                character.id == heroAnimationID
+                ? heroScale
+                : character.config.scale ?? arena.characterScale
             let xPosition =
                 character.config.xPosition
                 ?? defaultXPosition(
@@ -113,6 +138,7 @@ final class SpriteAnimationScene: SKScene {
             )
             let position = characterPosition(
                 for: character.config,
+                id: character.id,
                 index: character.index,
                 fallbackXPosition: xPosition,
                 fallbackYOffset: yOffset
@@ -128,17 +154,33 @@ final class SpriteAnimationScene: SKScene {
 
     private func updateCharacterVisibility() {
         for character in characters {
-            let isUnlocked = unlockedSpriteIndices.contains(character.index)
+            let isUnlocked = isVisibleAnimation(id: character.id)
             let wasHidden = character.node.isHidden
 
             character.node.isHidden = !isUnlocked
             character.shadow.isHidden = !isUnlocked
 
             if isUnlocked && wasHidden {
-                character.animation.start(on: character.node)
+                startAnimation(
+                    for: character.id,
+                    animation: character.animation,
+                    node: character.node
+                )
             } else if !isUnlocked && !wasHidden {
                 character.animation.stop(on: character.node)
             }
+        }
+    }
+
+    private func startAnimation(
+        for id: String,
+        animation: SpriteSheetAnimation,
+        node: SKSpriteNode
+    ) {
+        if id == heroAnimationID {
+            animation.showFirstFrame(on: node)
+        } else {
+            animation.start(on: node)
         }
     }
 
@@ -163,6 +205,7 @@ final class SpriteAnimationScene: SKScene {
                 )
             let position = characterPosition(
                 for: character.config,
+                id: character.id,
                 index: character.index,
                 fallbackXPosition: xPosition,
                 fallbackYOffset: character.config.yOffset ?? 0
@@ -179,10 +222,18 @@ final class SpriteAnimationScene: SKScene {
 
     private func characterPosition(
         for config: SpriteSheet,
+        id: String,
         index: Int,
         fallbackXPosition: CGFloat,
         fallbackYOffset: CGFloat
     ) -> CGPoint {
+        if id == heroAnimationID {
+            return CGPoint(
+                x: size.width * heroXRatio,
+                y: floorHeight * heroYRatio + fallbackYOffset
+            )
+        }
+
         guard
             let gridColumn = config.gridColumn
                 ?? automaticGridColumn(for: index),
@@ -206,6 +257,10 @@ final class SpriteAnimationScene: SKScene {
         let y = gridBaseY + rowOffset * floorHeight * gridCellHeightRatio
 
         return CGPoint(x: x, y: y)
+    }
+
+    private func isVisibleAnimation(id: String) -> Bool {
+        id == heroAnimationID || companionAnimationIDs.contains(id)
     }
 
     private func alternatingRowOffset(for row: Int) -> CGFloat {
@@ -235,6 +290,7 @@ final class SpriteAnimationScene: SKScene {
     }
 
     private struct CharacterInstance {
+        let id: String
         let index: Int
         let config: SpriteSheet
         let animation: SpriteSheetAnimation

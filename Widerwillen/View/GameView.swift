@@ -27,9 +27,21 @@ struct GameView: View {
             currentHP: progress.stageHP,
             maxHP: progress.maxStageHP,
             lookIndex: lookIndex(for: progress.stage),
-            isAutoBattleEnabled: progress.isAutoBattleEnabled,
-            onAttack: {
-                progress.attackStage()
+            heroAnimationID: progress.battleHeroAnimationID,
+            companionAnimationIDs: progress.battleCompanionAnimationIDs,
+            spriteAttackInterval: progress.spriteAttackInterval,
+            onTapAttack: {
+                progress.attackStage(damage: progress.tapDamage)
+            },
+            onSpriteAttack: {
+                guard progress.hasCompanionSprites else {
+                    return BattleAttackResult(damageDealt: 0)
+                }
+
+                return progress.attackStage(damage: progress.spriteDamage)
+            },
+            onPrestige: {
+                progress.prestige()
             },
             onExit: onExit
         )

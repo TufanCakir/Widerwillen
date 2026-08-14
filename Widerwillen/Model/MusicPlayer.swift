@@ -24,31 +24,34 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
 
     func setEnabled(_ isEnabled: Bool) {
         shouldPlay = isEnabled
+        print("[MusicPlayer] music enabled: \(isEnabled)")
 
         if isEnabled {
             playCurrentTrack()
         } else {
             player?.stop()
             player = nil
+            print("[MusicPlayer] stopped")
         }
     }
 
     private func playCurrentTrack(attempts: Int = 0) {
-        guard shouldPlay, !configuration.tracks.isEmpty else { return }
+        guard shouldPlay, !configuration.tracks.isEmpty else {
+            print(
+                "[MusicPlayer] play skipped. shouldPlay: \(shouldPlay), tracks: \(configuration.tracks.count)"
+            )
+            return
+        }
         guard attempts < configuration.tracks.count else {
             player = nil
+            print("[MusicPlayer] no playable cached music tracks found")
             return
         }
 
         let normalizedIndex = currentTrackIndex % configuration.tracks.count
         let track = configuration.tracks[normalizedIndex]
 
-        guard
-            let url = Bundle.main.url(
-                forResource: track.resourceName,
-                withExtension: track.fileExtension
-            )
-        else {
+        guard let url = url(for: track) else {
             advanceTrackIndex()
             playCurrentTrack(attempts: attempts + 1)
             return
@@ -60,7 +63,13 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
             player?.numberOfLoops = 0
             player?.prepareToPlay()
             player?.play()
+            print(
+                "[MusicPlayer] playing \(track.resourceName): \(url.path)"
+            )
         } catch {
+            print(
+                "[MusicPlayer] failed to play \(track.resourceName): \(error)"
+            )
             advanceTrackIndex()
             playCurrentTrack(attempts: attempts + 1)
         }
@@ -75,6 +84,18 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
 
     private func advanceTrackIndex() {
         currentTrackIndex = (currentTrackIndex + 1) % configuration.tracks.count
+    }
+
+    private func url(for track: MusicTrack) -> URL? {
+        guard let url = RemoteContentCache.cachedMusicURL(
+            named: track.resourceName
+        ) else {
+            print("[MusicPlayer] cache miss \(track.resourceName)")
+            return nil
+        }
+
+        print("[MusicPlayer] cache hit \(track.resourceName): \(url.path)")
+        return url
     }
 
     func audioPlayerDidFinishPlaying(

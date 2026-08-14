@@ -206,10 +206,7 @@ struct GameHeader: View {
     private func profileIconImage(_ imageName: String, size: CGFloat)
         -> some View
     {
-        Image(imageName)
-            .resizable()
-            .interpolation(.none)
-            .scaledToFit()
+        RemoteImage(name: imageName)
             .padding(6)
             .frame(width: size, height: size)
     }

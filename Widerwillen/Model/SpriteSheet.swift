@@ -9,6 +9,7 @@ import CoreGraphics
 import Foundation
 
 struct SpriteSheet: Codable {
+    let id: String
     let imageName: String
     let columns: Int
     let rows: Int
@@ -22,8 +23,41 @@ struct SpriteSheet: Codable {
     let gridColumn: Int?
     let gridRow: Int?
 
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case imageName
+        case columns
+        case rows
+        case spacing
+        case margin
+        case frameCount
+        case fps
+        case xPosition
+        case yOffset
+        case scale
+        case gridColumn
+        case gridRow
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        imageName = try container.decode(String.self, forKey: .imageName)
+        id = try container.decodeIfPresent(String.self, forKey: .id) ?? imageName
+        columns = try container.decode(Int.self, forKey: .columns)
+        rows = try container.decode(Int.self, forKey: .rows)
+        spacing = try container.decode(Int.self, forKey: .spacing)
+        margin = try container.decode(Int.self, forKey: .margin)
+        frameCount = try container.decode(Int.self, forKey: .frameCount)
+        fps = try container.decode(Double.self, forKey: .fps)
+        xPosition = try container.decodeIfPresent(CGFloat.self, forKey: .xPosition)
+        yOffset = try container.decodeIfPresent(CGFloat.self, forKey: .yOffset)
+        scale = try container.decodeIfPresent(CGFloat.self, forKey: .scale)
+        gridColumn = try container.decodeIfPresent(Int.self, forKey: .gridColumn)
+        gridRow = try container.decodeIfPresent(Int.self, forKey: .gridRow)
+    }
+
     static func load(
-        named resourceName: String = "spritesheet",
+        named resourceName: String = "animation",
         bundle: Bundle = .main
     ) throws -> SpriteSheet {
         guard
@@ -36,7 +70,7 @@ struct SpriteSheet: Codable {
     }
 
     static func loadAll(
-        named resourceName: String = "spritesheet",
+        named resourceName: String = "animation",
         bundle: Bundle = .main
     ) throws -> [SpriteSheet] {
         do {
@@ -64,7 +98,7 @@ extension SpriteSheet {
         var errorDescription: String? {
             switch self {
             case .emptySpriteSheetList:
-                "spritesheet.json does not contain any sprites."
+                "animation.json does not contain any animations."
             }
         }
     }

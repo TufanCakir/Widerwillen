@@ -74,6 +74,9 @@ struct SummonEntry: Decodable, Identifiable {
     let id: String
     let name: String
     let spriteIndex: Int?
+    let characterID: String?
+    let skinID: String?
+    let companionID: String?
     let imageName: String
     let rarity: SpriteRarity
     let damageBonus: Int
@@ -83,6 +86,9 @@ struct SummonEntry: Decodable, Identifiable {
         case id
         case name
         case spriteIndex
+        case characterID
+        case skinID
+        case companionID
         case imageName
         case rarity
         case damageBonus
@@ -96,6 +102,15 @@ struct SummonEntry: Decodable, Identifiable {
         spriteIndex = try container.decodeIfPresent(
             Int.self,
             forKey: .spriteIndex
+        )
+        characterID = try container.decodeIfPresent(
+            String.self,
+            forKey: .characterID
+        )
+        skinID = try container.decodeIfPresent(String.self, forKey: .skinID)
+        companionID = try container.decodeIfPresent(
+            String.self,
+            forKey: .companionID
         )
         imageName = try container.decode(String.self, forKey: .imageName)
         rarity = try container.decode(SpriteRarity.self, forKey: .rarity)

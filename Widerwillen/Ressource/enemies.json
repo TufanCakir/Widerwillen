@@ -1,0 +1,90 @@
+{
+    "areas": [
+        {
+            "id": "moon_gate",
+            "name": "Moon Gate",
+            "startsAtStage": 1,
+            "transitionImageName": "bg_app",
+            "enemies": [
+                {
+                    "id": "moon_cookieman",
+                    "name": "Moon Cookieman",
+                    "imageName": "sprite_cookieman",
+                    "animationID": "sprite_cookieman",
+                    "scale": 0.30,
+                    "columns": 4,
+                    "rows": 1,
+                    "frameCount": 1,
+                    "fps": 8
+                },
+                {
+                    "id": "moon_blunt",
+                    "name": "Moon Blunt",
+                    "imageName": "sprite_blunt",
+                    "animationID": "sprite_blunt",
+                    "scale": 0.32,
+                    "columns": 1,
+                    "rows": 1,
+                    "frameCount": 1,
+                    "fps": 8
+                }
+            ],
+            "bosses": [
+                {
+                    "id": "gate_keeper",
+                    "name": "Gate Keeper",
+                    "imageName": "sprite_blunt",
+                    "animationID": "sprite_blunt",
+                    "scale": 0.30,
+                    "columns": 1,
+                    "rows": 1,
+                    "frameCount": 1,
+                    "fps": 8
+                }
+            ]
+        },
+        {
+            "id": "relic_depths",
+            "name": "Relic Depths",
+            "startsAtStage": 21,
+            "transitionImageName": "icon_pixel_relic",
+            "enemies": [
+                {
+                    "id": "relic_blunt",
+                    "name": "Relic Blunt",
+                    "imageName": "sprite_blunt",
+                    "animationID": "sprite_blunt",
+                    "scale": 0.34,
+                    "columns": 1,
+                    "rows": 1,
+                    "frameCount": 1,
+                    "fps": 8
+                },
+                {
+                    "id": "blade_dompi",
+                    "name": "Blade Dompi",
+                    "imageName": "sprite_dompi",
+                    "animationID": "sprite_dompi",
+                    "scale": 0.32,
+                    "columns": 4,
+                    "rows": 1,
+                    "frameCount": 2,
+                    "fps": 8
+                }
+            ],
+            "bosses": [
+                {
+                    "id": "depth_crown",
+                    "name": "Depth Crown",
+                    "imageName": "sprite_klempi",
+                    "animationID": "sprite_klempi",
+                    "scale": 0.34,
+                    "columns": 4,
+                    "rows": 1,
+                    "frameCount": 3,
+                    "fps": 8
+                }
+            ]
+        }
+    ]
+}

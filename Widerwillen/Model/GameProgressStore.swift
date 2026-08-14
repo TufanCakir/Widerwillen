@@ -12,6 +12,22 @@ import Observation
 @Observable
 final class GameProgressStore {
     private static let saveKey = "moonBeastGameProgress"
+    private static let defaultProfileIconImageName = "widerwillen_logo"
+    private static let oldDefaultProfileIconImageName = "sprite_cookieman"
+    private static let defaultCharacterID = "nimbi"
+    private static let defaultCharacterSkinID = "nimbi_default"
+    private static let defaultHeroAnimationID = "sprite_nimbi"
+    private static let defaultHeroBasePower = 6
+    private static let characterConfiguration =
+        (try? CharacterConfiguration.load())
+        ?? CharacterConfiguration(characters: [])
+    private static let companionConfiguration =
+        (try? CompanionConfiguration.load())
+        ?? CompanionConfiguration(companions: [])
+    private static let passConfiguration =
+        (try? PassConfiguration.load()) ?? PassConfiguration(passes: [])
+    private static let skillConfiguration =
+        (try? SkillConfiguration.load()) ?? SkillConfiguration(skills: [])
 
     private(set) var stage = 0
     private(set) var stageHP = 12
@@ -26,23 +42,35 @@ final class GameProgressStore {
     private(set) var pendingCoins = 0
     private(set) var pendingCrystals = 0
     private(set) var ownedSprites: [Int: OwnedSprite] = [:]
+    private(set) var ownedCharacters: [String: OwnedCharacter] = [:]
+    private(set) var unlockedCharacterSkinIDs: Set<String> = []
     private(set) var ownedArtifacts: [String: OwnedArtifact] = [:]
     private(set) var ownedItems: [String: OwnedItem] = [:]
     private(set) var lastSummonResults: [SummonResult] = []
     private(set) var lastArtifactSummonResults: [ArtifactSummonResult] = []
     private(set) var lastItemSummonResults: [ItemSummonResult] = []
+    private(set) var ownedSkillLevels: [String: Int] = [:]
+    private(set) var passPointsByID: [String: Int] = [:]
+    private(set) var claimedPassRewardIDs: Set<String> = []
+    private(set) var premiumPassIDs: Set<String> = []
+    private(set) var purchasedShopProductIDs: Set<String> = []
     private(set) var eventCurrencies: [String: Int] = [:]
     private(set) var eventRunsByID: [String: EventRunProgress] = [:]
     private(set) var claimedGiftIDs: Set<String> = []
     private(set) var lastDailyLoginClaimDay = ""
-    private(set) var selectedProfileIconImageName = "sprite_cookieman"
+    private(set) var selectedProfileIconImageName =
+        GameProgressStore.defaultProfileIconImageName
+    private(set) var selectedCharacterID = GameProgressStore.defaultCharacterID
+    private(set) var selectedCharacterSkinID =
+        GameProgressStore.defaultCharacterSkinID
     private var lastIdleRewardUpdate = Date()
-
-    var isAutoBattleEnabled = true
 
     init() {
         loadProgress()
-        unlockStarterIfNeeded()
+        removeOldStarterCompanionIfNeeded()
+        unlockDefaultCharacterIfNeeded()
+        normalizeSelectedCharacterIfNeeded()
+        normalizeProfileIconSelectionIfNeeded()
         recalculateStageHPIfNeeded()
         refreshIdleRewards()
     }
@@ -51,14 +79,94 @@ final class GameProgressStore {
         Set(ownedSprites.keys)
     }
 
-    var battlePower: Int {
-        let spritePower = ownedSprites.values.reduce(0) {
-            $0
-                + Self.scaledPower(
-                    base: Self.rarityPower($1.rarity),
-                    level: $1.stars
-                )
+    var battleSpriteIndices: Set<Int> {
+        unlockedSpriteIndices
+    }
+
+    var battleHeroAnimationID: String {
+        selectedCharacterSkin?.animationID ?? Self.defaultHeroAnimationID
+    }
+
+    var battleCompanionAnimationIDs: Set<String> {
+        Set(ownedSprites.keys.compactMap {
+            Self.companionConfiguration.companion(spriteIndex: $0)?.animationID
+        })
+    }
+
+    var hasCompanionSprites: Bool {
+        !ownedSprites.isEmpty
+    }
+
+    var selectedCharacter: CharacterDefinition? {
+        Self.characterConfiguration.character(id: selectedCharacterID)
+            ?? Self.characterConfiguration.defaultCharacter
+    }
+
+    var selectedCharacterSkin: CharacterSkin? {
+        Self.characterConfiguration.skin(
+            id: selectedCharacterSkinID,
+            for: selectedCharacterID
+        ) ?? Self.characterConfiguration.defaultSkin(for: selectedCharacterID)
+    }
+
+    var ownedCharacterList: [OwnedCharacter] {
+        Array(ownedCharacters.values)
+    }
+
+    var characterDefinitions: [CharacterDefinition] {
+        Self.characterConfiguration.characters
+    }
+
+    func isSelectedCharacter(_ characterID: String) -> Bool {
+        selectedCharacterID == characterID
+    }
+
+    func selectCharacter(_ character: CharacterDefinition) {
+        guard ownedCharacters[character.id] != nil else { return }
+
+        selectedCharacterID = character.id
+        selectedCharacterSkinID =
+            Self.characterConfiguration.defaultSkin(for: character.id)?.id
+            ?? character.defaultSkinID
+        saveProgress()
+    }
+
+    func isSkinUnlocked(_ skin: CharacterSkin) -> Bool {
+        unlockedCharacterSkinIDs.contains(skin.id)
+    }
+
+    func isSelectedSkin(_ skin: CharacterSkin) -> Bool {
+        selectedCharacterSkinID == skin.id
+    }
+
+    func selectSkin(_ skin: CharacterSkin, for character: CharacterDefinition) {
+        guard ownedCharacters[character.id] != nil,
+            isSkinUnlocked(skin)
+        else {
+            return
         }
+
+        selectedCharacterID = character.id
+        selectedCharacterSkinID = skin.id
+        saveProgress()
+    }
+
+    var battlePower: Int {
+        manualAttackPower + companionAttackPower
+    }
+
+    private var manualAttackPower: Int {
+        let heroPower =
+            if let character = selectedCharacter,
+                let ownedCharacter = ownedCharacters[character.id]
+            {
+                Self.scaledPower(
+                    base: character.baseTapDamage,
+                    level: ownedCharacter.stars
+                )
+            } else {
+                Self.defaultHeroBasePower
+            }
         let artifactPower = ownedArtifacts.values.reduce(0) {
             $0 + Self.scaledPower(base: $1.damageBonus, level: $1.level)
         }
@@ -66,12 +174,53 @@ final class GameProgressStore {
             $0 + Self.scaledPower(base: $1.damageBonus, level: $1.level)
         }
         let accountPower = max(accountLevel - 1, 0) * 2
-        let prestigePower = prestigeCount * 5
+        let prestigePower = prestigeCount * 4
+        let rawPower =
+            heroPower + artifactPower + itemPower
+            + accountPower + prestigePower
         return max(
             1,
-            spritePower + artifactPower + itemPower + accountPower
-                + prestigePower
+            Int((Double(rawPower) * (1.0 + skillBonus(for: .damage)))
+                .rounded())
         )
+    }
+
+    private var companionAttackPower: Int {
+        ownedSprites.values
+            .reduce(0) {
+            let basePower =
+                Self.companionConfiguration.companion(
+                    spriteIndex: $1.spriteIndex
+                )?.baseDPS ?? Self.rarityPower($1.rarity)
+            return $0
+                + Self.scaledPower(
+                    base: basePower,
+                    level: $1.stars
+                )
+        }
+    }
+
+    var tapDamage: Int {
+        let multiplier = 0.45 + skillBonus(for: .tapDamage)
+        return max(1, Int((Double(manualAttackPower) * multiplier).rounded()))
+    }
+
+    var spriteDamage: Int {
+        guard companionAttackPower > 0 else { return 0 }
+
+        let multiplier = 1.0 + skillBonus(for: .spriteDamage)
+        let prestigeMultiplier = 1.0 + Double(prestigeCount) * 0.12
+        return max(
+            1,
+            Int((Double(companionAttackPower) * multiplier * prestigeMultiplier)
+                .rounded())
+        )
+    }
+
+    var spriteAttackInterval: Duration {
+        let speedBonus = min(skillBonus(for: .attackSpeed), 0.65)
+        let seconds = max(0.45, 1.45 * (1.0 - speedBonus))
+        return .milliseconds(Int(seconds * 1000))
     }
 
     var hasPendingRewards: Bool {
@@ -98,29 +247,47 @@ final class GameProgressStore {
         stage >= 20
     }
 
-    func attackStage() {
-        stageHP = max(stageHP - battlePower, 0)
+    @discardableResult
+    func attackStage(damage: Int? = nil) -> BattleAttackResult {
+        let damageValue = max(damage ?? tapDamage, 1)
+        let damageDealt = min(stageHP, damageValue)
+        stageHP = max(stageHP - damageValue, 0)
 
         if stageHP == 0 {
-            advanceStage()
+            let rewards = advanceStage()
+            return BattleAttackResult(
+                damageDealt: damageDealt,
+                coinsAwarded: rewards.coins,
+                crystalsAwarded: rewards.crystals
+            )
         } else {
             saveProgress()
+            return BattleAttackResult(damageDealt: damageDealt)
         }
     }
 
-    private func advanceStage() {
+    private func advanceStage() -> StageRewards {
         let nextStage = stage + 1
+        let earnedCoins = Int(
+            (Double(25 + nextStage * 3)
+                * (1.0 + skillBonus(for: .coinDrop))).rounded()
+        )
+        let earnedCrystals =
+            nextStage.isMultiple(of: 10)
+            ? 1 + nextStage / 50
+            : 0
+
         stage = nextStage
-        coins += 25 + nextStage * 3
+        coins += earnedCoins
         addAccountXP(12 + nextStage * 2)
         maxStageHP = Self.maxHP(for: nextStage, accountLevel: accountLevel)
         stageHP = maxStageHP
 
-        if nextStage.isMultiple(of: 10) {
-            crystals += 1 + nextStage / 50
-        }
+        crystals += earnedCrystals
+        addPassPoints(nextStage.isMultiple(of: 10) ? 30 : 10)
 
         saveProgress()
+        return StageRewards(coins: earnedCoins, crystals: earnedCrystals)
     }
 
     func remainingRuns(for event: GameEvent) -> Int {
@@ -171,6 +338,7 @@ final class GameProgressStore {
         coins += event.rewards.coins
         crystals += event.rewards.crystals
         artifactShards += event.rewards.relics
+        addPassPoints(14)
         saveProgress()
         return true
     }
@@ -280,6 +448,92 @@ final class GameProgressStore {
         }
     }
 
+    func passPoints(for pass: BattlePassDefinition) -> Int {
+        passPointsByID[pass.id, default: 0]
+    }
+
+    func isPremiumPassUnlocked(_ pass: BattlePassDefinition) -> Bool {
+        pass.productID == nil || premiumPassIDs.contains(pass.id)
+    }
+
+    func isPassRewardUnlocked(
+        _ reward: BattlePassReward,
+        in pass: BattlePassDefinition
+    ) -> Bool {
+        passPoints(for: pass) >= reward.requiredPoints
+            && (!reward.premium || isPremiumPassUnlocked(pass))
+    }
+
+    func isPassRewardClaimed(
+        _ reward: BattlePassReward,
+        in pass: BattlePassDefinition
+    ) -> Bool {
+        claimedPassRewardIDs.contains(passRewardKey(reward, in: pass))
+    }
+
+    func canClaimPassReward(
+        _ reward: BattlePassReward,
+        in pass: BattlePassDefinition
+    ) -> Bool {
+        isPassRewardUnlocked(reward, in: pass)
+            && !isPassRewardClaimed(reward, in: pass)
+    }
+
+    @discardableResult
+    func claimPassReward(
+        _ reward: BattlePassReward,
+        in pass: BattlePassDefinition
+    ) -> Bool {
+        guard canClaimPassReward(reward, in: pass) else { return false }
+
+        for amount in reward.rewards {
+            change(amount.resource, by: amount.amount)
+        }
+
+        claimedPassRewardIDs.insert(passRewardKey(reward, in: pass))
+        saveProgress()
+        return true
+    }
+
+    func unlockPremiumPass(_ pass: BattlePassDefinition) {
+        premiumPassIDs.insert(pass.id)
+        saveProgress()
+    }
+
+    func addPurchasedCrystals(_ amount: Int) {
+        crystals += max(amount, 0)
+        saveProgress()
+    }
+
+    func unlockPurchasedCharacterPack(_ pack: CharacterPack) {
+        for characterID in pack.characterIDs {
+            unlockCharacter(characterID)
+        }
+
+        for skinID in pack.skinIDs {
+            unlockSkin(skinID)
+        }
+
+        for reward in pack.rewards {
+            change(reward.resource, by: reward.amount)
+        }
+
+        if pack.bonusCrystals > 0 {
+            crystals += pack.bonusCrystals
+        }
+
+        if pack.purchaseType == .nonConsumable {
+            purchasedShopProductIDs.insert(pack.productID)
+        }
+
+        normalizeSelectedCharacterIfNeeded()
+        saveProgress()
+    }
+
+    func isPurchasedShopProduct(_ productID: String) -> Bool {
+        purchasedShopProductIDs.contains(productID)
+    }
+
     func canApplyTradeOffer(_ offer: TradeOffer) -> Bool {
         offer.costs.allSatisfy { amount(for: $0.resource) >= $0.amount }
     }
@@ -303,13 +557,36 @@ final class GameProgressStore {
     func prestige() {
         guard canPrestige else { return }
 
-        let earnedShards = max(1, stage / 10)
+        let earnedShards = max(
+            1,
+            Int((Double(stage / 10)
+                * (1.0 + skillBonus(for: .prestigeRelics))).rounded())
+        )
         prestigeCount += 1
         artifactShards += earnedShards
-        stage = 0
+        stage = 1
         maxStageHP = Self.maxHP(for: stage, accountLevel: accountLevel)
         stageHP = maxStageHP
         saveProgress()
+    }
+
+    func skillLevel(for skill: SkillNode) -> Int {
+        ownedSkillLevels[skill.id, default: 0]
+    }
+
+    func canUpgradeSkill(_ skill: SkillNode) -> Bool {
+        skillLevel(for: skill) < skill.maxLevel
+            && artifactShards >= skill.cost
+    }
+
+    @discardableResult
+    func upgradeSkill(_ skill: SkillNode) -> Bool {
+        guard canUpgradeSkill(skill) else { return false }
+
+        artifactShards -= skill.cost
+        ownedSkillLevels[skill.id, default: 0] += 1
+        saveProgress()
+        return true
     }
 
     @discardableResult
@@ -418,14 +695,49 @@ final class GameProgressStore {
     {
         switch kind {
         case .sprite:
+            if let characterID = entry.characterID {
+                let character =
+                    Self.characterConfiguration.character(id: characterID)
+                let oldStars = ownedCharacters[characterID]?.stars ?? 0
+                let newStars = oldStars + 1
+                let imageName =
+                    character?.skins.first { $0.id == entry.skinID }?.imageName
+                    ?? character?.skins.first?.imageName
+                    ?? entry.imageName
+                ownedCharacters[characterID] = OwnedCharacter(
+                    characterID: characterID,
+                    name: character?.name ?? entry.name,
+                    imageName: imageName,
+                    rarity: character?.rarity ?? entry.rarity,
+                    stars: newStars
+                )
+
+                if let skinID = entry.skinID {
+                    unlockedCharacterSkinIDs.insert(skinID)
+                }
+
+                return SummonResult(
+                    entry: entry,
+                    kind: kind,
+                    isDuplicate: oldStars > 0,
+                    level: newStars
+                )
+            }
+
             let spriteIndex = entry.spriteIndex ?? 0
+            let companion =
+                entry.companionID.flatMap {
+                    Self.companionConfiguration.companion(id: $0)
+                } ?? Self.companionConfiguration.companion(
+                    spriteIndex: spriteIndex
+                )
             let oldStars = ownedSprites[spriteIndex]?.stars ?? 0
             let newStars = oldStars + 1
             ownedSprites[spriteIndex] = OwnedSprite(
                 spriteIndex: spriteIndex,
-                name: entry.name,
-                imageName: entry.imageName,
-                rarity: entry.rarity,
+                name: companion?.name ?? entry.name,
+                imageName: companion?.imageName ?? entry.imageName,
+                rarity: companion?.rarity ?? entry.rarity,
                 stars: newStars
             )
             return SummonResult(
@@ -500,6 +812,53 @@ final class GameProgressStore {
         }
     }
 
+    private func addPassPoints(_ amount: Int) {
+        let points = max(amount, 0)
+        guard points > 0 else { return }
+
+        let passes =
+            (try? PassConfiguration.load().passes)
+            ?? Self.passConfiguration.passes
+
+        for pass in passes {
+            passPointsByID[pass.id, default: 0] += points
+        }
+    }
+
+    private func unlockCharacter(_ characterID: String) {
+        guard let character = Self.characterConfiguration.character(id: characterID)
+        else { return }
+
+        let currentStars = ownedCharacters[characterID]?.stars ?? 0
+        let skin =
+            Self.characterConfiguration.defaultSkin(for: characterID)
+            ?? character.skins.first
+        ownedCharacters[characterID] = OwnedCharacter(
+            characterID: characterID,
+            name: character.name,
+            imageName: skin?.imageName ?? "icon_nimpi",
+            rarity: character.rarity,
+            stars: max(currentStars, 1)
+        )
+        unlockedCharacterSkinIDs.insert(character.defaultSkinID)
+    }
+
+    private func unlockSkin(_ skinID: String) {
+        for character in Self.characterConfiguration.characters
+        where character.skins.contains(where: { $0.id == skinID }) {
+            unlockCharacter(character.id)
+            unlockedCharacterSkinIDs.insert(skinID)
+            return
+        }
+    }
+
+    private func passRewardKey(
+        _ reward: BattlePassReward,
+        in pass: BattlePassDefinition
+    ) -> String {
+        "\(pass.id)::\(reward.id)"
+    }
+
     private func clearLastSummonResults() {
         lastSummonResults = []
         lastArtifactSummonResults = []
@@ -563,6 +922,11 @@ final class GameProgressStore {
         claimedGiftIDs = Set(snapshot.claimedGiftIDs)
         lastDailyLoginClaimDay = snapshot.lastDailyLoginClaimDay
         selectedProfileIconImageName = snapshot.selectedProfileIconImageName
+        ownedSkillLevels = snapshot.ownedSkillLevels
+        passPointsByID = snapshot.passPointsByID
+        claimedPassRewardIDs = Set(snapshot.claimedPassRewardIDs)
+        premiumPassIDs = Set(snapshot.premiumPassIDs)
+        purchasedShopProductIDs = Set(snapshot.purchasedShopProductIDs)
         lastIdleRewardUpdate = Date(
             timeIntervalSince1970: snapshot.lastIdleRewardUpdate
         )
@@ -571,6 +935,14 @@ final class GameProgressStore {
                 ($0.spriteIndex, $0)
             }
         )
+        ownedCharacters = Dictionary(
+            uniqueKeysWithValues: snapshot.ownedCharacters.map {
+                ($0.characterID, $0)
+            }
+        )
+        unlockedCharacterSkinIDs = Set(snapshot.unlockedCharacterSkinIDs)
+        selectedCharacterID = snapshot.selectedCharacterID
+        selectedCharacterSkinID = snapshot.selectedCharacterSkinID
         ownedArtifacts = Dictionary(
             uniqueKeysWithValues: snapshot.ownedArtifacts.map {
                 ($0.artifactID, $0)
@@ -597,6 +969,8 @@ final class GameProgressStore {
             pendingCoins: pendingCoins,
             pendingCrystals: pendingCrystals,
             ownedSprites: Array(ownedSprites.values),
+            ownedCharacters: Array(ownedCharacters.values),
+            unlockedCharacterSkinIDs: Array(unlockedCharacterSkinIDs),
             ownedArtifacts: Array(ownedArtifacts.values),
             ownedItems: Array(ownedItems.values),
             eventCurrencies: eventCurrencies,
@@ -604,6 +978,13 @@ final class GameProgressStore {
             claimedGiftIDs: Array(claimedGiftIDs),
             lastDailyLoginClaimDay: lastDailyLoginClaimDay,
             selectedProfileIconImageName: selectedProfileIconImageName,
+            selectedCharacterID: selectedCharacterID,
+            selectedCharacterSkinID: selectedCharacterSkinID,
+            ownedSkillLevels: ownedSkillLevels,
+            passPointsByID: passPointsByID,
+            claimedPassRewardIDs: Array(claimedPassRewardIDs),
+            premiumPassIDs: Array(premiumPassIDs),
+            purchasedShopProductIDs: Array(purchasedShopProductIDs),
             lastIdleRewardUpdate: lastIdleRewardUpdate.timeIntervalSince1970
         )
 
@@ -611,16 +992,76 @@ final class GameProgressStore {
         UserDefaults.standard.set(data, forKey: Self.saveKey)
     }
 
-    private func unlockStarterIfNeeded() {
-        guard ownedSprites[0] == nil else { return }
+    private func removeOldStarterCompanionIfNeeded() {
+        guard ownedSprites.count == 1,
+            let starter = ownedSprites[0],
+            starter.name == "Cookieman",
+            starter.imageName == "sprite_cookieman",
+            starter.stars == 1
+        else {
+            return
+        }
 
-        ownedSprites[0] = OwnedSprite(
-            spriteIndex: 0,
-            name: "Cookieman",
-            imageName: "sprite_cookieman",
-            rarity: .common,
-            stars: 1
+        ownedSprites.removeValue(forKey: 0)
+        saveProgress()
+    }
+
+    private func unlockDefaultCharacterIfNeeded() {
+        guard ownedCharacters[Self.defaultCharacterID] == nil else { return }
+
+        let character = Self.characterConfiguration.defaultCharacter
+        ownedCharacters[character?.id ?? Self.defaultCharacterID] =
+            OwnedCharacter(
+                characterID: character?.id ?? Self.defaultCharacterID,
+                name: character?.name ?? "Nimbi",
+                imageName: character?.skins.first?.imageName ?? "icon_nimpi",
+                rarity: character?.rarity ?? .legendary,
+                stars: 1
+            )
+        unlockedCharacterSkinIDs.insert(
+            character?.defaultSkinID ?? Self.defaultCharacterSkinID
         )
+        saveProgress()
+    }
+
+    private func normalizeSelectedCharacterIfNeeded() {
+        let fallbackCharacter =
+            Self.characterConfiguration.defaultCharacter?.id
+            ?? Self.defaultCharacterID
+        let fallbackSkin =
+            Self.characterConfiguration.defaultSkin(for: fallbackCharacter)?.id
+            ?? Self.defaultCharacterSkinID
+
+        if ownedCharacters[selectedCharacterID] == nil {
+            selectedCharacterID = fallbackCharacter
+        }
+
+        if !unlockedCharacterSkinIDs.contains(selectedCharacterSkinID)
+            || Self.characterConfiguration.skin(
+                id: selectedCharacterSkinID,
+                for: selectedCharacterID
+            ) == nil
+        {
+            selectedCharacterSkinID = fallbackSkin
+        }
+
+        saveProgress()
+    }
+
+    private func normalizeProfileIconSelectionIfNeeded() {
+        let availableIconNames =
+            (try? ProfileIconConfiguration.load().icons.map(\.imageName)) ?? []
+        let fallbackIconName =
+            availableIconNames.first ?? Self.defaultProfileIconImageName
+        let usesOldSpriteSheetDefault =
+            selectedProfileIconImageName == Self.oldDefaultProfileIconImageName
+        let usesMissingIcon =
+            !availableIconNames.isEmpty
+            && !availableIconNames.contains(selectedProfileIconImageName)
+
+        guard usesOldSpriteSheetDefault || usesMissingIcon else { return }
+
+        selectedProfileIconImageName = fallbackIconName
         saveProgress()
     }
 
@@ -686,6 +1127,20 @@ final class GameProgressStore {
         return max(base, Int((Double(max(base, 1)) * multiplier).rounded()))
     }
 
+    private func skillBonus(for effect: SkillEffect) -> Double {
+        ownedSkillLevels.reduce(0) { total, entry in
+            guard
+                let skill = Self.skillConfiguration.skills.first(
+                    where: { $0.id == entry.key && $0.effect == effect }
+                )
+            else {
+                return total
+            }
+
+            return total + Double(entry.value) * skill.valuePerLevel
+        }
+    }
+
     private static func todayKey() -> String {
         let components = Calendar.current.dateComponents(
             [.year, .month, .day],
@@ -708,6 +1163,8 @@ final class GameProgressStore {
         let pendingCoins: Int
         let pendingCrystals: Int
         let ownedSprites: [OwnedSprite]
+        let ownedCharacters: [OwnedCharacter]
+        let unlockedCharacterSkinIDs: [String]
         let ownedArtifacts: [OwnedArtifact]
         let ownedItems: [OwnedItem]
         let eventCurrencies: [String: Int]
@@ -715,6 +1172,13 @@ final class GameProgressStore {
         let claimedGiftIDs: [String]
         let lastDailyLoginClaimDay: String
         let selectedProfileIconImageName: String
+        let selectedCharacterID: String
+        let selectedCharacterSkinID: String
+        let ownedSkillLevels: [String: Int]
+        let passPointsByID: [String: Int]
+        let claimedPassRewardIDs: [String]
+        let premiumPassIDs: [String]
+        let purchasedShopProductIDs: [String]
         let lastIdleRewardUpdate: TimeInterval
 
         init(
@@ -730,6 +1194,8 @@ final class GameProgressStore {
             pendingCoins: Int,
             pendingCrystals: Int,
             ownedSprites: [OwnedSprite],
+            ownedCharacters: [OwnedCharacter],
+            unlockedCharacterSkinIDs: [String],
             ownedArtifacts: [OwnedArtifact],
             ownedItems: [OwnedItem],
             eventCurrencies: [String: Int],
@@ -737,6 +1203,13 @@ final class GameProgressStore {
             claimedGiftIDs: [String],
             lastDailyLoginClaimDay: String,
             selectedProfileIconImageName: String,
+            selectedCharacterID: String,
+            selectedCharacterSkinID: String,
+            ownedSkillLevels: [String: Int],
+            passPointsByID: [String: Int],
+            claimedPassRewardIDs: [String],
+            premiumPassIDs: [String],
+            purchasedShopProductIDs: [String],
             lastIdleRewardUpdate: TimeInterval
         ) {
             self.stage = stage
@@ -751,6 +1224,8 @@ final class GameProgressStore {
             self.pendingCoins = pendingCoins
             self.pendingCrystals = pendingCrystals
             self.ownedSprites = ownedSprites
+            self.ownedCharacters = ownedCharacters
+            self.unlockedCharacterSkinIDs = unlockedCharacterSkinIDs
             self.ownedArtifacts = ownedArtifacts
             self.ownedItems = ownedItems
             self.eventCurrencies = eventCurrencies
@@ -758,6 +1233,13 @@ final class GameProgressStore {
             self.claimedGiftIDs = claimedGiftIDs
             self.lastDailyLoginClaimDay = lastDailyLoginClaimDay
             self.selectedProfileIconImageName = selectedProfileIconImageName
+            self.selectedCharacterID = selectedCharacterID
+            self.selectedCharacterSkinID = selectedCharacterSkinID
+            self.ownedSkillLevels = ownedSkillLevels
+            self.passPointsByID = passPointsByID
+            self.claimedPassRewardIDs = claimedPassRewardIDs
+            self.premiumPassIDs = premiumPassIDs
+            self.purchasedShopProductIDs = purchasedShopProductIDs
             self.lastIdleRewardUpdate = lastIdleRewardUpdate
         }
 
@@ -800,6 +1282,16 @@ final class GameProgressStore {
                     [OwnedSprite].self,
                     forKey: .ownedSprites
                 ) ?? []
+            ownedCharacters =
+                try container.decodeIfPresent(
+                    [OwnedCharacter].self,
+                    forKey: .ownedCharacters
+                ) ?? []
+            unlockedCharacterSkinIDs =
+                try container.decodeIfPresent(
+                    [String].self,
+                    forKey: .unlockedCharacterSkinIDs
+                ) ?? []
             ownedArtifacts =
                 try container.decodeIfPresent(
                     [OwnedArtifact].self,
@@ -834,7 +1326,42 @@ final class GameProgressStore {
                 try container.decodeIfPresent(
                     String.self,
                     forKey: .selectedProfileIconImageName
-                ) ?? "sprite_cookieman"
+                ) ?? GameProgressStore.defaultProfileIconImageName
+            selectedCharacterID =
+                try container.decodeIfPresent(
+                    String.self,
+                    forKey: .selectedCharacterID
+                ) ?? GameProgressStore.defaultCharacterID
+            selectedCharacterSkinID =
+                try container.decodeIfPresent(
+                    String.self,
+                    forKey: .selectedCharacterSkinID
+                ) ?? GameProgressStore.defaultCharacterSkinID
+            ownedSkillLevels =
+                try container.decodeIfPresent(
+                    [String: Int].self,
+                    forKey: .ownedSkillLevels
+                ) ?? [:]
+            passPointsByID =
+                try container.decodeIfPresent(
+                    [String: Int].self,
+                    forKey: .passPointsByID
+                ) ?? [:]
+            claimedPassRewardIDs =
+                try container.decodeIfPresent(
+                    [String].self,
+                    forKey: .claimedPassRewardIDs
+                ) ?? []
+            premiumPassIDs =
+                try container.decodeIfPresent(
+                    [String].self,
+                    forKey: .premiumPassIDs
+                ) ?? []
+            purchasedShopProductIDs =
+                try container.decodeIfPresent(
+                    [String].self,
+                    forKey: .purchasedShopProductIDs
+                ) ?? []
             lastIdleRewardUpdate =
                 try container.decodeIfPresent(
                     TimeInterval.self,
@@ -852,6 +1379,27 @@ struct OwnedSprite: Identifiable, Codable {
     let imageName: String
     let rarity: SpriteRarity
     let stars: Int
+}
+
+struct OwnedCharacter: Identifiable, Codable {
+    var id: String { characterID }
+
+    let characterID: String
+    let name: String
+    let imageName: String
+    let rarity: SpriteRarity
+    let stars: Int
+}
+
+struct BattleAttackResult {
+    let damageDealt: Int
+    var coinsAwarded = 0
+    var crystalsAwarded = 0
+}
+
+private struct StageRewards {
+    let coins: Int
+    let crystals: Int
 }
 
 struct SummonResult: Identifiable {

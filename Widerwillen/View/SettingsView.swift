@@ -5,6 +5,7 @@ struct SettingsView: View {
     @AppStorage("isMusicEnabled") private var isMusicEnabled = true
     @AppStorage("isLayerAnimationEnabled") private var isLayerAnimationEnabled =
         true
+    @AppStorage("remoteContentVersion") private var remoteContentVersion = 0
 
     private let appInfo = AppInfo.current
 
@@ -37,6 +38,7 @@ struct SettingsView: View {
                         infoRow(title: "App", value: appInfo.name)
                         infoRow(title: "Version", value: appInfo.version)
                         infoRow(title: "Build", value: appInfo.build)
+                        infoRow(title: "Content", value: contentVersionTitle)
                         infoRow(
                             title: "Bundle",
                             value: appInfo.bundleIdentifier
@@ -108,10 +110,7 @@ struct SettingsView: View {
         .frame(maxWidth: .infinity)
         .frame(minHeight: 68)
         .background {
-            Image("bg")
-                .resizable()
-                .interpolation(.none)
-                .scaledToFill()
+            RemoteImage(name: "bg_app", contentMode: .fill)
                 .opacity(0.72)
                 .allowsHitTesting(false)
         }
@@ -151,14 +150,17 @@ struct SettingsView: View {
         .frame(maxWidth: .infinity)
         .frame(minHeight: 52)
         .background {
-            Image("bg")
-                .resizable()
-                .interpolation(.none)
-                .scaledToFill()
+            RemoteImage(name: "bg_app", contentMode: .fill)
                 .opacity(0.56)
                 .allowsHitTesting(false)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var contentVersionTitle: String {
+        remoteContentVersion > 0
+            ? "Remote v\(remoteContentVersion)"
+            : "Bundle"
     }
 }
 

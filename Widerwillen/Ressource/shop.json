@@ -1,0 +1,99 @@
+{
+    "categories": [
+        {
+            "id": "passes",
+            "title": "Pass",
+            "imageName": "icon_pixel_relic"
+        },
+        {
+            "id": "crystals",
+            "title": "Crystals",
+            "imageName": "icon_pixel_crystal"
+        },
+        {
+            "id": "special",
+            "title": "Special",
+            "imageName": "icon_pixel_box"
+        },
+        {
+            "id": "skins",
+            "title": "Skins",
+            "imageName": "icon_pixel_sprite"
+        }
+    ],
+    "crystalPacks": [
+        {
+            "id": "crystals_100",
+            "category": "crystals",
+            "purchaseType": "consumable",
+            "productID": "com.tufancakir.widerwillen.crystals.100",
+            "title": "100 Crystals",
+            "subtitle": "Small pack",
+            "crystalAmount": 100,
+            "bonusCrystals": 0,
+            "imageName": "icon_pixel_crystal",
+            "limitedUntil": null
+        },
+        {
+            "id": "crystals_550",
+            "category": "crystals",
+            "purchaseType": "consumable",
+            "productID": "com.tufancakir.widerwillen.crystals.550",
+            "title": "500 + Bonus",
+            "subtitle": "10% bonus",
+            "crystalAmount": 500,
+            "bonusCrystals": 50,
+            "imageName": "icon_pixel_crystal",
+            "limitedUntil": null
+        },
+        {
+            "id": "crystals_1200",
+            "category": "special",
+            "purchaseType": "consumable",
+            "productID": "com.tufancakir.widerwillen.crystals.1200",
+            "title": "1000 + Bonus",
+            "subtitle": "Special value",
+            "crystalAmount": 1000,
+            "bonusCrystals": 200,
+            "imageName": "icon_pixel_crystal",
+            "limitedUntil": "31.08.2026"
+        },
+        {
+            "id": "crystals_2600",
+            "category": "special",
+            "purchaseType": "consumable",
+            "productID": "com.tufancakir.widerwillen.crystals.2600",
+            "title": "2000 + Bonus",
+            "subtitle": "Best value",
+            "crystalAmount": 2000,
+            "bonusCrystals": 600,
+            "imageName": "icon_pixel_crystal",
+            "limitedUntil": "31.08.2026"
+        }
+    ],
+    "characterPacks": [
+        {
+            "id": "nimbi_night_skin_pack",
+            "category": "skins",
+            "purchaseType": "nonConsumable",
+            "productID": "com.tufancakir.widerwillen.skin.nimbi_night",
+            "title": "Nimbi Night Skin",
+            "subtitle": "Unlocks Night Skin for Nimbi",
+            "imageName": "icon_nimbi_night",
+            "characterIDs": [
+                "nimbi"
+            ],
+            "skinIDs": [
+                "nimbi_night_skin"
+            ],
+            "bonusCrystals": 25,
+            "rewards": [
+                {
+                    "resource": "coins",
+                    "amount": 500
+                }
+            ],
+            "limitedUntil": null
+        }
+    ]
+}

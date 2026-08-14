@@ -2,10 +2,10 @@
     "banners": [
         {
             "id": "moon_beast_starter",
-            "title": "Moon Beast Gate",
+            "title": "Widerwillen Gate",
             "category": "Sprites",
             "kind": "sprite",
-            "bannerImageName": "sprite_cookieman",
+            "bannerImageName": "icon_cookieman",
             "currencyImageName": "icon_pixel_crystal",
             "singleCost": 8,
             "multiCost": 70,
@@ -15,16 +15,18 @@
                     "id": "cookieman_front",
                     "name": "Cookieman",
                     "spriteIndex": 0,
-                    "imageName": "sprite_cookieman",
+                    "companionID": "cookieman",
+                    "imageName": "icon_cookieman",
                     "rarity": "common",
                     "damageBonus": 1,
-                    "weight": 60
+                    "weight": 50
                 },
                 {
                     "id": "klempi_front",
                     "name": "Klempi",
                     "spriteIndex": 1,
-                    "imageName": "sprite_klempi",
+                    "companionID": "klempi",
+                    "imageName": "icon_klempi",
                     "rarity": "rare",
                     "damageBonus": 3,
                     "weight": 30
@@ -33,10 +35,32 @@
                     "id": "dompi_front",
                     "name": "Dompi",
                     "spriteIndex": 2,
-                    "imageName": "sprite_dompi",
+                    "companionID": "dompi",
+                    "imageName": "icon_dompi",
                     "rarity": "epic",
                     "damageBonus": 8,
                     "weight": 10
+                },
+                {
+                    "id": "nimbi_front",
+                    "name": "Nimbi",
+                    "spriteIndex": 22,
+                    "characterID": "nimbi",
+                    "skinID": "nimbi_default",
+                    "imageName": "icon_nimpi",
+                    "rarity": "legendary",
+                    "damageBonus": 18,
+                    "weight": 0.5
+                },
+                {
+                    "id": "blunt_front",
+                    "name": "Blunt",
+                    "spriteIndex": 21,
+                    "companionID": "blunt",
+                    "imageName": "sprite_blunt",
+                    "rarity": "legendary",
+                    "damageBonus": 18,
+                    "weight": 0.5
                 }
             ]
         },
@@ -57,7 +81,7 @@
                     "imageName": "icon_pixel_relic",
                     "rarity": "common",
                     "damageBonus": 2,
-                    "weight": 55
+                    "weight": 50
                 },
                 {
                     "id": "void_core",
@@ -65,15 +89,23 @@
                     "imageName": "icon_pixel_crystal",
                     "rarity": "rare",
                     "damageBonus": 5,
-                    "weight": 32
+                    "weight": 30
                 },
                 {
-                    "id": "slayken_crown",
-                    "name": "Slayken Crown",
-                    "imageName": "moon_beast_logo",
+                    "id": "crystal_crown",
+                    "name": "Crystal Crown",
+                    "imageName": "icon_pixel_crystal",
+                    "rarity": "epic",
+                    "damageBonus": 10,
+                    "weight": 10
+                },
+                {
+                    "id": "yellow_crown",
+                    "name": "Yellow Crown",
+                    "imageName": "icon_pixel_coin",
                     "rarity": "legendary",
                     "damageBonus": 18,
-                    "weight": 13
+                    "weight": 1
                 }
             ]
         },
@@ -94,7 +126,7 @@
                     "imageName": "icon_pixel_sword",
                     "rarity": "common",
                     "damageBonus": 2,
-                    "weight": 58
+                    "weight": 50
                 },
                 {
                     "id": "moon_blade",
@@ -102,7 +134,7 @@
                     "imageName": "icon_pixel_sword",
                     "rarity": "rare",
                     "damageBonus": 6,
-                    "weight": 31
+                    "weight": 30
                 },
                 {
                     "id": "slayken_edge",
@@ -110,7 +142,15 @@
                     "imageName": "icon_pixel_sword",
                     "rarity": "epic",
                     "damageBonus": 14,
-                    "weight": 11
+                    "weight": 10
+                },
+                {
+                    "id": "widerwillen_edge",
+                    "name": "Widerwillen Edge",
+                    "imageName": "icon_pixel_sword",
+                    "rarity": "legendary",
+                    "damageBonus": 26,
+                    "weight": 1
                 }
             ]
         }

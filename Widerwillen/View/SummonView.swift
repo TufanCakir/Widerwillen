@@ -15,6 +15,8 @@ struct SummonView: View {
     @State private var selectedCategory = ""
     @State private var ratesBanner: SummonBanner?
     @State private var pendingSummon: PendingSummon?
+    @State private var resultScreenResults: [SummonResult] = []
+    @State private var isShowingResultScreen = false
     @State private var message = ""
 
     init(
@@ -44,9 +46,6 @@ struct SummonView: View {
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-
-                resultList
-                    .frame(maxHeight: 180)
             }
 
             if let ratesBanner {
@@ -59,6 +58,11 @@ struct SummonView: View {
 
             if !message.isEmpty {
                 messageOverlay
+            }
+        }
+        .fullScreenCover(isPresented: $isShowingResultScreen) {
+            SummonResultView(results: resultScreenResults) {
+                isShowingResultScreen = false
             }
         }
     }
@@ -157,11 +161,10 @@ struct SummonView: View {
                 .buttonStyle(.plain)
             }
 
-            Image(banner.bannerImageName)
-                .resizable()
-                .interpolation(.none)
-                .scaledToFit()
+            RemoteImage(name: banner.bannerImageName)
+                .frame(maxWidth: .infinity)
                 .frame(height: 118)
+                .clipped()
                 .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
 
             Text(banner.title)
@@ -215,10 +218,7 @@ struct SummonView: View {
                         y: 0
                     )
 
-                Image(imageName)
-                    .resizable()
-                    .interpolation(.none)
-                    .scaledToFit()
+                RemoteImage(name: imageName)
                     .frame(width: 16, height: 16)
 
                 Text("\(cost)")
@@ -234,83 +234,12 @@ struct SummonView: View {
             .frame(maxWidth: .infinity)
             .padding()
             .background {
-                Image("icon_pixel_menü")
-                    .resizable()
-                    .interpolation(.none)
-                    .scaledToFill()
+                RemoteImage(name: "icon_pixel_menü", contentMode: .fill)
             }
             .clipShape(Capsule())
             .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
         }
         .buttonStyle(.plain)
-    }
-
-    private var resultList: some View {
-        ScrollView {
-            VStack(spacing: 8) {
-                ForEach(progress.lastSummonResults) { result in
-                    resultRow(
-                        imageName: result.entry.imageName,
-                        name: result.entry.name,
-                        detail: result.isDuplicate
-                            ? "Duplicate  Lv \(result.level)" : "New  Lv 1",
-                        rarity: result.entry.rarity
-                    )
-                }
-            }
-            .padding(.horizontal, 16)
-        }
-    }
-
-    private func resultRow(
-        imageName: String,
-        name: String,
-        detail: String,
-        rarity: SpriteRarity
-    ) -> some View {
-        HStack(spacing: 10) {
-            Image(imageName)
-                .resizable()
-                .interpolation(.none)
-                .scaledToFit()
-                .frame(width: 38, height: 38)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(name)
-                    .font(.system(size: 14, weight: .heavy))
-                    .shadow(
-                        color: .black.opacity(0.9),
-                        radius: 3,
-                        x: 0,
-                        y: 0
-                    )
-
-                Text(detail)
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundStyle(.white.opacity(0.75))
-                    .shadow(
-                        color: .black.opacity(0.9),
-                        radius: 3,
-                        x: 0,
-                        y: 0
-                    )
-            }
-
-            Spacer()
-
-            Text(rarity.title)
-                .font(.system(size: 11, weight: .heavy))
-                .foregroundStyle(rarity.color)
-                .shadow(
-                    color: .black.opacity(0.9),
-                    radius: 3,
-                    x: 0,
-                    y: 0
-                )
-        }
-        .foregroundStyle(.white)
-        .padding(8)
-        .background(.black.opacity(0.24))
     }
 
     private func ratesOverlayView(_ banner: SummonBanner) -> some View {
@@ -343,10 +272,7 @@ struct SummonView: View {
 
                 ForEach(banner.entries) { entry in
                     HStack(spacing: 10) {
-                        Image(entry.imageName)
-                            .resizable()
-                            .interpolation(.none)
-                            .scaledToFit()
+                        RemoteImage(name: entry.imageName)
                             .frame(width: 28, height: 28)
 
                         Text(entry.name)
@@ -457,7 +383,15 @@ struct SummonView: View {
         }
 
         pendingSummon = nil
-        message = didSummon ? "Summoned" : "Not enough currency"
+
+        if didSummon {
+            resultScreenResults = progress.lastSummonResults
+            isShowingResultScreen = true
+            message = ""
+            return
+        }
+
+        message = "Not enough currency"
 
         Task {
             try? await Task.sleep(for: .seconds(1.4))

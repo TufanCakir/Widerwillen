@@ -1,0 +1,85 @@
+{
+    "passes": [
+        {
+            "id": "moon_pass_01",
+            "title": "Moon Pass",
+            "season": "Season 1",
+            "category": "passes",
+            "purchaseType": "nonConsumable",
+            "pointName": "BP",
+            "productID": "com.tufancakir.widerwillen.pass.moon_01",
+            "imageName": "icon_pixel_relic",
+            "rewards": [
+                {
+                    "id": "moon_pass_01_free_001",
+                    "requiredPoints": 20,
+                    "title": "Starter Coins",
+                    "imageName": "icon_pixel_coin",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 250
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_002",
+                    "requiredPoints": 60,
+                    "title": "Crystal Drop",
+                    "imageName": "icon_pixel_crystal",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 5
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_premium_001",
+                    "requiredPoints": 100,
+                    "title": "Premium Crystals",
+                    "imageName": "icon_pixel_crystal",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 25
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_003",
+                    "requiredPoints": 160,
+                    "title": "Relic Cache",
+                    "imageName": "icon_pixel_relic",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "relics",
+                            "amount": 3
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_premium_002",
+                    "requiredPoints": 240,
+                    "title": "Premium Relics",
+                    "imageName": "icon_pixel_relic",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "relics",
+                            "amount": 12
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 15
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

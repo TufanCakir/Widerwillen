@@ -15,14 +15,10 @@ struct StartView: View {
             AppBackground()
 
             VStack(spacing: 0) {
-                Spacer(minLength: 48)
+                Spacer(minLength: 0)
 
-                Image("widerwillen_logo")
-                    .resizable()
-                    .interpolation(.none)
-                    .scaledToFit()
-                    .frame(maxWidth: 280)
-                    .shadow(color: .black.opacity(0.85), radius: 8, x: 0, y: 6)
+                RemoteImage(name: "widerwillen_font_logo1")
+                    .frame(maxWidth: 580)
 
                 Spacer(minLength: 44)
 
@@ -55,10 +51,7 @@ struct StartView: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 74)
                     .background {
-                        Image("bg")
-                            .resizable()
-                            .interpolation(.none)
-                            .scaledToFill()
+                        RemoteImage(name: "bg_app", contentMode: .fill)
                             .opacity(0.78)
                     }
                     .overlay {

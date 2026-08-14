@@ -43,10 +43,10 @@ struct MenuView: View {
                             .frame(maxWidth: .infinity)
                             .frame(height: 72)
                             .background {
-                                Image("icon_pixel_menü")
-                                    .resizable()
-                                    .interpolation(.none)
-                                    .scaledToFill()
+                                RemoteImage(
+                                    name: "icon_pixel_menü",
+                                    contentMode: .fill
+                                )
                             }
                     }
                     .buttonStyle(.plain)
@@ -75,11 +75,17 @@ struct MenuView: View {
             {
                 openMode(.settings)
             }
+            shortcutButton(title: "Skills", assetImage: "icon_pixel_relic") {
+                openMode(.skills)
+            }
             shortcutButton(title: "News", assetImage: "icon_pixel_news") {
                 openMode(.news)
             }
-            shortcutButton(title: "Giftbox", assetImage: "icon_pixel_box") {
+            shortcutButton(title: "Giftbox", assetImage: "icon_pixel_giftbox") {
                 openMode(.gift)
+            }
+            shortcutButton(title: "Warehouse", assetImage: "icon_pixel_box") {
+                openMode(.warehouse)
             }
             shortcutButton(
                 title: "Daily Login",
@@ -100,10 +106,7 @@ struct MenuView: View {
         Button(action: action) {
             VStack(spacing: 10) {
                 if let assetImage {
-                    Image(assetImage)
-                        .resizable()
-                        .interpolation(.none)
-                        .scaledToFit()
+                    RemoteImage(name: assetImage)
                         .frame(width: 32, height: 32)
                 } else if let systemImage {
                     Image(systemName: systemImage)
@@ -143,23 +146,20 @@ struct MenuView: View {
                 popupButton(
                     title: "Battle",
                     iconImage: "icon_pixel_sword",
-                    backgroundImage: "bg",
+                    backgroundImage: "bg_app",
                     mode: .battle
                 )
                 popupButton(
                     title: "Events",
                     iconImage: "icon_pixel_sword",
-                    backgroundImage: "bg",
+                    backgroundImage: "bg_app",
                     mode: .event
                 )
             }
             .padding(18)
             .frame(maxWidth: 360)
             .background {
-                Image("bg")
-                    .resizable()
-                    .interpolation(.none)
-                    .scaledToFill()
+                RemoteImage(name: "bg_app", contentMode: .fill)
                     .opacity(0.88)
                     .allowsHitTesting(false)
             }
@@ -186,10 +186,7 @@ struct MenuView: View {
             openMode(mode)
         } label: {
             HStack(spacing: 20) {
-                Image(iconImage)
-                    .resizable()
-                    .interpolation(.none)
-                    .scaledToFit()
+                RemoteImage(name: iconImage)
                     .frame(width: 34, height: 34)
 
                 Text(title)
@@ -200,10 +197,7 @@ struct MenuView: View {
             .frame(maxWidth: .infinity)
             .frame(height: 74)
             .background {
-                Image(backgroundImage)
-                    .resizable()
-                    .interpolation(.none)
-                    .scaledToFill()
+                RemoteImage(name: backgroundImage, contentMode: .fill)
                     .opacity(0.72)
             }
             .overlay {
@@ -220,9 +214,11 @@ struct MenuView: View {
 enum MenuMode {
     case battle
     case event
+    case skills
     case settings
     case news
     case gift
+    case warehouse
     case dailyLogin
 }
 

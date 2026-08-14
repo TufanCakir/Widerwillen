@@ -133,10 +133,7 @@ struct TradeView: View {
 
         return VStack(spacing: 14) {
             HStack(spacing: 14) {
-                Image(offer.imageName)
-                    .resizable()
-                    .interpolation(.none)
-                    .scaledToFit()
+                RemoteImage(name: offer.imageName)
                     .frame(width: 54, height: 54)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
 
@@ -154,10 +151,7 @@ struct TradeView: View {
 
                     HStack(spacing: 8) {
                         resourceRow(offer.costs, prefix: "-")
-                        Image("icon_pixel_trade")
-                            .resizable()
-                            .interpolation(.none)
-                            .scaledToFit()
+                        RemoteImage(name: "icon_pixel_trade")
                             .frame(width: 24, height: 24)
                         resourceRow(offer.rewards, prefix: "+")
                     }
@@ -169,10 +163,7 @@ struct TradeView: View {
             Button {
                 apply(offer)
             } label: {
-                Image(canBuy ? "icon_pixel_box" : "icon_pixel_trade")
-                    .resizable()
-                    .interpolation(.none)
-                    .scaledToFit()
+                RemoteImage(name: canBuy ? "icon_pixel_box" : "icon_pixel_trade")
                     .frame(width: 48, height: 48)
                     .opacity(canBuy ? 1 : 0.45)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)

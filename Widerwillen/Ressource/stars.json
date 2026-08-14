@@ -1,0 +1,31 @@
+{
+    "maxStars": 14,
+    "filledSystemImage": "star.fill",
+    "emptySystemImage": "star",
+    "tiers": [
+        {
+            "minStars": 1,
+            "color": {
+                "red": 1.0,
+                "green": 0.86,
+                "blue": 0.1
+            }
+        },
+        {
+            "minStars": 8,
+            "color": {
+                "red": 0.42,
+                "green": 0.9,
+                "blue": 1.0
+            }
+        },
+        {
+            "minStars": 12,
+            "color": {
+                "red": 1.0,
+                "green": 0.28,
+                "blue": 0.78
+            }
+        }
+    ]
+}

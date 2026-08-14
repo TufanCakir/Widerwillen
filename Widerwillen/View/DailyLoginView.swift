@@ -71,10 +71,7 @@ struct DailyLoginView: View {
         let canClaim = isToday && progress.canClaimDailyLogin
 
         return VStack(spacing: 10) {
-            Image(reward.imageName)
-                .resizable()
-                .interpolation(.none)
-                .scaledToFit()
+            RemoteImage(name: reward.imageName)
                 .frame(width: 54, height: 54)
 
             Text(reward.title)

@@ -1,0 +1,80 @@
+[
+    {
+        "id": "sprite_cookieman",
+        "imageName": "sprite_cookieman",
+        "columns": 4,
+        "rows": 1,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 1,
+        "fps": 8,
+        "gridColumn": 2,
+        "gridRow": 0,
+        "scale": 0.13
+    },
+    {
+        "id": "sprite_klempi",
+        "imageName": "sprite_klempi",
+        "columns": 4,
+        "rows": 1,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 3,
+        "fps": 8,
+        "gridColumn": 1,
+        "gridRow": 0,
+        "scale": 0.17
+    },
+    {
+        "id": "sprite_dompi",
+        "imageName": "sprite_dompi",
+        "columns": 4,
+        "rows": 1,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 2,
+        "fps": 8,
+        "gridColumn": 3,
+        "gridRow": 0,
+        "scale": 0.12
+    },
+    {
+        "id": "sprite_blunt",
+        "imageName": "sprite_blunt",
+        "columns": 1,
+        "rows": 1,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 1,
+        "fps": 8,
+        "gridColumn": 0,
+        "gridRow": 0,
+        "scale": 0.15
+    },
+    {
+        "id": "sprite_nimbi",
+        "imageName": "sprite_nimbi",
+        "columns": 3,
+        "rows": 1,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 3,
+        "fps": 8,
+        "gridColumn": 3,
+        "gridRow": 4,
+        "scale": 0.14
+    },
+    {
+        "id": "sprite_nimbi_night",
+        "imageName": "sprite_nimbi_night",
+        "columns": 3,
+        "rows": 1,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 3,
+        "fps": 8,
+        "gridColumn": 3,
+        "gridRow": 4,
+        "scale": 0.14
+    }
+]

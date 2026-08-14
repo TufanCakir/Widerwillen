@@ -1,0 +1,84 @@
+{
+    "skills": [
+        {
+            "id": "shadow_clone_sprite_damage",
+            "title": "Shadow Clone",
+            "category": "Shadow",
+            "imageName": "icon_pixel_sprite",
+            "effect": "spriteDamage",
+            "valuePerLevel": 0.08,
+            "cost": 2,
+            "maxLevel": 25
+        },
+        {
+            "id": "shadow_clone_speed",
+            "title": "Night Speed",
+            "category": "Shadow",
+            "imageName": "icon_pixel_sword",
+            "effect": "attackSpeed",
+            "valuePerLevel": 0.025,
+            "cost": 3,
+            "maxLevel": 20
+        },
+        {
+            "id": "burst_total_damage",
+            "title": "Burst Core",
+            "category": "Burst",
+            "imageName": "icon_pixel_crystal",
+            "effect": "damage",
+            "valuePerLevel": 0.06,
+            "cost": 2,
+            "maxLevel": 30
+        },
+        {
+            "id": "burst_coin_drop",
+            "title": "Coin Rain",
+            "category": "Burst",
+            "imageName": "icon_pixel_coin",
+            "effect": "coinDrop",
+            "valuePerLevel": 0.08,
+            "cost": 2,
+            "maxLevel": 25
+        },
+        {
+            "id": "tap_focus_damage",
+            "title": "Tap Focus",
+            "category": "Tap",
+            "imageName": "icon_pixel_sword",
+            "effect": "tapDamage",
+            "valuePerLevel": 0.10,
+            "cost": 1,
+            "maxLevel": 20
+        },
+        {
+            "id": "tap_lucky_drop",
+            "title": "Lucky Tap",
+            "category": "Tap",
+            "imageName": "icon_pixel_box",
+            "effect": "dropChance",
+            "valuePerLevel": 0.01,
+            "cost": 3,
+            "maxLevel": 15
+        },
+        {
+            "id": "prestige_relic_gain",
+            "title": "Relic Memory",
+            "category": "Prestige",
+            "imageName": "icon_pixel_relic",
+            "effect": "prestigeRelics",
+            "valuePerLevel": 0.12,
+            "cost": 4,
+            "maxLevel": 20
+        },
+        {
+            "id": "prestige_sprite_echo",
+            "title": "Sprite Echo",
+            "category": "Prestige",
+            "imageName": "icon_pixel_sprite",
+            "effect": "spriteDamage",
+            "valuePerLevel": 0.05,
+            "cost": 3,
+            "maxLevel": 30
+        }
+    ]
+}

@@ -17,10 +17,7 @@ struct AppResourceLabel: View {
 
     var body: some View {
         HStack(spacing: 6) {
-            Image(imageName)
-                .resizable()
-                .interpolation(.none)
-                .scaledToFit()
+            RemoteImage(name: imageName)
                 .frame(width: iconSize, height: iconSize)
 
             Text("\(prefix)\(value)")

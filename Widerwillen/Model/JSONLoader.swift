@@ -15,6 +15,14 @@ enum JSONLoader {
         bundle: Bundle = .main,
         decoder: JSONDecoder = JSONDecoder()
     ) throws -> T {
+        if let remoteData = RemoteContentCache.cachedJSONData(
+            named: resourceName
+        ),
+            let remoteValue = try? decoder.decode(T.self, from: remoteData)
+        {
+            return remoteValue
+        }
+
         guard
             let url = bundle.url(
                 forResource: resourceName,

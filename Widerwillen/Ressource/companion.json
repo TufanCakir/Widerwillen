@@ -1,0 +1,44 @@
+{
+    "companions": [
+        {
+            "id": "cookieman",
+            "name": "Cookieman",
+            "imageName": "icon_cookieman",
+            "animationID": "sprite_cookieman",
+            "rarity": "common",
+            "baseDPS": 6,
+            "maxStars": 14,
+            "legacySpriteIndex": 0
+        },
+        {
+            "id": "klempi",
+            "name": "Klempi",
+            "imageName": "icon_klempi",
+            "animationID": "sprite_klempi",
+            "rarity": "rare",
+            "baseDPS": 14,
+            "maxStars": 14,
+            "legacySpriteIndex": 1
+        },
+        {
+            "id": "dompi",
+            "name": "Dompi",
+            "imageName": "icon_dompi",
+            "animationID": "sprite_dompi",
+            "rarity": "epic",
+            "baseDPS": 34,
+            "maxStars": 14,
+            "legacySpriteIndex": 2
+        },
+        {
+            "id": "blunt",
+            "name": "Blunt",
+            "imageName": "sprite_blunt",
+            "animationID": "sprite_blunt",
+            "rarity": "legendary",
+            "baseDPS": 82,
+            "maxStars": 14,
+            "legacySpriteIndex": 21
+        }
+    ]
+}

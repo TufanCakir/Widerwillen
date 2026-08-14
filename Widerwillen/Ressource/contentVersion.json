@@ -1,0 +1,245 @@
+{
+  "contentVersion": 22,
+  "json": [
+    {
+      "name": "arena",
+      "path": "arena.json"
+    },
+    {
+      "name": "animation",
+      "path": "animation.json"
+    },
+    {
+      "name": "artifact",
+      "path": "artifact.json"
+    },
+    {
+      "name": "background",
+      "path": "background.json"
+    },
+    {
+      "name": "character",
+      "path": "character.json"
+    },
+    {
+      "name": "companion",
+      "path": "companion.json"
+    },
+    {
+      "name": "daily_login",
+      "path": "daily_login.json"
+    },
+    {
+      "name": "enemies",
+      "path": "enemies.json"
+    },
+    {
+      "name": "event",
+      "path": "event.json"
+    },
+    {
+      "name": "gift",
+      "path": "gift.json"
+    },
+    {
+      "name": "icon",
+      "path": "icon.json"
+    },
+    {
+      "name": "music",
+      "path": "music.json"
+    },
+    {
+      "name": "news",
+      "path": "news.json"
+    },
+    {
+      "name": "pass",
+      "path": "pass.json"
+    },
+    {
+      "name": "shop",
+      "path": "shop.json"
+    },
+    {
+      "name": "stars",
+      "path": "stars.json"
+    },
+    {
+      "name": "skill",
+      "path": "skill.json"
+    },
+    {
+      "name": "summon",
+      "path": "summon.json"
+    },
+    {
+      "name": "trade",
+      "path": "trade.json"
+    }
+  ],
+  "assets": [
+    {
+      "name": "bg_app",
+      "path": "assets/bg_app.png",
+      "version": 1
+    },
+    {
+      "name": "icon_cookieman",
+      "path": "assets/icon_cookieman.png",
+      "version": 1
+    },
+    {
+      "name": "icon_dompi",
+      "path": "assets/icon_dompi.png",
+      "version": 1
+    },
+    {
+      "name": "icon_klempi",
+      "path": "assets/icon_klempi.png",
+      "version": 1
+    },
+    {
+      "name": "icon_nimpi",
+      "path": "assets/icon_nimpi.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_box",
+      "path": "assets/icon_pixel_box.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_calendar",
+      "path": "assets/icon_pixel_calendar.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_coin",
+      "path": "assets/icon_pixel_coin.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_crystal",
+      "path": "assets/icon_pixel_crystal.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_house",
+      "path": "assets/icon_pixel_house.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_shop",
+      "path": "assets/icon_pixel_shop.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_giftbox",
+      "path": "assets/icon_pixel_giftbox.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_menü",
+      "path": "assets/icon_pixel_menü.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_news",
+      "path": "assets/icon_pixel_news.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_relic",
+      "path": "assets/icon_pixel_relic.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_settings",
+      "path": "assets/icon_pixel_settings.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_sprite",
+      "path": "assets/icon_pixel_sprite.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_sword",
+      "path": "assets/icon_pixel_sword.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_trade",
+      "path": "assets/icon_pixel_trade.png",
+      "version": 1
+    },
+    {
+      "name": "sprite_blunt",
+      "path": "assets/sprite_blunt.png",
+      "version": 1
+    },
+    {
+      "name": "sprite_cookieman",
+      "path": "assets/sprite_cookieman.png",
+      "version": 1
+    },
+    {
+      "name": "sprite_dompi",
+      "path": "assets/sprite_dompi.png",
+      "version": 1
+    },
+    {
+      "name": "sprite_klempi",
+      "path": "assets/sprite_klempi.png",
+      "version": 1
+    },
+    {
+      "name": "sprite_nimbi",
+      "path": "assets/sprite_nimbi.png",
+      "version": 1
+    },
+    {
+      "name": "icon_nimbi_night",
+      "path": "assets/icon_nimbi_night.png",
+      "version": 1
+    },
+    {
+      "name": "sprite_nimbi_night",
+      "path": "assets/sprite_nimbi_night.png",
+      "version": 1
+    },
+    {
+      "name": "widerwillen_font_logo",
+      "path": "assets/widerwillen_font_logo.png",
+      "version": 1
+    },
+    {
+      "name": "widerwillen_logo",
+      "path": "assets/widerwillen_logo.png",
+      "version": 1
+    }
+  ],
+  "music": [
+    {
+      "name": "aigainst_my_will",
+      "path": "music/aigainst_my_will.mp3",
+      "version": 1
+    },
+    {
+      "name": "aigainst_my_will2",
+      "path": "music/aigainst_my_will2.mp3",
+      "version": 1
+    },
+    {
+      "name": "widerwillen",
+      "path": "music/widerwillen.mp3",
+      "version": 1
+    },
+    {
+      "name": "widerwillen2",
+      "path": "music/widerwillen2.mp3",
+      "version": 1
+    }
+  ]
+}

@@ -138,10 +138,7 @@ struct GiftView: View {
 
     private func giftCard(_ gift: GiftReward) -> some View {
         HStack(spacing: 14) {
-            Image(gift.imageName)
-                .resizable()
-                .interpolation(.none)
-                .scaledToFit()
+            RemoteImage(name: gift.imageName)
                 .frame(width: 54, height: 54)
 
             VStack(alignment: .leading, spacing: 8) {
@@ -182,10 +179,7 @@ struct GiftView: View {
 
     private var emptyState: some View {
         VStack(spacing: 12) {
-            Image("icon_pixel_box")
-                .resizable()
-                .interpolation(.none)
-                .scaledToFit()
+            RemoteImage(name: "icon_pixel_box")
                 .frame(width: 62, height: 62)
                 .opacity(0.45)
 

@@ -6,22 +6,38 @@
 //
 
 import SpriteKit
+import UIKit
 
 final class SpriteSheetAnimation {
 
     private let config: SpriteSheet
     private let textures: [SKTexture]
     private let actionKey = "spriteSheetAnimation"
+    private let attackActionKey = "spriteSheetAttackAnimation"
 
     init(config: SpriteSheet = try! SpriteSheet.load()) {
         self.config = config
 
-        let sheet = SKTexture(imageNamed: config.imageName)
+        guard
+            let url = RemoteContentCache.cachedAssetURL(named: config.imageName),
+            let image = UIImage(contentsOfFile: url.path)
+        else {
+            textures = []
+            return
+        }
+
+        let sheet = SKTexture(image: image)
         sheet.filteringMode = .nearest
         textures = Self.textures(from: sheet, config: config)
     }
 
     var firstTexture: SKTexture? { textures.first }
+
+    func showFirstFrame(on node: SKSpriteNode) {
+        node.removeAction(forKey: actionKey)
+        node.removeAction(forKey: attackActionKey)
+        node.texture = firstTexture
+    }
 
     func start(on node: SKSpriteNode) {
         guard !textures.isEmpty else { return }
@@ -46,6 +62,30 @@ final class SpriteSheetAnimation {
 
     func stop(on node: SKSpriteNode) {
         node.removeAction(forKey: actionKey)
+    }
+
+    func playOnce(on node: SKSpriteNode) {
+        guard !textures.isEmpty else { return }
+
+        node.removeAction(forKey: actionKey)
+        node.removeAction(forKey: attackActionKey)
+
+        guard textures.count > 1 else {
+            node.texture = firstTexture
+            return
+        }
+
+        let animation = SKAction.animate(
+            with: textures,
+            timePerFrame: 1 / max(config.fps, 1),
+            resize: false,
+            restore: false
+        )
+        let returnToIdle = SKAction.run { [weak node, firstTexture] in
+            node?.texture = firstTexture
+        }
+
+        node.run(.sequence([animation, returnToIdle]), withKey: attackActionKey)
     }
 
     func size(fitting container: CGSize, scale: CGFloat = 0.7) -> CGSize {

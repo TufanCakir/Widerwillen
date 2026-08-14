@@ -8,7 +8,7 @@
         {
             "id": "cookieman",
             "title": "Cookieman",
-            "imageName": "sprite_cookieman"
+            "imageName": "icon_cookieman"
         },
         {
             "id": "klempi",
@@ -34,6 +34,75 @@
             "id": "relic",
             "title": "Relic",
             "imageName": "icon_pixel_relic"
+        },
+        {
+            "id": "house",
+            "title": "House",
+            "imageName": "icon_pixel_house"
+        },
+        {
+            "id": "trade",
+            "title": "Trade",
+            "imageName": "icon_pixel_trade"
+        },
+        {
+            "id": "coin",
+            "title": "Coin",
+            "imageName": "icon_pixel_coin"
+        },
+        {
+            "id": "crystal",
+            "title": "Crystal",
+            "imageName": "icon_pixel_crystal"
+        },
+        {
+            "id": "menü",
+            "title": "Menü",
+            "imageName": "icon_pixel_menü"
+        },
+        {
+            "id": "settings",
+            "title": "Settings",
+            "imageName": "icon_pixel_settings"
+        },
+        {
+            "id": "news",
+            "title": "News",
+            "imageName": "icon_pixel_news"
+        },
+        {
+            "id": "box",
+            "title": "Box",
+            "imageName": "icon_pixel_box"
+        },
+        {
+            "id": "calendar",
+            "title": "Calendar",
+            "imageName": "icon_pixel_calendar"
+        },
+        {
+            "id": "widerwillen_font",
+            "title": "Widerwillen_Font",
+            "imageName": "widerwillen_font_logo"
+        },
+        {
+            "id": "blunt",
+            "title": "Blunt",
+            "imageName": "sprite_blunt"
+        },
+        {
+            "id": "nimpi",
+            "title": "Nimpi",
+            "imageName": "icon_nimpi"
+        },
+        {
+            "id": "nimpi_night",
+            "title": "Nimpi Night",
+            "imageName": "icon_nimbi_night"
         }
     ]
 }
+
+
+
+
