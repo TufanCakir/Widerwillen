@@ -26,16 +26,6 @@ struct OfflineView: View {
 
             VStack(spacing: 18) {
                 ZStack {
-                    RemoteImage(name: "widerwillen_logo")
-                        .frame(width: 170, height: 170)
-                        .opacity(0.76)
-                        .shadow(
-                            color: .black.opacity(0.38),
-                            radius: 16,
-                            x: 0,
-                            y: 8
-                        )
-
                     Image(systemName: "wifi.slash")
                         .font(.system(size: 58, weight: .heavy))
                         .foregroundStyle(.white)
@@ -51,10 +41,12 @@ struct OfflineView: View {
                     Text("No Internet")
                         .font(.system(size: 28, weight: .heavy))
 
-                    Text("Widerwillen needs an internet connection to load game content.")
-                        .font(.system(size: 13, weight: .bold))
-                        .multilineTextAlignment(.center)
-                        .opacity(0.82)
+                    Text(
+                        "Widerwillen needs an internet connection to load game content."
+                    )
+                    .font(.system(size: 13, weight: .bold))
+                    .multilineTextAlignment(.center)
+                    .opacity(0.82)
 
                     Text(connectionName)
                         .font(.system(size: 11, weight: .heavy))

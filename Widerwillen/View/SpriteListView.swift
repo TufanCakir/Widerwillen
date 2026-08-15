@@ -127,7 +127,8 @@ struct SpriteListView: View {
             let owned = progress.ownedCharacterList.first {
                 $0.characterID == character.id
             }
-            let skin = character.skins.first { $0.id == character.defaultSkinID }
+            let skin =
+                character.skins.first { $0.id == character.defaultSkinID }
                 ?? character.skins.first
 
             return CollectionItem(
@@ -148,7 +149,8 @@ struct SpriteListView: View {
     private var skinItems: [CollectionItem] {
         progress.characterDefinitions.flatMap { character in
             character.skins.map { skin in
-                let isUnlocked = progress.isSkinUnlocked(skin)
+                let isUnlocked =
+                    progress.isSkinUnlocked(skin)
                     && progress.ownedCharacterList.contains {
                         $0.characterID == character.id
                     }
@@ -283,7 +285,10 @@ struct SpriteListView: View {
             }
         }
         .foregroundStyle(.white)
-        .opacity(item.canSelect || item.stars != nil || item.levelTitle != "Locked" ? 1 : 0.45)
+        .opacity(
+            item.canSelect || item.stars != nil || item.levelTitle != "Locked"
+                ? 1 : 0.45
+        )
         .frame(maxWidth: .infinity)
         .frame(height: 118)
         .background(.black.opacity(0.24))

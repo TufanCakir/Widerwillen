@@ -10,6 +10,8 @@ import SwiftUI
 struct NewsView: View {
     private let configuration: NewsConfiguration
 
+    @AppStorage("appLanguage") private var appLanguageCode = AppLanguage.de
+        .rawValue
     @State private var selectedCategory = ""
 
     init(configuration: NewsConfiguration = try! NewsConfiguration.load()) {
@@ -26,7 +28,8 @@ struct NewsView: View {
             VStack(spacing: 20) {
                 CategoryBar(
                     categories: categories,
-                    selectedCategory: $selectedCategory
+                    selectedCategory: $selectedCategory,
+                    displayName: localizedCategory
                 )
 
                 TabView(selection: $selectedCategory) {
@@ -50,6 +53,24 @@ struct NewsView: View {
         return values
     }
 
+    private var localizer: AppLocalizer {
+        AppLocalizer(languageCode: appLanguageCode)
+    }
+
+    private func localizedCategory(_ category: String) -> String {
+        let key = configuration.news.first { $0.category == category }?
+            .categoryKey
+        return localizer.text(key, fallback: category)
+    }
+
+    private func localizedTitle(_ post: NewsPost) -> String {
+        localizer.text(post.titleKey, fallback: post.title)
+    }
+
+    private func localizedBody(_ post: NewsPost) -> String {
+        localizer.text(post.bodyKey, fallback: post.body)
+    }
+
     private func newsPage(for category: String) -> some View {
         ScrollView {
             LazyVStack(spacing: 14) {
@@ -69,7 +90,7 @@ struct NewsView: View {
                 .frame(width: 54, height: 54)
 
             VStack(alignment: .leading, spacing: 8) {
-                Text(post.title)
+                Text(localizedTitle(post))
                     .font(.system(size: 18, weight: .heavy))
                     .foregroundStyle(.white)
                     .shadow(
@@ -89,7 +110,7 @@ struct NewsView: View {
                         y: 0
                     )
 
-                Text(post.body)
+                Text(localizedBody(post))
                     .font(.system(size: 13, weight: .bold))
                     .foregroundStyle(.white.opacity(0.82))
                     .shadow(

@@ -87,9 +87,11 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
     }
 
     private func url(for track: MusicTrack) -> URL? {
-        guard let url = RemoteContentCache.cachedMusicURL(
-            named: track.resourceName
-        ) else {
+        guard
+            let url = RemoteContentCache.cachedMusicURL(
+                named: track.resourceName
+            )
+        else {
             print("[MusicPlayer] cache miss \(track.resourceName)")
             return nil
         }

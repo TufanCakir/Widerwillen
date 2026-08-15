@@ -10,6 +10,7 @@ import SwiftUI
 struct CategoryBar: View {
     let categories: [String]
     @Binding var selectedCategory: String
+    var displayName: (String) -> String = { $0 }
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -18,7 +19,7 @@ struct CategoryBar: View {
                     Button {
                         selectedCategory = category
                     } label: {
-                        Text(category)
+                        Text(displayName(category))
                             .font(.system(size: 13, weight: .heavy))
                             .foregroundStyle(.white)
                             .shadow(
@@ -65,7 +66,7 @@ struct ResourceAmountRow: View {
         HStack(spacing: 8) {
             ForEach(amounts) { amount in
                 AppResourceLabel(
-                    imageName: amount.resource.imageName,
+                    imageName: amount.imageName ?? amount.resource.imageName,
                     value: amount.amount,
                     prefix: prefix,
                     iconSize: 20,

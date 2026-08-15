@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct StartView: View {
     @Binding var hasStartedGame: Bool
 
@@ -18,13 +17,11 @@ struct StartView: View {
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
 
-                    RemoteImage(name: "widerwillen_logo")
-                        .frame(maxWidth: 420, maxHeight: 280)
+                RemoteImage(name: "widerwillen_logo")
+                    .frame(maxWidth: 200)
 
-                    RemoteImage(name: "widerwillen_font_logo")
-                        .frame(maxWidth: 580)
-            
-
+                RemoteImage(name: "widerwillen_font_logo")
+                    .frame(maxWidth: 280)
 
                 Text("Tap to Start")
                     .font(.system(size: 24, weight: .heavy))

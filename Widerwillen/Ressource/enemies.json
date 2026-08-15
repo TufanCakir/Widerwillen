@@ -8,7 +8,7 @@
             "enemies": [
                 {
                     "id": "moon_cookieman",
-                    "name": "Moon Cookieman",
+                    "name": "Cookieman",
                     "imageName": "sprite_cookieman",
                     "animationID": "sprite_cookieman",
                     "scale": 0.30,
@@ -19,7 +19,7 @@
                 },
                 {
                     "id": "moon_blunt",
-                    "name": "Moon Blunt",
+                    "name": "Blunt",
                     "imageName": "sprite_blunt",
                     "animationID": "sprite_blunt",
                     "scale": 0.32,
@@ -32,7 +32,7 @@
             "bosses": [
                 {
                     "id": "gate_keeper",
-                    "name": "Gate Keeper",
+                    "name": "Blunt",
                     "imageName": "sprite_blunt",
                     "animationID": "sprite_blunt",
                     "scale": 0.30,
@@ -51,7 +51,7 @@
             "enemies": [
                 {
                     "id": "relic_blunt",
-                    "name": "Relic Blunt",
+                    "name": "Blunt",
                     "imageName": "sprite_blunt",
                     "animationID": "sprite_blunt",
                     "scale": 0.34,
@@ -62,7 +62,7 @@
                 },
                 {
                     "id": "blade_dompi",
-                    "name": "Blade Dompi",
+                    "name": "Dompi",
                     "imageName": "sprite_dompi",
                     "animationID": "sprite_dompi",
                     "scale": 0.32,
@@ -75,7 +75,7 @@
             "bosses": [
                 {
                     "id": "depth_crown",
-                    "name": "Depth Crown",
+                    "name": "Crown",
                     "imageName": "sprite_klempi",
                     "animationID": "sprite_klempi",
                     "scale": 0.34,

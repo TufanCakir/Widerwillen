@@ -42,17 +42,24 @@ struct SpriteSheet: Codable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         imageName = try container.decode(String.self, forKey: .imageName)
-        id = try container.decodeIfPresent(String.self, forKey: .id) ?? imageName
+        id =
+            try container.decodeIfPresent(String.self, forKey: .id) ?? imageName
         columns = try container.decode(Int.self, forKey: .columns)
         rows = try container.decode(Int.self, forKey: .rows)
         spacing = try container.decode(Int.self, forKey: .spacing)
         margin = try container.decode(Int.self, forKey: .margin)
         frameCount = try container.decode(Int.self, forKey: .frameCount)
         fps = try container.decode(Double.self, forKey: .fps)
-        xPosition = try container.decodeIfPresent(CGFloat.self, forKey: .xPosition)
+        xPosition = try container.decodeIfPresent(
+            CGFloat.self,
+            forKey: .xPosition
+        )
         yOffset = try container.decodeIfPresent(CGFloat.self, forKey: .yOffset)
         scale = try container.decodeIfPresent(CGFloat.self, forKey: .scale)
-        gridColumn = try container.decodeIfPresent(Int.self, forKey: .gridColumn)
+        gridColumn = try container.decodeIfPresent(
+            Int.self,
+            forKey: .gridColumn
+        )
         gridRow = try container.decodeIfPresent(Int.self, forKey: .gridRow)
     }
 

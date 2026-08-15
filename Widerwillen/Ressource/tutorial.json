@@ -5,12 +5,19 @@
             "trigger": "launch",
             "requiredAccountLevel": 1,
             "speakerName": "Blunt",
-            "speakerImageName": "sprite_blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
             "title": "Welcome",
+            "titleKey": "tutorial.welcome.title",
             "messages": [
                 "Tap the screen in battle to damage enemies.",
                 "Defeat enemies to earn coins, account XP and sometimes skill books.",
                 "New features unlock when your account level grows."
+            ],
+            "messageKeys": [
+                "tutorial.welcome.message.1",
+                "tutorial.welcome.message.2",
+                "tutorial.welcome.message.3"
             ]
         },
         {
@@ -18,11 +25,17 @@
             "trigger": "sprites",
             "requiredAccountLevel": 2,
             "speakerName": "Blunt",
-            "speakerImageName": "sprite_blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
             "title": "Sprites",
+            "titleKey": "tutorial.sprites.title",
             "messages": [
                 "Sprites are helpers you can collect.",
                 "When you summon helper sprites, they fight beside your selected character."
+            ],
+            "messageKeys": [
+                "tutorial.sprites.message.1",
+                "tutorial.sprites.message.2"
             ]
         },
         {
@@ -30,11 +43,17 @@
             "trigger": "summon",
             "requiredAccountLevel": 3,
             "speakerName": "Blunt",
-            "speakerImageName": "sprite_blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
             "title": "Summon",
+            "titleKey": "tutorial.summon.title",
             "messages": [
                 "Summons use crystals and can unlock characters, skins, helper sprites and items.",
                 "Duplicates increase stars, so old summons still make your team stronger."
+            ],
+            "messageKeys": [
+                "tutorial.summon.message.1",
+                "tutorial.summon.message.2"
             ]
         },
         {
@@ -42,11 +61,17 @@
             "trigger": "skills",
             "requiredAccountLevel": 2,
             "speakerName": "Blunt",
-            "speakerImageName": "sprite_blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
             "title": "Skill Trees",
+            "titleKey": "tutorial.skills.title",
             "messages": [
                 "Skill books unlock upgrades in different skill trees.",
                 "Some skills improve tap damage, others improve sprite damage, speed or drop chance."
+            ],
+            "messageKeys": [
+                "tutorial.skills.message.1",
+                "tutorial.skills.message.2"
             ]
         },
         {
@@ -54,11 +79,17 @@
             "trigger": "trade",
             "requiredAccountLevel": 4,
             "speakerName": "Blunt",
-            "speakerImageName": "sprite_blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
             "title": "Trade",
+            "titleKey": "tutorial.trade.title",
             "messages": [
                 "Trade lets you exchange resources when you need a different currency.",
                 "Use it carefully because some resources are rarer than others."
+            ],
+            "messageKeys": [
+                "tutorial.trade.message.1",
+                "tutorial.trade.message.2"
             ]
         },
         {
@@ -66,11 +97,143 @@
             "trigger": "shop",
             "requiredAccountLevel": 5,
             "speakerName": "Blunt",
-            "speakerImageName": "sprite_blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
             "title": "Shop",
+            "titleKey": "tutorial.shop.title",
             "messages": [
                 "The shop contains optional crystal packs, battle passes and special packs.",
                 "Coins, relics and skill books are still earned by playing."
+            ],
+            "messageKeys": [
+                "tutorial.shop.message.1",
+                "tutorial.shop.message.2"
+            ]
+        },
+        {
+            "id": "battle_first_steps",
+            "trigger": "battle",
+            "requiredAccountLevel": 1,
+            "speakerName": "Blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
+            "title": "Battle",
+            "titleKey": "tutorial.battle.title",
+            "messages": [
+                "Your character stands on the left and enemies stand on the right.",
+                "Tap to attack. Active skills can be placed in the battle skill bar later."
+            ],
+            "messageKeys": [
+                "tutorial.battle.message.1",
+                "tutorial.battle.message.2"
+            ]
+        },
+        {
+            "id": "event_unlock",
+            "trigger": "event",
+            "requiredAccountLevel": 3,
+            "speakerName": "Blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
+            "title": "Events",
+            "titleKey": "tutorial.event.title",
+            "messages": [
+                "Events are limited battles with their own rewards and currencies.",
+                "Event chips can be traded for items, skins or resources while the event is active."
+            ],
+            "messageKeys": [
+                "tutorial.event.message.1",
+                "tutorial.event.message.2"
+            ]
+        },
+        {
+            "id": "warehouse_unlock",
+            "trigger": "warehouse",
+            "requiredAccountLevel": 2,
+            "speakerName": "Blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
+            "title": "Warehouse",
+            "titleKey": "tutorial.warehouse.title",
+            "messages": [
+                "The warehouse stores your items, equipment and skins.",
+                "Later you can equip bonuses here before going into battle."
+            ],
+            "messageKeys": [
+                "tutorial.warehouse.message.1",
+                "tutorial.warehouse.message.2"
+            ]
+        },
+        {
+            "id": "settings_first_open",
+            "trigger": "settings",
+            "requiredAccountLevel": 1,
+            "speakerName": "Blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
+            "title": "Settings",
+            "titleKey": "tutorial.settings.title",
+            "messages": [
+                "Here you can change language, music and display options.",
+                "Remote content still updates through the launch and update screens."
+            ],
+            "messageKeys": [
+                "tutorial.settings.message.1",
+                "tutorial.settings.message.2"
+            ]
+        },
+        {
+            "id": "news_first_open",
+            "trigger": "news",
+            "requiredAccountLevel": 2,
+            "speakerName": "Blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
+            "title": "News",
+            "titleKey": "tutorial.news.title",
+            "messages": [
+                "News shows current updates, events and changes.",
+                "Check it when new content or a limited event appears."
+            ],
+            "messageKeys": [
+                "tutorial.news.message.1",
+                "tutorial.news.message.2"
+            ]
+        },
+        {
+            "id": "gift_first_open",
+            "trigger": "gift",
+            "requiredAccountLevel": 2,
+            "speakerName": "Blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
+            "title": "Giftbox",
+            "titleKey": "tutorial.gift.title",
+            "messages": [
+                "Rewards from gifts, events or compensation can appear here.",
+                "Claim them before they expire."
+            ],
+            "messageKeys": [
+                "tutorial.gift.message.1",
+                "tutorial.gift.message.2"
+            ]
+        },
+        {
+            "id": "daily_login_first_open",
+            "trigger": "dailyLogin",
+            "requiredAccountLevel": 1,
+            "speakerName": "Blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
+            "title": "Daily Login",
+            "titleKey": "tutorial.daily_login.title",
+            "messages": [
+                "Daily login rewards help you progress even with short sessions.",
+                "Come back each day to keep collecting the next reward."
+            ],
+            "messageKeys": [
+                "tutorial.daily_login.message.1",
+                "tutorial.daily_login.message.2"
             ]
         }
     ]

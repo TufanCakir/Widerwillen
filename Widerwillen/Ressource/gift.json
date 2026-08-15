@@ -3,44 +3,138 @@
         {
             "id": "starter_pack",
             "title": "Starter Pack",
+            "titleKey": "gift.starter_pack.title",
             "category": "Available",
+            "categoryKey": "gift.category.available",
             "imageName": "icon_pixel_box",
             "rewards": [
                 {
                     "resource": "coins",
-                    "amount": 1000
+                    "amount": 1200
                 },
                 {
                     "resource": "crystals",
                     "amount": 25
+                },
+                {
+                    "resource": "skill_books",
+                    "amount": 1
+                }
+            ]
+        },
+        {
+            "id": "skill_tree_launch_gift",
+            "title": "Skill Tree Gift",
+            "titleKey": "gift.skill_tree_launch_gift.title",
+            "category": "Available",
+            "categoryKey": "gift.category.available",
+            "imageName": "icon_pixel_skill_book",
+            "rewards": [
+                {
+                    "resource": "skill_books",
+                    "amount": 5
+                },
+                {
+                    "resource": "coins",
+                    "amount": 800
                 }
             ]
         },
         {
             "id": "relic_launch_gift",
             "title": "Relic Launch Gift",
+            "titleKey": "gift.relic_launch_gift.title",
             "category": "Available",
+            "categoryKey": "gift.category.available",
             "imageName": "icon_pixel_relic",
             "rewards": [
                 {
                     "resource": "relics",
-                    "amount": 12
+                    "amount": 14
+                },
+                {
+                    "resource": "skill_books",
+                    "amount": 1
                 }
             ]
         },
         {
             "id": "update_bonus",
             "title": "Update Bonus",
+            "titleKey": "gift.update_bonus.title",
             "category": "Available",
+            "categoryKey": "gift.category.available",
             "imageName": "icon_pixel_crystal",
             "rewards": [
                 {
                     "resource": "coins",
-                    "amount": 500
+                    "amount": 750
                 },
                 {
                     "resource": "crystals",
-                    "amount": 10
+                    "amount": 12
+                },
+                {
+                    "resource": "skill_books",
+                    "amount": 1
+                }
+            ]
+        },
+        {
+            "id": "event_chip_bundle_blue",
+            "title": "Blue Chip Bundle",
+            "titleKey": "gift.event_chip_bundle_blue.title",
+            "category": "Event",
+            "categoryKey": "gift.category.event",
+            "imageName": "icon_pixel_chip_blue",
+            "rewards": [
+                {
+                    "resource": "event_currency",
+                    "eventID": "crytal_hunt",
+                    "imageName": "icon_pixel_chip_blue",
+                    "amount": 80
+                },
+                {
+                    "resource": "crystals",
+                    "amount": 8
+                }
+            ]
+        },
+        {
+            "id": "event_chip_bundle_yellow",
+            "title": "Yellow Chip Bundle",
+            "titleKey": "gift.event_chip_bundle_yellow.title",
+            "category": "Event",
+            "categoryKey": "gift.category.event",
+            "imageName": "icon_pixel_chip_yellow",
+            "rewards": [
+                {
+                    "resource": "event_currency",
+                    "eventID": "coin_hunt",
+                    "imageName": "icon_pixel_chip_yellow",
+                    "amount": 120
+                },
+                {
+                    "resource": "coins",
+                    "amount": 1500
+                }
+            ]
+        },
+        {
+            "id": "compensation_skill_books_001",
+            "title": "Skill Book Compensation",
+            "titleKey": "gift.compensation_skill_books_001.title",
+            "category": "Compensation",
+            "categoryKey": "gift.category.compensation",
+            "imageName": "icon_pixel_skill_book",
+            "rewards": [
+                {
+                    "resource": "skill_books",
+                    "amount": 8
+                },
+                {
+                    "resource": "relics",
+                    "amount": 8
                 }
             ]
         }

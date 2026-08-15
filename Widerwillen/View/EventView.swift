@@ -12,6 +12,8 @@ struct EventView: View {
     let onBattleStateChange: (Bool) -> Void
 
     private let configuration: EventConfiguration
+    @AppStorage("appLanguage") private var appLanguageCode =
+        AppLanguage.de.rawValue
     @State private var message = ""
     @State private var selectedEvent: GameEvent?
     @State private var selectedCategory = ""
@@ -85,6 +87,10 @@ struct EventView: View {
         }
     }
 
+    private var localizer: AppLocalizer {
+        AppLocalizer(languageCode: appLanguageCode)
+    }
+
     private var eventCategories: [String] {
         var categories: [String] = []
 
@@ -103,7 +109,7 @@ struct EventView: View {
                     Button {
                         selectedCategory = category
                     } label: {
-                        Text(category)
+                        Text(localizedCategory(category))
                             .font(.system(size: 13, weight: .heavy))
                             .foregroundStyle(.white)
                             .shadow(
@@ -157,6 +163,20 @@ struct EventView: View {
         configuration.events.filter { $0.category == category }
     }
 
+    private func localizedCategory(_ category: String) -> String {
+        let key = configuration.events.first { $0.category == category }?
+            .categoryKey
+        return localizer.text(key, fallback: category)
+    }
+
+    private func localizedTitle(_ event: GameEvent) -> String {
+        localizer.text(event.titleKey, fallback: event.title)
+    }
+
+    private func localizedCurrencyName(_ event: GameEvent) -> String {
+        localizer.text(event.currencyNameKey, fallback: event.currencyName)
+    }
+
     private func eventBanner(_ event: GameEvent) -> some View {
         let remainingRuns = progress.remainingRuns(for: event)
         let eventCurrency = progress.eventCurrencies[event.id, default: 0]
@@ -180,7 +200,7 @@ struct EventView: View {
 
                     VStack(alignment: .leading, spacing: 8) {
                         HStack {
-                            Text(event.title)
+                            Text(localizedTitle(event))
                                 .font(.system(size: 20, weight: .heavy))
                                 .lineLimit(1)
                                 .shadow(
@@ -234,26 +254,30 @@ struct EventView: View {
                         }
 
                         HStack {
-                            Text("\(event.currencyName): \(eventCurrency)")
-                                .font(.system(size: 12, weight: .bold))
-                                .lineLimit(1)
-                                .shadow(
-                                    color: .black.opacity(0.9),
-                                    radius: 3,
-                                    x: 0,
-                                    y: 0
-                                )
+                            Text(
+                                "\(localizedCurrencyName(event)): \(eventCurrency)"
+                            )
+                            .font(.system(size: 12, weight: .bold))
+                            .lineLimit(1)
+                            .shadow(
+                                color: .black.opacity(0.9),
+                                radius: 3,
+                                x: 0,
+                                y: 0
+                            )
 
                             Spacer()
 
-                            Text("HP \(event.hp)")
-                                .font(.system(size: 12, weight: .bold))
-                                .shadow(
-                                    color: .black.opacity(0.9),
-                                    radius: 3,
-                                    x: 0,
-                                    y: 0
-                                )
+                            Text(
+                                "\(localizer.text("event.hp", fallback: "HP")) \(event.hp)"
+                            )
+                            .font(.system(size: 12, weight: .bold))
+                            .shadow(
+                                color: .black.opacity(0.9),
+                                radius: 3,
+                                x: 0,
+                                y: 0
+                            )
                         }
                         .foregroundStyle(.white.opacity(0.78))
                     }
@@ -277,6 +301,8 @@ private struct EventBattleView: View {
     let event: GameEvent
     let onExit: () -> Void
 
+    @AppStorage("appLanguage") private var appLanguageCode =
+        AppLanguage.de.rawValue
     @State private var currentHP: Int
     @State private var message = ""
     @State private var damageDealt = 0
@@ -297,14 +323,15 @@ private struct EventBattleView: View {
         ZStack {
             BattleSceneView(
                 progress: progress,
-                title: event.title,
-                healthTitle: "Event HP",
+                title: localizedTitle(event),
+                healthTitle: localizer.text("event.hp", fallback: "Event HP"),
                 currentHP: currentHP,
                 maxHP: eventMaxHP,
                 lookIndex: eventLookIndex,
                 heroAnimationID: progress.battleHeroAnimationID,
                 companionAnimationIDs: progress.battleCompanionAnimationIDs,
                 spriteAttackInterval: progress.spriteAttackInterval,
+                activeSkills: progress.activeBattleSkills,
                 onTapAttack: {
                     attackEvent(damage: progress.tapDamage)
                 },
@@ -314,6 +341,9 @@ private struct EventBattleView: View {
                     }
 
                     return attackEvent(damage: progress.spriteDamage)
+                },
+                onActiveSkillAttack: { skill in
+                    attackEvent(damage: skill.damage)
                 }
             )
 
@@ -346,7 +376,10 @@ private struct EventBattleView: View {
 
         guard progress.remainingRuns(for: event) > 0 else {
             currentHP = eventMaxHP
-            message = "Daily limit reached"
+            message = localizer.text(
+                "event.daily_limit_reached",
+                fallback: "Daily limit reached"
+            )
             return BattleAttackResult(damageDealt: 0)
         }
 
@@ -366,7 +399,10 @@ private struct EventBattleView: View {
                 rewards: event.rewards
             )
         } else {
-            message = "Daily limit reached"
+            message = localizer.text(
+                "event.daily_limit_reached",
+                fallback: "Daily limit reached"
+            )
             currentHP = eventMaxHP
         }
 
@@ -379,7 +415,7 @@ private struct EventBattleView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 18) {
-                Text("Victory")
+                Text(localizer.text("event.victory", fallback: "Victory"))
                     .font(.system(size: 34, weight: .heavy))
                     .shadow(
                         color: .black.opacity(0.9),
@@ -388,14 +424,16 @@ private struct EventBattleView: View {
                         y: 0
                     )
 
-                Text("Damage: \(summary.damageDealt)")
-                    .font(.system(size: 14, weight: .bold))
-                    .shadow(
-                        color: .black.opacity(0.9),
-                        radius: 3,
-                        x: 0,
-                        y: 0
-                    )
+                Text(
+                    "\(localizer.text("event.damage", fallback: "Damage")): \(summary.damageDealt)"
+                )
+                .font(.system(size: 14, weight: .bold))
+                .shadow(
+                    color: .black.opacity(0.9),
+                    radius: 3,
+                    x: 0,
+                    y: 0
+                )
 
                 HStack(spacing: 12) {
                     AppResourceLabel(
@@ -447,6 +485,14 @@ private struct EventBattleView: View {
             .padding(.horizontal, 28)
         }
         .contentShape(Rectangle())
+    }
+
+    private var localizer: AppLocalizer {
+        AppLocalizer(languageCode: appLanguageCode)
+    }
+
+    private func localizedTitle(_ event: GameEvent) -> String {
+        localizer.text(event.titleKey, fallback: event.title)
     }
 }
 

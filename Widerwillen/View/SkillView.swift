@@ -22,57 +22,82 @@ struct SkillView: View {
         self.progress = progress
         self.configuration = configuration
         _selectedCategory = State(
-            initialValue: configuration.skills.first?.category ?? ""
+            initialValue: configuration.trees.first?.category
+                ?? configuration.skills.first?.category ?? ""
         )
     }
 
     var body: some View {
-        ZStack {
-            AppBackground()
+        VStack(spacing: 16) {
+            GameHeader(progress: progress)
+                .padding(.top, 18)
 
-            VStack(spacing: 16) {
-                GameHeader(progress: progress)
-                    .padding(.top, 18)
-
-                HStack {
-                    AppResourceLabel(
-                        imageName: "icon_pixel_skill_books",
-                        value: progress.skillBooks,
-                        iconSize: 24,
-                        fontSize: 14
-                    )
-
-                    Spacer()
-                }
-                .padding(.horizontal, 20)
-
-                CategoryBar(
-                    categories: categories,
-                    selectedCategory: $selectedCategory
+            HStack {
+                AppResourceLabel(
+                    imageName: "icon_pixel_skill_book",
+                    value: progress.skillBooks,
+                    iconSize: 24,
+                    fontSize: 14
                 )
 
-                if !message.isEmpty {
-                    Text(message)
-                        .font(.system(size: 13, weight: .heavy))
-                        .foregroundStyle(.white.opacity(0.84))
-                        .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
-                }
-
-                TabView(selection: $selectedCategory) {
-                    ForEach(categories, id: \.self) { category in
-                        skillPage(for: category)
-                            .tag(category)
-                    }
-                }
-                .tabViewStyle(.page(indexDisplayMode: .never))
+                Spacer()
             }
+            .padding(.horizontal, 20)
+
+            CategoryBar(
+                categories: categories,
+                selectedCategory: $selectedCategory
+            )
+
+            if !message.isEmpty {
+                Text(message)
+                    .font(.system(size: 13, weight: .heavy))
+                    .foregroundStyle(.white.opacity(0.84))
+                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+            }
+
+            TabView(selection: $selectedCategory) {
+                ForEach(categories, id: \.self) { category in
+                    skillPage(for: category)
+                        .tag(category)
+                }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .background { skillBackground }
+        .ignoresSafeArea(.container, edges: .bottom)
+    }
+
+    private var skillBackground: some View {
+        ZStack {
+            RemoteImage(
+                name: selectedTreeBackgroundImageName,
+                contentMode: .fill
+            )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .clipped()
+            .ignoresSafeArea()
+
+            Color.black
+                .opacity(0.18)
+                .ignoresSafeArea()
+        }
+    }
+
+    private var selectedTreeBackgroundImageName: String {
+        tree(for: selectedCategory)?.backgroundImageName ?? "bg_app"
     }
 
     private var categories: [String] {
         var values: [String] = []
 
-        for skill in configuration.skills where !values.contains(skill.category) {
+        for tree in configuration.trees where !values.contains(tree.category) {
+            values.append(tree.category)
+        }
+
+        for skill in configuration.skills where !values.contains(skill.category)
+        {
             values.append(skill.category)
         }
 
@@ -85,11 +110,17 @@ struct SkillView: View {
 
         return ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 12) {
+                treeHeader(for: category, requiredLevel: requiredLevel)
+
                 if !isUnlocked {
-                    lockedPathCard(category: category, requiredLevel: requiredLevel)
+                    lockedPathCard(
+                        category: category,
+                        requiredLevel: requiredLevel
+                    )
                 }
 
-                ForEach(configuration.skills.filter { $0.category == category }) {
+                ForEach(configuration.skills.filter { $0.category == category })
+                {
                     skill in
                     skillCard(skill)
                 }
@@ -97,11 +128,56 @@ struct SkillView: View {
             .padding(.horizontal, 16)
             .padding(.bottom, 110)
         }
+        .background {
+            Color.black.opacity(0.16)
+        }
+    }
+
+    private func treeHeader(
+        for category: String,
+        requiredLevel: Int
+    ) -> some View {
+        let tree = tree(for: category)
+
+        return ZStack(alignment: .bottomLeading) {
+            RemoteImage(
+                name: tree?.backgroundImageName ?? "bg_app",
+                contentMode: .fill
+            )
+            .frame(height: 92)
+            .clipped()
+
+            LinearGradient(
+                colors: [.black.opacity(0.0), .black.opacity(0.72)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(tree?.title ?? "\(category) Path")
+                    .font(.system(size: 22, weight: .heavy))
+
+                Text("Unlocks at account LV \(requiredLevel)")
+                    .font(.system(size: 12, weight: .bold))
+                    .opacity(0.76)
+            }
+            .foregroundStyle(.white)
+            .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+            .padding(14)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .overlay {
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(.white.opacity(0.44), lineWidth: 1)
+        }
     }
 
     private func skillCard(_ skill: SkillNode) -> some View {
         let level = progress.skillLevel(for: skill)
-        let requiredLevel = skill.requiredAccountLevel ?? 1
+        let requiredLevel = max(
+            skill.requiredAccountLevel ?? 1,
+            requiredAccountLevel(for: skill.category)
+        )
         let isUnlocked = progress.accountLevel >= requiredLevel
         let canUpgrade = isUnlocked && progress.canUpgradeSkill(skill)
 
@@ -137,10 +213,14 @@ struct SkillView: View {
                     .minimumScaleFactor(0.75)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
 
-                Text(isUnlocked ? "Lv \(level)/\(skill.maxLevel)" : "Unlocks at LV \(requiredLevel)")
-                    .font(.system(size: 11, weight: .heavy))
-                    .foregroundStyle(.white.opacity(0.86))
-                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+                Text(
+                    isUnlocked
+                        ? "Lv \(level)/\(skill.maxLevel)"
+                        : "Unlocks at LV \(requiredLevel)"
+                )
+                .font(.system(size: 11, weight: .heavy))
+                .foregroundStyle(.white.opacity(0.86))
+                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
             }
 
             Spacer(minLength: 8)
@@ -149,19 +229,27 @@ struct SkillView: View {
                 upgrade(skill)
             } label: {
                 VStack(spacing: 3) {
-                    RemoteImage(name: "icon_pixel_skill_books")
+                    RemoteImage(name: "icon_pixel_skill_book")
                         .frame(width: 22, height: 22)
 
                     Text("\(skill.cost)")
                         .font(.system(size: 12, weight: .heavy))
                         .foregroundStyle(.white)
-                        .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+                        .shadow(
+                            color: .black.opacity(0.9),
+                            radius: 3,
+                            x: 0,
+                            y: 0
+                        )
                 }
                 .frame(width: 54, height: 54)
                 .background(.black.opacity(canUpgrade ? 0.48 : 0.22))
                 .overlay {
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(.white.opacity(canUpgrade ? 0.72 : 0.24), lineWidth: 1)
+                        .stroke(
+                            .white.opacity(canUpgrade ? 0.72 : 0.24),
+                            lineWidth: 1
+                        )
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 8))
             }
@@ -178,7 +266,9 @@ struct SkillView: View {
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 
-    private func lockedPathCard(category: String, requiredLevel: Int) -> some View {
+    private func lockedPathCard(category: String, requiredLevel: Int)
+        -> some View
+    {
         HStack(spacing: 12) {
             Image(systemName: "lock.fill")
                 .font(.system(size: 20, weight: .heavy))
@@ -206,10 +296,18 @@ struct SkillView: View {
     }
 
     private func requiredAccountLevel(for category: String) -> Int {
-        configuration.skills
+        if let tree = tree(for: category) {
+            return tree.requiredAccountLevel
+        }
+
+        return configuration.skills
             .filter { $0.category == category }
             .map { $0.requiredAccountLevel ?? 1 }
             .min() ?? 1
+    }
+
+    private func tree(for category: String) -> SkillTreeDefinition? {
+        configuration.trees.first { $0.category == category }
     }
 
     private func effectTitle(for skill: SkillNode) -> String {
@@ -230,6 +328,12 @@ struct SkillView: View {
             return "+\(percent)% drop chance per level"
         case .prestigeRelics:
             return "+\(percent)% prestige relics per level"
+        case .activeSkillDuration:
+            return "+\(percent)% active skill duration per level"
+        case .activeSkillCooldown:
+            return "-\(percent)% active skill cooldown per level"
+        case .stageSkipChance:
+            return "+\(percent)% stage skip chance per level"
         }
     }
 

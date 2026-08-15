@@ -130,7 +130,10 @@ struct TradeView: View {
 
     private func offerCard(_ offer: TradeOffer) -> some View {
         let canBuy = progress.canApplyTradeOffer(offer)
-        let boughtCount = progress.tradeOfferPurchaseCounts[offer.id, default: 0]
+        let boughtCount = progress.tradeOfferPurchaseCounts[
+            offer.id,
+            default: 0
+        ]
 
         return VStack(spacing: 14) {
             HStack(spacing: 14) {
@@ -180,10 +183,12 @@ struct TradeView: View {
             Button {
                 apply(offer)
             } label: {
-                RemoteImage(name: canBuy ? "icon_pixel_box" : "icon_pixel_trade")
-                    .frame(width: 48, height: 48)
-                    .opacity(canBuy ? 1 : 0.45)
-                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+                RemoteImage(
+                    name: canBuy ? "icon_pixel_box" : "icon_pixel_trade"
+                )
+                .frame(width: 48, height: 48)
+                .opacity(canBuy ? 1 : 0.45)
+                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
             }
             .buttonStyle(.plain)
             .disabled(!canBuy)

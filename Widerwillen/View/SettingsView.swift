@@ -6,6 +6,8 @@ struct SettingsView: View {
     @AppStorage("isLayerAnimationEnabled") private var isLayerAnimationEnabled =
         true
     @AppStorage("remoteContentVersion") private var remoteContentVersion = 0
+    @AppStorage("appLanguage") private var appLanguageCode = AppLanguage.de
+        .rawValue
 
     private let appInfo = AppInfo.current
 
@@ -15,30 +17,58 @@ struct SettingsView: View {
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 18) {
-                    sectionTitle("Settings")
+                    sectionTitle(
+                        localizer.text("settings.title", fallback: "Settings")
+                    )
 
                     VStack(spacing: 10) {
+                        languagePicker
+
                         settingsToggle(
-                            title: "Music",
-                            subtitle: isMusicEnabled ? "On" : "Off",
+                            title: localizer.text(
+                                "settings.music",
+                                fallback: "Music"
+                            ),
+                            subtitle: isMusicEnabled
+                                ? localizer.text("settings.on", fallback: "On")
+                                : localizer.text(
+                                    "settings.off",
+                                    fallback: "Off"
+                                ),
                             systemImage: "music.note",
                             isOn: $isMusicEnabled
                         )
                         settingsToggle(
-                            title: "Layer Animation",
-                            subtitle: isLayerAnimationEnabled ? "On" : "Off",
+                            title: localizer.text(
+                                "settings.layer_animation",
+                                fallback: "Layer Animation"
+                            ),
+                            subtitle: isLayerAnimationEnabled
+                                ? localizer.text("settings.on", fallback: "On")
+                                : localizer.text(
+                                    "settings.off",
+                                    fallback: "Off"
+                                ),
                             systemImage: "sparkles",
                             isOn: $isLayerAnimationEnabled
                         )
                     }
 
-                    sectionTitle("Info")
+                    sectionTitle(
+                        localizer.text("settings.info", fallback: "Info")
+                    )
 
                     VStack(spacing: 10) {
                         infoRow(title: "App", value: appInfo.name)
                         infoRow(title: "Version", value: appInfo.version)
                         infoRow(title: "Build", value: appInfo.build)
-                        infoRow(title: "Content", value: contentVersionTitle)
+                        infoRow(
+                            title: localizer.text(
+                                "settings.content",
+                                fallback: "Content"
+                            ),
+                            value: contentVersionTitle
+                        )
                         infoRow(
                             title: "Bundle",
                             value: appInfo.bundleIdentifier
@@ -50,6 +80,50 @@ struct SettingsView: View {
                 .padding(.bottom, 110)
             }
         }
+    }
+
+    private var localizer: AppLocalizer {
+        AppLocalizer(languageCode: appLanguageCode)
+    }
+
+    private var languagePicker: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 14) {
+                Image(systemName: "globe")
+                    .font(.system(size: 19, weight: .heavy))
+                    .foregroundStyle(.white)
+                    .frame(width: 32, height: 32)
+                    .background(.black.opacity(0.28))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                Text(localizer.text("settings.language", fallback: "Language"))
+                    .font(.system(size: 17, weight: .heavy))
+                    .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+
+                Spacer()
+            }
+
+            Picker(
+                localizer.text("settings.language", fallback: "Language"),
+                selection: $appLanguageCode
+            ) {
+                ForEach(AppLanguage.allCases) { language in
+                    Text(language.title)
+                        .tag(language.rawValue)
+                }
+            }
+            .pickerStyle(.segmented)
+        }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity)
+        .background {
+            RemoteImage(name: "bg_app", contentMode: .fill)
+                .opacity(0.72)
+                .allowsHitTesting(false)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 
     private func sectionTitle(_ title: String) -> some View {
@@ -160,7 +234,7 @@ struct SettingsView: View {
     private var contentVersionTitle: String {
         remoteContentVersion > 0
             ? "Remote v\(remoteContentVersion)"
-            : "Bundle"
+            : localizer.text("settings.bundle", fallback: "Bundle")
     }
 }
 

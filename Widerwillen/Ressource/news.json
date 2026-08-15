@@ -3,38 +3,50 @@
         {
             "id": "launch_001",
             "title": "Widerwillen Launch",
+            "titleKey": "news.launch_001.title",
             "category": "Announcement",
+            "categoryKey": "news.category.announcement",
             "imageName": "widerwillen_logo",
             "date": "2026-08-09",
             "body":
-                "Welcome to Widerwillen. Battle stages, collect rewards, summon units, and grow your account."
+                "Welcome to Widerwillen. Battle stages, collect rewards, summon units, and grow your account.",
+            "bodyKey": "news.launch_001.body"
         },
         {
             "id": "update_events",
             "title": "Event Battles Added",
+            "titleKey": "news.update_events.title",
             "category": "Update",
+            "categoryKey": "news.category.update",
             "imageName": "icon_pixel_news",
             "date": "2026-08-09",
             "body":
-                "Events now use real battle scenes with victory rewards and account-level scaling."
+                "Events now use real battle scenes with victory rewards and account-level scaling.",
+            "bodyKey": "news.update_events.body"
         },
         {
             "id": "update_trade_shop",
             "title": "Trade Shop Open",
+            "titleKey": "news.update_trade_shop.title",
             "category": "Update",
+            "categoryKey": "news.category.update",
             "imageName": "icon_pixel_trade",
             "date": "2026-08-09",
             "body":
-                "Use the Trade Shop to exchange coins, crystals, and relics through rotating offer categories."
+                "Use the Trade Shop to exchange coins, crystals, and relics through rotating offer categories.",
+            "bodyKey": "news.update_trade_shop.body"
         },
         {
             "id": "maintenance_note",
             "title": "Daily Login Rewards",
+            "titleKey": "news.maintenance_note.title",
             "category": "Announcement",
+            "categoryKey": "news.category.announcement",
             "imageName": "icon_pixel_calendar",
             "date": "2026-08-09",
             "body":
-                "Daily login rewards are now available. Check in once per day to claim your reward."
+                "Daily login rewards are now available. Check in once per day to claim your reward.",
+            "bodyKey": "news.maintenance_note.body"
         }
     ]
 }

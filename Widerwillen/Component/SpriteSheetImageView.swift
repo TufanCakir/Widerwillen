@@ -74,7 +74,9 @@ struct SpriteSheetImageView: View {
 
     private var frameImage: UIImage? {
         guard let config,
-            let url = RemoteContentCache.cachedAssetURL(named: config.imageName),
+            let url = RemoteContentCache.cachedAssetURL(
+                named: config.imageName
+            ),
             let sheet = UIImage(contentsOfFile: url.path)
         else {
             return nil

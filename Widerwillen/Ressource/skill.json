@@ -1,59 +1,41 @@
 {
-    "skills": [
+    "trees": [
         {
-            "id": "shadow_clone_sprite_damage",
+            "category": "Tap",
+            "title": "Tap",
+            "backgroundImageName": "bg_grey",
+            "requiredAccountLevel": 10
+        },
+        {
+            "category": "Shadow",
             "title": "Shadow Clone",
-            "category": "Shadow",
-            "imageName": "icon_pixel_sprite",
-            "effect": "spriteDamage",
-            "valuePerLevel": 0.08,
-            "cost": 2,
-            "maxLevel": 25,
-            "requiredAccountLevel": 4
+            "backgroundImageName": "bg_blue",
+            "requiredAccountLevel": 20
         },
         {
-            "id": "shadow_clone_speed",
-            "title": "Night Speed",
-            "category": "Shadow",
-            "imageName": "icon_pixel_sword",
-            "effect": "attackSpeed",
-            "valuePerLevel": 0.025,
-            "cost": 3,
-            "maxLevel": 20,
-            "requiredAccountLevel": 4
+            "category": "Alchemist",
+            "title": "Alchemist",
+            "backgroundImageName": "bg_viollet",
+            "requiredAccountLevel": 30
         },
         {
-            "id": "burst_total_damage",
-            "title": "Burst Core",
-            "category": "Burst",
-            "imageName": "icon_pixel_crystal",
-            "effect": "damage",
-            "valuePerLevel": 0.06,
-            "cost": 2,
-            "maxLevel": 30,
-            "requiredAccountLevel": 6
-        },
-        {
-            "id": "burst_coin_drop",
-            "title": "Coin Rain",
-            "category": "Burst",
-            "imageName": "icon_pixel_coin",
-            "effect": "coinDrop",
-            "valuePerLevel": 0.08,
-            "cost": 2,
-            "maxLevel": 25,
-            "requiredAccountLevel": 6
-        },
+            "category": "Dimension",
+            "title": "Dimension",
+            "backgroundImageName": "bg_white",
+            "requiredAccountLevel": 40
+        }
+    ],
+    "skills": [
         {
             "id": "tap_focus_damage",
             "title": "Tap Focus",
             "category": "Tap",
             "imageName": "icon_pixel_sword",
             "effect": "tapDamage",
-            "valuePerLevel": 0.10,
+            "valuePerLevel": 0.1,
             "cost": 1,
             "maxLevel": 20,
-            "requiredAccountLevel": 2
+            "requiredAccountLevel": 10
         },
         {
             "id": "tap_lucky_drop",
@@ -64,29 +46,114 @@
             "valuePerLevel": 0.01,
             "cost": 3,
             "maxLevel": 15,
-            "requiredAccountLevel": 3
+            "requiredAccountLevel": 12
         },
         {
-            "id": "prestige_relic_gain",
-            "title": "Relic Memory",
-            "category": "Prestige",
+            "id": "shadow_clone_active",
+            "title": "Shadow Clone",
+            "category": "Shadow",
+            "imageName": "icon_pixel_shadow_clone",
+            "effect": "spriteDamage",
+            "valuePerLevel": 0.08,
+            "cost": 2,
+            "maxLevel": 25,
+            "requiredAccountLevel": 20,
+            "activation": {
+                "kind": "shadowClone",
+                "durationSeconds": 8,
+                "cooldownSeconds": 22,
+                "damageMultiplier": 0.55,
+                "intervalSeconds": 0.75,
+                "companionAnimationID": "sprite_shadow_clone"
+            }
+        },
+        {
+            "id": "shadow_clone_duration",
+            "title": "Long Shadow",
+            "category": "Shadow",
+            "imageName": "icon_pixel_skill_shadow_clone_long",
+            "effect": "activeSkillDuration",
+            "valuePerLevel": 0.04,
+            "cost": 3,
+            "maxLevel": 20,
+            "requiredAccountLevel": 22
+        },
+        {
+            "id": "shadow_clone_speed",
+            "title": "Night Speed",
+            "category": "Shadow",
+            "imageName": "icon_pixel_skill_shadow_clone_speed",
+            "effect": "attackSpeed",
+            "valuePerLevel": 0.025,
+            "cost": 3,
+            "maxLevel": 20,
+            "requiredAccountLevel": 24
+        },
+        {
+            "id": "alchemist_coin_drop",
+            "title": "Coin Rain",
+            "category": "Alchemist",
+            "imageName": "icon_pixel_coin",
+            "effect": "coinDrop",
+            "valuePerLevel": 0.08,
+            "cost": 2,
+            "maxLevel": 25,
+            "requiredAccountLevel": 30
+        },
+        {
+            "id": "alchemist_rare_drop",
+            "title": "Rare Formula",
+            "category": "Alchemist",
+            "imageName": "icon_pixel_alchemist_rare",
+            "effect": "dropChance",
+            "valuePerLevel": 0.012,
+            "cost": 4,
+            "maxLevel": 15,
+            "requiredAccountLevel": 32
+        },
+        {
+            "id": "alchemist_relic_memory",
+            "title": "Relic Formula",
+            "category": "Alchemist",
             "imageName": "icon_pixel_relic",
             "effect": "prestigeRelics",
-            "valuePerLevel": 0.12,
-            "cost": 4,
+            "valuePerLevel": 0.1,
+            "cost": 5,
             "maxLevel": 20,
-            "requiredAccountLevel": 10
+            "requiredAccountLevel": 35
         },
         {
-            "id": "prestige_sprite_echo",
-            "title": "Sprite Echo",
-            "category": "Prestige",
-            "imageName": "icon_pixel_sprite",
-            "effect": "spriteDamage",
+            "id": "dimension_stage_skip",
+            "title": "Stage Rift",
+            "category": "Dimension",
+            "imageName": "icon_pixel_dimension_rift",
+            "effect": "stageSkipChance",
+            "valuePerLevel": 0.01,
+            "cost": 5,
+            "maxLevel": 20,
+            "requiredAccountLevel": 40
+        },
+        {
+            "id": "dimension_cooldown_rift",
+            "title": "Time Fold",
+            "category": "Dimension",
+            "imageName": "icon_pixel_dimension_fold",
+            "effect": "activeSkillCooldown",
+            "valuePerLevel": 0.025,
+            "cost": 5,
+            "maxLevel": 20,
+            "requiredAccountLevel": 42
+        },
+        {
+            "id": "dimension_total_damage",
+            "title": "Reality Break",
+            "category": "Dimension",
+            "imageName": "icon_pixel_dimension_break",
+            "effect": "damage",
             "valuePerLevel": 0.05,
-            "cost": 3,
+            "cost": 6,
             "maxLevel": 30,
-            "requiredAccountLevel": 10
+            "requiredAccountLevel": 45
         }
     ]
 }

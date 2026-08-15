@@ -22,9 +22,12 @@ struct TutorialDefinition: Decodable, Identifiable {
     let trigger: TutorialTrigger
     let requiredAccountLevel: Int
     let speakerName: String
+    let speakerNameKey: String?
     let speakerImageName: String
     let title: String
+    let titleKey: String?
     let messages: [String]
+    let messageKeys: [String]?
 }
 
 enum TutorialTrigger: String, Codable {
@@ -37,4 +40,8 @@ enum TutorialTrigger: String, Codable {
     case trade
     case event
     case warehouse
+    case settings
+    case news
+    case gift
+    case dailyLogin
 }

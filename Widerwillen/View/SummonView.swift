@@ -181,8 +181,10 @@ struct SummonView: View {
                         Image(systemName: "lock.fill")
                             .font(.system(size: 12, weight: .heavy))
 
-                        Text("Unlocks at account LV \(banner.requiredAccountLevel)")
-                            .font(.system(size: 12, weight: .heavy))
+                        Text(
+                            "Unlocks at account LV \(banner.requiredAccountLevel)"
+                        )
+                        .font(.system(size: 12, weight: .heavy))
                     }
                     .foregroundStyle(.white.opacity(0.82))
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)

@@ -25,27 +25,6 @@ struct LaunchView: View {
             .ignoresSafeArea()
 
             VStack(spacing: 20) {
-                ZStack {
-                    RemoteImage(name: "widerwillen_logo")
-                        .frame(width: 190, height: 190)
-                        .opacity(0.9)
-                        .shadow(
-                            color: .black.opacity(0.35),
-                            radius: 16,
-                            x: 0,
-                            y: 8
-                        )
-
-                    RemoteImage(name: "widerwillen_font_logo")
-                        .frame(maxWidth: 300, maxHeight: 110)
-                        .shadow(
-                            color: .black.opacity(0.85),
-                            radius: 3,
-                            x: 0,
-                            y: 0
-                        )
-                }
-                .frame(height: 220)
 
                 VStack(spacing: 10) {
                     if let progress = remoteContentStore.progress {

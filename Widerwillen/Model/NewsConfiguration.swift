@@ -20,8 +20,11 @@ struct NewsConfiguration: Decodable {
 struct NewsPost: Decodable, Identifiable {
     let id: String
     let title: String
+    let titleKey: String?
     let category: String
+    let categoryKey: String?
     let imageName: String
     let date: String
     let body: String
+    let bodyKey: String?
 }

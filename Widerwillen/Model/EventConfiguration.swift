@@ -20,9 +20,12 @@ struct EventConfiguration: Decodable {
 struct GameEvent: Decodable, Identifiable {
     let id: String
     let title: String
+    let titleKey: String?
     let category: String
+    let categoryKey: String?
     let bannerImageName: String
     let currencyName: String
+    let currencyNameKey: String?
     let currencyImageName: String
     let dailyLimit: Int
     let hp: Int
@@ -31,9 +34,12 @@ struct GameEvent: Decodable, Identifiable {
     private enum CodingKeys: String, CodingKey {
         case id
         case title
+        case titleKey
         case category
+        case categoryKey
         case bannerImageName
         case currencyName
+        case currencyNameKey
         case currencyImageName
         case dailyLimit
         case hp
@@ -44,14 +50,23 @@ struct GameEvent: Decodable, Identifiable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         title = try container.decode(String.self, forKey: .title)
+        titleKey = try container.decodeIfPresent(String.self, forKey: .titleKey)
         category =
             try container.decodeIfPresent(String.self, forKey: .category)
             ?? "Featured"
+        categoryKey = try container.decodeIfPresent(
+            String.self,
+            forKey: .categoryKey
+        )
         bannerImageName = try container.decode(
             String.self,
             forKey: .bannerImageName
         )
         currencyName = try container.decode(String.self, forKey: .currencyName)
+        currencyNameKey = try container.decodeIfPresent(
+            String.self,
+            forKey: .currencyNameKey
+        )
         currencyImageName = try container.decode(
             String.self,
             forKey: .currencyImageName

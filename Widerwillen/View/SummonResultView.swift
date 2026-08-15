@@ -89,12 +89,15 @@ struct SummonResultView: View {
             if result.kind == .sprite {
                 StarRatingView(stars: result.level, maxVisibleStars: 7, size: 8)
             } else {
-                Text(result.isDuplicate ? "Duplicate  Lv \(result.level)" : "New  Lv 1")
-                    .font(.system(size: 10, weight: .bold))
-                    .foregroundStyle(.white.opacity(0.76))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+                Text(
+                    result.isDuplicate
+                        ? "Duplicate  Lv \(result.level)" : "New  Lv 1"
+                )
+                .font(.system(size: 10, weight: .bold))
+                .foregroundStyle(.white.opacity(0.76))
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
             }
 
             Text(result.entry.rarity.title)
@@ -154,7 +157,9 @@ struct SummonResultView: View {
         revealedCount = 0
 
         for index in results.indices {
-            try? await Task.sleep(for: .milliseconds(index == results.startIndex ? 180 : 130))
+            try? await Task.sleep(
+                for: .milliseconds(index == results.startIndex ? 180 : 130)
+            )
             await MainActor.run {
                 revealedCount = index + 1
             }

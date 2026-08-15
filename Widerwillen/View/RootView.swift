@@ -43,7 +43,8 @@ struct RootView: View {
             }
 
             if internetConnectionStore.isConnected
-                && hasFinishedLaunchLoading && remoteContentStore.hasPendingUpdate
+                && hasFinishedLaunchLoading
+                && remoteContentStore.hasPendingUpdate
             {
                 remoteUpdatePrompt
                     .padding(.horizontal, 28)
@@ -59,59 +60,60 @@ struct RootView: View {
                 )
             }
         }
-            .statusBarHidden(true)
-            .onAppear {
-                progress.refreshIdleRewards()
-                musicPlayer.setEnabled(isMusicEnabled)
-            }
-            .task {
-                guard internetConnectionStore.isConnected else { return }
+        .statusBarHidden(true)
+        .onAppear {
+            progress.refreshIdleRewards()
+            musicPlayer.setEnabled(isMusicEnabled)
+        }
+        .task {
+            guard internetConnectionStore.isConnected else { return }
 
-                await remoteContentStore.loadLaunchContent()
-                await MainActor.run {
-                    hasFinishedLaunchLoading = true
+            await remoteContentStore.loadLaunchContent()
+            await MainActor.run {
+                hasFinishedLaunchLoading = true
+            }
+            await remoteContentStore.checkForAvailableUpdate()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active && internetConnectionStore.isConnected {
+                progress.refreshIdleRewards()
+                Task {
+                    await remoteContentStore.checkForAvailableUpdate()
                 }
+            }
+        }
+        .onChange(of: isMusicEnabled) { _, newValue in
+            musicPlayer.setEnabled(newValue)
+        }
+        .onChange(of: selectedTab) { _, _ in
+            Task {
+                guard internetConnectionStore.isConnected else { return }
                 await remoteContentStore.checkForAvailableUpdate()
             }
-            .onChange(of: scenePhase) { _, newPhase in
-                if newPhase == .active && internetConnectionStore.isConnected {
-                    progress.refreshIdleRewards()
-                    Task {
-                        await remoteContentStore.checkForAvailableUpdate()
+        }
+        .onChange(of: activeMode) { _, _ in
+            isFooterHiddenForActiveMode = false
+            Task {
+                guard internetConnectionStore.isConnected else { return }
+                await remoteContentStore.checkForAvailableUpdate()
+            }
+        }
+        .onChange(of: internetConnectionStore.isConnected) {
+            _,
+            isConnected in
+            guard isConnected else { return }
+
+            Task {
+                if !hasFinishedLaunchLoading {
+                    await remoteContentStore.loadLaunchContent()
+                    await MainActor.run {
+                        hasFinishedLaunchLoading = true
                     }
                 }
-            }
-            .onChange(of: isMusicEnabled) { _, newValue in
-                musicPlayer.setEnabled(newValue)
-            }
-            .onChange(of: selectedTab) { _, _ in
-                Task {
-                    guard internetConnectionStore.isConnected else { return }
-                    await remoteContentStore.checkForAvailableUpdate()
-                }
-            }
-            .onChange(of: activeMode) { _, _ in
-                isFooterHiddenForActiveMode = false
-                Task {
-                    guard internetConnectionStore.isConnected else { return }
-                    await remoteContentStore.checkForAvailableUpdate()
-                }
-            }
-            .onChange(of: internetConnectionStore.isConnected) {
-                _, isConnected in
-                guard isConnected else { return }
 
-                Task {
-                    if !hasFinishedLaunchLoading {
-                        await remoteContentStore.loadLaunchContent()
-                        await MainActor.run {
-                            hasFinishedLaunchLoading = true
-                        }
-                    }
-
-                    await remoteContentStore.checkForAvailableUpdate()
-                }
+                await remoteContentStore.checkForAvailableUpdate()
             }
+        }
     }
 
     private var remoteContentProgressView: some View {
@@ -139,9 +141,11 @@ struct RootView: View {
                 .font(.system(size: 18, weight: .heavy))
 
             if let version = remoteContentStore.pendingUpdateVersion {
-                Text("Version \(version) • \(remoteContentStore.pendingUpdateSizeText)")
-                    .font(.system(size: 12, weight: .bold))
-                    .opacity(0.78)
+                Text(
+                    "Version \(version) • \(remoteContentStore.pendingUpdateSizeText)"
+                )
+                .font(.system(size: 12, weight: .bold))
+                .opacity(0.78)
             }
 
             if remoteContentStore.isRefreshing {
@@ -229,6 +233,8 @@ struct RootView: View {
             GiftView(progress: progress)
         case .warehouse:
             warehouseView(progress: progress)
+        case .pass:
+            PassListView(progress: progress)
         case .dailyLogin:
             DailyLoginView(progress: progress)
         }
@@ -254,8 +260,16 @@ struct RootView: View {
                 return .skills
             case .warehouse:
                 return .warehouse
-            default:
-                return .launch
+            case .pass:
+                return .shop
+            case .settings:
+                return .settings
+            case .news:
+                return .news
+            case .gift:
+                return .gift
+            case .dailyLogin:
+                return .dailyLogin
             }
         }
 
@@ -298,7 +312,8 @@ struct RootView: View {
 
     private func usesFooterShell(_ mode: MenuMode) -> Bool {
         switch mode {
-        case .event, .skills, .settings, .news, .gift, .warehouse, .dailyLogin:
+        case .event, .skills, .settings, .news, .gift, .warehouse, .pass,
+            .dailyLogin:
             true
         case .battle:
             false

@@ -81,7 +81,7 @@ struct GameHeader: View {
             )
 
             AppResourceLabel(
-                imageName: "icon_pixel_skill_books",
+                imageName: "icon_pixel_skill_book",
                 value: progress.skillBooks,
                 iconSize: 22,
                 fontSize: 12
@@ -108,14 +108,22 @@ struct GameHeader: View {
     }
 
     private var profilePickerScreen: some View {
-        ZStack {
-            AppBackground()
+        GeometryReader { proxy in
+            ZStack {
+                AppBackground()
 
-            profilePickerPanel
+                profilePickerPanel(
+                    width: min(proxy.size.width - 28, 316),
+                    maxHeight: proxy.size.height * 0.74
+                )
+            }
+            .frame(width: proxy.size.width, height: proxy.size.height)
         }
     }
 
-    private var profilePickerPanel: some View {
+    private func profilePickerPanel(width: CGFloat, maxHeight: CGFloat)
+        -> some View
+    {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Profile Icon")
@@ -145,14 +153,18 @@ struct GameHeader: View {
                 .buttonStyle(.plain)
             }
 
-            LazyVGrid(columns: pickerColumns, spacing: 12) {
-                ForEach(iconConfiguration.icons) { icon in
-                    iconChoice(icon)
+            ScrollView(showsIndicators: false) {
+                LazyVGrid(columns: pickerColumns, spacing: 8) {
+                    ForEach(iconConfiguration.icons) { icon in
+                        iconChoice(icon)
+                    }
                 }
+                .padding(.vertical, 2)
             }
         }
-        .padding(14)
-        .frame(width: 260)
+        .padding(12)
+        .frame(width: width)
+        .frame(maxHeight: maxHeight)
         .background(.black.opacity(0.76))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
@@ -160,14 +172,14 @@ struct GameHeader: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 6)
-        .padding(.horizontal, 24)
     }
 
     private var pickerColumns: [GridItem] {
         [
-            GridItem(.fixed(68), spacing: 10),
-            GridItem(.fixed(68), spacing: 10),
-            GridItem(.fixed(68), spacing: 10),
+            GridItem(.fixed(58), spacing: 8),
+            GridItem(.fixed(58), spacing: 8),
+            GridItem(.fixed(58), spacing: 8),
+            GridItem(.fixed(58), spacing: 8),
         ]
     }
 
@@ -185,11 +197,11 @@ struct GameHeader: View {
         } label: {
             VStack(spacing: 6) {
                 ZStack(alignment: .topTrailing) {
-                    profileIconImage(icon.imageName, size: 42)
+                    profileIconImage(icon.imageName, size: 34)
 
                     if !isUnlocked {
                         Image(systemName: "lock.fill")
-                            .font(.system(size: 9, weight: .heavy))
+                            .font(.system(size: 8, weight: .heavy))
                             .foregroundStyle(.white)
                             .padding(3)
                             .background(.black.opacity(0.62))
@@ -199,10 +211,10 @@ struct GameHeader: View {
                 }
 
                 Text(isUnlocked ? icon.title : "LV \(requiredLevel)")
-                    .font(.system(size: 10, weight: .heavy))
+                    .font(.system(size: 8, weight: .heavy))
                     .foregroundStyle(.white.opacity(0.86))
                     .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(0.6)
                     .shadow(
                         color: .black.opacity(0.9),
                         radius: 3,
@@ -211,7 +223,7 @@ struct GameHeader: View {
                     )
             }
             .opacity(isUnlocked ? 1 : 0.46)
-            .frame(width: 68, height: 68)
+            .frame(width: 58, height: 58)
             .background(.white.opacity(isSelected ? 0.2 : 0.08))
             .overlay {
                 RoundedRectangle(cornerRadius: 8)

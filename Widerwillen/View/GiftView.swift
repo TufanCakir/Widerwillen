@@ -12,6 +12,8 @@ struct GiftView: View {
 
     private let configuration: GiftConfiguration
 
+    @AppStorage("appLanguage") private var appLanguageCode = AppLanguage.de
+        .rawValue
     @State private var selectedCategory = ""
     @State private var message = ""
 
@@ -78,6 +80,22 @@ struct GiftView: View {
         return values
     }
 
+    private var localizer: AppLocalizer {
+        AppLocalizer(languageCode: appLanguageCode)
+    }
+
+    private func localizedCategory(_ category: String) -> String {
+        let key =
+            availableGifts.first { $0.category == category }?.categoryKey
+            ?? configuration.gifts.first { $0.category == category }?
+            .categoryKey
+        return localizer.text(key, fallback: category)
+    }
+
+    private func localizedTitle(_ gift: GiftReward) -> String {
+        localizer.text(gift.titleKey, fallback: gift.title)
+    }
+
     private var availableGifts: [GiftReward] {
         configuration.gifts.filter { progress.canClaimGift($0) }
     }
@@ -88,34 +106,39 @@ struct GiftView: View {
         return Button {
             claimAll()
         } label: {
-            Text("Claim All")
+            Text(localizer.text("gift.claim_all", fallback: "Claim All"))
                 .font(.system(size: 18, weight: .heavy))
-                .foregroundStyle(.white)
+                .foregroundStyle(hasGifts ? .black : .white.opacity(0.54))
                 .shadow(
-                    color: .black.opacity(0.9),
-                    radius: 3,
+                    color: hasGifts
+                        ? .white.opacity(0.28) : .black.opacity(0.9),
+                    radius: 2,
                     x: 0,
                     y: 0
                 )
                 .frame(maxWidth: .infinity)
                 .frame(height: 56)
-                .background(.black.opacity(hasGifts ? 0.54 : 0.28))
+                .background(hasGifts ? .white : .black.opacity(0.28))
                 .overlay {
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(
-                            .white.opacity(hasGifts ? 0.72 : 0.28),
+                            .white.opacity(hasGifts ? 0.88 : 0.28),
                             lineWidth: 1
                         )
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 8))
-                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+                .shadow(color: .black.opacity(0.9), radius: 7, x: 0, y: 4)
         }
         .buttonStyle(.plain)
         .disabled(!hasGifts)
     }
 
     private var categoryBar: some View {
-        CategoryBar(categories: categories, selectedCategory: $selectedCategory)
+        CategoryBar(
+            categories: categories,
+            selectedCategory: $selectedCategory,
+            displayName: localizedCategory
+        )
     }
 
     private func giftPage(for category: String) -> some View {
@@ -142,7 +165,7 @@ struct GiftView: View {
                 .frame(width: 54, height: 54)
 
             VStack(alignment: .leading, spacing: 8) {
-                Text(gift.title)
+                Text(localizedTitle(gift))
                     .font(.system(size: 18, weight: .heavy))
                     .foregroundStyle(.white)
                     .shadow(
@@ -171,8 +194,15 @@ struct GiftView: View {
         let claimedCount = progress.claimGifts(availableGifts)
         message =
             claimedCount > 0
-            ? "\(claimedCount) gifts claimed"
-            : "No gifts available"
+            ? localizer.text(
+                "gift.claimed_count",
+                fallback: "\(claimedCount) gifts claimed"
+            )
+            .replacingOccurrences(of: "{count}", with: "\(claimedCount)")
+            : localizer.text(
+                "gift.none_available",
+                fallback: "No gifts available"
+            )
         syncSelectedCategory()
         clearMessageSoon()
     }
@@ -183,7 +213,7 @@ struct GiftView: View {
                 .frame(width: 62, height: 62)
                 .opacity(0.45)
 
-            Text("No gifts")
+            Text(localizer.text("gift.empty", fallback: "No gifts"))
                 .font(.system(size: 16, weight: .heavy))
                 .foregroundStyle(.white.opacity(0.72))
                 .shadow(

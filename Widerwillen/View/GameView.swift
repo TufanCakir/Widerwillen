@@ -30,6 +30,7 @@ struct GameView: View {
             heroAnimationID: progress.battleHeroAnimationID,
             companionAnimationIDs: progress.battleCompanionAnimationIDs,
             spriteAttackInterval: progress.spriteAttackInterval,
+            activeSkills: progress.activeBattleSkills,
             onTapAttack: {
                 progress.attackStage(damage: progress.tapDamage)
             },
@@ -39,6 +40,9 @@ struct GameView: View {
                 }
 
                 return progress.attackStage(damage: progress.spriteDamage)
+            },
+            onActiveSkillAttack: { skill in
+                progress.attackStage(damage: skill.damage)
             },
             onPrestige: {
                 progress.prestige()

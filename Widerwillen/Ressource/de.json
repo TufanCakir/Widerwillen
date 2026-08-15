@@ -1,0 +1,171 @@
+{
+    "strings": {
+        "common.next": "Weiter",
+        "common.ok": "OK",
+        "settings.title": "Einstellungen",
+        "settings.language": "Sprache",
+        "settings.music": "Musik",
+        "settings.layer_animation": "Ebenenanimation",
+        "settings.on": "Ein",
+        "settings.off": "Aus",
+        "settings.info": "Info",
+        "settings.content": "Inhalt",
+        "settings.bundle": "Bundle",
+        "tutorial.speaker.blunt": "Blunt",
+        "tutorial.welcome.title": "Willkommen",
+        "tutorial.welcome.message.1":
+            "Tippe im Kampf auf den Bildschirm, um Gegnern Schaden zuzufügen.",
+        "tutorial.welcome.message.2":
+            "Besiege Gegner, um Münzen, Konto-XP und manchmal Skillbücher zu erhalten.",
+        "tutorial.welcome.message.3":
+            "Neue Funktionen werden freigeschaltet, wenn dein Konto-Level steigt.",
+        "tutorial.sprites.title": "Sprites",
+        "tutorial.sprites.message.1":
+            "Sprites sind Helfer, die du sammeln kannst.",
+        "tutorial.sprites.message.2":
+            "Wenn du Helfer-Sprites beschwörst, kämpfen sie neben deinem ausgewählten Charakter.",
+        "tutorial.summon.title": "Beschwörung",
+        "tutorial.summon.message.1":
+            "Beschwörungen kosten Kristalle und können Charaktere, Skins, Helfer-Sprites und Items freischalten.",
+        "tutorial.summon.message.2":
+            "Duplikate erhöhen Sterne, also machen alte Beschwörungen dein Team weiter stärker.",
+        "tutorial.skills.title": "Skillbäume",
+        "tutorial.skills.message.1":
+            "Skillbücher schalten Upgrades in verschiedenen Skillbäumen frei.",
+        "tutorial.skills.message.2":
+            "Manche Skills verbessern Tap-Schaden, andere Sprite-Schaden, Geschwindigkeit oder Drop-Chance.",
+        "tutorial.trade.title": "Tausch",
+        "tutorial.trade.message.1":
+            "Im Tausch kannst du Ressourcen wechseln, wenn du eine andere Währung brauchst.",
+        "tutorial.trade.message.2":
+            "Nutze das bewusst, weil manche Ressourcen seltener sind als andere.",
+        "tutorial.shop.title": "Shop",
+        "tutorial.shop.message.1":
+            "Der Shop enthält optionale Kristallpakete, Battle-Pässe und Spezialpakete.",
+        "tutorial.shop.message.2":
+            "Münzen, Relikte und Skillbücher verdienst du weiterhin durchs Spielen.",
+        "tutorial.battle.title": "Kampf",
+        "tutorial.battle.message.1":
+            "Dein Charakter steht links und Gegner stehen rechts.",
+        "tutorial.battle.message.2":
+            "Tippe zum Angreifen. Aktive Skills kannst du später in die Kampf-Skillleiste legen.",
+        "tutorial.event.title": "Events",
+        "tutorial.event.message.1":
+            "Events sind begrenzte Kämpfe mit eigenen Belohnungen und Währungen.",
+        "tutorial.event.message.2":
+            "Event-Chips kannst du während des Events gegen Items, Skins oder Ressourcen tauschen.",
+        "tutorial.warehouse.title": "Lager",
+        "tutorial.warehouse.message.1":
+            "Im Lager findest du deine Items, Ausrüstung und Skins.",
+        "tutorial.warehouse.message.2":
+            "Später kannst du hier Boni ausrüsten, bevor du in den Kampf gehst.",
+        "tutorial.settings.title": "Einstellungen",
+        "tutorial.settings.message.1":
+            "Hier kannst du Sprache, Musik und Anzeigeoptionen ändern.",
+        "tutorial.settings.message.2":
+            "Remote-Inhalte werden weiter über Launch- und Update-Screens aktualisiert.",
+        "tutorial.news.title": "Neuigkeiten",
+        "tutorial.news.message.1":
+            "Neuigkeiten zeigen aktuelle Updates, Events und Änderungen.",
+        "tutorial.news.message.2":
+            "Schau hier rein, wenn neue Inhalte oder ein begrenztes Event erscheinen.",
+        "tutorial.gift.title": "Geschenkbox",
+        "tutorial.gift.message.1":
+            "Belohnungen aus Geschenken, Events oder Ausgleichen können hier erscheinen.",
+        "tutorial.gift.message.2": "Hole sie ab, bevor sie ablaufen.",
+        "tutorial.daily_login.title": "Täglicher Login",
+        "tutorial.daily_login.message.1":
+            "Tägliche Login-Belohnungen helfen dir auch bei kurzen Spielrunden weiter.",
+        "tutorial.daily_login.message.2":
+            "Komm jeden Tag zurück, um die nächste Belohnung zu sammeln.",
+        "event.category.daily": "Täglich",
+        "event.category.relic": "Relikt",
+        "event.category.treasure": "Schatz",
+        "event.category.boss": "Boss",
+        "event.hp": "Event-HP",
+        "event.victory": "Sieg",
+        "event.damage": "Schaden",
+        "event.daily_limit_reached": "Tageslimit erreicht",
+        "event.crystal_hunt.title": "Kristalljagd",
+        "event.coin_hunt.title": "Münzjagd",
+        "event.relic_hunt.title": "Reliktjagd",
+        "event.crystal_cavern.title": "Kristallhöhle",
+        "event.coin_cavern.title": "Münzhöhle",
+        "event.treasure_rush.title": "Schatzrausch",
+        "event.void_trial.title": "Leerenprüfung",
+        "event.currency.moon_shards": "Mondscherben",
+        "event.currency.boss_tokens": "Bossmarken",
+        "event.currency.relic_dust": "Reliktstaub",
+        "event.currency.cavern_gems": "Höhlenjuwelen",
+        "event.currency.treasure_keys": "Schatzschlüssel",
+        "event.currency.void_marks": "Leerenzeichen",
+        "news.category.announcement": "Ankündigung",
+        "news.category.update": "Update",
+        "news.launch_001.title": "Widerwillen-Start",
+        "news.launch_001.body":
+            "Willkommen bei Widerwillen. Kämpfe dich durch Stages, sammle Belohnungen, beschwöre Einheiten und erhöhe dein Konto-Level.",
+        "news.update_events.title": "Event-Kämpfe hinzugefügt",
+        "news.update_events.body":
+            "Events nutzen jetzt echte Kampfszenen mit Sieg-Belohnungen und Skalierung über dein Konto-Level.",
+        "news.update_trade_shop.title": "Tauschshop geöffnet",
+        "news.update_trade_shop.body":
+            "Nutze den Tauschshop, um Münzen, Kristalle und Relikte über wechselnde Angebotskategorien zu tauschen.",
+        "news.maintenance_note.title": "Tägliche Login-Belohnungen",
+        "news.maintenance_note.body":
+            "Tägliche Login-Belohnungen sind jetzt verfügbar. Schau einmal pro Tag vorbei, um deine Belohnung abzuholen.",
+        "daily_login.day.1": "Tag 1",
+        "daily_login.day.2": "Tag 2",
+        "daily_login.day.3": "Tag 3",
+        "daily_login.day.4": "Tag 4",
+        "daily_login.day.5": "Tag 5",
+        "daily_login.day.6": "Tag 6",
+        "daily_login.day.7": "Tag 7",
+        "daily_login.day.8": "Tag 8",
+        "daily_login.day.9": "Tag 9",
+        "daily_login.day.10": "Tag 10",
+        "daily_login.day.11": "Tag 11",
+        "daily_login.day.12": "Tag 12",
+        "daily_login.day.13": "Tag 13",
+        "daily_login.day.14": "Tag 14",
+        "daily_login.standard.title": "Täglicher Login",
+        "daily_login.launch.title": "Launch-Login",
+        "daily_login.summer.title": "Sommer-Login",
+        "daily_login.category.daily": "Täglich",
+        "daily_login.category.launch": "Launch",
+        "daily_login.category.seasonal": "Saisonal",
+        "daily_login.ready": "Bereit",
+        "daily_login.popup.title": "Login-Bonus",
+        "daily_login.popup.open": "Öffnen",
+        "daily_login.popup.claim": "Abholen",
+        "daily_login.claimed": "Tägliche Belohnung abgeholt",
+        "daily_login.already_claimed": "Heute schon abgeholt",
+        "gift.category.available": "Verfügbar",
+        "gift.category.event": "Event",
+        "gift.category.compensation": "Ausgleich",
+        "gift.starter_pack.title": "Starterpaket",
+        "gift.skill_tree_launch_gift.title": "Skillbaum-Geschenk",
+        "gift.relic_launch_gift.title": "Relikt-Startgeschenk",
+        "gift.update_bonus.title": "Update-Bonus",
+        "gift.event_chip_bundle_blue.title": "Blaues Chip-Paket",
+        "gift.event_chip_bundle_yellow.title": "Gelbes Chip-Paket",
+        "gift.compensation_skill_books_001.title": "Skillbuch-Ausgleich",
+        "gift.claim_all": "Alle abholen",
+        "gift.claimed_count": "{count} Geschenke abgeholt",
+        "gift.none_available": "Keine Geschenke verfügbar",
+        "gift.empty": "Keine Geschenke",
+        "warehouse.category.currencies": "Währungen",
+        "warehouse.category.event_chips": "Event-Chips",
+        "warehouse.category.relics": "Relikte",
+        "warehouse.category.equipment": "Ausrüstung",
+        "warehouse.currency.coins": "Münzen",
+        "warehouse.currency.crystals": "Kristalle",
+        "warehouse.currency.relics": "Relikte",
+        "warehouse.currency.skill_books": "Skillbücher",
+        "warehouse.idle.title": "Idle-Belohnungen",
+        "warehouse.idle.subtitle":
+            "Belohnungen, die während deiner Pause gesammelt wurden",
+        "warehouse.claim": "Abholen",
+        "warehouse.empty.relics": "Keine Relikte",
+        "warehouse.empty.equipment": "Keine Ausrüstung"
+    }
+}

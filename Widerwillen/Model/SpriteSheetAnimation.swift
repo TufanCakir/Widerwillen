@@ -19,7 +19,9 @@ final class SpriteSheetAnimation {
         self.config = config
 
         guard
-            let url = RemoteContentCache.cachedAssetURL(named: config.imageName),
+            let url = RemoteContentCache.cachedAssetURL(
+                named: config.imageName
+            ),
             let image = UIImage(contentsOfFile: url.path)
         else {
             textures = []
@@ -85,7 +87,10 @@ final class SpriteSheetAnimation {
             node?.texture = firstTexture
         }
 
-        node.run(.sequence([animation, returnToIdle]), withKey: attackActionKey)
+        node.run(
+            .sequence([animation, returnToIdle]),
+            withKey: attackActionKey
+        )
     }
 
     func size(fitting container: CGSize, scale: CGFloat = 0.7) -> CGSize {

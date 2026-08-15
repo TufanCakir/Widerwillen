@@ -60,6 +60,7 @@ final class GameProgressStore {
     private(set) var eventRunsByID: [String: EventRunProgress] = [:]
     private(set) var claimedGiftIDs: Set<String> = []
     private(set) var lastDailyLoginClaimDay = ""
+    private(set) var lastDailyLoginClaimDaysByID: [String: String] = [:]
     private(set) var selectedProfileIconImageName =
         GameProgressStore.defaultProfileIconImageName
     private(set) var selectedCharacterID = GameProgressStore.defaultCharacterID
@@ -90,9 +91,12 @@ final class GameProgressStore {
     }
 
     var battleCompanionAnimationIDs: Set<String> {
-        Set(ownedSprites.keys.compactMap {
-            Self.companionConfiguration.companion(spriteIndex: $0)?.animationID
-        })
+        Set(
+            ownedSprites.keys.compactMap {
+                Self.companionConfiguration.companion(spriteIndex: $0)?
+                    .animationID
+            }
+        )
     }
 
     var hasCompanionSprites: Bool {
@@ -182,24 +186,26 @@ final class GameProgressStore {
             + accountPower + prestigePower
         return max(
             1,
-            Int((Double(rawPower) * (1.0 + skillBonus(for: .damage)))
-                .rounded())
+            Int(
+                (Double(rawPower) * (1.0 + skillBonus(for: .damage)))
+                    .rounded()
+            )
         )
     }
 
     private var companionAttackPower: Int {
         ownedSprites.values
             .reduce(0) {
-            let basePower =
-                Self.companionConfiguration.companion(
-                    spriteIndex: $1.spriteIndex
-                )?.baseDPS ?? Self.rarityPower($1.rarity)
-            return $0
-                + Self.scaledPower(
-                    base: basePower,
-                    level: $1.stars
-                )
-        }
+                let basePower =
+                    Self.companionConfiguration.companion(
+                        spriteIndex: $1.spriteIndex
+                    )?.baseDPS ?? Self.rarityPower($1.rarity)
+                return $0
+                    + Self.scaledPower(
+                        base: basePower,
+                        level: $1.stars
+                    )
+            }
     }
 
     var tapDamage: Int {
@@ -214,8 +220,10 @@ final class GameProgressStore {
         let prestigeMultiplier = 1.0 + Double(prestigeCount) * 0.12
         return max(
             1,
-            Int((Double(companionAttackPower) * multiplier * prestigeMultiplier)
-                .rounded())
+            Int(
+                (Double(companionAttackPower) * multiplier * prestigeMultiplier)
+                    .rounded()
+            )
         )
     }
 
@@ -223,6 +231,40 @@ final class GameProgressStore {
         let speedBonus = min(skillBonus(for: .attackSpeed), 0.65)
         let seconds = max(0.45, 1.45 * (1.0 - speedBonus))
         return .milliseconds(Int(seconds * 1000))
+    }
+
+    var activeBattleSkills: [BattleActiveSkill] {
+        Self.skillConfiguration.skills.compactMap { skill in
+            guard
+                let activation = skill.activation,
+                skillLevel(for: skill) > 0
+            else {
+                return nil
+            }
+
+            let level = skillLevel(for: skill)
+            let damageMultiplier =
+                activation.damageMultiplier
+                * (1.0 + Double(max(level - 1, 0)) * skill.valuePerLevel)
+            let damage = max(
+                1,
+                Int((Double(manualAttackPower) * damageMultiplier).rounded())
+            )
+
+            return BattleActiveSkill(
+                id: skill.id,
+                title: skill.title,
+                imageName: skill.imageName,
+                kind: activation.kind,
+                durationSeconds: activation.durationSeconds
+                    * (1.0 + skillBonus(for: .activeSkillDuration)),
+                cooldownSeconds: activation.cooldownSeconds
+                    * (1.0 - min(skillBonus(for: .activeSkillCooldown), 0.7)),
+                tickIntervalSeconds: activation.intervalSeconds,
+                damage: damage,
+                companionAnimationID: activation.companionAnimationID
+            )
+        }
     }
 
     var hasPendingRewards: Bool {
@@ -271,25 +313,31 @@ final class GameProgressStore {
 
     private func advanceStage() -> StageRewards {
         let nextStage = stage + 1
+        let skippedStages = rollStageSkipCount(from: nextStage)
+        let reachedStage = nextStage + skippedStages
         let earnedCoins = Int(
-            (Double(25 + nextStage * 3)
-                * (1.0 + skillBonus(for: .coinDrop))).rounded()
+            (Double(25 + reachedStage * 3)
+                * (1.0 + skillBonus(for: .coinDrop))
+                * (1.0 + Double(skippedStages) * 0.65)).rounded()
         )
+        let bossStagesCleared = (nextStage...reachedStage)
+            .filter { $0.isMultiple(of: 10) }
+            .count
         let earnedCrystals =
-            nextStage.isMultiple(of: 10)
-            ? 1 + nextStage / 50
+            bossStagesCleared > 0
+            ? bossStagesCleared + reachedStage / 50
             : 0
-        let earnedSkillBooks = rollSkillBookDrop(for: nextStage)
+        let earnedSkillBooks = rollSkillBookDrop(for: reachedStage)
 
-        stage = nextStage
+        stage = reachedStage
         coins += earnedCoins
         skillBooks += earnedSkillBooks
-        addAccountXP(12 + nextStage * 2)
-        maxStageHP = Self.maxHP(for: nextStage, accountLevel: accountLevel)
+        addAccountXP(12 + reachedStage * 2 + skippedStages * 5)
+        maxStageHP = Self.maxHP(for: reachedStage, accountLevel: accountLevel)
         stageHP = maxStageHP
 
         crystals += earnedCrystals
-        addPassPoints(nextStage.isMultiple(of: 10) ? 30 : 10)
+        addPassPoints((bossStagesCleared > 0 ? 30 : 10) + skippedStages * 10)
 
         saveProgress()
         return StageRewards(
@@ -297,6 +345,16 @@ final class GameProgressStore {
             crystals: earnedCrystals,
             skillBooks: earnedSkillBooks
         )
+    }
+
+    private func rollStageSkipCount(from nextStage: Int) -> Int {
+        let chance = min(skillBonus(for: .stageSkipChance), 0.35)
+        guard chance > 0, Double.random(in: 0..<1) < chance else {
+            return 0
+        }
+
+        let skippedStage = nextStage + 1
+        return skippedStage.isMultiple(of: 10) ? 0 : 1
     }
 
     func remainingRuns(for event: GameEvent) -> Int {
@@ -393,7 +451,7 @@ final class GameProgressStore {
         guard canClaimGift(gift) else { return false }
 
         for reward in gift.rewards {
-            change(reward.resource, by: reward.amount)
+            change(reward, by: reward.amount)
         }
 
         claimedGiftIDs.insert(gift.id)
@@ -408,7 +466,7 @@ final class GameProgressStore {
 
         for gift in availableGifts {
             for reward in gift.rewards {
-                change(reward.resource, by: reward.amount)
+                change(reward, by: reward.amount)
             }
 
             claimedGiftIDs.insert(gift.id)
@@ -433,15 +491,45 @@ final class GameProgressStore {
         lastDailyLoginClaimDay != Self.todayKey()
     }
 
+    func canClaimDailyLogin(for login: DailyLoginCampaign) -> Bool {
+        lastDailyLoginClaimDaysByID[login.id] != Self.todayKey()
+    }
+
+    func hasClaimableDailyLogin(in configuration: DailyLoginConfiguration)
+        -> Bool
+    {
+        configuration.logins.contains { canClaimDailyLogin(for: $0) }
+    }
+
     @discardableResult
     func claimDailyLoginReward(_ reward: DailyLoginReward) -> Bool {
         guard canClaimDailyLogin else { return false }
 
         for amount in reward.rewards {
-            change(amount.resource, by: amount.amount)
+            change(amount, by: amount.amount)
         }
 
         lastDailyLoginClaimDay = Self.todayKey()
+        saveProgress()
+        return true
+    }
+
+    @discardableResult
+    func claimDailyLoginReward(
+        _ reward: DailyLoginReward,
+        in login: DailyLoginCampaign
+    ) -> Bool {
+        guard canClaimDailyLogin(for: login) else { return false }
+
+        for amount in reward.rewards {
+            change(amount, by: amount.amount)
+        }
+
+        let today = Self.todayKey()
+        lastDailyLoginClaimDaysByID[login.id] = today
+        if login.id == "standard" {
+            lastDailyLoginClaimDay = today
+        }
         saveProgress()
         return true
     }
@@ -583,8 +671,10 @@ final class GameProgressStore {
 
         let earnedShards = max(
             1,
-            Int((Double(stage / 10)
-                * (1.0 + skillBonus(for: .prestigeRelics))).rounded())
+            Int(
+                (Double(stage / 10)
+                    * (1.0 + skillBonus(for: .prestigeRelics))).rounded()
+            )
         )
         prestigeCount += 1
         artifactShards += earnedShards
@@ -599,8 +689,17 @@ final class GameProgressStore {
     }
 
     func canUpgradeSkill(_ skill: SkillNode) -> Bool {
-        skillLevel(for: skill) < skill.maxLevel
-            && accountLevel >= (skill.requiredAccountLevel ?? 1)
+        let treeRequiredLevel =
+            Self.skillConfiguration.trees
+            .first { $0.category == skill.category }?
+            .requiredAccountLevel ?? 1
+
+        return skillLevel(for: skill) < skill.maxLevel
+            && accountLevel
+                >= max(
+                    skill.requiredAccountLevel ?? 1,
+                    treeRequiredLevel
+                )
             && skillBooks >= skill.cost
     }
 
@@ -753,7 +852,8 @@ final class GameProgressStore {
             let companion =
                 entry.companionID.flatMap {
                     Self.companionConfiguration.companion(id: $0)
-                } ?? Self.companionConfiguration.companion(
+                }
+                ?? Self.companionConfiguration.companion(
                     spriteIndex: spriteIndex
                 )
             let oldStars = ownedSprites[spriteIndex]?.stars ?? 0
@@ -912,7 +1012,10 @@ final class GameProgressStore {
     }
 
     private func unlockCharacter(_ characterID: String) {
-        guard let character = Self.characterConfiguration.character(id: characterID)
+        guard
+            let character = Self.characterConfiguration.character(
+                id: characterID
+            )
         else { return }
 
         let currentStars = ownedCharacters[characterID]?.stars ?? 0
@@ -1008,6 +1111,7 @@ final class GameProgressStore {
         eventRunsByID = snapshot.eventRunsByID
         claimedGiftIDs = Set(snapshot.claimedGiftIDs)
         lastDailyLoginClaimDay = snapshot.lastDailyLoginClaimDay
+        lastDailyLoginClaimDaysByID = snapshot.lastDailyLoginClaimDaysByID
         selectedProfileIconImageName = snapshot.selectedProfileIconImageName
         ownedSkillLevels = snapshot.ownedSkillLevels
         passPointsByID = snapshot.passPointsByID
@@ -1066,6 +1170,7 @@ final class GameProgressStore {
             eventRunsByID: eventRunsByID,
             claimedGiftIDs: Array(claimedGiftIDs),
             lastDailyLoginClaimDay: lastDailyLoginClaimDay,
+            lastDailyLoginClaimDaysByID: lastDailyLoginClaimDaysByID,
             selectedProfileIconImageName: selectedProfileIconImageName,
             selectedCharacterID: selectedCharacterID,
             selectedCharacterSkinID: selectedCharacterSkinID,
@@ -1142,7 +1247,8 @@ final class GameProgressStore {
         let availableIcons =
             (try? ProfileIconConfiguration.load().icons) ?? []
         let availableIconNames = availableIcons.map(\.imageName)
-        let unlockedIconNames = availableIcons
+        let unlockedIconNames =
+            availableIcons
             .filter { accountLevel >= ($0.requiredAccountLevel ?? 1) }
             .map(\.imageName)
         let fallbackIconName =
@@ -1279,6 +1385,7 @@ final class GameProgressStore {
         let eventRunsByID: [String: EventRunProgress]
         let claimedGiftIDs: [String]
         let lastDailyLoginClaimDay: String
+        let lastDailyLoginClaimDaysByID: [String: String]
         let selectedProfileIconImageName: String
         let selectedCharacterID: String
         let selectedCharacterSkinID: String
@@ -1312,6 +1419,7 @@ final class GameProgressStore {
             eventRunsByID: [String: EventRunProgress],
             claimedGiftIDs: [String],
             lastDailyLoginClaimDay: String,
+            lastDailyLoginClaimDaysByID: [String: String],
             selectedProfileIconImageName: String,
             selectedCharacterID: String,
             selectedCharacterSkinID: String,
@@ -1344,6 +1452,7 @@ final class GameProgressStore {
             self.eventRunsByID = eventRunsByID
             self.claimedGiftIDs = claimedGiftIDs
             self.lastDailyLoginClaimDay = lastDailyLoginClaimDay
+            self.lastDailyLoginClaimDaysByID = lastDailyLoginClaimDaysByID
             self.selectedProfileIconImageName = selectedProfileIconImageName
             self.selectedCharacterID = selectedCharacterID
             self.selectedCharacterSkinID = selectedCharacterSkinID
@@ -1438,6 +1547,11 @@ final class GameProgressStore {
                     String.self,
                     forKey: .lastDailyLoginClaimDay
                 ) ?? ""
+            lastDailyLoginClaimDaysByID =
+                try container.decodeIfPresent(
+                    [String: String].self,
+                    forKey: .lastDailyLoginClaimDaysByID
+                ) ?? [:]
             selectedProfileIconImageName =
                 try container.decodeIfPresent(
                     String.self,
@@ -1517,6 +1631,18 @@ struct BattleAttackResult {
     var coinsAwarded = 0
     var crystalsAwarded = 0
     var skillBooksAwarded = 0
+}
+
+struct BattleActiveSkill: Identifiable, Equatable {
+    let id: String
+    let title: String
+    let imageName: String
+    let kind: ActiveSkillKind
+    let durationSeconds: Double
+    let cooldownSeconds: Double
+    let tickIntervalSeconds: Double
+    let damage: Int
+    let companionAnimationID: String?
 }
 
 private struct StageRewards {

@@ -78,16 +78,19 @@ struct Footer: View {
                             }
                         }
 
-                        Text(isUnlocked(tab) ? tab.title : "LV \(tab.requiredAccountLevel)")
-                            .font(.system(size: 10, weight: .bold))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.65)
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 0
-                            )
+                        Text(
+                            isUnlocked(tab)
+                                ? tab.title : "LV \(tab.requiredAccountLevel)"
+                        )
+                        .font(.system(size: 10, weight: .bold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.65)
+                        .shadow(
+                            color: .black.opacity(0.9),
+                            radius: 3,
+                            x: 0,
+                            y: 0
+                        )
 
                     }
                     .foregroundStyle(.white)

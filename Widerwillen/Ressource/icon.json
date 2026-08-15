@@ -7,52 +7,10 @@
             "requiredAccountLevel": 1
         },
         {
-            "id": "cookieman",
-            "title": "Cookieman",
-            "imageName": "icon_cookieman",
-            "requiredAccountLevel": 2
-        },
-        {
-            "id": "klempi",
-            "title": "Klempi",
-            "imageName": "icon_klempi",
-            "requiredAccountLevel": 3
-        },
-        {
-            "id": "dompi",
-            "title": "Dompi",
-            "imageName": "icon_dompi",
-            "requiredAccountLevel": 4
-        },
-        {
-            "id": "sprite",
-            "title": "Sprite",
-            "imageName": "icon_pixel_sprite",
-            "requiredAccountLevel": 2
-        },
-        {
-            "id": "sword",
-            "title": "Sword",
-            "imageName": "icon_pixel_sword",
-            "requiredAccountLevel": 1
-        },
-        {
-            "id": "relic",
-            "title": "Relic",
-            "imageName": "icon_pixel_relic",
-            "requiredAccountLevel": 4
-        },
-        {
-            "id": "house",
-            "title": "House",
-            "imageName": "icon_pixel_house",
-            "requiredAccountLevel": 1
-        },
-        {
-            "id": "trade",
-            "title": "Trade",
-            "imageName": "icon_pixel_trade",
-            "requiredAccountLevel": 4
+            "id": "widerwillen_font",
+            "title": "Widerwillen Font",
+            "imageName": "widerwillen_font_logo",
+            "requiredAccountLevel": 5
         },
         {
             "id": "coin",
@@ -61,67 +19,190 @@
             "requiredAccountLevel": 1
         },
         {
-            "id": "crystal",
-            "title": "Crystal",
-            "imageName": "icon_pixel_crystal",
-            "requiredAccountLevel": 3
-        },
-        {
-            "id": "menü",
-            "title": "Menü",
-            "imageName": "icon_pixel_menü",
+            "id": "sword",
+            "title": "Sword",
+            "imageName": "icon_pixel_sword",
             "requiredAccountLevel": 1
         },
         {
-            "id": "settings",
-            "title": "Settings",
-            "imageName": "icon_pixel_settings",
+            "id": "house",
+            "title": "Home",
+            "imageName": "icon_pixel_house",
             "requiredAccountLevel": 1
-        },
-        {
-            "id": "news",
-            "title": "News",
-            "imageName": "icon_pixel_news",
-            "requiredAccountLevel": 2
-        },
-        {
-            "id": "box",
-            "title": "Box",
-            "imageName": "icon_pixel_box",
-            "requiredAccountLevel": 2
         },
         {
             "id": "calendar",
             "title": "Calendar",
             "imageName": "icon_pixel_calendar",
-            "requiredAccountLevel": 1
+            "requiredAccountLevel": 2
         },
         {
-            "id": "widerwillen_font",
-            "title": "Widerwillen_Font",
-            "imageName": "widerwillen_font_logo",
+            "id": "settings",
+            "title": "Settings",
+            "imageName": "icon_pixel_settings",
+            "requiredAccountLevel": 2
+        },
+        {
+            "id": "news",
+            "title": "News",
+            "imageName": "icon_pixel_news",
+            "requiredAccountLevel": 3
+        },
+        {
+            "id": "box",
+            "title": "Box",
+            "imageName": "icon_pixel_box",
+            "requiredAccountLevel": 3
+        },
+        {
+            "id": "giftbox",
+            "title": "Giftbox",
+            "imageName": "icon_pixel_giftbox",
+            "requiredAccountLevel": 4
+        },
+        {
+            "id": "crystal",
+            "title": "Crystal",
+            "imageName": "icon_pixel_crystal",
             "requiredAccountLevel": 5
         },
         {
-            "id": "blunt",
-            "title": "Blunt",
-            "imageName": "sprite_blunt",
-            "requiredAccountLevel": 3
+            "id": "sprite",
+            "title": "Sprite",
+            "imageName": "icon_pixel_sprite",
+            "requiredAccountLevel": 6
+        },
+        {
+            "id": "shop",
+            "title": "Shop",
+            "imageName": "icon_pixel_shop",
+            "requiredAccountLevel": 7
+        },
+        {
+            "id": "trade",
+            "title": "Trade",
+            "imageName": "icon_pixel_trade",
+            "requiredAccountLevel": 8
+        },
+        {
+            "id": "menu",
+            "title": "Menu",
+            "imageName": "icon_pixel_menü",
+            "requiredAccountLevel": 8
+        },
+        {
+            "id": "relic",
+            "title": "Relic",
+            "imageName": "icon_pixel_relic",
+            "requiredAccountLevel": 10
+        },
+        {
+            "id": "skill_book",
+            "title": "Skill Book",
+            "imageName": "icon_pixel_skill_book",
+            "requiredAccountLevel": 10
+        },
+        {
+            "id": "cookieman",
+            "title": "Cookieman",
+            "imageName": "icon_cookieman",
+            "requiredAccountLevel": 11
         },
         {
             "id": "nimpi",
             "title": "Nimpi",
             "imageName": "icon_nimpi",
-            "requiredAccountLevel": 1
+            "requiredAccountLevel": 12
         },
         {
-            "id": "nimpi_night",
-            "title": "Nimpi Night",
+            "id": "klempi",
+            "title": "Klempi",
+            "imageName": "icon_klempi",
+            "requiredAccountLevel": 13
+        },
+        {
+            "id": "dompi",
+            "title": "Dompi",
+            "imageName": "icon_dompi",
+            "requiredAccountLevel": 14
+        },
+        {
+            "id": "blunt",
+            "title": "Blunt",
+            "imageName": "icon_blunt",
+            "requiredAccountLevel": 17
+        },
+        {
+            "id": "shadow_clone",
+            "title": "Shadow Clone",
+            "imageName": "icon_pixel_shadow_clone",
+            "requiredAccountLevel": 20
+        },
+        {
+            "id": "shadow_clone_long",
+            "title": "Long Shadow",
+            "imageName": "icon_pixel_skill_shadow_clone_long",
+            "requiredAccountLevel": 22
+        },
+        {
+            "id": "shadow_clone_speed",
+            "title": "Night Speed",
+            "imageName": "icon_pixel_skill_shadow_clone_speed",
+            "requiredAccountLevel": 24
+        },
+        {
+            "id": "alchemist_rare",
+            "title": "Rare Formula",
+            "imageName": "icon_pixel_alchemist_rare",
+            "requiredAccountLevel": 30
+        },
+        {
+            "id": "chip_blue",
+            "title": "Blue Chip",
+            "imageName": "icon_pixel_chip_blue",
+            "requiredAccountLevel": 30
+        },
+        {
+            "id": "chip_green",
+            "title": "Green Chip",
+            "imageName": "icon_pixel_chip_green",
+            "requiredAccountLevel": 31
+        },
+        {
+            "id": "chip_red",
+            "title": "Red Chip",
+            "imageName": "icon_pixel_chip_red",
+            "requiredAccountLevel": 32
+        },
+        {
+            "id": "chip_yellow",
+            "title": "Yellow Chip",
+            "imageName": "icon_pixel_chip_yellow",
+            "requiredAccountLevel": 33
+        },
+        {
+            "id": "dimension_rift",
+            "title": "Stage Rift",
+            "imageName": "icon_pixel_dimension_rift",
+            "requiredAccountLevel": 40
+        },
+        {
+            "id": "dimension_fold",
+            "title": "Time Fold",
+            "imageName": "icon_pixel_dimension_fold",
+            "requiredAccountLevel": 42
+        },
+        {
+            "id": "dimension_break",
+            "title": "Reality Break",
+            "imageName": "icon_pixel_dimension_break",
+            "requiredAccountLevel": 45
+        },
+        {
+            "id": "nimbi_night",
+            "title": "Nimbi Night",
             "imageName": "icon_nimbi_night",
-            "requiredAccountLevel": 6
+            "requiredAccountLevel": 46
         }
     ]
 }
-
-
-

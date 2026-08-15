@@ -20,7 +20,9 @@ struct GiftConfiguration: Decodable {
 struct GiftReward: Decodable, Identifiable {
     let id: String
     let title: String
+    let titleKey: String?
     let category: String
+    let categoryKey: String?
     let imageName: String
     let rewards: [TradeResourceAmount]
 }

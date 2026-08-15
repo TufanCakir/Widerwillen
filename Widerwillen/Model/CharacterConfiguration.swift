@@ -53,4 +53,3 @@ struct CharacterSkin: Decodable, Identifiable {
     let animationID: String
     let unlockSource: String
 }
-

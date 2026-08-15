@@ -26,15 +26,25 @@ struct StarsConfiguration: Decodable {
             filledSystemImage: "star.fill",
             emptySystemImage: "star",
             tiers: [
-                StarTier(minStars: 1, color: RGBColor(red: 1, green: 0.86, blue: 0.1)),
-                StarTier(minStars: 8, color: RGBColor(red: 0.42, green: 0.9, blue: 1)),
-                StarTier(minStars: 12, color: RGBColor(red: 1, green: 0.28, blue: 0.78))
+                StarTier(
+                    minStars: 1,
+                    color: RGBColor(red: 1, green: 0.86, blue: 0.1)
+                ),
+                StarTier(
+                    minStars: 8,
+                    color: RGBColor(red: 0.42, green: 0.9, blue: 1)
+                ),
+                StarTier(
+                    minStars: 12,
+                    color: RGBColor(red: 1, green: 0.28, blue: 0.78)
+                ),
             ]
         )
     }
 
     func color(for stars: Int) -> Color {
-        let tier = tiers
+        let tier =
+            tiers
             .sorted { $0.minStars < $1.minStars }
             .last { $0.minStars <= stars }
 

@@ -90,7 +90,7 @@ enum TradeResource: String, Codable {
         case .relics:
             "icon_pixel_relic"
         case .skillBooks:
-            "icon_pixel_skill_books"
+            "icon_pixel_skill_book"
         case .eventCurrency:
             "icon_pixel_chip_blue"
         }

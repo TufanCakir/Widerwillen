@@ -1,0 +1,169 @@
+{
+    "strings": {
+        "common.next": "Next",
+        "common.ok": "OK",
+        "settings.title": "Settings",
+        "settings.language": "Language",
+        "settings.music": "Music",
+        "settings.layer_animation": "Layer Animation",
+        "settings.on": "On",
+        "settings.off": "Off",
+        "settings.info": "Info",
+        "settings.content": "Content",
+        "settings.bundle": "Bundle",
+        "tutorial.speaker.blunt": "Blunt",
+        "tutorial.welcome.title": "Welcome",
+        "tutorial.welcome.message.1":
+            "Tap the screen in battle to damage enemies.",
+        "tutorial.welcome.message.2":
+            "Defeat enemies to earn coins, account XP and sometimes skill books.",
+        "tutorial.welcome.message.3":
+            "New features unlock when your account level grows.",
+        "tutorial.sprites.title": "Sprites",
+        "tutorial.sprites.message.1": "Sprites are helpers you can collect.",
+        "tutorial.sprites.message.2":
+            "When you summon helper sprites, they fight beside your selected character.",
+        "tutorial.summon.title": "Summon",
+        "tutorial.summon.message.1":
+            "Summons use crystals and can unlock characters, skins, helper sprites and items.",
+        "tutorial.summon.message.2":
+            "Duplicates increase stars, so old summons still make your team stronger.",
+        "tutorial.skills.title": "Skill Trees",
+        "tutorial.skills.message.1":
+            "Skill books unlock upgrades in different skill trees.",
+        "tutorial.skills.message.2":
+            "Some skills improve tap damage, others improve sprite damage, speed or drop chance.",
+        "tutorial.trade.title": "Trade",
+        "tutorial.trade.message.1":
+            "Trade lets you exchange resources when you need a different currency.",
+        "tutorial.trade.message.2":
+            "Use it carefully because some resources are rarer than others.",
+        "tutorial.shop.title": "Shop",
+        "tutorial.shop.message.1":
+            "The shop contains optional crystal packs, battle passes and special packs.",
+        "tutorial.shop.message.2":
+            "Coins, relics and skill books are still earned by playing.",
+        "tutorial.battle.title": "Battle",
+        "tutorial.battle.message.1":
+            "Your character stands on the left and enemies stand on the right.",
+        "tutorial.battle.message.2":
+            "Tap to attack. Active skills can be placed in the battle skill bar later.",
+        "tutorial.event.title": "Events",
+        "tutorial.event.message.1":
+            "Events are limited battles with their own rewards and currencies.",
+        "tutorial.event.message.2":
+            "Event chips can be traded for items, skins or resources while the event is active.",
+        "tutorial.warehouse.title": "Warehouse",
+        "tutorial.warehouse.message.1":
+            "The warehouse stores your items, equipment and skins.",
+        "tutorial.warehouse.message.2":
+            "Later you can equip bonuses here before going into battle.",
+        "tutorial.settings.title": "Settings",
+        "tutorial.settings.message.1":
+            "Here you can change language, music and display options.",
+        "tutorial.settings.message.2":
+            "Remote content still updates through the launch and update screens.",
+        "tutorial.news.title": "News",
+        "tutorial.news.message.1":
+            "News shows current updates, events and changes.",
+        "tutorial.news.message.2":
+            "Check it when new content or a limited event appears.",
+        "tutorial.gift.title": "Giftbox",
+        "tutorial.gift.message.1":
+            "Rewards from gifts, events or compensation can appear here.",
+        "tutorial.gift.message.2": "Claim them before they expire.",
+        "tutorial.daily_login.title": "Daily Login",
+        "tutorial.daily_login.message.1":
+            "Daily login rewards help you progress even with short sessions.",
+        "tutorial.daily_login.message.2":
+            "Come back each day to keep collecting the next reward.",
+        "event.category.daily": "Daily",
+        "event.category.relic": "Relic",
+        "event.category.treasure": "Treasure",
+        "event.category.boss": "Boss",
+        "event.hp": "Event HP",
+        "event.victory": "Victory",
+        "event.damage": "Damage",
+        "event.daily_limit_reached": "Daily limit reached",
+        "event.crystal_hunt.title": "Crystal Hunt",
+        "event.coin_hunt.title": "Coin Hunt",
+        "event.relic_hunt.title": "Relic Hunt",
+        "event.crystal_cavern.title": "Crystal Cavern",
+        "event.coin_cavern.title": "Coin Cavern",
+        "event.treasure_rush.title": "Treasure Rush",
+        "event.void_trial.title": "Void Trial",
+        "event.currency.moon_shards": "Moon Shards",
+        "event.currency.boss_tokens": "Boss Tokens",
+        "event.currency.relic_dust": "Relic Dust",
+        "event.currency.cavern_gems": "Cavern Gems",
+        "event.currency.treasure_keys": "Treasure Keys",
+        "event.currency.void_marks": "Void Marks",
+        "news.category.announcement": "Announcement",
+        "news.category.update": "Update",
+        "news.launch_001.title": "Widerwillen Launch",
+        "news.launch_001.body":
+            "Welcome to Widerwillen. Battle stages, collect rewards, summon units, and grow your account.",
+        "news.update_events.title": "Event Battles Added",
+        "news.update_events.body":
+            "Events now use real battle scenes with victory rewards and account-level scaling.",
+        "news.update_trade_shop.title": "Trade Shop Open",
+        "news.update_trade_shop.body":
+            "Use the Trade Shop to exchange coins, crystals, and relics through rotating offer categories.",
+        "news.maintenance_note.title": "Daily Login Rewards",
+        "news.maintenance_note.body":
+            "Daily login rewards are now available. Check in once per day to claim your reward.",
+        "daily_login.day.1": "Day 1",
+        "daily_login.day.2": "Day 2",
+        "daily_login.day.3": "Day 3",
+        "daily_login.day.4": "Day 4",
+        "daily_login.day.5": "Day 5",
+        "daily_login.day.6": "Day 6",
+        "daily_login.day.7": "Day 7",
+        "daily_login.day.8": "Day 8",
+        "daily_login.day.9": "Day 9",
+        "daily_login.day.10": "Day 10",
+        "daily_login.day.11": "Day 11",
+        "daily_login.day.12": "Day 12",
+        "daily_login.day.13": "Day 13",
+        "daily_login.day.14": "Day 14",
+        "daily_login.standard.title": "Daily Login",
+        "daily_login.launch.title": "Launch Login",
+        "daily_login.summer.title": "Summer Login",
+        "daily_login.category.daily": "Daily",
+        "daily_login.category.launch": "Launch",
+        "daily_login.category.seasonal": "Seasonal",
+        "daily_login.ready": "Ready",
+        "daily_login.popup.title": "Login Bonus",
+        "daily_login.popup.open": "Open",
+        "daily_login.popup.claim": "Claim",
+        "daily_login.claimed": "Daily reward claimed",
+        "daily_login.already_claimed": "Already claimed today",
+        "gift.category.available": "Available",
+        "gift.category.event": "Event",
+        "gift.category.compensation": "Compensation",
+        "gift.starter_pack.title": "Starter Pack",
+        "gift.skill_tree_launch_gift.title": "Skill Tree Gift",
+        "gift.relic_launch_gift.title": "Relic Launch Gift",
+        "gift.update_bonus.title": "Update Bonus",
+        "gift.event_chip_bundle_blue.title": "Blue Chip Bundle",
+        "gift.event_chip_bundle_yellow.title": "Yellow Chip Bundle",
+        "gift.compensation_skill_books_001.title": "Skill Book Compensation",
+        "gift.claim_all": "Claim All",
+        "gift.claimed_count": "{count} gifts claimed",
+        "gift.none_available": "No gifts available",
+        "gift.empty": "No gifts",
+        "warehouse.category.currencies": "Currencies",
+        "warehouse.category.event_chips": "Event Chips",
+        "warehouse.category.relics": "Relics",
+        "warehouse.category.equipment": "Equipment",
+        "warehouse.currency.coins": "Coins",
+        "warehouse.currency.crystals": "Crystals",
+        "warehouse.currency.relics": "Relics",
+        "warehouse.currency.skill_books": "Skill Books",
+        "warehouse.idle.title": "Idle Rewards",
+        "warehouse.idle.subtitle": "Rewards collected while you were away",
+        "warehouse.claim": "Claim",
+        "warehouse.empty.relics": "No relics",
+        "warehouse.empty.equipment": "No equipment"
+    }
+}

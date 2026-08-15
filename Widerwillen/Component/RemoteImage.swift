@@ -119,7 +119,9 @@ struct RemoteImage: View {
         if let url = RemoteContentCache.cachedAssetURL(named: name) {
             print("[RemoteImage] cache hit \(name): \(url.path)")
         } else {
-            print("[RemoteImage] cache miss \(name). Showing SF Symbol fallback: \(systemImageName)")
+            print(
+                "[RemoteImage] cache miss \(name). Showing SF Symbol fallback: \(systemImageName)"
+            )
         }
     }
 }

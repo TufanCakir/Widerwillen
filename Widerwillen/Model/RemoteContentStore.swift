@@ -159,7 +159,8 @@ final class RemoteContentStore {
         } catch {
             remoteLog("Remote manifest failed: \(error)")
             guard let fallbackManifest = bundledManifest() else {
-                statusText = contentVersion > 0
+                statusText =
+                    contentVersion > 0
                     ? "Cached content"
                     : "Bundle content"
                 remoteLog("No bundled contentVersion.json fallback found.")
@@ -204,7 +205,8 @@ final class RemoteContentStore {
 
             guard summary.succeededCount > 0 || summary.failedResources.isEmpty
             else {
-                statusText = contentVersion > 0 ? "Cached content" : "Bundle content"
+                statusText =
+                    contentVersion > 0 ? "Cached content" : "Bundle content"
                 remoteLog(
                     "Refresh stopped. No resources could be downloaded. Failed: \(summary.failedResources.joined(separator: ", "))"
                 )
@@ -216,14 +218,16 @@ final class RemoteContentStore {
                 manifest.contentVersion,
                 forKey: Self.versionKey
             )
-            statusText = summary.failedResources.isEmpty
+            statusText =
+                summary.failedResources.isEmpty
                 ? "Content updated"
                 : "Content updated with missing files"
             remoteLog(
                 "Refresh finished. Stored version is now \(contentVersion). Succeeded: \(summary.succeededCount), failed: \(summary.failedResources.count)"
             )
         } catch {
-            statusText = contentVersion > 0 ? "Cached content" : "Bundle content"
+            statusText =
+                contentVersion > 0 ? "Cached content" : "Bundle content"
             remoteLog("Refresh failed: \(error)")
         }
     }
@@ -276,7 +280,9 @@ final class RemoteContentStore {
             }
 
             let url = Self.baseURL.appending(path: resource.path)
-            remoteLog("Downloading JSON \(resource.name): \(url.absoluteString)")
+            remoteLog(
+                "Downloading JSON \(resource.name): \(url.absoluteString)"
+            )
             var request = URLRequest(
                 url: url,
                 cachePolicy: .reloadRevalidatingCacheData,
@@ -351,7 +357,11 @@ final class RemoteContentStore {
 
         do {
             let data = try await downloadFileData(resource, kind: kind)
-            try RemoteContentCache.storeFile(data, resource: resource, kind: kind)
+            try RemoteContentCache.storeFile(
+                data,
+                resource: resource,
+                kind: kind
+            )
             downloadedBytes += data.count
             summary.succeededCount += 1
             remoteLog(
@@ -422,7 +432,11 @@ final class RemoteContentStore {
 
     private func versionedURL(for resource: RemoteFileResource) -> URL {
         let url = Self.baseURL.appending(path: resource.path)
-        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        guard
+            var components = URLComponents(
+                url: url,
+                resolvingAgainstBaseURL: false
+            )
         else {
             return url
         }
@@ -447,10 +461,12 @@ final class RemoteContentStore {
     }
 
     private func bundledManifest() -> RemoteContentManifest? {
-        guard let url = Bundle.main.url(
-            forResource: "contentVersion",
-            withExtension: "json"
-        ) else {
+        guard
+            let url = Bundle.main.url(
+                forResource: "contentVersion",
+                withExtension: "json"
+            )
+        else {
             return nil
         }
 
@@ -479,7 +495,9 @@ final class RemoteContentStore {
         onlyMissing: Bool
     ) -> Int? {
         let jsonSize = manifest.json.reduce(0) { total, resource in
-            guard !onlyMissing || !RemoteContentCache.hasCachedJSON(named: resource.name)
+            guard
+                !onlyMissing
+                    || !RemoteContentCache.hasCachedJSON(named: resource.name)
             else {
                 return total
             }
@@ -487,10 +505,12 @@ final class RemoteContentStore {
             return total + (resource.sizeBytes ?? 0)
         }
         let assetSize = manifest.assets.reduce(0) { total, resource in
-            guard !onlyMissing || !RemoteContentCache.hasCachedFile(
-                resource,
-                kind: .asset
-            )
+            guard
+                !onlyMissing
+                    || !RemoteContentCache.hasCachedFile(
+                        resource,
+                        kind: .asset
+                    )
             else {
                 return total
             }
@@ -498,10 +518,12 @@ final class RemoteContentStore {
             return total + (resource.sizeBytes ?? 0)
         }
         let musicSize = manifest.music.reduce(0) { total, resource in
-            guard !onlyMissing || !RemoteContentCache.hasCachedFile(
-                resource,
-                kind: .music
-            )
+            guard
+                !onlyMissing
+                    || !RemoteContentCache.hasCachedFile(
+                        resource,
+                        kind: .music
+                    )
             else {
                 return total
             }
@@ -557,7 +579,9 @@ enum RemoteContentCache {
     }
 
     static func hasCachedJSON(named resourceName: String) -> Bool {
-        FileManager.default.fileExists(atPath: jsonURL(named: resourceName).path)
+        FileManager.default.fileExists(
+            atPath: jsonURL(named: resourceName).path
+        )
     }
 
     static func hasCachedFile(
@@ -664,7 +688,10 @@ enum RemoteContentCache {
         )
     }
 
-    private static func legacyFileURL(named resourceName: String, kind: FileKind)
+    private static func legacyFileURL(
+        named resourceName: String,
+        kind: FileKind
+    )
         -> URL
     {
         directory(for: kind).appending(

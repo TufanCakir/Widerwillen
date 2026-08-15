@@ -18,8 +18,10 @@ struct BattleSceneView: View {
     let heroAnimationID: String
     let companionAnimationIDs: Set<String>
     let spriteAttackInterval: Duration
+    let activeSkills: [BattleActiveSkill]
     let onTapAttack: () -> BattleAttackResult
     let onSpriteAttack: () -> BattleAttackResult
+    let onActiveSkillAttack: (BattleActiveSkill) -> BattleAttackResult
     let onPrestige: (() -> Void)?
     let onExit: (() -> Void)?
 
@@ -33,6 +35,8 @@ struct BattleSceneView: View {
     @State private var battlePopups: [BattlePopup] = []
     @State private var previousAreaID: String?
     @State private var transitionArea: EnemyArea?
+    @State private var activeSkillIDs: Set<String> = []
+    @State private var coolingDownSkillIDs: Set<String> = []
     @AppStorage("isLayerAnimationEnabled") private var isLayerAnimationEnabled =
         true
 
@@ -48,8 +52,12 @@ struct BattleSceneView: View {
         heroAnimationID: String,
         companionAnimationIDs: Set<String>,
         spriteAttackInterval: Duration,
+        activeSkills: [BattleActiveSkill] = [],
         onTapAttack: @escaping () -> BattleAttackResult,
         onSpriteAttack: @escaping () -> BattleAttackResult,
+        onActiveSkillAttack:
+            @escaping (BattleActiveSkill)
+            -> BattleAttackResult = { _ in BattleAttackResult(damageDealt: 0) },
         onPrestige: (() -> Void)? = nil,
         onExit: (() -> Void)? = nil,
         arena: ArenaConfiguration = try! ArenaConfiguration.load(),
@@ -67,8 +75,10 @@ struct BattleSceneView: View {
         self.heroAnimationID = heroAnimationID
         self.companionAnimationIDs = companionAnimationIDs
         self.spriteAttackInterval = spriteAttackInterval
+        self.activeSkills = activeSkills
         self.onTapAttack = onTapAttack
         self.onSpriteAttack = onSpriteAttack
+        self.onActiveSkillAttack = onActiveSkillAttack
         self.onPrestige = onPrestige
         self.onExit = onExit
         self.arena = arena
@@ -105,6 +115,11 @@ struct BattleSceneView: View {
 
                 enemyLayer(viewSize: viewSize, groundHeight: groundHeight)
 
+                activeSkillVisualLayer(
+                    viewSize: viewSize,
+                    groundHeight: groundHeight
+                )
+
                 popupLayer(viewSize: viewSize)
 
                 headerHUD
@@ -136,6 +151,18 @@ struct BattleSceneView: View {
                             maxHeight: .infinity,
                             alignment: .bottom
                         )
+                }
+
+                if !activeSkills.isEmpty {
+                    activeSkillBar
+                        .padding(.bottom, 26)
+                        .padding(.horizontal, 18)
+                        .frame(
+                            maxWidth: .infinity,
+                            maxHeight: .infinity,
+                            alignment: .bottom
+                        )
+                        .zIndex(12)
                 }
 
                 if let transitionArea {
@@ -191,6 +218,59 @@ struct BattleSceneView: View {
         }
     }
 
+    private func activateSkill(_ skill: BattleActiveSkill) {
+        guard
+            !activeSkillIDs.contains(skill.id),
+            !coolingDownSkillIDs.contains(skill.id)
+        else {
+            return
+        }
+
+        activeSkillIDs.insert(skill.id)
+        addPopup(
+            text: skill.title,
+            color: .cyan,
+            xRatio: 0.5,
+            yRatio: 0.34,
+            imageName: skill.imageName
+        )
+
+        Task {
+            await runActiveSkill(skill)
+        }
+    }
+
+    private func runActiveSkill(_ skill: BattleActiveSkill) async {
+        let duration = max(skill.durationSeconds, 0.1)
+        let interval = max(skill.tickIntervalSeconds, 0.15)
+        let ticks = max(1, Int((duration / interval).rounded(.down)))
+
+        for _ in 0..<ticks {
+            try? await Task.sleep(nanoseconds: nanoseconds(for: interval))
+            await MainActor.run {
+                guard activeSkillIDs.contains(skill.id) else { return }
+                performAttack(onActiveSkillAttack(skill))
+            }
+        }
+
+        await MainActor.run {
+            _ = activeSkillIDs.remove(skill.id)
+            coolingDownSkillIDs.insert(skill.id)
+        }
+
+        try? await Task.sleep(
+            nanoseconds: nanoseconds(for: max(skill.cooldownSeconds, 0.1))
+        )
+
+        await MainActor.run {
+            _ = coolingDownSkillIDs.remove(skill.id)
+        }
+    }
+
+    private func nanoseconds(for seconds: Double) -> UInt64 {
+        UInt64(max(seconds, 0) * 1_000_000_000)
+    }
+
     private func runSpriteAttackLoop() async {
         while !Task.isCancelled {
             try? await Task.sleep(for: spriteAttackInterval)
@@ -234,7 +314,7 @@ struct BattleSceneView: View {
                 color: .mint,
                 xRatio: 0.28,
                 yRatio: 0.58,
-                imageName: "icon_pixel_skill_books"
+                imageName: "icon_pixel_skill_book"
             )
         }
     }
@@ -318,8 +398,11 @@ struct BattleSceneView: View {
         }
     }
 
-    private func enemyLayer(viewSize: CGSize, groundHeight: CGFloat) -> some View {
-        let enemySize = min(viewSize.width, viewSize.height)
+    private func enemyLayer(viewSize: CGSize, groundHeight: CGFloat)
+        -> some View
+    {
+        let enemySize =
+            min(viewSize.width, viewSize.height)
             * CGFloat(currentEnemy.scale)
 
         return VStack(spacing: 4) {
@@ -337,16 +420,44 @@ struct BattleSceneView: View {
                 frameCount: currentEnemy.frameCount,
                 fps: currentEnemy.fps
             )
-                .frame(
-                    width: enemySize,
-                    height: enemySize
-                )
-                .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 5)
+            .frame(
+                width: enemySize,
+                height: enemySize
+            )
+            .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 5)
         }
         .position(
             x: viewSize.width * 0.62,
             y: viewSize.height - groundHeight * 0.12 - enemySize * 0.5
         )
+        .allowsHitTesting(false)
+    }
+
+    private func activeSkillVisualLayer(
+        viewSize: CGSize,
+        groundHeight: CGFloat
+    ) -> some View {
+        ZStack {
+            ForEach(activeSkills.filter { activeSkillIDs.contains($0.id) }) {
+                skill in
+                if skill.kind == .shadowClone {
+                    SpriteSheetImageView(
+                        animationID: skill.companionAnimationID
+                            ?? heroAnimationID
+                    )
+                    .frame(width: 118, height: 118)
+                    .opacity(0.46)
+                    .scaleEffect(x: -1, y: 1)
+                    .shadow(color: .cyan.opacity(0.8), radius: 8, x: 0, y: 0)
+                    .position(
+                        x: viewSize.width * 0.34,
+                        y: viewSize.height - groundHeight * 0.14 - 58
+                    )
+                    .transition(.scale.combined(with: .opacity))
+                }
+            }
+        }
+        .animation(.easeInOut(duration: 0.22), value: activeSkillIDs)
         .allowsHitTesting(false)
     }
 
@@ -430,13 +541,18 @@ struct BattleSceneView: View {
                     x: viewSize.width * popup.xRatio,
                     y: viewSize.height * popup.yRatio
                 )
-                .transition(.asymmetric(
-                    insertion: .scale.combined(with: .opacity),
-                    removal: .move(edge: .top).combined(with: .opacity)
-                ))
+                .transition(
+                    .asymmetric(
+                        insertion: .scale.combined(with: .opacity),
+                        removal: .move(edge: .top).combined(with: .opacity)
+                    )
+                )
             }
         }
-        .animation(.spring(response: 0.28, dampingFraction: 0.7), value: battlePopups.count)
+        .animation(
+            .spring(response: 0.28, dampingFraction: 0.7),
+            value: battlePopups.count
+        )
         .allowsHitTesting(false)
     }
 
@@ -582,6 +698,63 @@ struct BattleSceneView: View {
             .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .buttonStyle(.plain)
+    }
+
+    private var activeSkillBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                ForEach(activeSkills) { skill in
+                    activeSkillButton(skill)
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+        }
+        .frame(maxWidth: .infinity)
+        .background(.black.opacity(0.48))
+        .clipShape(Capsule())
+        .overlay {
+            Capsule()
+                .stroke(.white.opacity(0.45), lineWidth: 1)
+        }
+    }
+
+    private func activeSkillButton(_ skill: BattleActiveSkill) -> some View {
+        let isActive = activeSkillIDs.contains(skill.id)
+        let isCoolingDown = coolingDownSkillIDs.contains(skill.id)
+
+        return Button {
+            activateSkill(skill)
+        } label: {
+            ZStack {
+                Circle()
+                    .fill(isActive ? .cyan.opacity(0.34) : .black.opacity(0.54))
+
+                RemoteImage(name: skill.imageName)
+                    .frame(width: 32, height: 32)
+
+                if isCoolingDown {
+                    Circle()
+                        .fill(.black.opacity(0.62))
+
+                    Image(systemName: "timer")
+                        .font(.system(size: 18, weight: .heavy))
+                        .foregroundStyle(.white)
+                }
+            }
+            .frame(width: 54, height: 54)
+            .overlay {
+                Circle()
+                    .stroke(
+                        isActive ? .cyan : .white.opacity(0.72),
+                        lineWidth: isActive ? 3 : 2
+                    )
+            }
+            .shadow(color: .black.opacity(0.85), radius: 4, x: 0, y: 2)
+        }
+        .buttonStyle(.plain)
+        .disabled(isActive || isCoolingDown)
+        .opacity(isCoolingDown ? 0.68 : 1)
     }
 
     private struct BattlePopup: Identifiable {

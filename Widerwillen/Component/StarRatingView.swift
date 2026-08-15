@@ -18,9 +18,10 @@ struct StarRatingView: View {
     var body: some View {
         HStack(spacing: 1) {
             ForEach(0..<visibleStarCount, id: \.self) { index in
-                Image(systemName: index < filledVisibleStars
-                    ? configuration.filledSystemImage
-                    : configuration.emptySystemImage
+                Image(
+                    systemName: index < filledVisibleStars
+                        ? configuration.filledSystemImage
+                        : configuration.emptySystemImage
                 )
                 .font(.system(size: size, weight: .heavy))
             }

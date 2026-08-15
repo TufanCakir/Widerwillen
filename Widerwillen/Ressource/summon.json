@@ -58,7 +58,7 @@
                     "name": "Blunt",
                     "spriteIndex": 21,
                     "companionID": "blunt",
-                    "imageName": "sprite_blunt",
+                    "imageName": "icon_blunt",
                     "rarity": "legendary",
                     "damageBonus": 18,
                     "weight": 0.5

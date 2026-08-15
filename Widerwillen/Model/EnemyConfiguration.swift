@@ -52,7 +52,8 @@ struct EnemyConfiguration: Decodable {
         }
 
         let safeStage = max(stage, 1)
-        return areas
+        return
+            areas
             .sorted { $0.startsAtStage < $1.startsAtStage }
             .last { $0.startsAtStage <= safeStage } ?? areas[0]
     }

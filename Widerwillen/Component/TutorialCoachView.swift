@@ -14,6 +14,8 @@ struct TutorialCoachView: View {
     private let configuration: TutorialConfiguration
 
     @AppStorage("completedTutorialIDs") private var completedTutorialIDs = ""
+    @AppStorage("appLanguage") private var appLanguageCode = AppLanguage.de
+        .rawValue
     @State private var activeTutorial: TutorialDefinition?
     @State private var messageIndex = 0
 
@@ -59,11 +61,11 @@ struct TutorialCoachView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(tutorial.speakerName)
+                            Text(speakerName(for: tutorial))
                                 .font(.system(size: 12, weight: .heavy))
                                 .opacity(0.78)
 
-                            Text(tutorial.title)
+                            Text(title(for: tutorial))
                                 .font(.system(size: 18, weight: .heavy))
                         }
 
@@ -87,16 +89,23 @@ struct TutorialCoachView: View {
                     Button {
                         advance(tutorial)
                     } label: {
-                        Text(isLastMessage(for: tutorial) ? "OK" : "Next")
-                            .font(.system(size: 13, weight: .heavy))
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 36)
-                            .background(.white.opacity(0.18))
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(.white.opacity(0.62), lineWidth: 1)
-                            }
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        Text(
+                            isLastMessage(for: tutorial)
+                                ? localizer.text("common.ok", fallback: "OK")
+                                : localizer.text(
+                                    "common.next",
+                                    fallback: "Next"
+                                )
+                        )
+                        .font(.system(size: 13, weight: .heavy))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 36)
+                        .background(.white.opacity(0.18))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(.white.opacity(0.62), lineWidth: 1)
+                        }
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                     .buttonStyle(.plain)
                 }
@@ -118,9 +127,26 @@ struct TutorialCoachView: View {
         .zIndex(50)
     }
 
+    private var localizer: AppLocalizer {
+        AppLocalizer(languageCode: appLanguageCode)
+    }
+
+    private func speakerName(for tutorial: TutorialDefinition) -> String {
+        localizer.text(tutorial.speakerNameKey, fallback: tutorial.speakerName)
+    }
+
+    private func title(for tutorial: TutorialDefinition) -> String {
+        localizer.text(tutorial.titleKey, fallback: tutorial.title)
+    }
+
     private func currentMessage(for tutorial: TutorialDefinition) -> String {
         guard !tutorial.messages.isEmpty else { return "" }
-        return tutorial.messages[min(messageIndex, tutorial.messages.count - 1)]
+
+        let safeIndex = min(messageIndex, tutorial.messages.count - 1)
+        let fallback = tutorial.messages[safeIndex]
+        let key = tutorial.messageKeys?[safeIndex]
+
+        return localizer.text(key, fallback: fallback)
     }
 
     private func isLastMessage(for tutorial: TutorialDefinition) -> Bool {

@@ -41,7 +41,7 @@
     {
         "id": "sprite_blunt",
         "imageName": "sprite_blunt",
-        "columns": 1,
+        "columns": 3,
         "rows": 1,
         "spacing": 0,
         "margin": 0,

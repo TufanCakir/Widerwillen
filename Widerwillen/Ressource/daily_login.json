@@ -1,87 +1,224 @@
 {
-    "rewards": [
+    "logins": [
         {
-            "day": 1,
-            "title": "Day 1",
-            "imageName": "icon_pixel_coin",
+            "id": "standard_daily",
+            "title": "Daily Login",
+            "titleKey": "daily_login.standard.title",
+            "category": "Daily",
+            "categoryKey": "daily_login.category.daily",
+            "backgroundImageName": "bg_blue",
             "rewards": [
                 {
-                    "resource": "coins",
-                    "amount": 250
-                }
-            ]
-        },
-        {
-            "day": 2,
-            "title": "Day 2",
-            "imageName": "icon_pixel_crystal",
-            "rewards": [
-                {
-                    "resource": "crystals",
-                    "amount": 5
-                }
-            ]
-        },
-        {
-            "day": 3,
-            "title": "Day 3",
-            "imageName": "icon_pixel_relic",
-            "rewards": [
-                {
-                    "resource": "relics",
-                    "amount": 3
-                }
-            ]
-        },
-        {
-            "day": 4,
-            "title": "Day 4",
-            "imageName": "icon_pixel_coin",
-            "rewards": [
-                {
-                    "resource": "coins",
-                    "amount": 750
-                }
-            ]
-        },
-        {
-            "day": 5,
-            "title": "Day 5",
-            "imageName": "icon_pixel_crystal",
-            "rewards": [
-                {
-                    "resource": "crystals",
-                    "amount": 12
-                }
-            ]
-        },
-        {
-            "day": 6,
-            "title": "Day 6",
-            "imageName": "icon_pixel_relic",
-            "rewards": [
-                {
-                    "resource": "relics",
-                    "amount": 8
-                }
-            ]
-        },
-        {
-            "day": 7,
-            "title": "Day 7",
-            "imageName": "icon_pixel_box",
-            "rewards": [
-                {
-                    "resource": "coins",
-                    "amount": 1500
+                    "day": 1,
+                    "title": "Day 1",
+                    "titleKey": "daily_login.day.1",
+                    "imageName": "icon_pixel_coin",
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 300
+                        }
+                    ]
                 },
                 {
-                    "resource": "crystals",
-                    "amount": 20
+                    "day": 2,
+                    "title": "Day 2",
+                    "titleKey": "daily_login.day.2",
+                    "imageName": "icon_pixel_skill_book",
+                    "rewards": [
+                        {
+                            "resource": "skill_books",
+                            "amount": 1
+                        }
+                    ]
                 },
                 {
-                    "resource": "relics",
-                    "amount": 10
+                    "day": 3,
+                    "title": "Day 3",
+                    "titleKey": "daily_login.day.3",
+                    "imageName": "icon_pixel_crystal",
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 6
+                        }
+                    ]
+                },
+                {
+                    "day": 4,
+                    "title": "Day 4",
+                    "titleKey": "daily_login.day.4",
+                    "imageName": "icon_pixel_relic",
+                    "rewards": [
+                        {
+                            "resource": "relics",
+                            "amount": 4
+                        }
+                    ]
+                },
+                {
+                    "day": 5,
+                    "title": "Day 5",
+                    "titleKey": "daily_login.day.5",
+                    "imageName": "icon_pixel_coin",
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 900
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 1
+                        }
+                    ]
+                },
+                {
+                    "day": 6,
+                    "title": "Day 6",
+                    "titleKey": "daily_login.day.6",
+                    "imageName": "icon_pixel_crystal",
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 12
+                        },
+                        {
+                            "resource": "relics",
+                            "amount": 4
+                        }
+                    ]
+                },
+                {
+                    "day": 7,
+                    "title": "Day 7",
+                    "titleKey": "daily_login.day.7",
+                    "imageName": "icon_pixel_box",
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 1800
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 18
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "launch_bonus",
+            "title": "Launch Login",
+            "titleKey": "daily_login.launch.title",
+            "category": "Launch",
+            "categoryKey": "daily_login.category.launch",
+            "backgroundImageName": "bg_white",
+            "rewards": [
+                {
+                    "day": 1,
+                    "title": "Day 1",
+                    "titleKey": "daily_login.day.1",
+                    "imageName": "widerwillen_logo",
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 15
+                        },
+                        {
+                            "resource": "coins",
+                            "amount": 1000
+                        }
+                    ]
+                },
+                {
+                    "day": 2,
+                    "title": "Day 2",
+                    "titleKey": "daily_login.day.2",
+                    "imageName": "icon_pixel_skill_book",
+                    "rewards": [
+                        {
+                            "resource": "skill_books",
+                            "amount": 3
+                        }
+                    ]
+                },
+                {
+                    "day": 3,
+                    "title": "Day 3",
+                    "titleKey": "daily_login.day.3",
+                    "imageName": "icon_pixel_giftbox",
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 25
+                        },
+                        {
+                            "resource": "relics",
+                            "amount": 8
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "august_summer",
+            "title": "Summer Login",
+            "titleKey": "daily_login.summer.title",
+            "category": "Seasonal",
+            "categoryKey": "daily_login.category.seasonal",
+            "backgroundImageName": "bg_sommer",
+            "rewards": [
+                {
+                    "day": 1,
+                    "title": "Day 1",
+                    "titleKey": "daily_login.day.1",
+                    "imageName": "icon_pixel_chip_yellow",
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 1500
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 1
+                        }
+                    ]
+                },
+                {
+                    "day": 2,
+                    "title": "Day 2",
+                    "titleKey": "daily_login.day.2",
+                    "imageName": "icon_pixel_crystal",
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 18
+                        }
+                    ]
+                },
+                {
+                    "day": 3,
+                    "title": "Day 3",
+                    "titleKey": "daily_login.day.3",
+                    "imageName": "icon_pixel_box",
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 3000
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 20
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 2
+                        }
+                    ]
                 }
             ]
         }

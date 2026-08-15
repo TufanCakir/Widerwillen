@@ -34,22 +34,26 @@ struct RemoteContentManifest: Decodable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        contentVersion = try container.decodeIfPresent(
-            Int.self,
-            forKey: .contentVersion
-        ) ?? 0
-        json = try container.decodeIfPresent(
-            [RemoteJSONResource].self,
-            forKey: .json
-        ) ?? []
-        assets = try container.decodeIfPresent(
-            [RemoteFileResource].self,
-            forKey: .assets
-        ) ?? []
-        music = try container.decodeIfPresent(
-            [RemoteFileResource].self,
-            forKey: .music
-        ) ?? []
+        contentVersion =
+            try container.decodeIfPresent(
+                Int.self,
+                forKey: .contentVersion
+            ) ?? 0
+        json =
+            try container.decodeIfPresent(
+                [RemoteJSONResource].self,
+                forKey: .json
+            ) ?? []
+        assets =
+            try container.decodeIfPresent(
+                [RemoteFileResource].self,
+                forKey: .assets
+            ) ?? []
+        music =
+            try container.decodeIfPresent(
+                [RemoteFileResource].self,
+                forKey: .music
+            ) ?? []
     }
 }
 
