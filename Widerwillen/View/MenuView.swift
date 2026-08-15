@@ -216,19 +216,23 @@ struct MenuView: View {
 
             DailyLoginView(
                 progress: progress,
-                configuration: dailyLoginConfiguration
+                configuration: dailyLoginConfiguration,
+                isCompactPresentation: true
             ) {
                 withAnimation(.snappy(duration: 0.2)) {
                     isDailyLoginPopupPresented = false
                 }
             }
+            .frame(maxWidth: 360)
+            .frame(maxHeight: 560)
+            .background(.black.opacity(0.82))
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(.white.opacity(0.64), lineWidth: 1)
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 34)
+            .padding(.horizontal, 22)
+            .padding(.vertical, 44)
             .shadow(color: .black.opacity(0.92), radius: 10, x: 0, y: 5)
         }
         .zIndex(20)

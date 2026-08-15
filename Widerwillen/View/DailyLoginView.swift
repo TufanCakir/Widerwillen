@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DailyLoginView: View {
     let progress: GameProgressStore
+    var isCompactPresentation = false
     var onClose: (() -> Void)?
 
     private let configuration: DailyLoginConfiguration
@@ -22,10 +23,12 @@ struct DailyLoginView: View {
         progress: GameProgressStore,
         configuration: DailyLoginConfiguration =
             try! DailyLoginConfiguration.load(),
+        isCompactPresentation: Bool = false,
         onClose: (() -> Void)? = nil
     ) {
         self.progress = progress
         self.configuration = configuration
+        self.isCompactPresentation = isCompactPresentation
         self.onClose = onClose
         _selectedLoginID = State(
             initialValue: configuration.logins.first?.id ?? ""
@@ -34,12 +37,34 @@ struct DailyLoginView: View {
 
     var body: some View {
         ZStack {
-            AppBackground()
+            if !isCompactPresentation {
+                AppBackground()
+            }
 
             VStack(spacing: 12) {
                 ZStack(alignment: .topTrailing) {
-                    GameHeader(progress: progress)
-                        .padding(.top, 18)
+                    if isCompactPresentation {
+                        Text(
+                            localizer.text(
+                                "daily_login.title",
+                                fallback: "Daily Login"
+                            )
+                        )
+                        .font(.system(size: 22, weight: .heavy))
+                        .foregroundStyle(.white)
+                        .shadow(
+                            color: .black.opacity(0.9),
+                            radius: 3,
+                            x: 0,
+                            y: 0
+                        )
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 14)
+                        .padding(.top, 14)
+                    } else {
+                        GameHeader(progress: progress)
+                            .padding(.top, 18)
+                    }
 
                     if let onClose {
                         Button {
@@ -59,8 +84,8 @@ struct DailyLoginView: View {
                                 )
                         }
                         .buttonStyle(.plain)
-                        .padding(.top, 50)
-                        .padding(.trailing, 18)
+                        .padding(.top, isCompactPresentation ? 12 : 50)
+                        .padding(.trailing, isCompactPresentation ? 12 : 18)
                     }
                 }
 
@@ -81,6 +106,7 @@ struct DailyLoginView: View {
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
+                .frame(maxHeight: isCompactPresentation ? 430 : .infinity)
             }
         }
     }
@@ -90,7 +116,12 @@ struct DailyLoginView: View {
     }
 
     private var columns: [GridItem] {
-        [GridItem(.adaptive(minimum: 92), spacing: 10)]
+        [
+            GridItem(
+                .adaptive(minimum: isCompactPresentation ? 74 : 92),
+                spacing: isCompactPresentation ? 8 : 10
+            )
+        ]
     }
 
     private var localizer: AppLocalizer {
@@ -116,11 +147,11 @@ struct DailyLoginView: View {
 
     private func loginPage(for login: DailyLoginCampaign) -> some View {
         ScrollView {
-            LazyVStack(spacing: 12) {
+            LazyVStack(spacing: isCompactPresentation ? 8 : 12) {
                 loginSection(login)
             }
-            .padding(.horizontal, 14)
-            .padding(.bottom, 110)
+            .padding(.horizontal, isCompactPresentation ? 10 : 14)
+            .padding(.bottom, isCompactPresentation ? 14 : 110)
         }
     }
 
@@ -128,7 +159,12 @@ struct DailyLoginView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text(localizedTitle(login))
-                    .font(.system(size: 20, weight: .heavy))
+                    .font(
+                        .system(
+                            size: isCompactPresentation ? 17 : 20,
+                            weight: .heavy
+                        )
+                    )
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
 
@@ -157,7 +193,7 @@ struct DailyLoginView: View {
                 }
             }
         }
-        .padding(12)
+        .padding(isCompactPresentation ? 10 : 12)
         .background {
             ZStack {
                 RemoteImage(name: login.backgroundImageName, contentMode: .fill)
@@ -187,41 +223,54 @@ struct DailyLoginView: View {
         )
         let isToday = currentReward?.day == reward.day
         let canClaim = isToday && progress.canClaimDailyLogin(for: login)
+        let isClaimed = isToday && !progress.canClaimDailyLogin(for: login)
 
         return VStack(spacing: 7) {
             RemoteImage(name: reward.imageName)
-                .frame(width: 38, height: 38)
+                .frame(
+                    width: isCompactPresentation ? 30 : 38,
+                    height: isCompactPresentation ? 30 : 38
+                )
+                .saturation(isClaimed ? 0 : 1)
+                .opacity(isClaimed ? 0.45 : 1)
 
             Text(localizedTitle(reward))
-                .font(.system(size: 11, weight: .heavy))
-                .foregroundStyle(.black)
+                .font(
+                    .system(
+                        size: isCompactPresentation ? 10 : 11,
+                        weight: .heavy
+                    )
+                )
+                .foregroundStyle(isClaimed ? .black.opacity(0.48) : .black)
+                .strikethrough(isClaimed, color: .black.opacity(0.65))
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
 
             ResourceAmountRow(
                 amounts: reward.rewards,
                 prefix: "+",
-                color: .black
+                color: isClaimed ? .black.opacity(0.48) : .black
             )
+            .strikethrough(isClaimed, color: .black.opacity(0.65))
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 112)
-        .padding(8)
-        .background(.white.opacity(isToday ? 0.96 : 0.82))
+        .frame(height: isCompactPresentation ? 92 : 112)
+        .padding(isCompactPresentation ? 6 : 8)
+        .background(
+            isClaimed
+                ? .gray.opacity(0.76)
+                : .white.opacity(isToday ? 0.96 : 0.82)
+        )
         .overlay {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(
-                    canClaim
-                        ? .white.opacity(0.95)
-                        : isToday
-                            ? .black.opacity(0.32)
-                            : .black.opacity(0.14),
+                    canClaim ? .white.opacity(0.95) : .black.opacity(0.16),
                     lineWidth: canClaim ? 2 : 1
                 )
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(color: .black.opacity(0.78), radius: 5, x: 0, y: 3)
-        .opacity(isToday || progress.canClaimDailyLogin(for: login) ? 1 : 0.66)
+        .opacity(isToday || progress.canClaimDailyLogin(for: login) ? 1 : 0.62)
         .contentShape(RoundedRectangle(cornerRadius: 8))
         .onTapGesture {
             if canClaim {
