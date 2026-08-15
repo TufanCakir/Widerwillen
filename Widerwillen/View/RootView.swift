@@ -15,18 +15,48 @@ struct RootView: View {
     @State private var progress = GameProgressStore()
     @State private var musicPlayer = MusicPlayer()
     @State private var remoteContentStore = RemoteContentStore()
+    @State private var internetConnectionStore = InternetConnectionStore()
     @State private var selectedTab: AppTab = .home
     @State private var activeMode: MenuMode?
+    @State private var hasFinishedLaunchLoading = false
     @State private var hasStartedGame = false
     @State private var isFooterHiddenForActiveMode = false
 
     var body: some View {
         ZStack {
-            currentView
+            if !internetConnectionStore.isConnected {
+                OfflineView(
+                    connectionName: internetConnectionStore.connectionName
+                )
+            } else if hasFinishedLaunchLoading {
+                currentView
+            } else {
+                LaunchView(remoteContentStore: remoteContentStore)
+            }
 
-            if remoteContentStore.isRefreshing {
+            if internetConnectionStore.isConnected
+                && hasFinishedLaunchLoading && remoteContentStore.isRefreshing
+                && !remoteContentStore.hasPendingUpdate
+            {
                 remoteContentProgressView
                     .padding(.horizontal, 28)
+            }
+
+            if internetConnectionStore.isConnected
+                && hasFinishedLaunchLoading && remoteContentStore.hasPendingUpdate
+            {
+                remoteUpdatePrompt
+                    .padding(.horizontal, 28)
+            }
+
+            if internetConnectionStore.isConnected
+                && hasFinishedLaunchLoading && hasStartedGame
+                && !remoteContentStore.hasPendingUpdate
+            {
+                TutorialCoachView(
+                    progress: progress,
+                    trigger: currentTutorialTrigger
+                )
             }
         }
             .statusBarHidden(true)
@@ -35,13 +65,19 @@ struct RootView: View {
                 musicPlayer.setEnabled(isMusicEnabled)
             }
             .task {
-                await remoteContentStore.refreshIfNeeded()
+                guard internetConnectionStore.isConnected else { return }
+
+                await remoteContentStore.loadLaunchContent()
+                await MainActor.run {
+                    hasFinishedLaunchLoading = true
+                }
+                await remoteContentStore.checkForAvailableUpdate()
             }
             .onChange(of: scenePhase) { _, newPhase in
-                if newPhase == .active {
+                if newPhase == .active && internetConnectionStore.isConnected {
                     progress.refreshIdleRewards()
                     Task {
-                        await remoteContentStore.refreshIfNeeded()
+                        await remoteContentStore.checkForAvailableUpdate()
                     }
                 }
             }
@@ -50,13 +86,30 @@ struct RootView: View {
             }
             .onChange(of: selectedTab) { _, _ in
                 Task {
-                    await remoteContentStore.refreshIfNeeded()
+                    guard internetConnectionStore.isConnected else { return }
+                    await remoteContentStore.checkForAvailableUpdate()
                 }
             }
             .onChange(of: activeMode) { _, _ in
                 isFooterHiddenForActiveMode = false
                 Task {
-                    await remoteContentStore.refreshIfNeeded()
+                    guard internetConnectionStore.isConnected else { return }
+                    await remoteContentStore.checkForAvailableUpdate()
+                }
+            }
+            .onChange(of: internetConnectionStore.isConnected) {
+                _, isConnected in
+                guard isConnected else { return }
+
+                Task {
+                    if !hasFinishedLaunchLoading {
+                        await remoteContentStore.loadLaunchContent()
+                        await MainActor.run {
+                            hasFinishedLaunchLoading = true
+                        }
+                    }
+
+                    await remoteContentStore.checkForAvailableUpdate()
                 }
             }
     }
@@ -78,6 +131,66 @@ struct RootView: View {
         .background(.black.opacity(0.68))
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(color: .black.opacity(0.9), radius: 4, x: 0, y: 2)
+    }
+
+    private var remoteUpdatePrompt: some View {
+        VStack(spacing: 14) {
+            Text("Content Update")
+                .font(.system(size: 18, weight: .heavy))
+
+            if let version = remoteContentStore.pendingUpdateVersion {
+                Text("Version \(version) • \(remoteContentStore.pendingUpdateSizeText)")
+                    .font(.system(size: 12, weight: .bold))
+                    .opacity(0.78)
+            }
+
+            if remoteContentStore.isRefreshing {
+                if let progress = remoteContentStore.progress {
+                    ProgressView(value: progress)
+                        .progressViewStyle(.linear)
+                } else {
+                    ProgressView()
+                        .progressViewStyle(.linear)
+                }
+
+                Text(remoteContentStore.progressDetailText)
+                    .font(.system(size: 11, weight: .bold))
+                    .opacity(0.78)
+            } else {
+                HStack(spacing: 12) {
+                    Button {
+                        remoteContentStore.skipPendingUpdate()
+                    } label: {
+                        Text("Not now")
+                            .frame(maxWidth: .infinity)
+                    }
+
+                    Button {
+                        Task {
+                            await remoteContentStore.applyPendingUpdate()
+                        }
+                    } label: {
+                        Text("Download")
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+                .font(.system(size: 14, weight: .heavy))
+                .buttonStyle(.bordered)
+                .tint(.white)
+            }
+        }
+        .foregroundStyle(.white)
+        .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+        .tint(.white)
+        .padding(18)
+        .frame(maxWidth: 320)
+        .background(.black.opacity(0.78))
+        .overlay {
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(.white.opacity(0.65), lineWidth: 1)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 5)
     }
 
     @ViewBuilder
@@ -125,8 +238,38 @@ struct RootView: View {
         ZStack(alignment: .bottom) {
             selectedTabView
 
-            Footer(selectedTab: $selectedTab)
+            Footer(selectedTab: $selectedTab, progress: progress)
                 .ignoresSafeArea(edges: .bottom)
+        }
+    }
+
+    private var currentTutorialTrigger: TutorialTrigger {
+        if let activeMode {
+            switch activeMode {
+            case .battle:
+                return .battle
+            case .event:
+                return .event
+            case .skills:
+                return .skills
+            case .warehouse:
+                return .warehouse
+            default:
+                return .launch
+            }
+        }
+
+        switch selectedTab {
+        case .home:
+            return .launch
+        case .sprites:
+            return .sprites
+        case .summon:
+            return .summon
+        case .shop:
+            return .shop
+        case .trade:
+            return .trade
         }
     }
 
@@ -139,10 +282,14 @@ struct RootView: View {
                     selectedTab: Binding(
                         get: { selectedTab },
                         set: { newTab in
+                            guard progress.canAccess(tab: newTab) else {
+                                return
+                            }
                             selectedTab = newTab
                             activeMode = nil
                         }
-                    )
+                    ),
+                    progress: progress
                 )
                 .ignoresSafeArea(edges: .bottom)
             }
@@ -164,13 +311,29 @@ struct RootView: View {
         case .home:
             MenuView(progress: progress) { activeMode = $0 }
         case .sprites:
-            SpriteListView(progress: progress)
+            if progress.canAccess(tab: .sprites) {
+                SpriteListView(progress: progress)
+            } else {
+                MenuView(progress: progress) { activeMode = $0 }
+            }
         case .summon:
-            SummonView(progress: progress)
+            if progress.canAccess(tab: .summon) {
+                SummonView(progress: progress)
+            } else {
+                MenuView(progress: progress) { activeMode = $0 }
+            }
         case .shop:
-            ShopView(progress: progress)
+            if progress.canAccess(tab: .shop) {
+                ShopView(progress: progress)
+            } else {
+                MenuView(progress: progress) { activeMode = $0 }
+            }
         case .trade:
-            TradeView(progress: progress)
+            if progress.canAccess(tab: .trade) {
+                TradeView(progress: progress)
+            } else {
+                MenuView(progress: progress) { activeMode = $0 }
+            }
         }
     }
 }

@@ -10,6 +10,7 @@
             "singleCost": 8,
             "multiCost": 70,
             "multiCount": 10,
+            "requiredAccountLevel": 3,
             "entries": [
                 {
                     "id": "cookieman_front",
@@ -74,6 +75,7 @@
             "singleCost": 6,
             "multiCost": 50,
             "multiCount": 10,
+            "requiredAccountLevel": 5,
             "entries": [
                 {
                     "id": "moon_totem",
@@ -119,6 +121,7 @@
             "singleCost": 10,
             "multiCost": 85,
             "multiCount": 10,
+            "requiredAccountLevel": 7,
             "entries": [
                 {
                     "id": "training_sword",

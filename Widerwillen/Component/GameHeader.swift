@@ -76,8 +76,15 @@ struct GameHeader: View {
             AppResourceLabel(
                 imageName: "icon_pixel_relic",
                 value: progress.artifactShards,
-                iconSize: 24,
-                fontSize: 13
+                iconSize: 22,
+                fontSize: 12
+            )
+
+            AppResourceLabel(
+                imageName: "icon_pixel_skill_books",
+                value: progress.skillBooks,
+                iconSize: 22,
+                fontSize: 12
             )
         }
     }
@@ -166,17 +173,32 @@ struct GameHeader: View {
 
     private func iconChoice(_ icon: ProfileIcon) -> some View {
         let isSelected = progress.selectedProfileIconImageName == icon.imageName
+        let requiredLevel = icon.requiredAccountLevel ?? 1
+        let isUnlocked = progress.accountLevel >= requiredLevel
 
         return Button {
+            guard isUnlocked else { return }
             progress.selectProfileIcon(icon)
             withAnimation(.snappy(duration: 0.2)) {
                 isShowingProfilePicker = false
             }
         } label: {
             VStack(spacing: 6) {
-                profileIconImage(icon.imageName, size: 42)
+                ZStack(alignment: .topTrailing) {
+                    profileIconImage(icon.imageName, size: 42)
 
-                Text(icon.title)
+                    if !isUnlocked {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 9, weight: .heavy))
+                            .foregroundStyle(.white)
+                            .padding(3)
+                            .background(.black.opacity(0.62))
+                            .clipShape(Circle())
+                            .offset(x: 5, y: -5)
+                    }
+                }
+
+                Text(isUnlocked ? icon.title : "LV \(requiredLevel)")
                     .font(.system(size: 10, weight: .heavy))
                     .foregroundStyle(.white.opacity(0.86))
                     .lineLimit(1)
@@ -188,6 +210,7 @@ struct GameHeader: View {
                         y: 0
                     )
             }
+            .opacity(isUnlocked ? 1 : 0.46)
             .frame(width: 68, height: 68)
             .background(.white.opacity(isSelected ? 0.2 : 0.08))
             .overlay {

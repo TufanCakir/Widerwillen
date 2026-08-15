@@ -1,0 +1,77 @@
+{
+    "tutorials": [
+        {
+            "id": "welcome_blunt",
+            "trigger": "launch",
+            "requiredAccountLevel": 1,
+            "speakerName": "Blunt",
+            "speakerImageName": "sprite_blunt",
+            "title": "Welcome",
+            "messages": [
+                "Tap the screen in battle to damage enemies.",
+                "Defeat enemies to earn coins, account XP and sometimes skill books.",
+                "New features unlock when your account level grows."
+            ]
+        },
+        {
+            "id": "sprites_unlock",
+            "trigger": "sprites",
+            "requiredAccountLevel": 2,
+            "speakerName": "Blunt",
+            "speakerImageName": "sprite_blunt",
+            "title": "Sprites",
+            "messages": [
+                "Sprites are helpers you can collect.",
+                "When you summon helper sprites, they fight beside your selected character."
+            ]
+        },
+        {
+            "id": "summon_unlock",
+            "trigger": "summon",
+            "requiredAccountLevel": 3,
+            "speakerName": "Blunt",
+            "speakerImageName": "sprite_blunt",
+            "title": "Summon",
+            "messages": [
+                "Summons use crystals and can unlock characters, skins, helper sprites and items.",
+                "Duplicates increase stars, so old summons still make your team stronger."
+            ]
+        },
+        {
+            "id": "skills_unlock",
+            "trigger": "skills",
+            "requiredAccountLevel": 2,
+            "speakerName": "Blunt",
+            "speakerImageName": "sprite_blunt",
+            "title": "Skill Trees",
+            "messages": [
+                "Skill books unlock upgrades in different skill trees.",
+                "Some skills improve tap damage, others improve sprite damage, speed or drop chance."
+            ]
+        },
+        {
+            "id": "trade_unlock",
+            "trigger": "trade",
+            "requiredAccountLevel": 4,
+            "speakerName": "Blunt",
+            "speakerImageName": "sprite_blunt",
+            "title": "Trade",
+            "messages": [
+                "Trade lets you exchange resources when you need a different currency.",
+                "Use it carefully because some resources are rarer than others."
+            ]
+        },
+        {
+            "id": "shop_unlock",
+            "trigger": "shop",
+            "requiredAccountLevel": 5,
+            "speakerName": "Blunt",
+            "speakerImageName": "sprite_blunt",
+            "title": "Shop",
+            "messages": [
+                "The shop contains optional crystal packs, battle passes and special packs.",
+                "Coins, relics and skill books are still earned by playing."
+            ]
+        }
+    ]
+}

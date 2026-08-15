@@ -88,8 +88,12 @@ struct RemoteImage: View {
             "circle.fill"
         case _ where name.contains("crystal"):
             "diamond.fill"
+        case _ where name.contains("chip"):
+            "circle.hexagongrid.fill"
         case _ where name.contains("relic"):
             "hexagon.fill"
+        case _ where name.contains("book"):
+            "book.fill"
         case _ where name.contains("sword"):
             "bolt.fill"
         case _ where name.contains("box"):

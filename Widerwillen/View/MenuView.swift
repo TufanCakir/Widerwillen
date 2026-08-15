@@ -103,21 +103,39 @@ struct MenuView: View {
         systemImage: String? = nil,
         action: @escaping () -> Void = {}
     ) -> some View {
-        Button(action: action) {
+        let requiredLevel = requiredAccountLevel(for: title)
+        let isUnlocked = progress.accountLevel >= requiredLevel
+
+        return Button {
+            guard isUnlocked else { return }
+            action()
+        } label: {
             VStack(spacing: 10) {
-                if let assetImage {
-                    RemoteImage(name: assetImage)
-                        .frame(width: 32, height: 32)
-                } else if let systemImage {
-                    Image(systemName: systemImage)
-                        .font(.system(size: 28, weight: .heavy))
+                ZStack(alignment: .topTrailing) {
+                    if let assetImage {
+                        RemoteImage(name: assetImage)
+                            .frame(width: 32, height: 32)
+                    } else if let systemImage {
+                        Image(systemName: systemImage)
+                            .font(.system(size: 28, weight: .heavy))
+                    }
+
+                    if !isUnlocked {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 9, weight: .heavy))
+                            .padding(3)
+                            .background(.black.opacity(0.58))
+                            .clipShape(Circle())
+                            .offset(x: 7, y: -5)
+                    }
                 }
 
-                Text(title)
+                Text(isUnlocked ? title : "LV \(requiredLevel)")
                     .font(.system(size: 13, weight: .bold))
                     .lineLimit(1)
             }
             .foregroundStyle(.white)
+            .opacity(isUnlocked ? 1 : 0.48)
         }
         .buttonStyle(.plain)
         .shadow(
@@ -181,7 +199,11 @@ struct MenuView: View {
         backgroundImage: String,
         mode: MenuMode
     ) -> some View {
-        Button {
+        let requiredLevel = mode.requiredAccountLevel
+        let isUnlocked = progress.accountLevel >= requiredLevel
+
+        return Button {
+            guard isUnlocked else { return }
             isModePickerPresented = false
             openMode(mode)
         } label: {
@@ -189,11 +211,17 @@ struct MenuView: View {
                 RemoteImage(name: iconImage)
                     .frame(width: 34, height: 34)
 
-                Text(title)
+                Text(isUnlocked ? title : "\(title) LV \(requiredLevel)")
                     .font(.system(size: 24, weight: .bold))
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+
+                if !isUnlocked {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 16, weight: .heavy))
+                }
             }
             .foregroundStyle(.white)
+            .opacity(isUnlocked ? 1 : 0.5)
             .frame(maxWidth: .infinity)
             .frame(height: 74)
             .background {
@@ -209,6 +237,21 @@ struct MenuView: View {
         }
         .buttonStyle(.plain)
     }
+
+    private func requiredAccountLevel(for shortcutTitle: String) -> Int {
+        switch shortcutTitle {
+        case "Skills":
+            2
+        case "Warehouse":
+            2
+        case "Giftbox":
+            2
+        case "News":
+            2
+        default:
+            1
+        }
+    }
 }
 
 enum MenuMode {
@@ -220,6 +263,17 @@ enum MenuMode {
     case gift
     case warehouse
     case dailyLogin
+
+    var requiredAccountLevel: Int {
+        switch self {
+        case .battle, .settings, .dailyLogin:
+            1
+        case .skills, .news, .gift, .warehouse:
+            2
+        case .event:
+            3
+        }
+    }
 }
 
 #Preview {

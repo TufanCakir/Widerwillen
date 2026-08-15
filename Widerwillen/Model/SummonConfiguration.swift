@@ -28,6 +28,7 @@ struct SummonBanner: Decodable, Identifiable {
     let singleCost: Int
     let multiCost: Int
     let multiCount: Int
+    let requiredAccountLevel: Int
     let entries: [SummonEntry]
 
     private enum CodingKeys: String, CodingKey {
@@ -40,6 +41,7 @@ struct SummonBanner: Decodable, Identifiable {
         case singleCost
         case multiCost
         case multiCount
+        case requiredAccountLevel
         case entries
     }
 
@@ -66,6 +68,11 @@ struct SummonBanner: Decodable, Identifiable {
         singleCost = try container.decode(Int.self, forKey: .singleCost)
         multiCost = try container.decode(Int.self, forKey: .multiCost)
         multiCount = try container.decode(Int.self, forKey: .multiCount)
+        requiredAccountLevel =
+            try container.decodeIfPresent(
+                Int.self,
+                forKey: .requiredAccountLevel
+            ) ?? 1
         entries = try container.decode([SummonEntry].self, forKey: .entries)
     }
 }

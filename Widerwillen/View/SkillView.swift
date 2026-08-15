@@ -36,8 +36,8 @@ struct SkillView: View {
 
                 HStack {
                     AppResourceLabel(
-                        imageName: "icon_pixel_relic",
-                        value: progress.artifactShards,
+                        imageName: "icon_pixel_skill_books",
+                        value: progress.skillBooks,
                         iconSize: 24,
                         fontSize: 14
                     )
@@ -80,8 +80,15 @@ struct SkillView: View {
     }
 
     private func skillPage(for category: String) -> some View {
-        ScrollView(showsIndicators: false) {
+        let requiredLevel = requiredAccountLevel(for: category)
+        let isUnlocked = progress.accountLevel >= requiredLevel
+
+        return ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 12) {
+                if !isUnlocked {
+                    lockedPathCard(category: category, requiredLevel: requiredLevel)
+                }
+
                 ForEach(configuration.skills.filter { $0.category == category }) {
                     skill in
                     skillCard(skill)
@@ -94,12 +101,26 @@ struct SkillView: View {
 
     private func skillCard(_ skill: SkillNode) -> some View {
         let level = progress.skillLevel(for: skill)
-        let canUpgrade = progress.canUpgradeSkill(skill)
+        let requiredLevel = skill.requiredAccountLevel ?? 1
+        let isUnlocked = progress.accountLevel >= requiredLevel
+        let canUpgrade = isUnlocked && progress.canUpgradeSkill(skill)
 
         return HStack(spacing: 14) {
-            RemoteImage(name: skill.imageName)
-                .frame(width: 52, height: 52)
-                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+            ZStack(alignment: .topTrailing) {
+                RemoteImage(name: skill.imageName)
+                    .frame(width: 52, height: 52)
+                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+
+                if !isUnlocked {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 10, weight: .heavy))
+                        .foregroundStyle(.white)
+                        .padding(4)
+                        .background(.black.opacity(0.62))
+                        .clipShape(Circle())
+                        .offset(x: 5, y: -5)
+                }
+            }
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(skill.title)
@@ -116,7 +137,7 @@ struct SkillView: View {
                     .minimumScaleFactor(0.75)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
 
-                Text("Lv \(level)/\(skill.maxLevel)")
+                Text(isUnlocked ? "Lv \(level)/\(skill.maxLevel)" : "Unlocks at LV \(requiredLevel)")
                     .font(.system(size: 11, weight: .heavy))
                     .foregroundStyle(.white.opacity(0.86))
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
@@ -128,7 +149,7 @@ struct SkillView: View {
                 upgrade(skill)
             } label: {
                 VStack(spacing: 3) {
-                    RemoteImage(name: "icon_pixel_relic")
+                    RemoteImage(name: "icon_pixel_skill_books")
                         .frame(width: 22, height: 22)
 
                     Text("\(skill.cost)")
@@ -147,6 +168,7 @@ struct SkillView: View {
             .buttonStyle(.plain)
             .disabled(!canUpgrade)
         }
+        .opacity(isUnlocked ? 1 : 0.48)
         .padding(14)
         .background(.black.opacity(0.26))
         .overlay {
@@ -154,6 +176,40 @@ struct SkillView: View {
                 .stroke(.white.opacity(0.48), lineWidth: 1)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private func lockedPathCard(category: String, requiredLevel: Int) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: "lock.fill")
+                .font(.system(size: 20, weight: .heavy))
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("\(category) Path")
+                    .font(.system(size: 16, weight: .heavy))
+
+                Text("Unlocks at account LV \(requiredLevel)")
+                    .font(.system(size: 12, weight: .bold))
+                    .opacity(0.78)
+            }
+
+            Spacer()
+        }
+        .foregroundStyle(.white)
+        .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+        .padding(14)
+        .background(.black.opacity(0.34))
+        .overlay {
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(.white.opacity(0.42), lineWidth: 1)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private func requiredAccountLevel(for category: String) -> Int {
+        configuration.skills
+            .filter { $0.category == category }
+            .map { $0.requiredAccountLevel ?? 1 }
+            .min() ?? 1
     }
 
     private func effectTitle(for skill: SkillNode) -> String {
@@ -178,7 +234,10 @@ struct SkillView: View {
     }
 
     private func upgrade(_ skill: SkillNode) {
-        message = progress.upgradeSkill(skill) ? "Skill upgraded" : "Need more relics"
+        message =
+            progress.upgradeSkill(skill)
+            ? "Skill upgraded"
+            : "Need more skill books"
 
         Task {
             try? await Task.sleep(for: .seconds(1.2))

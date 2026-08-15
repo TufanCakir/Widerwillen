@@ -21,4 +21,5 @@ struct ProfileIcon: Decodable, Identifiable {
     let id: String
     let title: String
     let imageName: String
+    let requiredAccountLevel: Int?
 }

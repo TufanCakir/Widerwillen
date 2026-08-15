@@ -58,6 +58,7 @@ struct RemoteJSONResource: Decodable, Identifiable {
 
     let name: String
     let path: String
+    let sizeBytes: Int?
 }
 
 struct RemoteFileResource: Decodable, Identifiable {
@@ -66,17 +67,25 @@ struct RemoteFileResource: Decodable, Identifiable {
     let name: String
     let path: String
     let version: Int
+    let sizeBytes: Int?
 
     private enum CodingKeys: String, CodingKey {
         case name
         case path
         case version
+        case sizeBytes
     }
 
-    init(name: String, path: String, version: Int = 1) {
+    init(
+        name: String,
+        path: String,
+        version: Int = 1,
+        sizeBytes: Int? = nil
+    ) {
         self.name = name
         self.path = path
         self.version = version
+        self.sizeBytes = sizeBytes
     }
 
     init(from decoder: Decoder) throws {
@@ -84,5 +93,6 @@ struct RemoteFileResource: Decodable, Identifiable {
         name = try container.decode(String.self, forKey: .name)
         path = try container.decode(String.self, forKey: .path)
         version = try container.decodeIfPresent(Int.self, forKey: .version) ?? 1
+        sizeBytes = try container.decodeIfPresent(Int.self, forKey: .sizeBytes)
     }
 }

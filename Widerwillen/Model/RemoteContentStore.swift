@@ -22,10 +22,15 @@ final class RemoteContentStore {
 
     private(set) var isRefreshing = false
     private(set) var progress: Double?
+    private(set) var downloadedBytes = 0
+    private(set) var expectedDownloadBytes: Int?
+    private(set) var pendingUpdateSizeBytes: Int?
+    private(set) var pendingUpdateVersion: Int?
     private(set) var statusText = "Bundle content"
     private(set) var contentVersion = UserDefaults.standard.integer(
         forKey: versionKey
     )
+    private var pendingUpdateManifest: RemoteContentManifest?
 
     init() {
         let cache = URLCache(
@@ -42,19 +47,88 @@ final class RemoteContentStore {
         session = URLSession(configuration: configuration)
     }
 
-    func refreshIfNeeded() async {
+    var progressDetailText: String {
+        let downloadedText = Self.byteFormatter.string(
+            fromByteCount: Int64(downloadedBytes)
+        )
+
+        if let expectedDownloadBytes {
+            let expectedText = Self.byteFormatter.string(
+                fromByteCount: Int64(expectedDownloadBytes)
+            )
+            return "\(downloadedText) / \(expectedText)"
+        }
+
+        return downloadedBytes > 0 ? downloadedText : statusText
+    }
+
+    var pendingUpdateSizeText: String {
+        guard let pendingUpdateSizeBytes else { return "Unknown size" }
+
+        return Self.byteFormatter.string(
+            fromByteCount: Int64(pendingUpdateSizeBytes)
+        )
+    }
+
+    var hasPendingUpdate: Bool {
+        pendingUpdateManifest != nil
+    }
+
+    func loadLaunchContent() async {
+        await refreshIfNeeded(allowVersionUpdate: contentVersion == 0)
+    }
+
+    func checkForAvailableUpdate() async {
+        guard !isRefreshing else { return }
+
+        do {
+            let manifest = try await fetchManifest()
+            let missingResources = RemoteContentCache.missingResourceNames(
+                in: manifest
+            )
+            let hasVersionUpdate = manifest.contentVersion > contentVersion
+
+            guard hasVersionUpdate else {
+                if !missingResources.isEmpty {
+                    await refreshIfNeeded(allowVersionUpdate: false)
+                }
+                return
+            }
+
+            pendingUpdateManifest = manifest
+            pendingUpdateVersion = manifest.contentVersion
+            pendingUpdateSizeBytes = estimatedDownloadSize(
+                for: manifest,
+                onlyMissing: false
+            )
+            statusText = "Update available"
+            remoteLog(
+                "Update available. Version: \(manifest.contentVersion), size: \(pendingUpdateSizeText)"
+            )
+        } catch {
+            remoteLog("Update check failed: \(error)")
+        }
+    }
+
+    func applyPendingUpdate() async {
+        guard let manifest = pendingUpdateManifest else { return }
+        await refresh(using: manifest, onlyMissing: false)
+        pendingUpdateManifest = nil
+        pendingUpdateVersion = nil
+        pendingUpdateSizeBytes = nil
+    }
+
+    func skipPendingUpdate() {
+        pendingUpdateManifest = nil
+        pendingUpdateVersion = nil
+        pendingUpdateSizeBytes = nil
+        statusText = "Update skipped"
+    }
+
+    func refreshIfNeeded(allowVersionUpdate: Bool = true) async {
         guard !isRefreshing else {
             remoteLog("Refresh skipped because another refresh is running")
             return
-        }
-
-        isRefreshing = true
-        progress = nil
-        statusText = "Checking content"
-        remoteLog("Refresh started. Stored version: \(contentVersion)")
-        defer {
-            isRefreshing = false
-            progress = nil
         }
 
         do {
@@ -62,7 +136,8 @@ final class RemoteContentStore {
             let missingResources = RemoteContentCache.missingResourceNames(
                 in: manifest
             )
-            let shouldUpdateVersion = manifest.contentVersion > contentVersion
+            let shouldUpdateVersion =
+                allowVersionUpdate && manifest.contentVersion > contentVersion
             let shouldRepairCache = !missingResources.isEmpty
 
             remoteLog(
@@ -77,10 +152,54 @@ final class RemoteContentStore {
                 return
             }
 
+            await refresh(
+                using: manifest,
+                onlyMissing: !shouldUpdateVersion
+            )
+        } catch {
+            remoteLog("Remote manifest failed: \(error)")
+            guard let fallbackManifest = bundledManifest() else {
+                statusText = contentVersion > 0
+                    ? "Cached content"
+                    : "Bundle content"
+                remoteLog("No bundled contentVersion.json fallback found.")
+                return
+            }
+
+            statusText = "Repairing cached content"
+            await refresh(using: fallbackManifest, onlyMissing: true)
+        }
+    }
+
+    private func refresh(
+        using manifest: RemoteContentManifest,
+        onlyMissing: Bool
+    ) async {
+        guard !isRefreshing else {
+            remoteLog("Refresh skipped because another refresh is running")
+            return
+        }
+
+        isRefreshing = true
+        progress = nil
+        downloadedBytes = 0
+        expectedDownloadBytes = estimatedDownloadSize(
+            for: manifest,
+            onlyMissing: onlyMissing
+        )
+        statusText = "Downloading content"
+        remoteLog("Refresh started. Stored version: \(contentVersion)")
+        defer {
+            isRefreshing = false
+            progress = nil
+            expectedDownloadBytes = nil
+        }
+
+        do {
             try RemoteContentCache.prepareDirectories()
             let summary = await downloadResources(
                 from: manifest,
-                onlyMissing: !shouldUpdateVersion
+                onlyMissing: onlyMissing
             )
 
             guard summary.succeededCount > 0 || summary.failedResources.isEmpty
@@ -104,32 +223,8 @@ final class RemoteContentStore {
                 "Refresh finished. Stored version is now \(contentVersion). Succeeded: \(summary.succeededCount), failed: \(summary.failedResources.count)"
             )
         } catch {
-            remoteLog("Remote manifest failed: \(error)")
-            do {
-                guard let fallbackManifest = bundledManifest() else {
-                    statusText = contentVersion > 0
-                        ? "Cached content"
-                        : "Bundle content"
-                    remoteLog("No bundled contentVersion.json fallback found.")
-                    return
-                }
-
-                statusText = "Repairing cached content"
-                try RemoteContentCache.prepareDirectories()
-                let summary = await downloadResources(
-                    from: fallbackManifest,
-                    onlyMissing: true
-                )
-                statusText = contentVersion > 0
-                    ? "Cached content"
-                    : "Bundle content"
-                remoteLog(
-                    "Cache repair from bundled manifest finished. Succeeded: \(summary.succeededCount), failed: \(summary.failedResources.count)"
-                )
-            } catch {
-                statusText = contentVersion > 0 ? "Cached content" : "Bundle content"
-                remoteLog("Cache repair from bundled manifest failed: \(error)")
-            }
+            statusText = contentVersion > 0 ? "Cached content" : "Bundle content"
+            remoteLog("Refresh failed: \(error)")
         }
     }
 
@@ -193,6 +288,7 @@ final class RemoteContentStore {
                 let (data, response) = try await session.data(for: request)
                 try validate(response: response)
                 try RemoteContentCache.storeJSON(data, named: resource.name)
+                downloadedBytes += data.count
                 summary.succeededCount += 1
                 remoteLog("Stored JSON \(resource.name). Bytes: \(data.count)")
             } catch {
@@ -253,20 +349,10 @@ final class RemoteContentStore {
             return
         }
 
-        let url = Self.baseURL.appending(path: resource.path)
-        remoteLog(
-            "Downloading \(kind.logName) \(resource.name): \(url.absoluteString)"
-        )
-        let request = URLRequest(
-            url: url,
-            cachePolicy: .reloadRevalidatingCacheData,
-            timeoutInterval: 12
-        )
-
         do {
-            let (data, response) = try await session.data(for: request)
-            try validate(response: response)
+            let data = try await downloadFileData(resource, kind: kind)
             try RemoteContentCache.storeFile(data, resource: resource, kind: kind)
+            downloadedBytes += data.count
             summary.succeededCount += 1
             remoteLog(
                 "Stored \(kind.logName) \(resource.name) v\(resource.version). Bytes: \(data.count)"
@@ -280,13 +366,83 @@ final class RemoteContentStore {
         progress = Double(completedCount) / Double(totalCount)
     }
 
+    private func downloadFileData(
+        _ resource: RemoteFileResource,
+        kind: RemoteContentCache.FileKind
+    ) async throws -> Data {
+        let versionedURL = versionedURL(for: resource)
+
+        do {
+            return try await downloadData(
+                from: versionedURL,
+                resourceName: resource.name,
+                kind: kind
+            )
+        } catch {
+            let plainURL = Self.baseURL.appending(path: resource.path)
+            remoteLog(
+                "Versioned \(kind.logName) URL failed for \(resource.name). Retrying without query: \(plainURL.absoluteString)"
+            )
+            return try await downloadData(
+                from: plainURL,
+                resourceName: resource.name,
+                kind: kind
+            )
+        }
+    }
+
+    private func downloadData(
+        from url: URL,
+        resourceName: String,
+        kind: RemoteContentCache.FileKind
+    ) async throws -> Data {
+        remoteLog(
+            "Downloading \(kind.logName) \(resourceName): \(url.absoluteString)"
+        )
+        let request = URLRequest(
+            url: url,
+            cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
+            timeoutInterval: 12
+        )
+        let (data, response) = try await session.data(for: request)
+        try validate(response: response)
+        return data
+    }
+
     private func validate(response: URLResponse) throws {
         guard let httpResponse = response as? HTTPURLResponse else { return }
         remoteLog(
             "HTTP \(httpResponse.statusCode): \(httpResponse.url?.absoluteString ?? "unknown url")"
         )
+        logCacheHeaders(from: httpResponse)
         guard (200...299).contains(httpResponse.statusCode) else {
             throw URLError(.badServerResponse)
+        }
+    }
+
+    private func versionedURL(for resource: RemoteFileResource) -> URL {
+        let url = Self.baseURL.appending(path: resource.path)
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        else {
+            return url
+        }
+
+        components.queryItems = [
+            URLQueryItem(name: "v", value: "\(resource.version)")
+        ]
+        return components.url ?? url
+    }
+
+    private func logCacheHeaders(from response: HTTPURLResponse) {
+        let headers = response.allHeaderFields
+        let cacheControl = headers["Cache-Control"] ?? headers["cache-control"]
+        let etag = headers["ETag"] ?? headers["etag"]
+        let lastModified = headers["Last-Modified"] ?? headers["last-modified"]
+
+        if cacheControl != nil || etag != nil || lastModified != nil {
+            remoteLog(
+                "Cache headers: Cache-Control=\(cacheControl ?? "-"), ETag=\(etag ?? "-"), Last-Modified=\(lastModified ?? "-")"
+            )
         }
     }
 
@@ -317,6 +473,51 @@ final class RemoteContentStore {
     private func remoteLog(_ message: String) {
         print("[RemoteContent] \(message)")
     }
+
+    private func estimatedDownloadSize(
+        for manifest: RemoteContentManifest,
+        onlyMissing: Bool
+    ) -> Int? {
+        let jsonSize = manifest.json.reduce(0) { total, resource in
+            guard !onlyMissing || !RemoteContentCache.hasCachedJSON(named: resource.name)
+            else {
+                return total
+            }
+
+            return total + (resource.sizeBytes ?? 0)
+        }
+        let assetSize = manifest.assets.reduce(0) { total, resource in
+            guard !onlyMissing || !RemoteContentCache.hasCachedFile(
+                resource,
+                kind: .asset
+            )
+            else {
+                return total
+            }
+
+            return total + (resource.sizeBytes ?? 0)
+        }
+        let musicSize = manifest.music.reduce(0) { total, resource in
+            guard !onlyMissing || !RemoteContentCache.hasCachedFile(
+                resource,
+                kind: .music
+            )
+            else {
+                return total
+            }
+
+            return total + (resource.sizeBytes ?? 0)
+        }
+        let total = jsonSize + assetSize + musicSize
+
+        return total > 0 ? total : nil
+    }
+
+    private static let byteFormatter: ByteCountFormatter = {
+        let formatter = ByteCountFormatter()
+        formatter.countStyle = .file
+        return formatter
+    }()
 
     private struct DownloadSummary {
         var succeededCount = 0

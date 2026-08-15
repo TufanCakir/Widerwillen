@@ -227,6 +227,16 @@ struct BattleSceneView: View {
                 imageName: "icon_pixel_crystal"
             )
         }
+
+        if result.skillBooksAwarded > 0 {
+            addPopup(
+                text: "+\(result.skillBooksAwarded)",
+                color: .mint,
+                xRatio: 0.28,
+                yRatio: 0.58,
+                imageName: "icon_pixel_skill_books"
+            )
+        }
     }
 
     private func addCoinPopups(count: Int) {

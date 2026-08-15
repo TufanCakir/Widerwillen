@@ -1,5 +1,5 @@
 {
-  "contentVersion": 22,
+  "contentVersion": 31,
   "json": [
     {
       "name": "arena",
@@ -74,6 +74,10 @@
       "path": "summon.json"
     },
     {
+      "name": "tutorial",
+      "path": "tutorial.json"
+    },
+    {
       "name": "trade",
       "path": "trade.json"
     }
@@ -115,6 +119,26 @@
       "version": 1
     },
     {
+      "name": "icon_pixel_chip_blue",
+      "path": "assets/icon_pixel_chip_blue.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_chip_green",
+      "path": "assets/icon_pixel_chip_green.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_chip_red",
+      "path": "assets/icon_pixel_chip_red.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_chip_yellow",
+      "path": "assets/icon_pixel_chip_yellow.png",
+      "version": 1
+    },
+    {
       "name": "icon_pixel_coin",
       "path": "assets/icon_pixel_coin.png",
       "version": 1
@@ -152,6 +176,11 @@
     {
       "name": "icon_pixel_relic",
       "path": "assets/icon_pixel_relic.png",
+      "version": 1
+    },
+    {
+      "name": "icon_pixel_skill_book",
+      "path": "assets/icon_pixel_skill_book.png",
       "version": 1
     },
     {
@@ -212,7 +241,7 @@
     {
       "name": "widerwillen_font_logo",
       "path": "assets/widerwillen_font_logo.png",
-      "version": 1
+      "version": 5
     },
     {
       "name": "widerwillen_logo",

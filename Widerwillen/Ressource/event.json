@@ -6,7 +6,7 @@
             "category": "Daily",
             "bannerImageName": "icon_pixel_crystal",
             "currencyName": "Moon Shards",
-            "currencyImageName": "icon_pixel_crystal",
+            "currencyImageName": "icon_pixel_chip_blue",
             "dailyLimit": 5,
             "hp": 36,
             "rewards": {
@@ -22,7 +22,7 @@
             "category": "Daily",
             "bannerImageName": "icon_pixel_coin",
             "currencyName": "Boss Tokens",
-            "currencyImageName": "icon_pixel_coin",
+            "currencyImageName": "icon_pixel_chip_yellow",
             "dailyLimit": 5,
             "hp": 60,
             "rewards": {
@@ -38,7 +38,7 @@
             "category": "Relic",
             "bannerImageName": "icon_pixel_relic",
             "currencyName": "Relic Dust",
-            "currencyImageName": "icon_pixel_relic",
+            "currencyImageName": "icon_pixel_chip_green",
             "dailyLimit": 3,
             "hp": 84,
             "rewards": {
@@ -54,7 +54,7 @@
             "category": "Daily",
             "bannerImageName": "icon_pixel_crystal",
             "currencyName": "Cavern Gems",
-            "currencyImageName": "icon_pixel_crystal",
+            "currencyImageName": "icon_pixel_chip_blue",
             "dailyLimit": 3,
             "hp": 110,
             "rewards": {
@@ -70,7 +70,7 @@
             "category": "Daily",
             "bannerImageName": "icon_pixel_coin",
             "currencyName": "Cavern Gems",
-            "currencyImageName": "icon_pixel_coin",
+            "currencyImageName": "icon_pixel_chip_yellow",
             "dailyLimit": 3,
             "hp": 110,
             "rewards": {
@@ -86,7 +86,7 @@
             "category": "Treasure",
             "bannerImageName": "icon_pixel_box",
             "currencyName": "Treasure Keys",
-            "currencyImageName": "icon_pixel_box",
+            "currencyImageName": "icon_pixel_chip_green",
             "dailyLimit": 3,
             "hp": 52,
             "rewards": {
@@ -102,7 +102,7 @@
             "category": "Boss",
             "bannerImageName": "sprite_cookieman",
             "currencyName": "Void Marks",
-            "currencyImageName": "icon_pixel_relic",
+            "currencyImageName": "icon_pixel_chip_red",
             "dailyLimit": 1,
             "hp": 160,
             "rewards": {

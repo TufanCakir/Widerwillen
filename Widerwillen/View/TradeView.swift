@@ -130,6 +130,7 @@ struct TradeView: View {
 
     private func offerCard(_ offer: TradeOffer) -> some View {
         let canBuy = progress.canApplyTradeOffer(offer)
+        let boughtCount = progress.tradeOfferPurchaseCounts[offer.id, default: 0]
 
         return VStack(spacing: 14) {
             HStack(spacing: 14) {
@@ -154,6 +155,22 @@ struct TradeView: View {
                         RemoteImage(name: "icon_pixel_trade")
                             .frame(width: 24, height: 24)
                         resourceRow(offer.rewards, prefix: "+")
+                    }
+
+                    if !offer.unlocks.isEmpty {
+                        unlockRow(offer.unlocks)
+                    }
+
+                    if let limit = offer.limit {
+                        Text("Limit \(boughtCount)/\(limit)")
+                            .font(.system(size: 11, weight: .heavy))
+                            .foregroundStyle(.white.opacity(0.72))
+                            .shadow(
+                                color: .black.opacity(0.9),
+                                radius: 3,
+                                x: 0,
+                                y: 0
+                            )
                     }
                 }
 
@@ -187,12 +204,30 @@ struct TradeView: View {
         HStack(spacing: 6) {
             ForEach(amounts) { amount in
                 AppResourceLabel(
-                    imageName: amount.resource.imageName,
+                    imageName: amount.imageName ?? amount.resource.imageName,
                     value: amount.amount,
                     prefix: prefix,
                     iconSize: 20,
                     fontSize: 12
                 )
+            }
+        }
+    }
+
+    private func unlockRow(_ unlocks: [TradeUnlockReward]) -> some View {
+        HStack(spacing: 6) {
+            ForEach(unlocks) { unlock in
+                HStack(spacing: 5) {
+                    RemoteImage(name: unlock.imageName)
+                        .frame(width: 20, height: 20)
+
+                    Text(unlock.name)
+                        .font(.system(size: 11, weight: .heavy))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                }
+                .foregroundStyle(.white.opacity(0.84))
+                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
             }
         }
     }

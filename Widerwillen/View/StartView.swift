@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct StartView: View {
     @Binding var hasStartedGame: Bool
 
@@ -17,51 +18,18 @@ struct StartView: View {
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
 
-                RemoteImage(name: "widerwillen_font_logo1")
-                    .frame(maxWidth: 580)
+                    RemoteImage(name: "widerwillen_logo")
+                        .frame(maxWidth: 420, maxHeight: 280)
 
-                Spacer(minLength: 44)
+                    RemoteImage(name: "widerwillen_font_logo")
+                        .frame(maxWidth: 580)
+            
 
-                Button {
-                    withAnimation(.snappy(duration: 0.2)) {
-                        hasStartedGame = true
-                    }
-                } label: {
-                    HStack(spacing: 14) {
-                        Image(systemName: "play.fill")
-                            .font(.system(size: 18, weight: .heavy))
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 0
-                            )
 
-                        Text("Start")
-                            .font(.system(size: 30, weight: .heavy))
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 0
-                            )
-                    }
+                Text("Tap to Start")
+                    .font(.system(size: 24, weight: .heavy))
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 74)
-                    .background {
-                        RemoteImage(name: "bg_app", contentMode: .fill)
-                            .opacity(0.78)
-                    }
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(.white.opacity(0.72), lineWidth: 2)
-                    }
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                }
-                .buttonStyle(.plain)
-                .padding(.horizontal, 34)
 
                 Spacer(minLength: 44)
 
@@ -72,6 +40,12 @@ struct StartView: View {
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
                     .padding(.horizontal, 24)
                     .padding(.bottom, 18)
+            }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            withAnimation(.snappy(duration: 0.2)) {
+                hasStartedGame = true
             }
         }
     }

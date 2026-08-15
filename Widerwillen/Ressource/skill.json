@@ -8,7 +8,8 @@
             "effect": "spriteDamage",
             "valuePerLevel": 0.08,
             "cost": 2,
-            "maxLevel": 25
+            "maxLevel": 25,
+            "requiredAccountLevel": 4
         },
         {
             "id": "shadow_clone_speed",
@@ -18,7 +19,8 @@
             "effect": "attackSpeed",
             "valuePerLevel": 0.025,
             "cost": 3,
-            "maxLevel": 20
+            "maxLevel": 20,
+            "requiredAccountLevel": 4
         },
         {
             "id": "burst_total_damage",
@@ -28,7 +30,8 @@
             "effect": "damage",
             "valuePerLevel": 0.06,
             "cost": 2,
-            "maxLevel": 30
+            "maxLevel": 30,
+            "requiredAccountLevel": 6
         },
         {
             "id": "burst_coin_drop",
@@ -38,7 +41,8 @@
             "effect": "coinDrop",
             "valuePerLevel": 0.08,
             "cost": 2,
-            "maxLevel": 25
+            "maxLevel": 25,
+            "requiredAccountLevel": 6
         },
         {
             "id": "tap_focus_damage",
@@ -48,7 +52,8 @@
             "effect": "tapDamage",
             "valuePerLevel": 0.10,
             "cost": 1,
-            "maxLevel": 20
+            "maxLevel": 20,
+            "requiredAccountLevel": 2
         },
         {
             "id": "tap_lucky_drop",
@@ -58,7 +63,8 @@
             "effect": "dropChance",
             "valuePerLevel": 0.01,
             "cost": 3,
-            "maxLevel": 15
+            "maxLevel": 15,
+            "requiredAccountLevel": 3
         },
         {
             "id": "prestige_relic_gain",
@@ -68,7 +74,8 @@
             "effect": "prestigeRelics",
             "valuePerLevel": 0.12,
             "cost": 4,
-            "maxLevel": 20
+            "maxLevel": 20,
+            "requiredAccountLevel": 10
         },
         {
             "id": "prestige_sprite_echo",
@@ -78,7 +85,8 @@
             "effect": "spriteDamage",
             "valuePerLevel": 0.05,
             "cost": 3,
-            "maxLevel": 30
+            "maxLevel": 30,
+            "requiredAccountLevel": 10
         }
     ]
 }

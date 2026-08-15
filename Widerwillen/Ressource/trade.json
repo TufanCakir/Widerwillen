@@ -93,6 +93,119 @@
                     "amount": 10
                 }
             ]
+        },
+        {
+            "id": "crystal_hunt_coin_bundle",
+            "title": "Blue Chip Coins",
+            "category": "Crystal Hunt",
+            "imageName": "icon_pixel_chip_blue",
+            "limit": 10,
+            "costs": [
+                {
+                    "resource": "event_currency",
+                    "eventID": "crytal_hunt",
+                    "imageName": "icon_pixel_chip_blue",
+                    "amount": 60
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "coins",
+                    "amount": 1200
+                }
+            ]
+        },
+        {
+            "id": "crystal_hunt_crystal_bundle",
+            "title": "Blue Chip Crystals",
+            "category": "Crystal Hunt",
+            "imageName": "icon_pixel_crystal",
+            "limit": 5,
+            "costs": [
+                {
+                    "resource": "event_currency",
+                    "eventID": "crytal_hunt",
+                    "imageName": "icon_pixel_chip_blue",
+                    "amount": 120
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "crystals",
+                    "amount": 12
+                }
+            ]
+        },
+        {
+            "id": "crystal_hunt_relic_bundle",
+            "title": "Blue Chip Relics",
+            "category": "Crystal Hunt",
+            "imageName": "icon_pixel_relic",
+            "limit": 3,
+            "costs": [
+                {
+                    "resource": "event_currency",
+                    "eventID": "crytal_hunt",
+                    "imageName": "icon_pixel_chip_blue",
+                    "amount": 180
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 16
+                }
+            ]
+        },
+        {
+            "id": "crystal_hunt_moon_sword",
+            "title": "Moon Event Sword",
+            "category": "Crystal Hunt",
+            "imageName": "icon_pixel_sword",
+            "limit": 1,
+            "costs": [
+                {
+                    "resource": "event_currency",
+                    "eventID": "crytal_hunt",
+                    "imageName": "icon_pixel_chip_blue",
+                    "amount": 260
+                }
+            ],
+            "unlocks": [
+                {
+                    "id": "moon_event_sword",
+                    "kind": "item",
+                    "itemID": "moon_event_sword",
+                    "name": "Moon Event Sword",
+                    "imageName": "icon_pixel_sword",
+                    "rarity": "epic",
+                    "damageBonus": 18
+                }
+            ]
+        },
+        {
+            "id": "void_trial_nimbi_night",
+            "title": "Nimbi Night Skin",
+            "category": "Void Trial",
+            "imageName": "icon_nimbi_night",
+            "limit": 1,
+            "costs": [
+                {
+                    "resource": "event_currency",
+                    "eventID": "void_trial",
+                    "imageName": "icon_pixel_chip_red",
+                    "amount": 320
+                }
+            ],
+            "unlocks": [
+                {
+                    "id": "nimbi_night_skin",
+                    "kind": "skin",
+                    "skinID": "nimbi_night_skin",
+                    "name": "Nimbi Night",
+                    "imageName": "icon_nimbi_night"
+                }
+            ]
         }
     ]
 }

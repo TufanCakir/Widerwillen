@@ -37,6 +37,7 @@ final class GameProgressStore {
     private(set) var accountXPToNextLevel = 100
     private(set) var prestigeCount = 0
     private(set) var artifactShards = 0
+    private(set) var skillBooks = 0
     private(set) var coins = 0
     private(set) var crystals = 0
     private(set) var pendingCoins = 0
@@ -54,6 +55,7 @@ final class GameProgressStore {
     private(set) var claimedPassRewardIDs: Set<String> = []
     private(set) var premiumPassIDs: Set<String> = []
     private(set) var purchasedShopProductIDs: Set<String> = []
+    private(set) var tradeOfferPurchaseCounts: [String: Int] = [:]
     private(set) var eventCurrencies: [String: Int] = [:]
     private(set) var eventRunsByID: [String: EventRunProgress] = [:]
     private(set) var claimedGiftIDs: Set<String> = []
@@ -258,7 +260,8 @@ final class GameProgressStore {
             return BattleAttackResult(
                 damageDealt: damageDealt,
                 coinsAwarded: rewards.coins,
-                crystalsAwarded: rewards.crystals
+                crystalsAwarded: rewards.crystals,
+                skillBooksAwarded: rewards.skillBooks
             )
         } else {
             saveProgress()
@@ -276,9 +279,11 @@ final class GameProgressStore {
             nextStage.isMultiple(of: 10)
             ? 1 + nextStage / 50
             : 0
+        let earnedSkillBooks = rollSkillBookDrop(for: nextStage)
 
         stage = nextStage
         coins += earnedCoins
+        skillBooks += earnedSkillBooks
         addAccountXP(12 + nextStage * 2)
         maxStageHP = Self.maxHP(for: nextStage, accountLevel: accountLevel)
         stageHP = maxStageHP
@@ -287,7 +292,11 @@ final class GameProgressStore {
         addPassPoints(nextStage.isMultiple(of: 10) ? 30 : 10)
 
         saveProgress()
-        return StageRewards(coins: earnedCoins, crystals: earnedCrystals)
+        return StageRewards(
+            coins: earnedCoins,
+            crystals: earnedCrystals,
+            skillBooks: earnedSkillBooks
+        )
     }
 
     func remainingRuns(for event: GameEvent) -> Int {
@@ -445,6 +454,10 @@ final class GameProgressStore {
             crystals
         case .relics:
             artifactShards
+        case .skillBooks:
+            skillBooks
+        case .eventCurrency:
+            0
         }
     }
 
@@ -535,7 +548,13 @@ final class GameProgressStore {
     }
 
     func canApplyTradeOffer(_ offer: TradeOffer) -> Bool {
-        offer.costs.allSatisfy { amount(for: $0.resource) >= $0.amount }
+        if let limit = offer.limit,
+            tradeOfferPurchaseCounts[offer.id, default: 0] >= limit
+        {
+            return false
+        }
+
+        return offer.costs.allSatisfy { amount(for: $0) >= $0.amount }
     }
 
     @discardableResult
@@ -543,13 +562,18 @@ final class GameProgressStore {
         guard canApplyTradeOffer(offer) else { return false }
 
         for cost in offer.costs {
-            change(cost.resource, by: -cost.amount)
+            change(cost, by: -cost.amount)
         }
 
         for reward in offer.rewards {
-            change(reward.resource, by: reward.amount)
+            change(reward, by: reward.amount)
         }
 
+        for unlock in offer.unlocks {
+            applyTradeUnlock(unlock)
+        }
+
+        tradeOfferPurchaseCounts[offer.id, default: 0] += 1
         saveProgress()
         return true
     }
@@ -576,14 +600,15 @@ final class GameProgressStore {
 
     func canUpgradeSkill(_ skill: SkillNode) -> Bool {
         skillLevel(for: skill) < skill.maxLevel
-            && artifactShards >= skill.cost
+            && accountLevel >= (skill.requiredAccountLevel ?? 1)
+            && skillBooks >= skill.cost
     }
 
     @discardableResult
     func upgradeSkill(_ skill: SkillNode) -> Bool {
         guard canUpgradeSkill(skill) else { return false }
 
-        artifactShards -= skill.cost
+        skillBooks -= skill.cost
         ownedSkillLevels[skill.id, default: 0] += 1
         saveProgress()
         return true
@@ -809,7 +834,68 @@ final class GameProgressStore {
             crystals = max(crystals + amount, 0)
         case .relics:
             artifactShards = max(artifactShards + amount, 0)
+        case .skillBooks:
+            skillBooks = max(skillBooks + amount, 0)
+        case .eventCurrency:
+            break
         }
+    }
+
+    private func amount(for amount: TradeResourceAmount) -> Int {
+        switch amount.resource {
+        case .eventCurrency:
+            guard let eventID = amount.eventID else { return 0 }
+            return eventCurrencies[eventID, default: 0]
+        default:
+            return self.amount(for: amount.resource)
+        }
+    }
+
+    private func change(_ amount: TradeResourceAmount, by value: Int) {
+        switch amount.resource {
+        case .eventCurrency:
+            guard let eventID = amount.eventID else { return }
+            eventCurrencies[eventID] = max(
+                eventCurrencies[eventID, default: 0] + value,
+                0
+            )
+        default:
+            change(amount.resource, by: value)
+        }
+    }
+
+    private func applyTradeUnlock(_ unlock: TradeUnlockReward) {
+        switch unlock.kind {
+        case .character:
+            if let characterID = unlock.characterID {
+                unlockCharacter(characterID)
+            }
+        case .skin:
+            if let skinID = unlock.skinID {
+                unlockSkin(skinID)
+            }
+        case .item:
+            let itemID = unlock.itemID ?? unlock.id
+            let oldLevel = ownedItems[itemID]?.level ?? 0
+            ownedItems[itemID] = OwnedItem(
+                itemID: itemID,
+                name: unlock.name,
+                imageName: unlock.imageName,
+                rarity: unlock.rarity ?? .rare,
+                damageBonus: unlock.damageBonus ?? 1,
+                level: oldLevel + 1
+            )
+        }
+    }
+
+    private func rollSkillBookDrop(for stage: Int) -> Int {
+        let isBossStage = stage.isMultiple(of: 10)
+        let baseChance = isBossStage ? 0.25 : 0.05
+        let chance = min(baseChance + skillBonus(for: .dropChance), 0.65)
+        guard Double.random(in: 0..<1) < chance else { return 0 }
+
+        let bossBonus = isBossStage ? max(1, stage / 40) : 0
+        return 1 + bossBonus
     }
 
     private func addPassPoints(_ amount: Int) {
@@ -913,6 +999,7 @@ final class GameProgressStore {
         accountXPToNextLevel = Self.xpToNextLevel(for: accountLevel)
         prestigeCount = snapshot.prestigeCount
         artifactShards = snapshot.artifactShards
+        skillBooks = snapshot.skillBooks
         coins = snapshot.coins
         crystals = snapshot.crystals
         pendingCoins = snapshot.pendingCoins
@@ -927,6 +1014,7 @@ final class GameProgressStore {
         claimedPassRewardIDs = Set(snapshot.claimedPassRewardIDs)
         premiumPassIDs = Set(snapshot.premiumPassIDs)
         purchasedShopProductIDs = Set(snapshot.purchasedShopProductIDs)
+        tradeOfferPurchaseCounts = snapshot.tradeOfferPurchaseCounts
         lastIdleRewardUpdate = Date(
             timeIntervalSince1970: snapshot.lastIdleRewardUpdate
         )
@@ -964,6 +1052,7 @@ final class GameProgressStore {
             accountXP: accountXP,
             prestigeCount: prestigeCount,
             artifactShards: artifactShards,
+            skillBooks: skillBooks,
             coins: coins,
             crystals: crystals,
             pendingCoins: pendingCoins,
@@ -985,6 +1074,7 @@ final class GameProgressStore {
             claimedPassRewardIDs: Array(claimedPassRewardIDs),
             premiumPassIDs: Array(premiumPassIDs),
             purchasedShopProductIDs: Array(purchasedShopProductIDs),
+            tradeOfferPurchaseCounts: tradeOfferPurchaseCounts,
             lastIdleRewardUpdate: lastIdleRewardUpdate.timeIntervalSince1970
         )
 
@@ -1049,17 +1139,27 @@ final class GameProgressStore {
     }
 
     private func normalizeProfileIconSelectionIfNeeded() {
-        let availableIconNames =
-            (try? ProfileIconConfiguration.load().icons.map(\.imageName)) ?? []
+        let availableIcons =
+            (try? ProfileIconConfiguration.load().icons) ?? []
+        let availableIconNames = availableIcons.map(\.imageName)
+        let unlockedIconNames = availableIcons
+            .filter { accountLevel >= ($0.requiredAccountLevel ?? 1) }
+            .map(\.imageName)
         let fallbackIconName =
-            availableIconNames.first ?? Self.defaultProfileIconImageName
+            unlockedIconNames.first
+            ?? availableIconNames.first
+            ?? Self.defaultProfileIconImageName
         let usesOldSpriteSheetDefault =
             selectedProfileIconImageName == Self.oldDefaultProfileIconImageName
         let usesMissingIcon =
             !availableIconNames.isEmpty
             && !availableIconNames.contains(selectedProfileIconImageName)
+        let usesLockedIcon =
+            !unlockedIconNames.isEmpty
+            && !unlockedIconNames.contains(selectedProfileIconImageName)
 
-        guard usesOldSpriteSheetDefault || usesMissingIcon else { return }
+        guard usesOldSpriteSheetDefault || usesMissingIcon || usesLockedIcon
+        else { return }
 
         selectedProfileIconImageName = fallbackIconName
         saveProgress()
@@ -1102,7 +1202,14 @@ final class GameProgressStore {
         let levelValue = max(accountLevel, 1)
         let baseHP = 12.0 * pow(1.24, Double(stageValue))
         let levelMultiplier = pow(1.10, Double(levelValue - 1))
-        return max(12, Int((baseHP * levelMultiplier).rounded()))
+        let variance = hpVarianceMultiplier(for: stageValue)
+        return max(12, Int((baseHP * levelMultiplier * variance).rounded()))
+    }
+
+    private static func hpVarianceMultiplier(for stage: Int) -> Double {
+        let seed = UInt64(max(stage, 0)) &* 1_103_515_245 &+ 12_345
+        let bucket = Double(seed % 17)
+        return 0.92 + bucket * 0.01
     }
 
     private static func xpToNextLevel(for level: Int) -> Int {
@@ -1158,6 +1265,7 @@ final class GameProgressStore {
         let accountXP: Int
         let prestigeCount: Int
         let artifactShards: Int
+        let skillBooks: Int
         let coins: Int
         let crystals: Int
         let pendingCoins: Int
@@ -1179,6 +1287,7 @@ final class GameProgressStore {
         let claimedPassRewardIDs: [String]
         let premiumPassIDs: [String]
         let purchasedShopProductIDs: [String]
+        let tradeOfferPurchaseCounts: [String: Int]
         let lastIdleRewardUpdate: TimeInterval
 
         init(
@@ -1189,6 +1298,7 @@ final class GameProgressStore {
             accountXP: Int,
             prestigeCount: Int,
             artifactShards: Int,
+            skillBooks: Int,
             coins: Int,
             crystals: Int,
             pendingCoins: Int,
@@ -1210,6 +1320,7 @@ final class GameProgressStore {
             claimedPassRewardIDs: [String],
             premiumPassIDs: [String],
             purchasedShopProductIDs: [String],
+            tradeOfferPurchaseCounts: [String: Int],
             lastIdleRewardUpdate: TimeInterval
         ) {
             self.stage = stage
@@ -1219,6 +1330,7 @@ final class GameProgressStore {
             self.accountXP = accountXP
             self.prestigeCount = prestigeCount
             self.artifactShards = artifactShards
+            self.skillBooks = skillBooks
             self.coins = coins
             self.crystals = crystals
             self.pendingCoins = pendingCoins
@@ -1240,6 +1352,7 @@ final class GameProgressStore {
             self.claimedPassRewardIDs = claimedPassRewardIDs
             self.premiumPassIDs = premiumPassIDs
             self.purchasedShopProductIDs = purchasedShopProductIDs
+            self.tradeOfferPurchaseCounts = tradeOfferPurchaseCounts
             self.lastIdleRewardUpdate = lastIdleRewardUpdate
         }
 
@@ -1265,6 +1378,9 @@ final class GameProgressStore {
                 ?? 0
             artifactShards =
                 try container.decodeIfPresent(Int.self, forKey: .artifactShards)
+                ?? 0
+            skillBooks =
+                try container.decodeIfPresent(Int.self, forKey: .skillBooks)
                 ?? 0
             coins = try container.decodeIfPresent(Int.self, forKey: .coins) ?? 0
             crystals =
@@ -1362,6 +1478,11 @@ final class GameProgressStore {
                     [String].self,
                     forKey: .purchasedShopProductIDs
                 ) ?? []
+            tradeOfferPurchaseCounts =
+                try container.decodeIfPresent(
+                    [String: Int].self,
+                    forKey: .tradeOfferPurchaseCounts
+                ) ?? [:]
             lastIdleRewardUpdate =
                 try container.decodeIfPresent(
                     TimeInterval.self,
@@ -1395,11 +1516,13 @@ struct BattleAttackResult {
     let damageDealt: Int
     var coinsAwarded = 0
     var crystalsAwarded = 0
+    var skillBooksAwarded = 0
 }
 
 private struct StageRewards {
     let coins: Int
     let crystals: Int
+    let skillBooks: Int
 }
 
 struct SummonResult: Identifiable {

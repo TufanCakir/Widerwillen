@@ -26,6 +26,7 @@ struct SkillNode: Decodable, Identifiable {
     let valuePerLevel: Double
     let cost: Int
     let maxLevel: Int
+    let requiredAccountLevel: Int?
 }
 
 enum SkillEffect: String, Codable {

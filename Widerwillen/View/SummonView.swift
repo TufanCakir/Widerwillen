@@ -134,7 +134,9 @@ struct SummonView: View {
     }
 
     private func bannerCard(_ banner: SummonBanner) -> some View {
-        VStack(spacing: 34) {
+        let isUnlocked = progress.accountLevel >= banner.requiredAccountLevel
+
+        return VStack(spacing: 34) {
             HStack {
                 AppResourceLabel(
                     imageName: banner.currencyImageName,
@@ -164,19 +166,35 @@ struct SummonView: View {
             RemoteImage(name: banner.bannerImageName)
                 .frame(maxWidth: .infinity)
                 .frame(height: 118)
+                .opacity(isUnlocked ? 1 : 0.42)
                 .clipped()
                 .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
 
-            Text(banner.title)
-                .font(.system(size: 26, weight: .heavy))
-                .foregroundStyle(.white)
-                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+            VStack(spacing: 8) {
+                Text(banner.title)
+                    .font(.system(size: 26, weight: .heavy))
+                    .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+
+                if !isUnlocked {
+                    HStack(spacing: 6) {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 12, weight: .heavy))
+
+                        Text("Unlocks at account LV \(banner.requiredAccountLevel)")
+                            .font(.system(size: 12, weight: .heavy))
+                    }
+                    .foregroundStyle(.white.opacity(0.82))
+                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+                }
+            }
 
             HStack(spacing: 10) {
                 summonButton(
                     title: "Single",
                     cost: banner.singleCost,
-                    imageName: banner.currencyImageName
+                    imageName: banner.currencyImageName,
+                    isUnlocked: isUnlocked
                 ) {
                     pendingSummon = PendingSummon(
                         banner: banner,
@@ -188,7 +206,8 @@ struct SummonView: View {
                 summonButton(
                     title: "Multi",
                     cost: banner.multiCost,
-                    imageName: banner.currencyImageName
+                    imageName: banner.currencyImageName,
+                    isUnlocked: isUnlocked
                 ) {
                     pendingSummon = PendingSummon(
                         banner: banner,
@@ -205,10 +224,19 @@ struct SummonView: View {
         title: String,
         cost: Int,
         imageName: String,
+        isUnlocked: Bool,
         action: @escaping () -> Void
     ) -> some View {
-        Button(action: action) {
+        Button {
+            guard isUnlocked else { return }
+            action()
+        } label: {
             HStack(spacing: 6) {
+                if !isUnlocked {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 11, weight: .heavy))
+                }
+
                 Text(title)
                     .font(.system(size: 14, weight: .heavy))
                     .shadow(
@@ -231,6 +259,7 @@ struct SummonView: View {
                     )
             }
             .foregroundStyle(.white)
+            .opacity(isUnlocked ? 1 : 0.48)
             .frame(maxWidth: .infinity)
             .padding()
             .background {
@@ -374,6 +403,14 @@ struct SummonView: View {
     }
 
     private func runSummon(_ pending: PendingSummon) {
+        guard progress.accountLevel >= pending.banner.requiredAccountLevel
+        else {
+            pendingSummon = nil
+            message = "Unlocks at LV \(pending.banner.requiredAccountLevel)"
+            clearMessageLater()
+            return
+        }
+
         let didSummon: Bool
 
         if pending.count == 1 {
@@ -393,6 +430,10 @@ struct SummonView: View {
 
         message = "Not enough currency"
 
+        clearMessageLater()
+    }
+
+    private func clearMessageLater() {
         Task {
             try? await Task.sleep(for: .seconds(1.4))
             await MainActor.run {
