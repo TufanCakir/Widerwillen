@@ -2,6 +2,7 @@
     "strings": {
         "common.next": "Weiter",
         "common.ok": "OK",
+        "common.cancel": "Abbrechen",
         "settings.title": "Einstellungen",
         "settings.language": "Sprache",
         "settings.music": "Musik",
@@ -11,6 +12,14 @@
         "settings.info": "Info",
         "settings.content": "Inhalt",
         "settings.bundle": "Bundle",
+        "settings.danger": "Gefahr",
+        "settings.reset.title": "Spiel zurücksetzen",
+        "settings.reset.subtitle": "Spielfortschritt von vorne starten",
+        "settings.reset.confirm_title": "Spiel zurücksetzen?",
+        "settings.reset.confirm_message":
+            "Das setzt Spielfortschritt, Belohnungen, Währungen und Tutorials zurück. Käufe bleiben verfügbar.",
+        "settings.reset.confirm_button": "Fortschritt zurücksetzen",
+        "settings.reset.done": "Spielfortschritt zurückgesetzt",
         "tutorial.speaker.blunt": "Blunt",
         "tutorial.welcome.title": "Willkommen",
         "tutorial.welcome.message.1":

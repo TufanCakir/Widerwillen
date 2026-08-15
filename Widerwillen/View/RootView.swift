@@ -226,7 +226,7 @@ struct RootView: View {
         case .skills:
             SkillView(progress: progress)
         case .settings:
-            SettingsView()
+            SettingsView(progress: progress)
         case .news:
             NewsView()
         case .gift:

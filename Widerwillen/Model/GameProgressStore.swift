@@ -78,6 +78,56 @@ final class GameProgressStore {
         refreshIdleRewards()
     }
 
+    func resetGameProgress() {
+        let preservedPremiumPassIDs = premiumPassIDs
+        let preservedPurchasedShopProductIDs = purchasedShopProductIDs
+
+        UserDefaults.standard.removeObject(forKey: Self.saveKey)
+
+        stage = 0
+        stageHP = 12
+        maxStageHP = 12
+        accountLevel = 1
+        accountXP = 0
+        accountXPToNextLevel = Self.xpToNextLevel(for: accountLevel)
+        prestigeCount = 0
+        artifactShards = 0
+        skillBooks = 0
+        coins = 0
+        crystals = 0
+        pendingCoins = 0
+        pendingCrystals = 0
+        ownedSprites = [:]
+        ownedCharacters = [:]
+        unlockedCharacterSkinIDs = []
+        ownedArtifacts = [:]
+        ownedItems = [:]
+        lastSummonResults = []
+        lastArtifactSummonResults = []
+        lastItemSummonResults = []
+        ownedSkillLevels = [:]
+        passPointsByID = [:]
+        claimedPassRewardIDs = []
+        premiumPassIDs = preservedPremiumPassIDs
+        purchasedShopProductIDs = preservedPurchasedShopProductIDs
+        tradeOfferPurchaseCounts = [:]
+        eventCurrencies = [:]
+        eventRunsByID = [:]
+        claimedGiftIDs = []
+        lastDailyLoginClaimDay = ""
+        lastDailyLoginClaimDaysByID = [:]
+        selectedProfileIconImageName = Self.defaultProfileIconImageName
+        selectedCharacterID = Self.defaultCharacterID
+        selectedCharacterSkinID = Self.defaultCharacterSkinID
+        lastIdleRewardUpdate = Date()
+
+        unlockDefaultCharacterIfNeeded()
+        normalizeSelectedCharacterIfNeeded()
+        normalizeProfileIconSelectionIfNeeded()
+        recalculateStageHPIfNeeded()
+        saveProgress()
+    }
+
     var unlockedSpriteIndices: Set<Int> {
         Set(ownedSprites.keys)
     }

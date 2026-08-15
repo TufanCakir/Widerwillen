@@ -144,13 +144,14 @@ struct BattleSceneView: View {
 
                 if let onPrestige, progress.canPrestige {
                     prestigeButton(onPrestige: onPrestige)
-                        .padding(.bottom, 118)
-                        .padding(.horizontal, 34)
+                        .padding(.top, onExit == nil ? 142 : 198)
+                        .padding(.trailing, 18)
                         .frame(
                             maxWidth: .infinity,
                             maxHeight: .infinity,
-                            alignment: .bottom
+                            alignment: .topTrailing
                         )
+                        .zIndex(12)
                 }
 
                 if !activeSkills.isEmpty {
@@ -679,23 +680,25 @@ struct BattleSceneView: View {
         Button {
             onPrestige()
         } label: {
-            HStack(spacing: 10) {
-                RemoteImage(name: "icon_pixel_relic")
-                    .frame(width: 24, height: 24)
+            VStack(spacing: 4) {
+                RemoteImage(name: "icon_pixel_prestige")
+                    .frame(width: 28, height: 28)
 
                 Text("Prestige")
-                    .font(.system(size: 18, weight: .heavy))
+                    .font(.system(size: 9, weight: .heavy))
                     .foregroundStyle(.white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 54)
-            .background(.black.opacity(0.62))
+            .frame(width: 62, height: 58)
+            .background(.black.opacity(0.58))
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(.white.opacity(0.78), lineWidth: 2)
+                    .stroke(.white.opacity(0.72), lineWidth: 1)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
+            .shadow(color: .black.opacity(0.9), radius: 4, x: 0, y: 2)
         }
         .buttonStyle(.plain)
     }

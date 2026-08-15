@@ -2,12 +2,18 @@ import Foundation
 import SwiftUI
 
 struct SettingsView: View {
+    let progress: GameProgressStore
+
     @AppStorage("isMusicEnabled") private var isMusicEnabled = true
     @AppStorage("isLayerAnimationEnabled") private var isLayerAnimationEnabled =
         true
     @AppStorage("remoteContentVersion") private var remoteContentVersion = 0
     @AppStorage("appLanguage") private var appLanguageCode = AppLanguage.de
         .rawValue
+    @AppStorage("completedTutorialIDs") private var completedTutorialIDs = ""
+
+    @State private var isResetConfirmationPresented = false
+    @State private var resetMessage = ""
 
     private let appInfo = AppInfo.current
 
@@ -55,6 +61,26 @@ struct SettingsView: View {
                     }
 
                     sectionTitle(
+                        localizer.text("settings.danger", fallback: "Danger")
+                    )
+
+                    VStack(spacing: 10) {
+                        resetButton
+
+                        if !resetMessage.isEmpty {
+                            Text(resetMessage)
+                                .font(.system(size: 12, weight: .heavy))
+                                .foregroundStyle(.white.opacity(0.84))
+                                .shadow(
+                                    color: .black.opacity(0.9),
+                                    radius: 3,
+                                    x: 0,
+                                    y: 0
+                                )
+                        }
+                    }
+
+                    sectionTitle(
                         localizer.text("settings.info", fallback: "Info")
                     )
 
@@ -79,6 +105,37 @@ struct SettingsView: View {
                 .padding(.top, 28)
                 .padding(.bottom, 110)
             }
+        }
+        .confirmationDialog(
+            localizer.text(
+                "settings.reset.confirm_title",
+                fallback: "Reset game?"
+            ),
+            isPresented: $isResetConfirmationPresented,
+            titleVisibility: .visible
+        ) {
+            Button(
+                localizer.text(
+                    "settings.reset.confirm_button",
+                    fallback: "Reset Progress"
+                ),
+                role: .destructive
+            ) {
+                resetGame()
+            }
+
+            Button(
+                localizer.text("common.cancel", fallback: "Cancel"),
+                role: .cancel
+            ) {}
+        } message: {
+            Text(
+                localizer.text(
+                    "settings.reset.confirm_message",
+                    fallback:
+                        "This resets gameplay progress, rewards, currencies and tutorials. Purchases stay available."
+                )
+            )
         }
     }
 
@@ -192,6 +249,70 @@ struct SettingsView: View {
         .contentShape(RoundedRectangle(cornerRadius: 8))
     }
 
+    private var resetButton: some View {
+        Button {
+            isResetConfirmationPresented = true
+        } label: {
+            HStack(spacing: 14) {
+                Image(systemName: "trash.fill")
+                    .font(.system(size: 19, weight: .heavy))
+                    .foregroundStyle(.white)
+                    .frame(width: 32, height: 32)
+                    .background(.black.opacity(0.28))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(
+                        localizer.text(
+                            "settings.reset.title",
+                            fallback: "Reset Game"
+                        )
+                    )
+                    .font(.system(size: 17, weight: .heavy))
+
+                    Text(
+                        localizer.text(
+                            "settings.reset.subtitle",
+                            fallback: "Start gameplay from the beginning"
+                        )
+                    )
+                    .font(.system(size: 12, weight: .bold))
+                    .opacity(0.78)
+                }
+
+                Spacer()
+            }
+            .foregroundStyle(.white)
+            .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+            .padding(.horizontal, 18)
+            .frame(maxWidth: .infinity)
+            .frame(minHeight: 68)
+            .background(.red.opacity(0.72))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.white.opacity(0.58), lineWidth: 1)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func resetGame() {
+        progress.resetGameProgress()
+        completedTutorialIDs = ""
+        resetMessage = localizer.text(
+            "settings.reset.done",
+            fallback: "Game progress reset"
+        )
+
+        Task {
+            try? await Task.sleep(for: .seconds(1.6))
+            await MainActor.run {
+                resetMessage = ""
+            }
+        }
+    }
+
     private func infoRow(title: String, value: String) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 16) {
             Text(title)
@@ -265,5 +386,5 @@ extension Bundle {
 }
 
 #Preview {
-    SettingsView()
+    SettingsView(progress: GameProgressStore())
 }

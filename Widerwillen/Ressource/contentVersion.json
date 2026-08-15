@@ -1,5 +1,5 @@
 {
-    "contentVersion": 61,
+    "contentVersion": 65,
     "json": [
         {
             "name": "arena",
@@ -209,6 +209,11 @@
         {
             "name": "icon_pixel_relic",
             "path": "assets/icon_pixel_relic.png",
+            "version": 1
+        },
+        {
+            "name": "icon_pixel_prestige",
+            "path": "assets/icon_pixel_prestige.png",
             "version": 1
         },
         {

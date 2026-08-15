@@ -23,7 +23,7 @@
                     "imageName": "sprite_blunt",
                     "animationID": "sprite_blunt",
                     "scale": 0.32,
-                    "columns": 1,
+                    "columns": 3,
                     "rows": 1,
                     "frameCount": 1,
                     "fps": 8
@@ -36,7 +36,7 @@
                     "imageName": "sprite_blunt",
                     "animationID": "sprite_blunt",
                     "scale": 0.30,
-                    "columns": 1,
+                    "columns": 3,
                     "rows": 1,
                     "frameCount": 1,
                     "fps": 8
@@ -55,7 +55,7 @@
                     "imageName": "sprite_blunt",
                     "animationID": "sprite_blunt",
                     "scale": 0.34,
-                    "columns": 1,
+                    "columns": 3,
                     "rows": 1,
                     "frameCount": 1,
                     "fps": 8
@@ -75,7 +75,7 @@
             "bosses": [
                 {
                     "id": "depth_crown",
-                    "name": "Crown",
+                    "name": "Klempi",
                     "imageName": "sprite_klempi",
                     "animationID": "sprite_klempi",
                     "scale": 0.34,

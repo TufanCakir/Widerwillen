@@ -2,6 +2,7 @@
     "strings": {
         "common.next": "Next",
         "common.ok": "OK",
+        "common.cancel": "Cancel",
         "settings.title": "Settings",
         "settings.language": "Language",
         "settings.music": "Music",
@@ -11,6 +12,14 @@
         "settings.info": "Info",
         "settings.content": "Content",
         "settings.bundle": "Bundle",
+        "settings.danger": "Danger",
+        "settings.reset.title": "Reset Game",
+        "settings.reset.subtitle": "Start gameplay from the beginning",
+        "settings.reset.confirm_title": "Reset game?",
+        "settings.reset.confirm_message":
+            "This resets gameplay progress, rewards, currencies and tutorials. Purchases stay available.",
+        "settings.reset.confirm_button": "Reset Progress",
+        "settings.reset.done": "Game progress reset",
         "tutorial.speaker.blunt": "Blunt",
         "tutorial.welcome.title": "Welcome",
         "tutorial.welcome.message.1":
