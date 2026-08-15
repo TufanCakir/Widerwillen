@@ -689,17 +689,7 @@ final class GameProgressStore {
     }
 
     func canUpgradeSkill(_ skill: SkillNode) -> Bool {
-        let treeRequiredLevel =
-            Self.skillConfiguration.trees
-            .first { $0.category == skill.category }?
-            .requiredAccountLevel ?? 1
-
         return skillLevel(for: skill) < skill.maxLevel
-            && accountLevel
-                >= max(
-                    skill.requiredAccountLevel ?? 1,
-                    treeRequiredLevel
-                )
             && skillBooks >= skill.cost
     }
 
@@ -1247,25 +1237,16 @@ final class GameProgressStore {
         let availableIcons =
             (try? ProfileIconConfiguration.load().icons) ?? []
         let availableIconNames = availableIcons.map(\.imageName)
-        let unlockedIconNames =
-            availableIcons
-            .filter { accountLevel >= ($0.requiredAccountLevel ?? 1) }
-            .map(\.imageName)
         let fallbackIconName =
-            unlockedIconNames.first
-            ?? availableIconNames.first
+            availableIconNames.first
             ?? Self.defaultProfileIconImageName
         let usesOldSpriteSheetDefault =
             selectedProfileIconImageName == Self.oldDefaultProfileIconImageName
         let usesMissingIcon =
             !availableIconNames.isEmpty
             && !availableIconNames.contains(selectedProfileIconImageName)
-        let usesLockedIcon =
-            !unlockedIconNames.isEmpty
-            && !unlockedIconNames.contains(selectedProfileIconImageName)
 
-        guard usesOldSpriteSheetDefault || usesMissingIcon || usesLockedIcon
-        else { return }
+        guard usesOldSpriteSheetDefault || usesMissingIcon else { return }
 
         selectedProfileIconImageName = fallbackIconName
         saveProgress()

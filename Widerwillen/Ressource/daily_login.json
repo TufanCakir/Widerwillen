@@ -170,7 +170,7 @@
             "titleKey": "daily_login.summer.title",
             "category": "Seasonal",
             "categoryKey": "daily_login.category.seasonal",
-            "backgroundImageName": "bg_sommer",
+            "backgroundImageName": "bg_summer",
             "rewards": [
                 {
                     "day": 1,

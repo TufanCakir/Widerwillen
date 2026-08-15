@@ -105,19 +105,9 @@ struct SkillView: View {
     }
 
     private func skillPage(for category: String) -> some View {
-        let requiredLevel = requiredAccountLevel(for: category)
-        let isUnlocked = progress.accountLevel >= requiredLevel
-
-        return ScrollView(showsIndicators: false) {
+        ScrollView(showsIndicators: false) {
             LazyVStack(spacing: 12) {
-                treeHeader(for: category, requiredLevel: requiredLevel)
-
-                if !isUnlocked {
-                    lockedPathCard(
-                        category: category,
-                        requiredLevel: requiredLevel
-                    )
-                }
+                treeHeader(for: category)
 
                 ForEach(configuration.skills.filter { $0.category == category })
                 {
@@ -133,10 +123,7 @@ struct SkillView: View {
         }
     }
 
-    private func treeHeader(
-        for category: String,
-        requiredLevel: Int
-    ) -> some View {
+    private func treeHeader(for category: String) -> some View {
         let tree = tree(for: category)
 
         return ZStack(alignment: .bottomLeading) {
@@ -156,10 +143,6 @@ struct SkillView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(tree?.title ?? "\(category) Path")
                     .font(.system(size: 22, weight: .heavy))
-
-                Text("Unlocks at account LV \(requiredLevel)")
-                    .font(.system(size: 12, weight: .bold))
-                    .opacity(0.76)
             }
             .foregroundStyle(.white)
             .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
@@ -174,29 +157,12 @@ struct SkillView: View {
 
     private func skillCard(_ skill: SkillNode) -> some View {
         let level = progress.skillLevel(for: skill)
-        let requiredLevel = max(
-            skill.requiredAccountLevel ?? 1,
-            requiredAccountLevel(for: skill.category)
-        )
-        let isUnlocked = progress.accountLevel >= requiredLevel
-        let canUpgrade = isUnlocked && progress.canUpgradeSkill(skill)
+        let canUpgrade = progress.canUpgradeSkill(skill)
 
         return HStack(spacing: 14) {
-            ZStack(alignment: .topTrailing) {
-                RemoteImage(name: skill.imageName)
-                    .frame(width: 52, height: 52)
-                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
-
-                if !isUnlocked {
-                    Image(systemName: "lock.fill")
-                        .font(.system(size: 10, weight: .heavy))
-                        .foregroundStyle(.white)
-                        .padding(4)
-                        .background(.black.opacity(0.62))
-                        .clipShape(Circle())
-                        .offset(x: 5, y: -5)
-                }
-            }
+            RemoteImage(name: skill.imageName)
+                .frame(width: 52, height: 52)
+                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(skill.title)
@@ -213,14 +179,10 @@ struct SkillView: View {
                     .minimumScaleFactor(0.75)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
 
-                Text(
-                    isUnlocked
-                        ? "Lv \(level)/\(skill.maxLevel)"
-                        : "Unlocks at LV \(requiredLevel)"
-                )
-                .font(.system(size: 11, weight: .heavy))
-                .foregroundStyle(.white.opacity(0.86))
-                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+                Text("Lv \(level)/\(skill.maxLevel)")
+                    .font(.system(size: 11, weight: .heavy))
+                    .foregroundStyle(.white.opacity(0.86))
+                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
             }
 
             Spacer(minLength: 8)
@@ -256,7 +218,6 @@ struct SkillView: View {
             .buttonStyle(.plain)
             .disabled(!canUpgrade)
         }
-        .opacity(isUnlocked ? 1 : 0.48)
         .padding(14)
         .background(.black.opacity(0.26))
         .overlay {
@@ -264,46 +225,6 @@ struct SkillView: View {
                 .stroke(.white.opacity(0.48), lineWidth: 1)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
-    }
-
-    private func lockedPathCard(category: String, requiredLevel: Int)
-        -> some View
-    {
-        HStack(spacing: 12) {
-            Image(systemName: "lock.fill")
-                .font(.system(size: 20, weight: .heavy))
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text("\(category) Path")
-                    .font(.system(size: 16, weight: .heavy))
-
-                Text("Unlocks at account LV \(requiredLevel)")
-                    .font(.system(size: 12, weight: .bold))
-                    .opacity(0.78)
-            }
-
-            Spacer()
-        }
-        .foregroundStyle(.white)
-        .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
-        .padding(14)
-        .background(.black.opacity(0.34))
-        .overlay {
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.42), lineWidth: 1)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-    }
-
-    private func requiredAccountLevel(for category: String) -> Int {
-        if let tree = tree(for: category) {
-            return tree.requiredAccountLevel
-        }
-
-        return configuration.skills
-            .filter { $0.category == category }
-            .map { $0.requiredAccountLevel ?? 1 }
-            .min() ?? 1
     }
 
     private func tree(for category: String) -> SkillTreeDefinition? {

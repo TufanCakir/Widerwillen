@@ -61,6 +61,7 @@ struct CategoryBar: View {
 struct ResourceAmountRow: View {
     let amounts: [TradeResourceAmount]
     var prefix = ""
+    var color: Color = .white
 
     var body: some View {
         HStack(spacing: 8) {
@@ -70,7 +71,8 @@ struct ResourceAmountRow: View {
                     value: amount.amount,
                     prefix: prefix,
                     iconSize: 20,
-                    fontSize: 12
+                    fontSize: 12,
+                    color: color
                 )
             }
         }

@@ -1,5 +1,5 @@
 {
-    "contentVersion": 52,
+    "contentVersion": 61,
     "json": [
         {
             "name": "arena",
@@ -97,9 +97,9 @@
             "version": 1
         },
         {
-            "name": "bg_sommer",
-            "path": "assets/bg_sommer.png",
-            "version": 1
+            "name": "bg_summer",
+            "path": "assets/bg_summer.png",
+            "version": 3
         },
         {
             "name": "bg_blue",
@@ -249,7 +249,7 @@
         {
             "name": "icon_blunt",
             "path": "assets/icon_blunt.png",
-            "version": 1
+            "version": 2
         },
         {
             "name": "sprite_cookieman",
@@ -319,12 +319,12 @@
         {
             "name": "widerwillen_font_logo",
             "path": "assets/widerwillen_font_logo.png",
-            "version": 5
+            "version": 6
         },
         {
             "name": "widerwillen_logo",
             "path": "assets/widerwillen_logo.png",
-            "version": 1
+            "version": 6
         }
     ],
     "music": [

@@ -185,32 +185,17 @@ struct GameHeader: View {
 
     private func iconChoice(_ icon: ProfileIcon) -> some View {
         let isSelected = progress.selectedProfileIconImageName == icon.imageName
-        let requiredLevel = icon.requiredAccountLevel ?? 1
-        let isUnlocked = progress.accountLevel >= requiredLevel
 
         return Button {
-            guard isUnlocked else { return }
             progress.selectProfileIcon(icon)
             withAnimation(.snappy(duration: 0.2)) {
                 isShowingProfilePicker = false
             }
         } label: {
             VStack(spacing: 6) {
-                ZStack(alignment: .topTrailing) {
-                    profileIconImage(icon.imageName, size: 34)
+                profileIconImage(icon.imageName, size: 34)
 
-                    if !isUnlocked {
-                        Image(systemName: "lock.fill")
-                            .font(.system(size: 8, weight: .heavy))
-                            .foregroundStyle(.white)
-                            .padding(3)
-                            .background(.black.opacity(0.62))
-                            .clipShape(Circle())
-                            .offset(x: 5, y: -5)
-                    }
-                }
-
-                Text(isUnlocked ? icon.title : "LV \(requiredLevel)")
+                Text(icon.title)
                     .font(.system(size: 8, weight: .heavy))
                     .foregroundStyle(.white.opacity(0.86))
                     .lineLimit(1)
@@ -222,7 +207,6 @@ struct GameHeader: View {
                         y: 0
                     )
             }
-            .opacity(isUnlocked ? 1 : 0.46)
             .frame(width: 58, height: 58)
             .background(.white.opacity(isSelected ? 0.2 : 0.08))
             .overlay {

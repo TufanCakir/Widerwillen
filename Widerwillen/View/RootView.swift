@@ -296,9 +296,6 @@ struct RootView: View {
                     selectedTab: Binding(
                         get: { selectedTab },
                         set: { newTab in
-                            guard progress.canAccess(tab: newTab) else {
-                                return
-                            }
                             selectedTab = newTab
                             activeMode = nil
                         }
@@ -326,29 +323,13 @@ struct RootView: View {
         case .home:
             MenuView(progress: progress) { activeMode = $0 }
         case .sprites:
-            if progress.canAccess(tab: .sprites) {
-                SpriteListView(progress: progress)
-            } else {
-                MenuView(progress: progress) { activeMode = $0 }
-            }
+            SpriteListView(progress: progress)
         case .summon:
-            if progress.canAccess(tab: .summon) {
-                SummonView(progress: progress)
-            } else {
-                MenuView(progress: progress) { activeMode = $0 }
-            }
+            SummonView(progress: progress)
         case .shop:
-            if progress.canAccess(tab: .shop) {
-                ShopView(progress: progress)
-            } else {
-                MenuView(progress: progress) { activeMode = $0 }
-            }
+            ShopView(progress: progress)
         case .trade:
-            if progress.canAccess(tab: .trade) {
-                TradeView(progress: progress)
-            } else {
-                MenuView(progress: progress) { activeMode = $0 }
-            }
+            TradeView(progress: progress)
         }
     }
 }

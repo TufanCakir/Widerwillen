@@ -9,48 +9,75 @@ import SwiftUI
 
 struct DailyLoginView: View {
     let progress: GameProgressStore
+    var onClose: (() -> Void)?
 
     private let configuration: DailyLoginConfiguration
 
     @AppStorage("appLanguage") private var appLanguageCode = AppLanguage.de
         .rawValue
-    @State private var selectedCategory = ""
+    @State private var selectedLoginID = ""
     @State private var message = ""
 
     init(
         progress: GameProgressStore,
         configuration: DailyLoginConfiguration =
-            try! DailyLoginConfiguration.load()
+            try! DailyLoginConfiguration.load(),
+        onClose: (() -> Void)? = nil
     ) {
         self.progress = progress
         self.configuration = configuration
-        _selectedCategory = State(
-            initialValue: configuration.logins.first?.category ?? ""
+        self.onClose = onClose
+        _selectedLoginID = State(
+            initialValue: configuration.logins.first?.id ?? ""
         )
     }
 
     var body: some View {
         ZStack {
-            dailyBackground
+            AppBackground()
 
             VStack(spacing: 12) {
-                GameHeader(progress: progress)
-                    .padding(.top, 18)
+                ZStack(alignment: .topTrailing) {
+                    GameHeader(progress: progress)
+                        .padding(.top, 18)
+
+                    if let onClose {
+                        Button {
+                            onClose()
+                        } label: {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 13, weight: .heavy))
+                                .foregroundStyle(.white)
+                                .frame(width: 34, height: 34)
+                                .background(.black.opacity(0.58))
+                                .clipShape(Circle())
+                                .shadow(
+                                    color: .black.opacity(0.9),
+                                    radius: 4,
+                                    x: 0,
+                                    y: 2
+                                )
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, 50)
+                        .padding(.trailing, 18)
+                    }
+                }
 
                 CategoryBar(
-                    categories: categories,
-                    selectedCategory: $selectedCategory,
-                    displayName: localizedCategory
+                    categories: loginIDs,
+                    selectedCategory: $selectedLoginID,
+                    displayName: localizedLoginTitle
                 )
 
                 if !message.isEmpty {
                     statusText(message)
                 }
 
-                TabView(selection: $selectedCategory) {
-                    ForEach(categories, id: \.self) { category in
-                        loginPage(for: category)
-                            .tag(category)
+                TabView(selection: $selectedLoginID) {
+                    ForEach(configuration.logins) { login in
+                        loginPage(for: login)
+                            .tag(login.id)
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
@@ -58,36 +85,8 @@ struct DailyLoginView: View {
         }
     }
 
-    private var categories: [String] {
-        var values: [String] = []
-
-        for login in configuration.logins where !values.contains(login.category)
-        {
-            values.append(login.category)
-        }
-
-        return values
-    }
-
-    private var selectedCampaigns: [DailyLoginCampaign] {
-        configuration.logins.filter { $0.category == selectedCategory }
-    }
-
-    private var dailyBackground: some View {
-        ZStack {
-            RemoteImage(
-                name: selectedCampaigns.first?.backgroundImageName ?? "bg_blue",
-                contentMode: .fill
-            )
-            .ignoresSafeArea()
-
-            LinearGradient(
-                colors: [.black.opacity(0.36), .black.opacity(0.08)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
-        }
+    private var loginIDs: [String] {
+        configuration.logins.map(\.id)
     }
 
     private var columns: [GridItem] {
@@ -98,10 +97,13 @@ struct DailyLoginView: View {
         AppLocalizer(languageCode: appLanguageCode)
     }
 
-    private func localizedCategory(_ category: String) -> String {
-        let key = configuration.logins.first { $0.category == category }?
-            .categoryKey
-        return localizer.text(key, fallback: category)
+    private func localizedLoginTitle(_ id: String) -> String {
+        guard let login = configuration.logins.first(where: { $0.id == id })
+        else {
+            return id
+        }
+
+        return localizedTitle(login)
     }
 
     private func localizedTitle(_ login: DailyLoginCampaign) -> String {
@@ -112,14 +114,10 @@ struct DailyLoginView: View {
         localizer.text(reward.titleKey, fallback: reward.title)
     }
 
-    private func loginPage(for category: String) -> some View {
+    private func loginPage(for login: DailyLoginCampaign) -> some View {
         ScrollView {
             LazyVStack(spacing: 12) {
-                ForEach(configuration.logins.filter { $0.category == category })
-                {
-                    login in
-                    loginSection(login)
-                }
+                loginSection(login)
             }
             .padding(.horizontal, 14)
             .padding(.bottom, 110)
@@ -160,7 +158,18 @@ struct DailyLoginView: View {
             }
         }
         .padding(12)
-        .background(.black.opacity(0.34))
+        .background {
+            ZStack {
+                RemoteImage(name: login.backgroundImageName, contentMode: .fill)
+                    .opacity(0.74)
+
+                LinearGradient(
+                    colors: [.black.opacity(0.18), .black.opacity(0.42)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            }
+        }
         .overlay {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(.white.opacity(0.46), lineWidth: 1)
@@ -185,36 +194,33 @@ struct DailyLoginView: View {
 
             Text(localizedTitle(reward))
                 .font(.system(size: 11, weight: .heavy))
-                .foregroundStyle(.white)
+                .foregroundStyle(.black)
                 .lineLimit(1)
                 .minimumScaleFactor(0.75)
-                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
 
             ResourceAmountRow(
                 amounts: reward.rewards,
-                prefix: "+"
+                prefix: "+",
+                color: .black
             )
         }
         .frame(maxWidth: .infinity)
         .frame(height: 112)
         .padding(8)
-        .background {
-            RemoteImage(name: login.backgroundImageName, contentMode: .fill)
-                .opacity(isToday ? 0.56 : 0.34)
-        }
+        .background(.white.opacity(isToday ? 0.96 : 0.82))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(
                     canClaim
                         ? .white.opacity(0.95)
                         : isToday
-                            ? .white.opacity(0.68)
-                            : .white.opacity(0.32),
+                            ? .black.opacity(0.32)
+                            : .black.opacity(0.14),
                     lineWidth: canClaim ? 2 : 1
                 )
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .shadow(color: .black.opacity(0.75), radius: 3, x: 0, y: 2)
+        .shadow(color: .black.opacity(0.78), radius: 5, x: 0, y: 3)
         .opacity(isToday || progress.canClaimDailyLogin(for: login) ? 1 : 0.66)
         .contentShape(RoundedRectangle(cornerRadius: 8))
         .onTapGesture {

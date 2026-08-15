@@ -179,7 +179,6 @@ struct TutorialCoachView: View {
 
         let nextTutorial = configuration.tutorials.first {
             $0.trigger == trigger
-                && progress.accountLevel >= $0.requiredAccountLevel
                 && !completedIDs.contains($0.id)
         }
 

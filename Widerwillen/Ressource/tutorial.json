@@ -23,7 +23,7 @@
         {
             "id": "sprites_unlock",
             "trigger": "sprites",
-            "requiredAccountLevel": 2,
+            "requiredAccountLevel": 1,
             "speakerName": "Blunt",
             "speakerNameKey": "tutorial.speaker.blunt",
             "speakerImageName": "icon_blunt",
@@ -41,7 +41,7 @@
         {
             "id": "summon_unlock",
             "trigger": "summon",
-            "requiredAccountLevel": 3,
+            "requiredAccountLevel": 1,
             "speakerName": "Blunt",
             "speakerNameKey": "tutorial.speaker.blunt",
             "speakerImageName": "icon_blunt",
@@ -59,7 +59,7 @@
         {
             "id": "skills_unlock",
             "trigger": "skills",
-            "requiredAccountLevel": 2,
+            "requiredAccountLevel": 1,
             "speakerName": "Blunt",
             "speakerNameKey": "tutorial.speaker.blunt",
             "speakerImageName": "icon_blunt",
@@ -77,7 +77,7 @@
         {
             "id": "trade_unlock",
             "trigger": "trade",
-            "requiredAccountLevel": 4,
+            "requiredAccountLevel": 1,
             "speakerName": "Blunt",
             "speakerNameKey": "tutorial.speaker.blunt",
             "speakerImageName": "icon_blunt",
@@ -95,7 +95,7 @@
         {
             "id": "shop_unlock",
             "trigger": "shop",
-            "requiredAccountLevel": 5,
+            "requiredAccountLevel": 1,
             "speakerName": "Blunt",
             "speakerNameKey": "tutorial.speaker.blunt",
             "speakerImageName": "icon_blunt",
@@ -149,7 +149,7 @@
         {
             "id": "warehouse_unlock",
             "trigger": "warehouse",
-            "requiredAccountLevel": 2,
+            "requiredAccountLevel": 1,
             "speakerName": "Blunt",
             "speakerNameKey": "tutorial.speaker.blunt",
             "speakerImageName": "icon_blunt",
@@ -185,7 +185,7 @@
         {
             "id": "news_first_open",
             "trigger": "news",
-            "requiredAccountLevel": 2,
+            "requiredAccountLevel": 1,
             "speakerName": "Blunt",
             "speakerNameKey": "tutorial.speaker.blunt",
             "speakerImageName": "icon_blunt",
@@ -203,7 +203,7 @@
         {
             "id": "gift_first_open",
             "trigger": "gift",
-            "requiredAccountLevel": 2,
+            "requiredAccountLevel": 1,
             "speakerName": "Blunt",
             "speakerNameKey": "tutorial.speaker.blunt",
             "speakerImageName": "icon_blunt",
