@@ -8,13 +8,19 @@
 import SwiftUI
 
 struct NewsView: View {
+    let playSoundEffect: (String) -> Void
+
     private let configuration: NewsConfiguration
 
     @AppStorage("appLanguage") private var appLanguageCode = AppLanguage.de
         .rawValue
     @State private var selectedCategory = ""
 
-    init(configuration: NewsConfiguration = try! NewsConfiguration.load()) {
+    init(
+        playSoundEffect: @escaping (String) -> Void = { _ in },
+        configuration: NewsConfiguration = try! NewsConfiguration.load()
+    ) {
+        self.playSoundEffect = playSoundEffect
         self.configuration = configuration
         _selectedCategory = State(
             initialValue: configuration.news.first?.category ?? ""
@@ -29,6 +35,7 @@ struct NewsView: View {
                 CategoryBar(
                     categories: categories,
                     selectedCategory: $selectedCategory,
+                    playSoundEffect: playSoundEffect,
                     displayName: localizedCategory
                 )
 

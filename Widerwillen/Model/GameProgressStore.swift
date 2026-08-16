@@ -451,7 +451,8 @@ final class GameProgressStore {
             usedRuns: currentRun.usedRuns + 1,
             resetDay: Self.todayKey()
         )
-        eventCurrencies[event.id, default: 0] += event.rewards.eventCurrency
+        eventCurrencies[event.currencyStorageID, default: 0] +=
+            event.rewards.chipAmount
         coins += event.rewards.coins
         crystals += event.rewards.crystals
         artifactShards += event.rewards.relics
@@ -594,7 +595,7 @@ final class GameProgressStore {
             artifactShards
         case .skillBooks:
             skillBooks
-        case .eventCurrency:
+        case .eventChip:
             0
         }
     }
@@ -976,14 +977,14 @@ final class GameProgressStore {
             artifactShards = max(artifactShards + amount, 0)
         case .skillBooks:
             skillBooks = max(skillBooks + amount, 0)
-        case .eventCurrency:
+        case .eventChip:
             break
         }
     }
 
     private func amount(for amount: TradeResourceAmount) -> Int {
         switch amount.resource {
-        case .eventCurrency:
+        case .eventChip:
             guard let eventID = amount.eventID else { return 0 }
             return eventCurrencies[eventID, default: 0]
         default:
@@ -993,7 +994,7 @@ final class GameProgressStore {
 
     private func change(_ amount: TradeResourceAmount, by value: Int) {
         switch amount.resource {
-        case .eventCurrency:
+        case .eventChip:
             guard let eventID = amount.eventID else { return }
             eventCurrencies[eventID] = max(
                 eventCurrencies[eventID, default: 0] + value,

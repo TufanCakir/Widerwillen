@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ShopView: View {
     let progress: GameProgressStore
+    let playSoundEffect: (String) -> Void
 
     private let shopConfiguration: ShopConfiguration
     private let passConfiguration: PassConfiguration
@@ -20,6 +21,7 @@ struct ShopView: View {
 
     init(
         progress: GameProgressStore,
+        playSoundEffect: @escaping (String) -> Void = { _ in },
         shopConfiguration: ShopConfiguration =
             (try? ShopConfiguration.load())
             ?? ShopConfiguration(crystalPacks: []),
@@ -27,6 +29,7 @@ struct ShopView: View {
             (try? PassConfiguration.load()) ?? PassConfiguration(passes: [])
     ) {
         self.progress = progress
+        self.playSoundEffect = playSoundEffect
         self.shopConfiguration = shopConfiguration
         self.passConfiguration = passConfiguration
     }
@@ -59,46 +62,21 @@ struct ShopView: View {
                 if activeCategories.count > 1 {
                     CategoryBar(
                         categories: activeCategories.map(\.id),
-                        selectedCategory: $selectedCategory
+                        selectedCategory: $selectedCategory,
+                        playSoundEffect: playSoundEffect
                     ) { categoryID in
                         activeCategories.first { $0.id == categoryID }?.title
                             ?? categoryID
                     }
                 }
 
-                ScrollView {
-                    LazyVStack(spacing: 14) {
-                        ForEach(filteredPasses) { pass in
-                            passShopCard(pass)
-                        }
-
-                        ForEach(filteredCrystalPacks) { pack in
-                            crystalPackCard(pack)
-                        }
-
-                        ForEach(filteredCharacterPacks) { pack in
-                            characterPackCard(pack)
-                        }
-
-                        if filteredPasses.isEmpty
-                            && filteredCrystalPacks.isEmpty
-                            && filteredCharacterPacks.isEmpty
-                        {
-                            Text("No offers")
-                                .font(.system(size: 16, weight: .heavy))
-                                .foregroundStyle(.white.opacity(0.78))
-                                .shadow(
-                                    color: .black.opacity(0.9),
-                                    radius: 3,
-                                    x: 0,
-                                    y: 0
-                                )
-                                .padding(.top, 40)
-                        }
+                TabView(selection: $selectedCategory) {
+                    ForEach(activeCategories) { category in
+                        shopPage(for: category.id)
+                            .tag(category.id)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 110)
                 }
+                .tabViewStyle(.page(indexDisplayMode: .never))
             }
 
             if let selectedPass {
@@ -106,7 +84,9 @@ struct ShopView: View {
             }
         }
         .task {
-            selectedCategory = defaultCategoryID
+            if !activeCategories.contains(where: { $0.id == selectedCategory }) {
+                selectedCategory = defaultCategoryID
+            }
             await store.loadProducts(productIDs: allProductIDs)
             syncOwnedPasses()
             syncOwnedCharacterPacks()
@@ -159,6 +139,60 @@ struct ShopView: View {
         }
     }
 
+    private func passes(in categoryID: String) -> [BattlePassDefinition] {
+        passConfiguration.passes.filter {
+            ($0.category ?? "passes") == categoryID
+        }
+    }
+
+    private func crystalPacks(in categoryID: String) -> [CrystalPack] {
+        shopConfiguration.crystalPacks.filter { $0.category == categoryID }
+    }
+
+    private func characterPacks(in categoryID: String) -> [CharacterPack] {
+        shopConfiguration.characterPacks.filter { $0.category == categoryID }
+    }
+
+    private func shopPage(for categoryID: String) -> some View {
+        let passes = passes(in: categoryID)
+        let crystalPacks = crystalPacks(in: categoryID)
+        let characterPacks = characterPacks(in: categoryID)
+
+        return ScrollView {
+            LazyVStack(spacing: 14) {
+                ForEach(passes) { pass in
+                    passShopCard(pass)
+                }
+
+                ForEach(crystalPacks) { pack in
+                    crystalPackCard(pack)
+                }
+
+                ForEach(characterPacks) { pack in
+                    characterPackCard(pack)
+                }
+
+                if passes.isEmpty
+                    && crystalPacks.isEmpty
+                    && characterPacks.isEmpty
+                {
+                    Text("No offers")
+                        .font(.system(size: 16, weight: .heavy))
+                        .foregroundStyle(.white.opacity(0.78))
+                        .shadow(
+                            color: .black.opacity(0.9),
+                            radius: 3,
+                            x: 0,
+                            y: 0
+                        )
+                        .padding(.top, 40)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 110)
+        }
+    }
+
     private func passShopCard(_ pass: BattlePassDefinition) -> some View {
         let isUnlocked = progress.isPremiumPassUnlocked(pass)
         let productID = pass.productID
@@ -192,6 +226,7 @@ struct ShopView: View {
 
             VStack(spacing: 8) {
                 Button {
+                    playSoundEffect("ui_select")
                     selectedPass = pass
                 } label: {
                     Image(systemName: "info.circle.fill")
@@ -201,6 +236,7 @@ struct ShopView: View {
                 .buttonStyle(.plain)
 
                 Button {
+                    playSoundEffect("ui_confirm")
                     Task {
                         await buyPass(pass)
                     }
@@ -359,7 +395,10 @@ struct ShopView: View {
         isDisabled: Bool = false,
         action: @escaping () -> Void
     ) -> some View {
-        Button(action: action) {
+        Button {
+            playSoundEffect("ui_confirm")
+            action()
+        } label: {
             Text(title)
                 .font(.system(size: 13, weight: .heavy))
                 .foregroundStyle(isDisabled ? .white : .black)
@@ -376,6 +415,7 @@ struct ShopView: View {
     private func rewardsOverlay(for pass: BattlePassDefinition) -> some View {
         ZStack {
             Button {
+                playSoundEffect("ui_back")
                 selectedPass = nil
             } label: {
                 Color.black.opacity(0.52)
@@ -398,6 +438,7 @@ struct ShopView: View {
                     Spacer()
 
                     Button {
+                        playSoundEffect("ui_back")
                         selectedPass = nil
                     } label: {
                         Image(systemName: "xmark")

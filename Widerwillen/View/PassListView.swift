@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PassListView: View {
     let progress: GameProgressStore
+    let playSoundEffect: (String) -> Void
 
     private let passConfiguration: PassConfiguration
 
@@ -16,10 +17,12 @@ struct PassListView: View {
 
     init(
         progress: GameProgressStore,
+        playSoundEffect: @escaping (String) -> Void = { _ in },
         passConfiguration: PassConfiguration =
             (try? PassConfiguration.load()) ?? PassConfiguration(passes: [])
     ) {
         self.progress = progress
+        self.playSoundEffect = playSoundEffect
         self.passConfiguration = passConfiguration
     }
 
@@ -42,7 +45,8 @@ struct PassListView: View {
                             PassView(
                                 progress: progress,
                                 pass: pass,
-                                store: store
+                                store: store,
+                                playSoundEffect: playSoundEffect
                             ) { pass in
                                 await buyPass(pass)
                             }

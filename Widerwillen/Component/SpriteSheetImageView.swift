@@ -72,10 +72,22 @@ struct SpriteSheetImageView: View {
         max(fps ?? config?.fps ?? 8, 1)
     }
 
+    private var resolvedImageName: String {
+        config?.imageName ?? animationID
+    }
+
+    private var resolvedSpacing: Int {
+        max(config?.spacing ?? 0, 0)
+    }
+
+    private var resolvedMargin: Int {
+        max(config?.margin ?? 0, 0)
+    }
+
     private var frameImage: UIImage? {
-        guard let config,
+        guard
             let url = RemoteContentCache.cachedAssetURL(
-                named: config.imageName
+                named: resolvedImageName
             ),
             let sheet = UIImage(contentsOfFile: url.path)
         else {
@@ -84,9 +96,10 @@ struct SpriteSheetImageView: View {
 
         return Self.frameImage(
             from: sheet,
-            config: config,
             columns: resolvedColumns,
             rows: resolvedRows,
+            spacing: resolvedSpacing,
+            margin: resolvedMargin,
             frameCount: resolvedFrameCount,
             frameIndex: frameIndex
         )
@@ -113,7 +126,7 @@ struct SpriteSheetImageView: View {
     private func runAnimationLoop() async {
         frameIndex = 0
 
-        guard config != nil, resolvedFrameCount > 1 else { return }
+        guard resolvedFrameCount > 1 else { return }
 
         while !Task.isCancelled {
             let delay = UInt64(1_000_000_000 / resolvedFPS)
@@ -128,9 +141,10 @@ struct SpriteSheetImageView: View {
 
     private static func frameImage(
         from sheet: UIImage,
-        config: SpriteSheet,
         columns: Int,
         rows: Int,
+        spacing: Int,
+        margin: Int,
         frameCount: Int,
         frameIndex: Int
     ) -> UIImage? {
@@ -144,8 +158,6 @@ struct SpriteSheetImageView: View {
 
         let width = cgImage.width
         let height = cgImage.height
-        let spacing = max(config.spacing, 0)
-        let margin = max(config.margin, 0)
         let frameWidth =
             (width - margin * 2 - spacing * (columns - 1))
             / columns

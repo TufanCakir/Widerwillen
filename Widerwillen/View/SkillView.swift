@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SkillView: View {
     let progress: GameProgressStore
+    let playSoundEffect: (String) -> Void
 
     private let configuration: SkillConfiguration
 
@@ -17,9 +18,11 @@ struct SkillView: View {
 
     init(
         progress: GameProgressStore,
+        playSoundEffect: @escaping (String) -> Void = { _ in },
         configuration: SkillConfiguration = try! SkillConfiguration.load()
     ) {
         self.progress = progress
+        self.playSoundEffect = playSoundEffect
         self.configuration = configuration
         _selectedCategory = State(
             initialValue: configuration.trees.first?.category
@@ -46,7 +49,8 @@ struct SkillView: View {
 
             CategoryBar(
                 categories: categories,
-                selectedCategory: $selectedCategory
+                selectedCategory: $selectedCategory,
+                playSoundEffect: playSoundEffect
             )
 
             if !message.isEmpty {
@@ -259,10 +263,9 @@ struct SkillView: View {
     }
 
     private func upgrade(_ skill: SkillNode) {
-        message =
-            progress.upgradeSkill(skill)
-            ? "Skill upgraded"
-            : "Need more skill books"
+        let didUpgrade = progress.upgradeSkill(skill)
+        playSoundEffect(didUpgrade ? "ui_upgrade" : "ui_tap")
+        message = didUpgrade ? "Skill upgraded" : "Need more skill books"
 
         Task {
             try? await Task.sleep(for: .seconds(1.2))

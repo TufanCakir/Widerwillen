@@ -1,64 +1,24 @@
 {
     "looks": [
         {
-            "name": "Moon Ground",
+            "name": "Area 1",
             "backgroundColor": {
                 "red": 0.005,
                 "green": 0.015,
                 "blue": 0.04
             },
-            "backgroundImageName": null,
-            "backgroundDarkening": 0.28,
-            "accentColor": {
-                "red": 0.0,
-                "green": 0.95,
-                "blue": 1.0
-            },
-            "animationSpeed": 2.0,
-            "glowIntensity": 2.0,
-            "gridIntensity": 2.0,
-            "scanlineIntensity": 2.0,
-            "isAnimated": true
+            "backgroundImageName": "bg_white",
+            "backgroundDarkening": 0.15
         },
         {
-            "name": "Metal Shader",
+            "name": "Area 2",
             "backgroundColor": {
-                "red": 0.0,
-                "green": 0.035,
-                "blue": 0.065
-            },
-            "backgroundImageName": null,
-            "backgroundDarkening": 0.15,
-            "accentColor": {
-                "red": 0.25,
-                "green": 1.0,
-                "blue": 0.78
-            },
-            "animationSpeed": 2.0,
-            "glowIntensity": 2.0,
-            "gridIntensity": 2.0,
-            "scanlineIntensity": 2.0,
-            "isAnimated": true
-        },
-        {
-            "name": "Image Fullscreen",
-            "backgroundColor": {
-                "red": 0.01,
-                "green": 0.02,
+                "red": 0.005,
+                "green": 0.015,
                 "blue": 0.04
             },
-            "backgroundImageName": null,
-            "backgroundDarkening": 0.3,
-            "accentColor": {
-                "red": 0.75,
-                "green": 0.2,
-                "blue": 1.0
-            },
-            "animationSpeed": 1.0,
-            "glowIntensity": 1.0,
-            "gridIntensity": 1.0,
-            "scanlineIntensity": 1.0,
-            "isAnimated": false
+            "backgroundImageName": "bg_white",
+            "backgroundDarkening": 0.15
         }
     ]
 }

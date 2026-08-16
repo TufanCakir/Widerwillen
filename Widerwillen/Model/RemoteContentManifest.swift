@@ -67,6 +67,10 @@ struct RemoteJSONResource: Decodable, Identifiable {
 
 struct RemoteFileResource: Decodable, Identifiable {
     var id: String { name }
+    var fileExtension: String {
+        let pathExtension = URL(fileURLWithPath: path).pathExtension
+        return pathExtension.isEmpty ? "mp3" : pathExtension
+    }
 
     let name: String
     let path: String

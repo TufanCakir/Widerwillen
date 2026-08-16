@@ -11,6 +11,7 @@ struct PassView: View {
     let progress: GameProgressStore
     let pass: BattlePassDefinition
     let store: StoreKitStore
+    var playSoundEffect: (String) -> Void = { _ in }
     let buyPass: (BattlePassDefinition) async -> Void
 
     var body: some View {
@@ -43,6 +44,7 @@ struct PassView: View {
                 let productID = pass.productID
             {
                 Button {
+                    playSoundEffect("ui_confirm")
                     Task {
                         await buyPass(pass)
                     }
@@ -130,6 +132,7 @@ struct PassView: View {
             Spacer()
 
             Button {
+                playSoundEffect("ui_confirm")
                 _ = progress.claimPassReward(reward, in: pass)
             } label: {
                 Image(

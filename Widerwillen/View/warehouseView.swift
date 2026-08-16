@@ -9,6 +9,7 @@ import SwiftUI
 
 struct warehouseView: View {
     let progress: GameProgressStore
+    let playSoundEffect: (String) -> Void
 
     private let eventConfiguration: EventConfiguration
 
@@ -18,9 +19,11 @@ struct warehouseView: View {
 
     init(
         progress: GameProgressStore,
+        playSoundEffect: @escaping (String) -> Void = { _ in },
         eventConfiguration: EventConfiguration = try! EventConfiguration.load()
     ) {
         self.progress = progress
+        self.playSoundEffect = playSoundEffect
         self.eventConfiguration = eventConfiguration
     }
 
@@ -35,6 +38,7 @@ struct warehouseView: View {
                 CategoryBar(
                     categories: categories,
                     selectedCategory: $selectedCategory,
+                    playSoundEffect: playSoundEffect,
                     displayName: localizedCategory
                 )
 
@@ -158,6 +162,7 @@ struct warehouseView: View {
             }
 
             Button {
+                playSoundEffect("ui_confirm")
                 progress.claimIdleRewards()
             } label: {
                 Text(
@@ -195,17 +200,28 @@ struct warehouseView: View {
     private var eventChipsPage: some View {
         ScrollView {
             LazyVStack(spacing: 12) {
-                ForEach(eventConfiguration.events) { event in
+                ForEach(uniqueChipEvents) { event in
                     currencyCard(
                         title: localizedCurrencyName(event),
                         imageName: event.currencyImageName,
-                        amount: progress.eventCurrencies[event.id, default: 0],
+                        amount: progress.eventCurrencies[
+                            event.currencyStorageID,
+                            default: 0
+                        ],
                         subtitle: localizedEventTitle(event)
                     )
                 }
             }
             .padding(.horizontal, 16)
             .padding(.bottom, 110)
+        }
+    }
+
+    private var uniqueChipEvents: [GameEvent] {
+        var seenIDs: Set<String> = []
+
+        return eventConfiguration.events.filter { event in
+            seenIDs.insert(event.currencyStorageID).inserted
         }
     }
 

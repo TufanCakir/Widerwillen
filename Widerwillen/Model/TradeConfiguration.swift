@@ -72,6 +72,27 @@ struct TradeResourceAmount: Decodable, Identifiable {
     let amount: Int
     let eventID: String?
     let imageName: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case resource
+        case amount
+        case eventID
+        case chipID
+        case imageName
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        resource = try container.decode(TradeResource.self, forKey: .resource)
+        amount = try container.decode(Int.self, forKey: .amount)
+        eventID =
+            try container.decodeIfPresent(String.self, forKey: .chipID)
+            ?? container.decodeIfPresent(String.self, forKey: .eventID)
+        imageName = try container.decodeIfPresent(
+            String.self,
+            forKey: .imageName
+        )
+    }
 }
 
 enum TradeResource: String, Codable {
@@ -79,7 +100,30 @@ enum TradeResource: String, Codable {
     case crystals
     case relics
     case skillBooks = "skill_books"
-    case eventCurrency = "event_currency"
+    case eventChip = "event_chip"
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+
+        switch rawValue {
+        case "event_currency":
+            self = .eventChip
+        default:
+            guard let resource = TradeResource(rawValue: rawValue) else {
+                throw DecodingError.dataCorruptedError(
+                    in: container,
+                    debugDescription: "Unknown trade resource: \(rawValue)"
+                )
+            }
+            self = resource
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
+    }
 
     var imageName: String {
         switch self {
@@ -91,7 +135,7 @@ enum TradeResource: String, Codable {
             "icon_pixel_relic"
         case .skillBooks:
             "icon_pixel_skill_book"
-        case .eventCurrency:
+        case .eventChip:
             "icon_pixel_chip_blue"
         }
     }

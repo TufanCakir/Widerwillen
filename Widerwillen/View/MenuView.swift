@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MenuView: View {
     let progress: GameProgressStore
+    let playSoundEffect: (String) -> Void
     let openMode: (MenuMode) -> Void
 
     private let dailyLoginConfiguration: DailyLoginConfiguration
@@ -19,11 +20,13 @@ struct MenuView: View {
 
     init(
         progress: GameProgressStore,
+        playSoundEffect: @escaping (String) -> Void = { _ in },
         dailyLoginConfiguration: DailyLoginConfiguration =
             try! DailyLoginConfiguration.load(),
         openMode: @escaping (MenuMode) -> Void
     ) {
         self.progress = progress
+        self.playSoundEffect = playSoundEffect
         self.dailyLoginConfiguration = dailyLoginConfiguration
         self.openMode = openMode
     }
@@ -44,6 +47,7 @@ struct MenuView: View {
 
                 VStack(spacing: 28) {
                     Button {
+                        playSoundEffect("ui_select")
                         isModePickerPresented = true
                     } label: {
                         Text("Start")
@@ -96,27 +100,34 @@ struct MenuView: View {
         LazyVGrid(columns: shortcutColumns, spacing: 10) {
             shortcutButton(title: "Settings", assetImage: "icon_pixel_settings")
             {
+                playSoundEffect("ui_navigation")
                 openMode(.settings)
             }
-            shortcutButton(title: "Skills", assetImage: "icon_pixel_relic") {
+            shortcutButton(title: "Skills", assetImage: "icon_pixel_skill_book") {
+                playSoundEffect("ui_navigation")
                 openMode(.skills)
             }
             shortcutButton(title: "News", assetImage: "icon_pixel_news") {
+                playSoundEffect("ui_navigation")
                 openMode(.news)
             }
             shortcutButton(title: "Giftbox", assetImage: "icon_pixel_giftbox") {
+                playSoundEffect("ui_navigation")
                 openMode(.gift)
             }
             shortcutButton(title: "Warehouse", assetImage: "icon_pixel_box") {
+                playSoundEffect("ui_navigation")
                 openMode(.warehouse)
             }
-            shortcutButton(title: "Pass", assetImage: "icon_pixel_relic") {
+            shortcutButton(title: "Pass", assetImage: "icon_pixel_pass") {
+                playSoundEffect("ui_navigation")
                 openMode(.pass)
             }
             shortcutButton(
                 title: "Daily Login",
                 assetImage: "icon_pixel_calendar"
             ) {
+                playSoundEffect("ui_navigation")
                 openMode(.dailyLogin)
             }
         }
@@ -165,6 +176,7 @@ struct MenuView: View {
     private var modePickerOverlay: some View {
         ZStack {
             Button {
+                playSoundEffect("ui_back")
                 withAnimation(.snappy(duration: 0.2)) {
                     isModePickerPresented = false
                 }
@@ -216,6 +228,7 @@ struct MenuView: View {
 
             DailyLoginView(
                 progress: progress,
+                playSoundEffect: playSoundEffect,
                 configuration: dailyLoginConfiguration,
                 isCompactPresentation: true
             ) {
@@ -245,6 +258,7 @@ struct MenuView: View {
         mode: MenuMode
     ) -> some View {
         Button {
+            playSoundEffect("ui_confirm")
             isModePickerPresented = false
             openMode(mode)
         } label: {

@@ -1,0 +1,28 @@
+{
+    "chips": [
+        {
+            "id": "blue_chips",
+            "name": "Blue Chips",
+            "nameKey": "event.currency.blue_chips",
+            "imageName": "icon_pixel_chip_blue"
+        },
+        {
+            "id": "yellow_chips",
+            "name": "Yellow Chips",
+            "nameKey": "event.currency.yellow_chips",
+            "imageName": "icon_pixel_chip_yellow"
+        },
+        {
+            "id": "green_chips",
+            "name": "Green Chips",
+            "nameKey": "event.currency.green_chips",
+            "imageName": "icon_pixel_chip_green"
+        },
+        {
+            "id": "red_chips",
+            "name": "Red Chips",
+            "nameKey": "event.currency.red_chips",
+            "imageName": "icon_pixel_chip_red"
+        }
+    ]
+}

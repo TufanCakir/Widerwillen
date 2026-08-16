@@ -13,6 +13,7 @@ struct TutorialCoachView: View {
 
     private let configuration: TutorialConfiguration
 
+    @AppStorage("isTutorialEnabled") private var isTutorialEnabled = true
     @AppStorage("completedTutorialIDs") private var completedTutorialIDs = ""
     @AppStorage("appLanguage") private var appLanguageCode = AppLanguage.de
         .rawValue
@@ -38,6 +39,12 @@ struct TutorialCoachView: View {
             }
         }
         .onAppear {
+            updateActiveTutorial()
+        }
+        .onChange(of: isTutorialEnabled) { _, _ in
+            updateActiveTutorial()
+        }
+        .onChange(of: completedTutorialIDs) { _, _ in
             updateActiveTutorial()
         }
         .onChange(of: progress.accountLevel) { _, _ in
@@ -175,6 +182,12 @@ struct TutorialCoachView: View {
     }
 
     private func updateActiveTutorial() {
+        guard isTutorialEnabled else {
+            activeTutorial = nil
+            messageIndex = 0
+            return
+        }
+
         guard activeTutorial == nil else { return }
 
         let nextTutorial = configuration.tutorials.first {

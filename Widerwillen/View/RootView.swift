@@ -11,6 +11,11 @@ struct RootView: View {
     @Environment(\.scenePhase) private var scenePhase
 
     @AppStorage("isMusicEnabled") private var isMusicEnabled = true
+    @AppStorage("isSoundEffectsEnabled") private var isSoundEffectsEnabled =
+        true
+    @AppStorage("isTutorialEnabled") private var isTutorialEnabled = true
+    @AppStorage("musicVolume") private var musicVolume = 0.8
+    @AppStorage("soundEffectsVolume") private var soundEffectsVolume = 0.9
 
     @State private var progress = GameProgressStore()
     @State private var musicPlayer = MusicPlayer()
@@ -51,7 +56,7 @@ struct RootView: View {
             }
 
             if internetConnectionStore.isConnected
-                && hasFinishedLaunchLoading && hasStartedGame
+                && hasFinishedLaunchLoading && isTutorialEnabled
                 && !remoteContentStore.hasPendingUpdate
             {
                 TutorialCoachView(
@@ -63,7 +68,10 @@ struct RootView: View {
         .statusBarHidden(true)
         .onAppear {
             progress.refreshIdleRewards()
+            musicPlayer.setMusicVolume(musicVolume)
             musicPlayer.setEnabled(isMusicEnabled)
+            musicPlayer.setSoundEffectsVolume(soundEffectsVolume)
+            musicPlayer.setSoundEffectsEnabled(isSoundEffectsEnabled)
         }
         .task {
             guard internetConnectionStore.isConnected else { return }
@@ -84,6 +92,18 @@ struct RootView: View {
         }
         .onChange(of: isMusicEnabled) { _, newValue in
             musicPlayer.setEnabled(newValue)
+        }
+
+        .onChange(of: musicVolume) { _, newValue in
+            musicPlayer.setMusicVolume(newValue)
+        }
+
+        .onChange(of: isSoundEffectsEnabled) { _, newValue in
+            musicPlayer.setSoundEffectsEnabled(newValue)
+        }
+
+        .onChange(of: soundEffectsVolume) { _, newValue in
+            musicPlayer.setSoundEffectsVolume(newValue)
         }
         .onChange(of: selectedTab) { _, _ in
             Task {
@@ -216,27 +236,52 @@ struct RootView: View {
     private func modeView(_ mode: MenuMode) -> some View {
         switch mode {
         case .battle:
-            GameView(progress: progress) {
+            GameView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect,
+                stopSoundEffects: musicPlayer.stopAllSoundEffects
+            ) {
                 activeMode = nil
             }
         case .event:
-            EventView(progress: progress) { isBattleActive in
+            EventView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            ) { isBattleActive in
                 isFooterHiddenForActiveMode = isBattleActive
             }
         case .skills:
-            SkillView(progress: progress)
+            SkillView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            )
         case .settings:
-            SettingsView(progress: progress)
+            SettingsView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            )
         case .news:
-            NewsView()
+            NewsView(playSoundEffect: musicPlayer.playSoundEffect)
         case .gift:
-            GiftView(progress: progress)
+            GiftView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            )
         case .warehouse:
-            warehouseView(progress: progress)
+            warehouseView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            )
         case .pass:
-            PassListView(progress: progress)
+            PassListView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            )
         case .dailyLogin:
-            DailyLoginView(progress: progress)
+            DailyLoginView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            )
         }
     }
 
@@ -244,7 +289,11 @@ struct RootView: View {
         ZStack(alignment: .bottom) {
             selectedTabView
 
-            Footer(selectedTab: $selectedTab, progress: progress)
+            Footer(
+                selectedTab: $selectedTab,
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            )
                 .ignoresSafeArea(edges: .bottom)
         }
     }
@@ -300,7 +349,8 @@ struct RootView: View {
                             activeMode = nil
                         }
                     ),
-                    progress: progress
+                    progress: progress,
+                    playSoundEffect: musicPlayer.playSoundEffect
                 )
                 .ignoresSafeArea(edges: .bottom)
             }
@@ -321,15 +371,30 @@ struct RootView: View {
     private var selectedTabView: some View {
         switch selectedTab {
         case .home:
-            MenuView(progress: progress) { activeMode = $0 }
+            MenuView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            ) { activeMode = $0 }
         case .sprites:
-            SpriteListView(progress: progress)
+            SpriteListView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            )
         case .summon:
-            SummonView(progress: progress)
+            SummonView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            )
         case .shop:
-            ShopView(progress: progress)
+            ShopView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            )
         case .trade:
-            TradeView(progress: progress)
+            TradeView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            )
         }
     }
 }

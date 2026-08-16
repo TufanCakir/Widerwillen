@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EventView: View {
     let progress: GameProgressStore
+    let playSoundEffect: (String) -> Void
     let onBattleStateChange: (Bool) -> Void
 
     private let configuration: EventConfiguration
@@ -21,9 +22,11 @@ struct EventView: View {
     init(
         progress: GameProgressStore,
         configuration: EventConfiguration = try! EventConfiguration.load(),
+        playSoundEffect: @escaping (String) -> Void = { _ in },
         onBattleStateChange: @escaping (Bool) -> Void = { _ in }
     ) {
         self.progress = progress
+        self.playSoundEffect = playSoundEffect
         self.onBattleStateChange = onBattleStateChange
         self.configuration = configuration
         _selectedCategory = State(
@@ -37,6 +40,7 @@ struct EventView: View {
                 EventBattleView(
                     progress: progress,
                     event: selectedEvent,
+                    playSoundEffect: playSoundEffect,
                     onExit: {
                         self.selectedEvent = nil
                     }
@@ -58,7 +62,7 @@ struct EventView: View {
     }
 
     private var eventList: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 10) {
             categoryBar
 
             if !message.isEmpty {
@@ -103,59 +107,23 @@ struct EventView: View {
     }
 
     private var categoryBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
-                ForEach(eventCategories, id: \.self) { category in
-                    Button {
-                        selectedCategory = category
-                    } label: {
-                        Text(localizedCategory(category))
-                            .font(.system(size: 13, weight: .heavy))
-                            .foregroundStyle(.white)
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 0
-                            )
-                            .lineLimit(1)
-                            .padding(.horizontal, 14)
-                            .frame(height: 34)
-                            .background {
-                                Capsule()
-                                    .fill(
-                                        selectedCategory == category
-                                            ? .white.opacity(0.24)
-                                            : .black.opacity(0.28)
-                                    )
-                            }
-                            .overlay {
-                                Capsule()
-                                    .stroke(.white.opacity(0.7), lineWidth: 1)
-                            }
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 2
-                            )
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-            .padding(.horizontal, 16)
-        }
+        CategoryBar(
+            categories: eventCategories,
+            selectedCategory: $selectedCategory,
+            playSoundEffect: playSoundEffect,
+            displayName: localizedCategory
+        )
     }
 
     private func eventPage(for category: String) -> some View {
         ScrollView {
-            VStack(spacing: 0) {
+            VStack(spacing: 20) {
                 ForEach(events(in: category)) { event in
                     eventBanner(event)
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 110)
+            .padding(.horizontal)
+            .padding(.bottom, 120)
         }
     }
 
@@ -179,30 +147,54 @@ struct EventView: View {
 
     private func eventBanner(_ event: GameEvent) -> some View {
         let remainingRuns = progress.remainingRuns(for: event)
-        let eventCurrency = progress.eventCurrencies[event.id, default: 0]
+        let chipBalance = progress.eventCurrencies[
+            event.currencyStorageID,
+            default: 0
+        ]
 
         return Button {
+            playSoundEffect("event_start")
             selectedEvent = event
             message = ""
         } label: {
-            VStack(spacing: 0) {
-                ZStack(alignment: .bottomLeading) {
+            ZStack {
+                RemoteImage(
+                    name: event.cardBackgroundImageName ?? "bg_white",
+                    contentMode: .fill
+                )
+                .frame(maxWidth: .infinity)
+                .frame(height: 112)
+                .clipped()
+                .opacity(0.92)
+
+                LinearGradient(
+                    colors: [
+                        .black.opacity(0.12),
+                        .black.opacity(0.64)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+
+                HStack(spacing: 12) {
                     RemoteImage(name: event.bannerImageName)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 132)
-                        .clipped()
+                        .frame(width: 58, height: 58)
+                        .padding(8)
+                        .background(.black.opacity(0.28))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .shadow(
+                            color: .black.opacity(0.9),
+                            radius: 4,
+                            x: 0,
+                            y: 2
+                        )
 
-                    LinearGradient(
-                        colors: [.blue.opacity(0.0), .blue.opacity(0.82)],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
+                    VStack(alignment: .leading, spacing: 7) {
+                        HStack(spacing: 8) {
                             Text(localizedTitle(event))
-                                .font(.system(size: 20, weight: .heavy))
+                                .font(.system(size: 17, weight: .heavy))
                                 .lineLimit(1)
+                                .minimumScaleFactor(0.72)
                                 .shadow(
                                     color: .black.opacity(0.9),
                                     radius: 3,
@@ -210,10 +202,14 @@ struct EventView: View {
                                     y: 0
                                 )
 
-                            Spacer()
+                            Spacer(minLength: 8)
 
                             Text("\(remainingRuns)/\(event.dailyLimit)")
-                                .font(.system(size: 13, weight: .heavy))
+                                .font(.system(size: 12, weight: .heavy))
+                                .padding(.horizontal, 8)
+                                .frame(height: 24)
+                                .background(.black.opacity(0.36))
+                                .clipShape(Capsule())
                                 .shadow(
                                     color: .black.opacity(0.9),
                                     radius: 3,
@@ -222,42 +218,9 @@ struct EventView: View {
                                 )
                         }
 
-                        HStack(spacing: 12) {
-                            AppResourceLabel(
-                                imageName: event.currencyImageName,
-                                value: event.rewards.eventCurrency,
-                                prefix: "+",
-                                iconSize: 20,
-                                fontSize: 12
-                            )
-                            AppResourceLabel(
-                                imageName: "icon_pixel_coin",
-                                value: event.rewards.coins,
-                                prefix: "+",
-                                iconSize: 20,
-                                fontSize: 12
-                            )
-                            AppResourceLabel(
-                                imageName: "icon_pixel_crystal",
-                                value: event.rewards.crystals,
-                                prefix: "+",
-                                iconSize: 20,
-                                fontSize: 12
-                            )
-                            AppResourceLabel(
-                                imageName: "icon_pixel_relic",
-                                value: event.rewards.relics,
-                                prefix: "+",
-                                iconSize: 20,
-                                fontSize: 12
-                            )
-                        }
-
-                        HStack {
-                            Text(
-                                "\(localizedCurrencyName(event)): \(eventCurrency)"
-                            )
-                            .font(.system(size: 12, weight: .bold))
+                        Text("\(localizedCurrencyName(event)): \(chipBalance)")
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundStyle(.white.opacity(0.78))
                             .lineLimit(1)
                             .shadow(
                                 color: .black.opacity(0.9),
@@ -266,39 +229,59 @@ struct EventView: View {
                                 y: 0
                             )
 
-                            Spacer()
-
-                            Text(
-                                "\(localizer.text("event.hp", fallback: "HP")) \(event.hp)"
+                        HStack(spacing: 9) {
+                            eventRewardLabel(
+                                imageName: event.currencyImageName,
+                                value: event.rewards.chipAmount
                             )
-                            .font(.system(size: 12, weight: .bold))
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 0
+                            eventRewardLabel(
+                                imageName: "icon_pixel_coin",
+                                value: event.rewards.coins
+                            )
+                            eventRewardLabel(
+                                imageName: "icon_pixel_crystal",
+                                value: event.rewards.crystals
+                            )
+                            eventRewardLabel(
+                                imageName: "icon_pixel_relic",
+                                value: event.rewards.relics
                             )
                         }
-                        .foregroundStyle(.white.opacity(0.78))
                     }
-                    .foregroundStyle(.white)
-                    .padding(12)
                 }
+                .foregroundStyle(.white)
+                .padding(12)
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 150)
+            .frame(height: 112)
             .clipShape(RoundedRectangle(cornerRadius: 8))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.white.opacity(0.5), lineWidth: 1)
+            }
             .contentShape(RoundedRectangle(cornerRadius: 8))
+            .shadow(color: .black.opacity(0.65), radius: 3, x: 0, y: 2)
             .opacity(remainingRuns > 0 ? 1 : 0.45)
         }
         .buttonStyle(.plain)
         .disabled(remainingRuns == 0)
+    }
+
+    private func eventRewardLabel(imageName: String, value: Int) -> some View {
+        AppResourceLabel(
+            imageName: imageName,
+            value: value,
+            prefix: "+",
+            iconSize: 17,
+            fontSize: 10
+        )
     }
 }
 
 private struct EventBattleView: View {
     let progress: GameProgressStore
     let event: GameEvent
+    let playSoundEffect: (String) -> Void
     let onExit: () -> Void
 
     @AppStorage("appLanguage") private var appLanguageCode =
@@ -311,10 +294,12 @@ private struct EventBattleView: View {
     init(
         progress: GameProgressStore,
         event: GameEvent,
+        playSoundEffect: @escaping (String) -> Void = { _ in },
         onExit: @escaping () -> Void
     ) {
         self.progress = progress
         self.event = event
+        self.playSoundEffect = playSoundEffect
         self.onExit = onExit
         _currentHP = State(initialValue: progress.eventMaxHP(for: event))
     }
@@ -332,18 +317,31 @@ private struct EventBattleView: View {
                 companionAnimationIDs: progress.battleCompanionAnimationIDs,
                 spriteAttackInterval: progress.spriteAttackInterval,
                 activeSkills: progress.activeBattleSkills,
+                backgroundImageName: event.battleBackgroundImageName,
+                groundImageName: event.battleGroundImageName,
                 onTapAttack: {
-                    attackEvent(damage: progress.tapDamage)
+                    let result = attackEvent(damage: progress.tapDamage)
+                    playSoundEffect(
+                        result.coinsAwarded > 0 ? "event_win" : "battle_tap"
+                    )
+                    return result
                 },
                 onSpriteAttack: {
                     guard progress.hasCompanionSprites else {
                         return BattleAttackResult(damageDealt: 0)
                     }
 
-                    return attackEvent(damage: progress.spriteDamage)
+                    let result = attackEvent(damage: progress.spriteDamage)
+                    playSoundEffect(
+                        result.coinsAwarded > 0
+                            ? "event_win"
+                            : "battle_sprite_attack"
+                    )
+                    return result
                 },
                 onActiveSkillAttack: { skill in
-                    attackEvent(damage: skill.damage)
+                    playSoundEffect("battle_skill")
+                    return attackEvent(damage: skill.damage)
                 }
             )
 
@@ -354,7 +352,9 @@ private struct EventBattleView: View {
         .task(id: victorySummary?.id) {
             guard victorySummary != nil else { return }
 
-            try? await Task.sleep(for: .seconds(2.4))
+            try? await Task.sleep(
+                for: .seconds(event.victory.dismissDelaySeconds)
+            )
             await MainActor.run {
                 onExit()
             }
@@ -406,7 +406,11 @@ private struct EventBattleView: View {
             currentHP = eventMaxHP
         }
 
-        return BattleAttackResult(damageDealt: actualDamage)
+        return BattleAttackResult(
+            damageDealt: actualDamage,
+            coinsAwarded: didClear ? event.rewards.coins : 0,
+            crystalsAwarded: didClear ? event.rewards.crystals : 0
+        )
     }
 
     private func victoryOverlay(_ summary: EventVictorySummary) -> some View {
@@ -415,8 +419,19 @@ private struct EventBattleView: View {
                 .ignoresSafeArea()
 
             VStack(spacing: 18) {
-                Text(localizer.text("event.victory", fallback: "Victory"))
-                    .font(.system(size: 34, weight: .heavy))
+                if let imageName = event.victory.imageName {
+                    RemoteImage(name: imageName)
+                        .frame(width: 58, height: 58)
+                        .shadow(
+                            color: .black.opacity(0.9),
+                            radius: 4,
+                            x: 0,
+                            y: 2
+                        )
+                }
+
+                Text(localizedVictoryTitle)
+                    .font(.system(size: 30, weight: .heavy))
                     .shadow(
                         color: .black.opacity(0.9),
                         radius: 3,
@@ -438,7 +453,7 @@ private struct EventBattleView: View {
                 HStack(spacing: 12) {
                     AppResourceLabel(
                         imageName: event.currencyImageName,
-                        value: summary.rewards.eventCurrency,
+                        value: summary.rewards.chipAmount,
                         prefix: "+",
                         iconSize: 24,
                         fontSize: 13
@@ -473,7 +488,10 @@ private struct EventBattleView: View {
             .padding(.horizontal, 28)
             .padding(.vertical, 26)
             .background {
-                RemoteImage(name: "bg_app", contentMode: .fill)
+                RemoteImage(
+                    name: event.victory.backgroundImageName,
+                    contentMode: .fill
+                )
                     .opacity(0.9)
             }
             .overlay {
@@ -493,6 +511,10 @@ private struct EventBattleView: View {
 
     private func localizedTitle(_ event: GameEvent) -> String {
         localizer.text(event.titleKey, fallback: event.title)
+    }
+
+    private var localizedVictoryTitle: String {
+        localizer.text(event.victory.titleKey, fallback: event.victory.title)
     }
 }
 

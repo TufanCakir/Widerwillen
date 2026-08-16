@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DailyLoginView: View {
     let progress: GameProgressStore
+    let playSoundEffect: (String) -> Void
     var isCompactPresentation = false
     var onClose: (() -> Void)?
 
@@ -21,12 +22,14 @@ struct DailyLoginView: View {
 
     init(
         progress: GameProgressStore,
+        playSoundEffect: @escaping (String) -> Void = { _ in },
         configuration: DailyLoginConfiguration =
             try! DailyLoginConfiguration.load(),
         isCompactPresentation: Bool = false,
         onClose: (() -> Void)? = nil
     ) {
         self.progress = progress
+        self.playSoundEffect = playSoundEffect
         self.configuration = configuration
         self.isCompactPresentation = isCompactPresentation
         self.onClose = onClose
@@ -68,6 +71,7 @@ struct DailyLoginView: View {
 
                     if let onClose {
                         Button {
+                            playSoundEffect("ui_back")
                             onClose()
                         } label: {
                             Image(systemName: "xmark")
@@ -92,6 +96,7 @@ struct DailyLoginView: View {
                 CategoryBar(
                     categories: loginIDs,
                     selectedCategory: $selectedLoginID,
+                    playSoundEffect: playSoundEffect,
                     displayName: localizedLoginTitle
                 )
 
@@ -274,7 +279,10 @@ struct DailyLoginView: View {
         .contentShape(RoundedRectangle(cornerRadius: 8))
         .onTapGesture {
             if canClaim {
+                playSoundEffect("ui_confirm")
                 claim(reward, in: login)
+            } else {
+                playSoundEffect("ui_tap")
             }
         }
     }

@@ -3,10 +3,14 @@ import SwiftUI
 
 struct SettingsView: View {
     let progress: GameProgressStore
+    var playSoundEffect: (String) -> Void = { _ in }
 
     @AppStorage("isMusicEnabled") private var isMusicEnabled = true
-    @AppStorage("isLayerAnimationEnabled") private var isLayerAnimationEnabled =
+    @AppStorage("isSoundEffectsEnabled") private var isSoundEffectsEnabled =
         true
+    @AppStorage("musicVolume") private var musicVolume = 0.8
+    @AppStorage("soundEffectsVolume") private var soundEffectsVolume = 0.9
+    @AppStorage("isTutorialEnabled") private var isTutorialEnabled = true
     @AppStorage("remoteContentVersion") private var remoteContentVersion = 0
     @AppStorage("appLanguage") private var appLanguageCode = AppLanguage.de
         .rawValue
@@ -14,6 +18,7 @@ struct SettingsView: View {
 
     @State private var isResetConfirmationPresented = false
     @State private var resetMessage = ""
+    @State private var tutorialMessage = ""
 
     private let appInfo = AppInfo.current
 
@@ -22,12 +27,9 @@ struct SettingsView: View {
             AppBackground()
 
             ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 18) {
-                    sectionTitle(
-                        localizer.text("settings.title", fallback: "Settings")
-                    )
+                VStack(alignment: .leading, spacing: 12) {
 
-                    VStack(spacing: 10) {
+                    VStack(spacing: 6) {
                         languagePicker
 
                         settingsToggle(
@@ -44,25 +46,69 @@ struct SettingsView: View {
                             systemImage: "music.note",
                             isOn: $isMusicEnabled
                         )
+
+                        settingsSlider(
+                            title: localizer.text(
+                                "settings.music_volume",
+                                fallback: "Music Volume"
+                            ),
+                            systemImage: "speaker.wave.2.fill",
+                            value: $musicVolume
+                        )
+
                         settingsToggle(
                             title: localizer.text(
-                                "settings.layer_animation",
-                                fallback: "Layer Animation"
+                                "settings.sound_effects",
+                                fallback: "Sound Effects"
                             ),
-                            subtitle: isLayerAnimationEnabled
+                            subtitle: isSoundEffectsEnabled
                                 ? localizer.text("settings.on", fallback: "On")
                                 : localizer.text(
                                     "settings.off",
                                     fallback: "Off"
                                 ),
-                            systemImage: "sparkles",
-                            isOn: $isLayerAnimationEnabled
+                            systemImage: "speaker.wave.3.fill",
+                            isOn: $isSoundEffectsEnabled
                         )
-                    }
 
-                    sectionTitle(
-                        localizer.text("settings.danger", fallback: "Danger")
-                    )
+                        settingsSlider(
+                            title: localizer.text(
+                                "settings.sound_effects_volume",
+                                fallback: "Sound Effects Volume"
+                            ),
+                            systemImage: "waveform",
+                            value: $soundEffectsVolume
+                        )
+
+                        settingsToggle(
+                            title: localizer.text(
+                                "settings.tutorials",
+                                fallback: "Tutorials"
+                            ),
+                            subtitle: isTutorialEnabled
+                                ? localizer.text("settings.on", fallback: "On")
+                                : localizer.text(
+                                    "settings.off",
+                                    fallback: "Off"
+                                ),
+                            systemImage: "questionmark.bubble.fill",
+                            isOn: $isTutorialEnabled
+                        )
+
+                        replayTutorialsButton
+
+                        if !tutorialMessage.isEmpty {
+                            Text(tutorialMessage)
+                                .font(.system(size: 12, weight: .heavy))
+                                .foregroundStyle(.white.opacity(0.84))
+                                .shadow(
+                                    color: .black.opacity(0.9),
+                                    radius: 3,
+                                    x: 0,
+                                    y: 0
+                                )
+                        }
+                    }
 
                     VStack(spacing: 10) {
                         resetButton
@@ -79,10 +125,6 @@ struct SettingsView: View {
                                 )
                         }
                     }
-
-                    sectionTitle(
-                        localizer.text("settings.info", fallback: "Info")
-                    )
 
                     VStack(spacing: 10) {
                         infoRow(title: "App", value: appInfo.name)
@@ -101,9 +143,8 @@ struct SettingsView: View {
                         )
                     }
                 }
-                .padding(.horizontal, 24)
-                .padding(.top, 28)
-                .padding(.bottom, 110)
+                .padding(.horizontal)
+                .padding(.bottom, 120)
             }
         }
         .confirmationDialog(
@@ -121,13 +162,16 @@ struct SettingsView: View {
                 ),
                 role: .destructive
             ) {
+                playSoundEffect("ui_reset")
                 resetGame()
             }
 
             Button(
                 localizer.text("common.cancel", fallback: "Cancel"),
                 role: .cancel
-            ) {}
+            ) {
+                playSoundEffect("ui_back")
+            }
         } message: {
             Text(
                 localizer.text(
@@ -183,24 +227,103 @@ struct SettingsView: View {
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 
-    private func sectionTitle(_ title: String) -> some View {
-        Text(title)
-            .font(.system(size: 24, weight: .heavy))
-            .foregroundStyle(.white)
-            .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
-    }
-
     private func settingsToggle(
         title: String,
         subtitle: String,
         systemImage: String,
         isOn: Binding<Bool>
-    )
-        -> some View
-    {
+    ) -> some View {
         Toggle(isOn: isOn) {
-            HStack(spacing: 14) {
+            HStack(spacing: 10) {
                 Image(systemName: systemImage)
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(width: 26, height: 26)
+                    .background(.black.opacity(0.28))
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(title)
+                        .font(.system(size: 14, weight: .bold))
+
+                    Text(subtitle)
+                        .font(.system(size: 10, weight: .semibold))
+                        .opacity(0.7)
+                }
+                .foregroundStyle(.white)
+
+                Spacer()
+            }
+        }
+        .toggleStyle(.switch)
+        .padding(.horizontal, 12)
+        .frame(maxWidth: .infinity)
+        .frame(minHeight: 50)
+        .background {
+            RemoteImage(name: "bg_app", contentMode: .fill)
+                .opacity(0.72)
+                .allowsHitTesting(false)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private func settingsSlider(
+        title: String,
+        systemImage: String,
+        value: Binding<Double>
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 10) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 14, weight: .bold))
+                    .frame(width: 26, height: 26)
+                    .background(.black.opacity(0.28))
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+
+                Text(title)
+                    .font(.system(size: 13, weight: .bold))
+
+                Spacer()
+
+                Text("\(Int(value.wrappedValue * 100))%")
+                    .font(.system(size: 11, weight: .bold))
+                    .opacity(0.8)
+            }
+
+            Slider(value: value, in: 0...1)
+                .tint(.white)
+        }
+        .foregroundStyle(.white)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .frame(maxWidth: .infinity)
+        .background {
+            RemoteImage(name: "bg_app", contentMode: .fill)
+                .opacity(0.72)
+                .allowsHitTesting(false)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var replayTutorialsButton: some View {
+        Button {
+            playSoundEffect("ui_confirm")
+            isTutorialEnabled = true
+            completedTutorialIDs = ""
+            tutorialMessage = localizer.text(
+                "settings.tutorials.replay_done",
+                fallback: "Tutorials will appear again"
+            )
+
+            Task {
+                try? await Task.sleep(for: .seconds(1.6))
+                await MainActor.run {
+                    tutorialMessage = ""
+                }
+            }
+        } label: {
+            HStack(spacing: 14) {
+                Image(systemName: "arrow.counterclockwise.circle.fill")
                     .font(.system(size: 19, weight: .heavy))
                     .foregroundStyle(.white)
                     .frame(width: 32, height: 32)
@@ -208,49 +331,44 @@ struct SettingsView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 8))
 
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(title)
-                        .font(.system(size: 17, weight: .heavy))
-                        .shadow(
-                            color: .black.opacity(0.9),
-                            radius: 3,
-                            x: 0,
-                            y: 0
+                    Text(
+                        localizer.text(
+                            "settings.tutorials.replay",
+                            fallback: "Show Tutorials Again"
                         )
+                    )
+                    .font(.system(size: 17, weight: .heavy))
 
-                    Text(subtitle)
-                        .font(.system(size: 12, weight: .bold))
-                        .opacity(0.78)
-                        .shadow(
-                            color: .black.opacity(0.9),
-                            radius: 3,
-                            x: 0,
-                            y: 0
+                    Text(
+                        localizer.text(
+                            "settings.tutorials.replay_subtitle",
+                            fallback: "Reset viewed tutorial messages"
                         )
+                    )
+                    .font(.system(size: 12, weight: .bold))
+                    .opacity(0.78)
                 }
-                .foregroundStyle(.white)
-                .shadow(
-                    color: .black.opacity(0.9),
-                    radius: 3,
-                    x: 0,
-                    y: 2
-                )
+
+                Spacer()
             }
+            .foregroundStyle(.white)
+            .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+            .padding(.horizontal, 18)
+            .frame(maxWidth: .infinity)
+            .frame(minHeight: 68)
+            .background {
+                RemoteImage(name: "bg_app", contentMode: .fill)
+                    .opacity(0.72)
+                    .allowsHitTesting(false)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
         }
-        .toggleStyle(.switch)
-        .padding(.horizontal, 18)
-        .frame(maxWidth: .infinity)
-        .frame(minHeight: 68)
-        .background {
-            RemoteImage(name: "bg_app", contentMode: .fill)
-                .opacity(0.72)
-                .allowsHitTesting(false)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .contentShape(RoundedRectangle(cornerRadius: 8))
+        .buttonStyle(.plain)
     }
 
     private var resetButton: some View {
         Button {
+            playSoundEffect("ui_select")
             isResetConfirmationPresented = true
         } label: {
             HStack(spacing: 14) {

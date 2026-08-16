@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SummonView: View {
     let progress: GameProgressStore
+    let playSoundEffect: (String) -> Void
 
     private let configuration: SummonConfiguration
 
@@ -21,9 +22,11 @@ struct SummonView: View {
 
     init(
         progress: GameProgressStore,
+        playSoundEffect: @escaping (String) -> Void = { _ in },
         configuration: SummonConfiguration = try! SummonConfiguration.load()
     ) {
         self.progress = progress
+        self.playSoundEffect = playSoundEffect
         self.configuration = configuration
         _selectedCategory = State(
             initialValue: configuration.banners.first?.category ?? ""
@@ -79,48 +82,11 @@ struct SummonView: View {
     }
 
     private var categoryBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
-                ForEach(categories, id: \.self) { category in
-                    Button {
-                        selectedCategory = category
-                    } label: {
-                        Text(category)
-                            .font(.system(size: 13, weight: .heavy))
-                            .foregroundStyle(.white)
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 0
-                            )
-                            .lineLimit(1)
-                            .padding(.horizontal, 14)
-                            .frame(height: 34)
-                            .background {
-                                Capsule()
-                                    .fill(
-                                        selectedCategory == category
-                                            ? .white.opacity(0.24)
-                                            : .black.opacity(0.28)
-                                    )
-                            }
-                            .overlay {
-                                Capsule()
-                                    .stroke(.white.opacity(0.7), lineWidth: 1)
-                            }
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 2
-                            )
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-            .padding(.horizontal, 16)
-        }
+        CategoryBar(
+            categories: categories,
+            selectedCategory: $selectedCategory,
+            playSoundEffect: playSoundEffect
+        )
     }
 
     private func bannerPage(for category: String) -> some View {
@@ -146,6 +112,7 @@ struct SummonView: View {
                 Spacer()
 
                 Button {
+                    playSoundEffect("ui_select")
                     ratesBanner = banner
                 } label: {
                     Image(systemName: "info.circle")
@@ -210,6 +177,7 @@ struct SummonView: View {
         action: @escaping () -> Void
     ) -> some View {
         Button {
+            playSoundEffect("ui_select")
             action()
         } label: {
             HStack(spacing: 6) {
@@ -250,7 +218,10 @@ struct SummonView: View {
         ZStack {
             Color.black.opacity(0.55)
                 .ignoresSafeArea()
-                .onTapGesture { ratesBanner = nil }
+                .onTapGesture {
+                    playSoundEffect("ui_back")
+                    ratesBanner = nil
+                }
 
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
@@ -266,6 +237,7 @@ struct SummonView: View {
                     Spacer()
 
                     Button {
+                        playSoundEffect("ui_back")
                         ratesBanner = nil
                     } label: {
                         Image(systemName: "xmark")
@@ -339,6 +311,7 @@ struct SummonView: View {
 
                 HStack(spacing: 12) {
                     Button("Cancel") {
+                        playSoundEffect("ui_back")
                         pendingSummon = nil
                     }
                     .buttonStyle(.bordered)
@@ -389,12 +362,14 @@ struct SummonView: View {
         pendingSummon = nil
 
         if didSummon {
+            playSoundEffect("ui_confirm")
             resultScreenResults = progress.lastSummonResults
             isShowingResultScreen = true
             message = ""
             return
         }
 
+        playSoundEffect("ui_tap")
         message = "Not enough currency"
 
         clearMessageLater()

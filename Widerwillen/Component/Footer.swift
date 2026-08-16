@@ -38,11 +38,13 @@ enum AppTab: CaseIterable {
 struct Footer: View {
     @Binding var selectedTab: AppTab
     let progress: GameProgressStore
+    var playSoundEffect: (String) -> Void = { _ in }
 
     var body: some View {
         HStack(spacing: 0) {
             ForEach(AppTab.allCases, id: \.self) { tab in
                 Button {
+                    playSoundEffect(selectedTab == tab ? "ui_tap" : "ui_navigation")
                     selectedTab = tab
                 } label: {
                     VStack(spacing: 5) {

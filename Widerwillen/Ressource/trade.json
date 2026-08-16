@@ -102,8 +102,8 @@
             "limit": 10,
             "costs": [
                 {
-                    "resource": "event_currency",
-                    "eventID": "crytal_hunt",
+                    "resource": "event_chip",
+                    "chipID": "blue_chips",
                     "imageName": "icon_pixel_chip_blue",
                     "amount": 60
                 }
@@ -123,8 +123,8 @@
             "limit": 5,
             "costs": [
                 {
-                    "resource": "event_currency",
-                    "eventID": "crytal_hunt",
+                    "resource": "event_chip",
+                    "chipID": "blue_chips",
                     "imageName": "icon_pixel_chip_blue",
                     "amount": 120
                 }
@@ -144,8 +144,8 @@
             "limit": 3,
             "costs": [
                 {
-                    "resource": "event_currency",
-                    "eventID": "crytal_hunt",
+                    "resource": "event_chip",
+                    "chipID": "blue_chips",
                     "imageName": "icon_pixel_chip_blue",
                     "amount": 180
                 }
@@ -165,8 +165,8 @@
             "limit": 1,
             "costs": [
                 {
-                    "resource": "event_currency",
-                    "eventID": "crytal_hunt",
+                    "resource": "event_chip",
+                    "chipID": "blue_chips",
                     "imageName": "icon_pixel_chip_blue",
                     "amount": 260
                 }
@@ -191,8 +191,8 @@
             "limit": 1,
             "costs": [
                 {
-                    "resource": "event_currency",
-                    "eventID": "void_trial",
+                    "resource": "event_chip",
+                    "chipID": "red_chips",
                     "imageName": "icon_pixel_chip_red",
                     "amount": 320
                 }

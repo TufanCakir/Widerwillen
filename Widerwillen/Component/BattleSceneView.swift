@@ -19,12 +19,14 @@ struct BattleSceneView: View {
     let companionAnimationIDs: Set<String>
     let spriteAttackInterval: Duration
     let activeSkills: [BattleActiveSkill]
+    let backgroundImageName: String?
+    let groundImageName: String?
     let onTapAttack: () -> BattleAttackResult
     let onSpriteAttack: () -> BattleAttackResult
     let onActiveSkillAttack: (BattleActiveSkill) -> BattleAttackResult
     let onPrestige: (() -> Void)?
     let onExit: (() -> Void)?
-
+  
     private let arena: ArenaConfiguration
     private let background: BackgroundConfiguration
     private let enemies: EnemyConfiguration
@@ -53,6 +55,8 @@ struct BattleSceneView: View {
         companionAnimationIDs: Set<String>,
         spriteAttackInterval: Duration,
         activeSkills: [BattleActiveSkill] = [],
+        backgroundImageName: String? = nil,
+        groundImageName: String? = nil,
         onTapAttack: @escaping () -> BattleAttackResult,
         onSpriteAttack: @escaping () -> BattleAttackResult,
         onActiveSkillAttack:
@@ -76,6 +80,8 @@ struct BattleSceneView: View {
         self.companionAnimationIDs = companionAnimationIDs
         self.spriteAttackInterval = spriteAttackInterval
         self.activeSkills = activeSkills
+        self.backgroundImageName = backgroundImageName
+        self.groundImageName = groundImageName
         self.onTapAttack = onTapAttack
         self.onSpriteAttack = onSpriteAttack
         self.onActiveSkillAttack = onActiveSkillAttack
@@ -405,33 +411,38 @@ struct BattleSceneView: View {
         let enemySize =
             min(viewSize.width, viewSize.height)
             * CGFloat(currentEnemy.scale)
+        let baselineY = battleBaselineY(viewSize: viewSize, groundHeight: groundHeight)
 
-        return VStack(spacing: 4) {
-            if isBossStage {
-                Text("Boss")
+            return VStack(spacing: 4) {
+                Text(isBossStage ? "Boss · \(currentEnemy.name)" : currentEnemy.name)
                     .font(.system(size: 13, weight: .heavy))
-                    .foregroundStyle(.red)
+                    .foregroundStyle(isBossStage ? .red : .white)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
-            }
 
-            SpriteSheetImageView(
-                animationID: currentEnemy.animationID ?? currentEnemy.imageName,
-                columns: currentEnemy.columns,
-                rows: currentEnemy.rows,
-                frameCount: currentEnemy.frameCount,
-                fps: currentEnemy.fps
-            )
-            .frame(
-                width: enemySize,
-                height: enemySize
-            )
-            .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 5)
+                SpriteSheetImageView(
+                    animationID: currentEnemy.animationID ?? currentEnemy.imageName,
+                    columns: currentEnemy.columns,
+                    rows: currentEnemy.rows,
+                    frameCount: currentEnemy.frameCount,
+                    fps: currentEnemy.fps
+                )
+                .frame(
+                    width: enemySize,
+                    height: enemySize
+                )
+                .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 5)
         }
         .position(
-            x: viewSize.width * 0.62,
-            y: viewSize.height - groundHeight * 0.12 - enemySize * 0.5
+            x: viewSize.width * 0.66,
+            y: baselineY - enemySize * 0.5
         )
         .allowsHitTesting(false)
+    }
+
+    private func battleBaselineY(viewSize: CGSize, groundHeight: CGFloat)
+        -> CGFloat
+    {
+        viewSize.height - groundHeight * 0.56
     }
 
     private func activeSkillVisualLayer(
@@ -442,17 +453,27 @@ struct BattleSceneView: View {
             ForEach(activeSkills.filter { activeSkillIDs.contains($0.id) }) {
                 skill in
                 if skill.kind == .shadowClone {
+                    let cloneSize = min(viewSize.width, viewSize.height) * 0.26
+                    let baselineY = battleBaselineY(
+                        viewSize: viewSize,
+                        groundHeight: groundHeight
+                    )
+
                     SpriteSheetImageView(
                         animationID: skill.companionAnimationID
-                            ?? heroAnimationID
+                            ?? heroAnimationID,
+                        columns: 3,
+                        rows: 1,
+                        frameCount: 3,
+                        fps: 8
                     )
-                    .frame(width: 118, height: 118)
-                    .opacity(0.46)
+                    .frame(width: cloneSize, height: cloneSize)
+                    .opacity(0.62)
                     .scaleEffect(x: -1, y: 1)
                     .shadow(color: .cyan.opacity(0.8), radius: 8, x: 0, y: 0)
                     .position(
-                        x: viewSize.width * 0.34,
-                        y: viewSize.height - groundHeight * 0.14 - 58
+                        x: viewSize.width * 0.44,
+                        y: baselineY - cloneSize * 0.5
                     )
                     .transition(.scale.combined(with: .opacity))
                 }
@@ -556,44 +577,45 @@ struct BattleSceneView: View {
         )
         .allowsHitTesting(false)
     }
-
+    
     @ViewBuilder
     private func backgroundLayer(
         look: GameBackgroundLook,
         viewSize: CGSize
     ) -> some View {
-        if let backgroundImageName = look.backgroundImageName {
-            RemoteImage(name: backgroundImageName, contentMode: .fill)
-                .frame(width: viewSize.width, height: viewSize.height)
+        if let imageName = backgroundImageName ?? look.backgroundImageName {
+            RemoteImage(name: imageName, contentMode: .fill)
+                .frame(
+                    width: viewSize.width,
+                    height: viewSize.height
+                )
                 .clipped()
                 .ignoresSafeArea()
         } else {
-            TimelineView(
-                .periodic(from: animationStartDate, by: animationFrameInterval)
-            ) {
-                timeline in
-                let time =
-                    isLayerAnimationEnabled && look.isAnimated
-                    ? Float(timeline.date.timeIntervalSince(animationStartDate))
-                        * Float(look.animationSpeed)
-                    : 0
+            look.backgroundColor.swiftUIColor
+                .ignoresSafeArea()
+        }
+    }
 
-                Rectangle()
-                    .fill(
-                        ShaderLibrary.staticArenaBackground(
-                            .float2(
-                                Float(viewSize.width),
-                                Float(viewSize.height)
-                            ),
-                            .float(time),
-                            .float(Float(look.glowIntensity)),
-                            .float(Float(look.accentColor.red)),
-                            .float(Float(look.accentColor.green)),
-                            .float(Float(look.accentColor.blue))
-                        )
-                    )
-                    .ignoresSafeArea()
-            }
+    @ViewBuilder
+    private func groundLayer(
+        look: ArenaLook,
+        viewSize: CGSize,
+        groundHeight: CGFloat
+    ) -> some View {
+        if let imageName = groundImageName ?? look.groundImageName {
+            RemoteImage(name: imageName, contentMode: .fill)
+                .frame(
+                    width: viewSize.width,
+                    height: groundHeight
+                )
+                .clipped()
+        } else {
+            Color.black
+                .frame(
+                    width: viewSize.width,
+                    height: groundHeight
+                )
         }
     }
 
@@ -606,48 +628,6 @@ struct BattleSceneView: View {
             Color.black
                 .opacity(opacity)
                 .ignoresSafeArea()
-        }
-    }
-
-    @ViewBuilder
-    private func groundLayer(
-        look: ArenaLook,
-        viewSize: CGSize,
-        groundHeight: CGFloat
-    ) -> some View {
-        if let groundImageName = look.groundImageName {
-            RemoteImage(name: groundImageName, contentMode: .fill)
-                .frame(width: viewSize.width, height: groundHeight)
-                .clipped()
-        } else {
-            TimelineView(
-                .periodic(from: animationStartDate, by: animationFrameInterval)
-            ) {
-                timeline in
-                let time =
-                    isLayerAnimationEnabled && look.isAnimated
-                    ? Float(timeline.date.timeIntervalSince(animationStartDate))
-                    : 0
-
-                Rectangle()
-                    .fill(
-                        ShaderLibrary.riverFloor(
-                            .float2(
-                                Float(viewSize.width),
-                                Float(groundHeight)
-                            ),
-                            .float(time),
-                            .float(Float(look.animationSpeed)),
-                            .float(Float(look.glowIntensity)),
-                            .float(Float(look.gridIntensity)),
-                            .float(Float(look.scanlineIntensity)),
-                            .float(Float(look.accentColor.red)),
-                            .float(Float(look.accentColor.green)),
-                            .float(Float(look.accentColor.blue))
-                        )
-                    )
-                    .frame(height: groundHeight)
-            }
         }
     }
 
@@ -730,8 +710,17 @@ struct BattleSceneView: View {
             activateSkill(skill)
         } label: {
             ZStack {
+                RemoteImage(name: skill.imageName, contentMode: .fill)
+                    .frame(width: 54, height: 54)
+                    .clipShape(Circle())
+                    .opacity(isCoolingDown ? 0.36 : 0.72)
+
                 Circle()
-                    .fill(isActive ? .cyan.opacity(0.34) : .black.opacity(0.54))
+                    .fill(
+                        isActive
+                            ? .cyan.opacity(0.22)
+                            : .black.opacity(0.36)
+                    )
 
                 RemoteImage(name: skill.imageName)
                     .frame(width: 32, height: 32)

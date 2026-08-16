@@ -20,9 +20,9 @@ final class SpriteAnimationScene: SKScene {
     private let gridCenterXRatio: CGFloat = 0.5
     private let gridRowOffsetRatio: CGFloat = 0.065
     private let gridBaseYRatio: CGFloat = 0.30
-    private let heroXRatio: CGFloat = 0.38
-    private let heroYRatio: CGFloat = 0.12
-    private let heroScale: CGFloat = 0.32
+    private let heroXRatio: CGFloat = 0.34
+    private let heroYRatio: CGFloat = 0.54
+    private let heroScale: CGFloat = 0.28
 
     private var floorHeight: CGFloat {
         size.height * arena.floorHeightRatio

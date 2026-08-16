@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TradeView: View {
     let progress: GameProgressStore
+    let playSoundEffect: (String) -> Void
 
     private let configuration: TradeConfiguration
 
@@ -17,9 +18,11 @@ struct TradeView: View {
 
     init(
         progress: GameProgressStore,
+        playSoundEffect: @escaping (String) -> Void = { _ in },
         configuration: TradeConfiguration = try! TradeConfiguration.load()
     ) {
         self.progress = progress
+        self.playSoundEffect = playSoundEffect
         self.configuration = configuration
         _selectedCategory = State(
             initialValue: configuration.offers.first?.category ?? ""
@@ -71,48 +74,11 @@ struct TradeView: View {
     }
 
     private var categoryBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
-                ForEach(categories, id: \.self) { category in
-                    Button {
-                        selectedCategory = category
-                    } label: {
-                        Text(category)
-                            .font(.system(size: 13, weight: .heavy))
-                            .foregroundStyle(.white)
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 0
-                            )
-                            .lineLimit(1)
-                            .padding(.horizontal, 14)
-                            .frame(height: 34)
-                            .background {
-                                Capsule()
-                                    .fill(
-                                        selectedCategory == category
-                                            ? .white.opacity(0.24)
-                                            : .black.opacity(0.28)
-                                    )
-                            }
-                            .overlay {
-                                Capsule()
-                                    .stroke(.white.opacity(0.7), lineWidth: 1)
-                            }
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 2
-                            )
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
-            .padding(.horizontal, 16)
-        }
+        CategoryBar(
+            categories: categories,
+            selectedCategory: $selectedCategory,
+            playSoundEffect: playSoundEffect
+        )
     }
 
     private func offerPage(for category: String) -> some View {
@@ -181,6 +147,7 @@ struct TradeView: View {
             }
 
             Button {
+                playSoundEffect("ui_confirm")
                 apply(offer)
             } label: {
                 RemoteImage(

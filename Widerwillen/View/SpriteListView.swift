@@ -9,12 +9,21 @@ import SwiftUI
 
 struct SpriteListView: View {
     let progress: GameProgressStore
+    let playSoundEffect: (String) -> Void
 
     @State private var selectedCategory: SpriteCollectionCategory = .characters
 
     private let columns = [
         GridItem(.adaptive(minimum: 96), spacing: 14)
     ]
+
+    init(
+        progress: GameProgressStore,
+        playSoundEffect: @escaping (String) -> Void = { _ in }
+    ) {
+        self.progress = progress
+        self.playSoundEffect = playSoundEffect
+    }
 
     var body: some View {
         ZStack {
@@ -37,47 +46,75 @@ struct SpriteListView: View {
     }
 
     private var categoryBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
-                ForEach(SpriteCollectionCategory.allCases, id: \.self) {
-                    category in
-                    Button {
-                        selectedCategory = category
-                    } label: {
-                        HStack(spacing: 7) {
-                            RemoteImage(name: category.imageName)
-                                .frame(width: 20, height: 20)
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(SpriteCollectionCategory.allCases, id: \.self) {
+                        category in
+                        Button {
+                            if selectedCategory == category {
+                                playSoundEffect("ui_tap")
+                            }
+                            selectedCategory = category
+                            scrollToCategory(category, proxy: proxy)
+                        } label: {
+                            HStack(spacing: 7) {
+                                RemoteImage(name: category.imageName)
+                                    .frame(width: 20, height: 20)
 
-                            Text(category.title)
-                                .font(.system(size: 13, weight: .heavy))
+                                Text(category.title)
+                                    .font(.system(size: 13, weight: .heavy))
+                            }
+                            .foregroundStyle(.white)
+                            .lineLimit(1)
+                            .padding(.horizontal, 12)
+                            .frame(height: 34)
+                            .background {
+                                Capsule()
+                                    .fill(
+                                        selectedCategory == category
+                                            ? .white.opacity(0.24)
+                                            : .black.opacity(0.28)
+                                    )
+                            }
+                            .overlay {
+                                Capsule()
+                                    .stroke(.white.opacity(0.7), lineWidth: 1)
+                            }
+                            .shadow(
+                                color: .black.opacity(0.9),
+                                radius: 3,
+                                x: 0,
+                                y: 0
+                            )
                         }
-                        .foregroundStyle(.white)
-                        .lineLimit(1)
-                        .padding(.horizontal, 12)
-                        .frame(height: 34)
-                        .background {
-                            Capsule()
-                                .fill(
-                                    selectedCategory == category
-                                        ? .white.opacity(0.24)
-                                        : .black.opacity(0.28)
-                                )
-                        }
-                        .overlay {
-                            Capsule()
-                                .stroke(.white.opacity(0.7), lineWidth: 1)
-                        }
-                        .shadow(
-                            color: .black.opacity(0.9),
-                            radius: 3,
-                            x: 0,
-                            y: 0
-                        )
+                        .buttonStyle(.plain)
+                        .id(category)
                     }
-                    .buttonStyle(.plain)
                 }
+                .padding(.horizontal, 16)
             }
-            .padding(.horizontal, 16)
+            .onAppear {
+                scrollToCategory(selectedCategory, proxy: proxy, animated: false)
+            }
+            .onChange(of: selectedCategory) { _, category in
+                playSoundEffect("ui_page")
+                scrollToCategory(category, proxy: proxy)
+            }
+        }
+    }
+
+    private func scrollToCategory(
+        _ category: SpriteCollectionCategory,
+        proxy: ScrollViewProxy,
+        animated: Bool = true
+    ) {
+        if animated {
+            withAnimation(.easeInOut(duration: 0.22)) {
+                proxy.scrollTo(category, anchor: .center)
+            }
+        } else {
+            proxy.scrollTo(category, anchor: .center)
         }
     }
 
@@ -91,6 +128,7 @@ struct SpriteListView: View {
                 LazyVGrid(columns: columns, spacing: 14) {
                     ForEach(items(for: category)) { item in
                         Button {
+                            playSoundEffect("ui_select")
                             select(item)
                         } label: {
                             collectionCard(item)

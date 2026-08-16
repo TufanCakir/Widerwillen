@@ -574,8 +574,15 @@ enum RemoteContentCache {
         cachedFileURL(named: resourceName, kind: .asset)
     }
 
-    static func cachedMusicURL(named resourceName: String) -> URL? {
-        cachedFileURL(named: resourceName, kind: .music)
+    static func cachedMusicURL(
+        named resourceName: String,
+        fileExtension: String? = nil
+    ) -> URL? {
+        cachedFileURL(
+            named: resourceName,
+            kind: .music,
+            fileExtension: fileExtension
+        )
     }
 
     static func hasCachedJSON(named resourceName: String) -> Bool {
@@ -589,11 +596,7 @@ enum RemoteContentCache {
         kind: FileKind
     ) -> Bool {
         FileManager.default.fileExists(
-            atPath: fileURL(
-                named: resource.name,
-                version: resource.version,
-                kind: kind
-            ).path
+            atPath: fileURL(resource: resource, kind: kind).path
         )
     }
 
@@ -630,11 +633,7 @@ enum RemoteContentCache {
             kind: kind
         )
         try data.write(
-            to: fileURL(
-                named: resource.name,
-                version: resource.version,
-                kind: kind
-            ),
+            to: fileURL(resource: resource, kind: kind),
             options: .atomic
         )
     }
@@ -654,11 +653,13 @@ enum RemoteContentCache {
 
     private static func cachedFileURL(
         named resourceName: String,
-        kind: FileKind
+        kind: FileKind,
+        fileExtension: String? = nil
     ) -> URL? {
         if let latestVersionedURL = cachedVersionedFileURLs(
             named: resourceName,
-            kind: kind
+            kind: kind,
+            fileExtension: fileExtension
         )
         .sorted(by: { versionNumber(from: $0) < versionNumber(from: $1) })
         .last {
@@ -677,14 +678,12 @@ enum RemoteContentCache {
         legacyFileURL(named: resourceName, kind: kind)
     }
 
-    private static func fileURL(
-        named resourceName: String,
-        version: Int,
-        kind: FileKind
-    ) -> URL {
+    private static func fileURL(resource: RemoteFileResource, kind: FileKind)
+        -> URL
+    {
         directory(for: kind).appending(
             path:
-                "\(resourceName)_v\(max(version, 1)).\(fileExtension(for: kind))"
+                "\(resource.name)_v\(max(resource.version, 1)).\(resource.fileExtension)"
         )
     }
 
@@ -701,7 +700,8 @@ enum RemoteContentCache {
 
     private static func cachedVersionedFileURLs(
         named resourceName: String,
-        kind: FileKind
+        kind: FileKind,
+        fileExtension: String? = nil
     ) -> [URL] {
         guard
             let urls = try? FileManager.default.contentsOfDirectory(
@@ -713,11 +713,17 @@ enum RemoteContentCache {
         }
 
         let prefix = "\(resourceName)_v"
-        let suffix = ".\(fileExtension(for: kind))"
 
         return urls.filter {
-            $0.lastPathComponent.hasPrefix(prefix)
-                && $0.lastPathComponent.hasSuffix(suffix)
+            guard $0.lastPathComponent.hasPrefix(prefix) else {
+                return false
+            }
+
+            guard let fileExtension else {
+                return true
+            }
+
+            return $0.pathExtension == fileExtension
         }
     }
 
@@ -726,10 +732,10 @@ enum RemoteContentCache {
         keepingVersion version: Int,
         kind: FileKind
     ) throws {
-        let keepURL = fileURL(named: resourceName, version: version, kind: kind)
+        let keepPrefix = "\(resourceName)_v\(max(version, 1))."
 
         for url in cachedVersionedFileURLs(named: resourceName, kind: kind)
-        where url != keepURL {
+        where !url.lastPathComponent.hasPrefix(keepPrefix) {
             try FileManager.default.removeItem(at: url)
         }
     }

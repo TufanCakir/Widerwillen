@@ -9,6 +9,7 @@ import SwiftUI
 
 struct GiftView: View {
     let progress: GameProgressStore
+    let playSoundEffect: (String) -> Void
 
     private let configuration: GiftConfiguration
 
@@ -19,9 +20,11 @@ struct GiftView: View {
 
     init(
         progress: GameProgressStore,
+        playSoundEffect: @escaping (String) -> Void = { _ in },
         configuration: GiftConfiguration = try! GiftConfiguration.load()
     ) {
         self.progress = progress
+        self.playSoundEffect = playSoundEffect
         self.configuration = configuration
         _selectedCategory = State(
             initialValue: configuration.gifts.first?.category ?? ""
@@ -104,6 +107,7 @@ struct GiftView: View {
         let hasGifts = !availableGifts.isEmpty
 
         return Button {
+            playSoundEffect("ui_confirm")
             claimAll()
         } label: {
             Text(localizer.text("gift.claim_all", fallback: "Claim All"))
@@ -137,6 +141,7 @@ struct GiftView: View {
         CategoryBar(
             categories: categories,
             selectedCategory: $selectedCategory,
+            playSoundEffect: playSoundEffect,
             displayName: localizedCategory
         )
     }

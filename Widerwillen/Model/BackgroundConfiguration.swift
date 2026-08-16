@@ -23,10 +23,4 @@ struct GameBackgroundLook: Decodable {
     let backgroundColor: RGBColor
     let backgroundImageName: String?
     let backgroundDarkening: Double
-    let accentColor: RGBColor
-    let animationSpeed: CGFloat
-    let glowIntensity: CGFloat
-    let gridIntensity: CGFloat
-    let scanlineIntensity: CGFloat
-    let isAnimated: Bool
 }

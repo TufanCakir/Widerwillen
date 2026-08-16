@@ -1,5 +1,5 @@
 {
-    "contentVersion": 66,
+    "contentVersion": 98,
     "json": [
         {
             "name": "arena",
@@ -20,6 +20,10 @@
         {
             "name": "character",
             "path": "character.json"
+        },
+        {
+            "name": "chip",
+            "path": "chip.json"
         },
         {
             "name": "companion",
@@ -122,6 +126,26 @@
             "version": 1
         },
         {
+            "name": "bg_yellow",
+            "path": "assets/bg_yellow.png",
+            "version": 1
+        },
+        {
+            "name": "bg_red",
+            "path": "assets/bg_red.png",
+            "version": 1
+        },
+        {
+            "name": "bg_green",
+            "path": "assets/bg_green.png",
+            "version": 1
+        },
+        {
+            "name": "bg_bright_blue",
+            "path": "assets/bg_bright_blue.png",
+            "version": 1
+        },
+        {
             "name": "icon_cookieman",
             "path": "assets/icon_cookieman.png",
             "version": 1
@@ -142,8 +166,18 @@
             "version": 1
         },
         {
+            "name": "icon_slenderize",
+            "path": "assets/icon_slenderize.png",
+            "version": 3
+        },
+        {
             "name": "icon_pixel_box",
             "path": "assets/icon_pixel_box.png",
+            "version": 1
+        },
+        {
+            "name": "icon_pixel_pass",
+            "path": "assets/icon_pixel_pass.png",
             "version": 1
         },
         {
@@ -277,6 +311,11 @@
             "version": 1
         },
         {
+            "name": "sprite_slenderize",
+            "path": "assets/sprite_slenderize.png",
+            "version": 3
+        },
+        {
             "name": "sprite_shadow_clone",
             "path": "assets/sprite_shadow_clone.png",
             "version": 1
@@ -334,24 +373,44 @@
     ],
     "music": [
         {
-            "name": "aigainst_my_will",
-            "path": "music/aigainst_my_will.mp3",
+            "name": "beat1",
+            "path": "music/beat1.m4a",
             "version": 1
         },
         {
-            "name": "aigainst_my_will2",
-            "path": "music/aigainst_my_will2.mp3",
+            "name": "sfx_battle_tap",
+            "path": "music/sfx_battle_tap.m4a",
+            "version": 2
+        },
+        {
+            "name": "sfx_sprite_attack",
+            "path": "music/sfx_battle_tap.m4a",
+            "version": 2
+        },
+        {
+            "name": "sfx_skill",
+            "path": "music/sfx_skill.m4a",
             "version": 1
         },
         {
-            "name": "widerwillen",
-            "path": "music/widerwillen.mp3",
-            "version": 1
+            "name": "sfx_stage_clear",
+            "path": "music/sfx_stage_clear.m4a",
+            "version": 2
         },
         {
-            "name": "widerwillen2",
-            "path": "music/widerwillen2.mp3",
-            "version": 1
+            "name": "sfx_prestige",
+            "path": "music/sfx_prestige.m4a",
+            "version": 2
+        },
+        {
+            "name": "sfx_event_start",
+            "path": "music/sfx_event_start.m4a",
+            "version": 2
+        },
+        {
+            "name": "sfx_event_win",
+            "path": "music/sfx_event_win.m4a",
+            "version": 2
         }
     ]
 }

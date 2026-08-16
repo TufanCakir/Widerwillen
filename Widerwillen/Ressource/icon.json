@@ -127,6 +127,12 @@
             "requiredAccountLevel": 14
         },
         {
+            "id": "slenderize",
+            "title": "Slenderize",
+            "imageName": "icon_slenderize",
+            "requiredAccountLevel": 14
+        },
+        {
             "id": "blunt",
             "title": "Blunt",
             "imageName": "icon_blunt",
@@ -203,6 +209,13 @@
             "title": "Nimbi Night",
             "imageName": "icon_nimbi_night",
             "requiredAccountLevel": 46
+        },
+        {
+            "id": "pass",
+            "title": "Pass",
+            "imageName": "icon_pixel_pass",
+            "requiredAccountLevel": 46
         }
     ]
 }
+

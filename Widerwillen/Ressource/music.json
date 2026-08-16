@@ -1,24 +1,117 @@
 {
     "tracks": [
         {
-            "id": "music_01",
-            "resourceName": "aigainst_my_will",
-            "fileExtension": "mp3"
+            "id": "beat_1",
+            "resourceName": "beat1",
+            "fileExtension": "m4a",
+            "volume": 0.85
+        }
+    ],
+    "soundEffects": [
+        {
+            "id": "battle_tap",
+            "resourceName": "sfx_battle_tap",
+            "fileExtension": "m4a",
+            "volume": 0.8,
+            "category": "battle"
         },
         {
-            "id": "music_02",
-            "resourceName": "aigainst_my_will2",
-            "fileExtension": "mp3"
+            "id": "battle_sprite_attack",
+            "resourceName": "sfx_battle_tap",
+            "fileExtension": "m4a",
+            "volume": 0.7,
+            "category": "battle"
         },
         {
-            "id": "music_03",
-            "resourceName": "widerwillen",
-            "fileExtension": "mp3"
+            "id": "battle_skill",
+            "resourceName": "sfx_skill",
+            "fileExtension": "m4a",
+            "volume": 0.85,
+            "category": "battle"
         },
         {
-            "id": "music_04",
-            "resourceName": "widerwillen2",
-            "fileExtension": "mp3"
+            "id": "stage_clear",
+            "resourceName": "sfx_stage_clear",
+            "fileExtension": "m4a",
+            "volume": 0.9,
+            "category": "stage"
+        },
+        {
+            "id": "prestige",
+            "resourceName": "sfx_prestige",
+            "fileExtension": "m4a",
+            "volume": 1.0,
+            "category": "stage"
+        },
+        {
+            "id": "event_start",
+            "resourceName": "sfx_event_start",
+            "fileExtension": "m4a",
+            "volume": 0.85,
+            "category": "event"
+        },
+        {
+            "id": "event_win",
+            "resourceName": "sfx_event_win",
+            "fileExtension": "m4a",
+            "volume": 1.0,
+            "category": "event"
+        },
+        {
+            "id": "ui_navigation",
+            "resourceName": "sfx_battle_tap",
+            "fileExtension": "m4a",
+            "volume": 0.55,
+            "category": "ui"
+        },
+        {
+            "id": "ui_select",
+            "resourceName": "sfx_battle_tap",
+            "fileExtension": "m4a",
+            "volume": 0.5,
+            "category": "ui"
+        },
+        {
+            "id": "ui_confirm",
+            "resourceName": "sfx_stage_clear",
+            "fileExtension": "m4a",
+            "volume": 0.65,
+            "category": "ui"
+        },
+        {
+            "id": "ui_back",
+            "resourceName": "sfx_battle_tap",
+            "fileExtension": "m4a",
+            "volume": 0.42,
+            "category": "ui"
+        },
+        {
+            "id": "ui_reset",
+            "resourceName": "sfx_prestige",
+            "fileExtension": "m4a",
+            "volume": 0.7,
+            "category": "ui"
+        },
+        {
+            "id": "ui_upgrade",
+            "resourceName": "sfx_skill",
+            "fileExtension": "m4a",
+            "volume": 0.78,
+            "category": "ui"
+        },
+        {
+            "id": "ui_page",
+            "resourceName": "sfx_battle_tap",
+            "fileExtension": "m4a",
+            "volume": 0.36,
+            "category": "ui"
+        },
+        {
+            "id": "ui_tap",
+            "resourceName": "sfx_battle_tap",
+            "fileExtension": "m4a",
+            "volume": 0.38,
+            "category": "ui"
         }
     ]
 }

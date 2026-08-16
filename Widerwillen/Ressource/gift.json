@@ -89,8 +89,8 @@
             "imageName": "icon_pixel_chip_blue",
             "rewards": [
                 {
-                    "resource": "event_currency",
-                    "eventID": "crytal_hunt",
+                    "resource": "event_chip",
+                    "chipID": "blue_chips",
                     "imageName": "icon_pixel_chip_blue",
                     "amount": 80
                 },
@@ -109,8 +109,8 @@
             "imageName": "icon_pixel_chip_yellow",
             "rewards": [
                 {
-                    "resource": "event_currency",
-                    "eventID": "coin_hunt",
+                    "resource": "event_chip",
+                    "chipID": "yellow_chips",
                     "imageName": "icon_pixel_chip_yellow",
                     "amount": 120
                 },
