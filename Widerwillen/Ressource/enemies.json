@@ -25,7 +25,7 @@
                     "scale": 0.32,
                     "columns": 4,
                     "rows": 1,
-                    "frameCount": 3,
+                    "frameCount": 4,
                     "fps": 8
                 }
             ],
@@ -38,7 +38,7 @@
                     "scale": 0.30,
                     "columns": 5,
                     "rows": 1,
-                    "frameCount": 3,
+                    "frameCount": 5,
                     "fps": 8
                 }
             ]
@@ -68,7 +68,7 @@
                     "scale": 0.32,
                     "columns": 4,
                     "rows": 1,
-                    "frameCount": 2,
+                    "frameCount": 4,
                     "fps": 8
                 }
             ],
@@ -81,7 +81,7 @@
                     "scale": 0.34,
                     "columns": 4,
                     "rows": 1,
-                    "frameCount": 3,
+                    "frameCount": 4,
                     "fps": 8
                 }
             ]

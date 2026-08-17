@@ -705,16 +705,12 @@ struct BattleSceneView: View {
             activateSkill(skill)
         } label: {
             ZStack {
-                RemoteImage(name: skill.imageName, contentMode: .fill)
-                    .frame(width: 54, height: 54)
-                    .clipShape(Circle())
-                    .opacity(isCoolingDown ? 0.36 : 0.72)
-
+                // Fester Hintergrund für das Pixel-Icon
                 Circle()
                     .fill(
                         isActive
-                            ? .cyan.opacity(0.22)
-                            : .black.opacity(0.36)
+                            ? Color.cyan.opacity(0.30)
+                            : Color.white.opacity(0.18)
                     )
 
                 RemoteImage(name: skill.imageName)
@@ -722,7 +718,7 @@ struct BattleSceneView: View {
 
                 if isCoolingDown {
                     Circle()
-                        .fill(.black.opacity(0.62))
+                        .fill(.black.opacity(0.65))
 
                     Image(systemName: "timer")
                         .font(.system(size: 18, weight: .heavy))
@@ -737,13 +733,18 @@ struct BattleSceneView: View {
                         lineWidth: isActive ? 3 : 2
                     )
             }
-            .shadow(color: .black.opacity(0.85), radius: 4, x: 0, y: 2)
+            .shadow(
+                color: .black.opacity(0.85),
+                radius: 4,
+                x: 0,
+                y: 2
+            )
         }
         .buttonStyle(.plain)
         .disabled(isActive || isCoolingDown)
         .opacity(isCoolingDown ? 0.68 : 1)
     }
-
+    
     private struct BattlePopup: Identifiable {
         let id = UUID()
         let text: String
