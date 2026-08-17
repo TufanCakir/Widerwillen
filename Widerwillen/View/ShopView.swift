@@ -84,7 +84,8 @@ struct ShopView: View {
             }
         }
         .task {
-            if !activeCategories.contains(where: { $0.id == selectedCategory }) {
+            if !activeCategories.contains(where: { $0.id == selectedCategory })
+            {
                 selectedCategory = defaultCategoryID
             }
             await store.loadProducts(productIDs: allProductIDs)

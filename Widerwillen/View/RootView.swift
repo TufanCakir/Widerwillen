@@ -294,7 +294,7 @@ struct RootView: View {
                 progress: progress,
                 playSoundEffect: musicPlayer.playSoundEffect
             )
-                .ignoresSafeArea(edges: .bottom)
+            .ignoresSafeArea(edges: .bottom)
         }
     }
 

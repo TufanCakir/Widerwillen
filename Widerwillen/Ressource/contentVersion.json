@@ -1,5 +1,5 @@
 {
-    "contentVersion": 98,
+    "contentVersion": 99,
     "json": [
         {
             "name": "arena",
@@ -171,6 +171,11 @@
             "version": 3
         },
         {
+            "name": "icon_slush",
+            "path": "assets/icon_slush.png",
+            "version": 1
+        },
+        {
             "name": "icon_pixel_box",
             "path": "assets/icon_pixel_box.png",
             "version": 1
@@ -313,6 +318,11 @@
         {
             "name": "sprite_slenderize",
             "path": "assets/sprite_slenderize.png",
+            "version": 3
+        },
+        {
+            "name": "sprite_slush",
+            "path": "assets/sprite_slush.png",
             "version": 3
         },
         {

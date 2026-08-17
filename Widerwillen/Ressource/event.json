@@ -9,7 +9,7 @@
             "bannerImageName": "icon_pixel_chip_blue",
             "cardBackgroundImageName": "bg_blue",
             "battleBackgroundImageName": "bg_white",
-             "battleGroundImageName": "bg_blue",
+            "battleGroundImageName": "bg_blue",
             "chipID": "blue_chips",
             "victory": {
                 "title": "Chips Secured",
@@ -36,7 +36,7 @@
             "bannerImageName": "icon_pixel_chip_yellow",
             "cardBackgroundImageName": "bg_white",
             "battleBackgroundImageName": "bg_white",
-             "battleGroundImageName": "bg_yellow",
+            "battleGroundImageName": "bg_yellow",
             "chipID": "yellow_chips",
             "victory": {
                 "title": "Chips Secured",
@@ -63,7 +63,7 @@
             "bannerImageName": "icon_pixel_crystal",
             "cardBackgroundImageName": "bg_blue",
             "battleBackgroundImageName": "bg_white",
-             "battleGroundImageName": "bg_bright_blue",
+            "battleGroundImageName": "bg_bright_blue",
             "chipID": "blue_chips",
             "victory": {
                 "title": "Victory",
@@ -90,7 +90,7 @@
             "bannerImageName": "icon_pixel_coin",
             "cardBackgroundImageName": "bg_white",
             "battleBackgroundImageName": "bg_white",
-             "battleGroundImageName": "bg_yellow",
+            "battleGroundImageName": "bg_yellow",
             "chipID": "yellow_chips",
             "victory": {
                 "title": "Victory",
@@ -117,7 +117,7 @@
             "bannerImageName": "icon_pixel_chip_green",
             "cardBackgroundImageName": "bg_grey",
             "battleBackgroundImageName": "bg_white",
-             "battleGroundImageName": "bg_green",
+            "battleGroundImageName": "bg_green",
             "chipID": "green_chips",
             "victory": {
                 "title": "Chips Secured",
@@ -144,7 +144,7 @@
             "bannerImageName": "icon_pixel_chip_red",
             "cardBackgroundImageName": "bg_viollet",
             "battleBackgroundImageName": "bg_white",
-             "battleGroundImageName": "bg_red",
+            "battleGroundImageName": "bg_red",
             "chipID": "red_chips",
             "victory": {
                 "title": "Chips Secured",
@@ -171,7 +171,7 @@
             "bannerImageName": "icon_pixel_relic",
             "cardBackgroundImageName": "bg_grey",
             "battleBackgroundImageName": "bg_white",
-             "battleGroundImageName": "bg_red",
+            "battleGroundImageName": "bg_red",
             "chipID": "green_chips",
             "victory": {
                 "title": "Victory",
@@ -198,7 +198,7 @@
             "bannerImageName": "icon_pixel_crystal",
             "cardBackgroundImageName": "bg_blue",
             "battleBackgroundImageName": "bg_white",
-             "battleGroundImageName": "bg_bright_blue",
+            "battleGroundImageName": "bg_bright_blue",
             "chipID": "blue_chips",
             "victory": {
                 "title": "Victory",
@@ -225,7 +225,7 @@
             "bannerImageName": "icon_pixel_coin",
             "cardBackgroundImageName": "bg_white",
             "battleBackgroundImageName": "bg_white",
-             "battleGroundImageName": "bg_yellow",
+            "battleGroundImageName": "bg_yellow",
             "chipID": "yellow_chips",
             "victory": {
                 "title": "Victory",
@@ -252,7 +252,7 @@
             "bannerImageName": "icon_pixel_chip_green",
             "cardBackgroundImageName": "bg_summer",
             "battleBackgroundImageName": "bg_white",
-             "battleGroundImageName": "bg_green",
+            "battleGroundImageName": "bg_green",
             "chipID": "green_chips",
             "victory": {
                 "title": "Victory",
@@ -279,7 +279,7 @@
             "bannerImageName": "icon_cookieman",
             "cardBackgroundImageName": "bg_viollet",
             "battleBackgroundImageName": "bg_white",
-             "battleGroundImageName": "bg_viollet",
+            "battleGroundImageName": "bg_viollet",
             "chipID": "red_chips",
             "victory": {
                 "title": "Victory",

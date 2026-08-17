@@ -51,7 +51,7 @@ struct GameEvent: Decodable, Identifiable {
     let hp: Int
     let rewards: EventRewards
     var currencyStorageID: String { chipID ?? id }
-  
+
     private enum CodingKeys: String, CodingKey {
         case id
         case title
@@ -134,10 +134,11 @@ struct GameEvent: Decodable, Identifiable {
             String.self,
             forKey: .currencyNameKey
         )
-        currencyImageName = try container.decodeIfPresent(
-            String.self,
-            forKey: .currencyImageName
-        ) ?? "icon_pixel_chip_blue"
+        currencyImageName =
+            try container.decodeIfPresent(
+                String.self,
+                forKey: .currencyImageName
+            ) ?? "icon_pixel_chip_blue"
         cardBackgroundImageName = try container.decodeIfPresent(
             String.self,
             forKey: .cardBackgroundImageName
@@ -220,7 +221,10 @@ struct EventVictoryPresentation: Decodable {
             try container.decodeIfPresent(String.self, forKey: .title)
             ?? "Victory"
         titleKey = try container.decodeIfPresent(String.self, forKey: .titleKey)
-        imageName = try container.decodeIfPresent(String.self, forKey: .imageName)
+        imageName = try container.decodeIfPresent(
+            String.self,
+            forKey: .imageName
+        )
         backgroundImageName =
             try container.decodeIfPresent(
                 String.self,

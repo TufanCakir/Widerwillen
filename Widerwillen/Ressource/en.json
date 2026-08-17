@@ -12,10 +12,8 @@
         "settings.layer_animation": "Layer Animation",
         "settings.tutorials": "Tutorials",
         "settings.tutorials.replay": "Show Tutorials Again",
-        "settings.tutorials.replay_subtitle":
-            "Reset viewed tutorial messages",
-        "settings.tutorials.replay_done":
-            "Tutorials will appear again",
+        "settings.tutorials.replay_subtitle": "Reset viewed tutorial messages",
+        "settings.tutorials.replay_done": "Tutorials will appear again",
         "settings.on": "On",
         "settings.off": "Off",
         "settings.info": "Info",

@@ -14,8 +14,7 @@
         "settings.tutorials.replay": "Tutorials nochmal ansehen",
         "settings.tutorials.replay_subtitle":
             "Gesehene Tutorial-Hinweise zurücksetzen",
-        "settings.tutorials.replay_done":
-            "Tutorials werden wieder angezeigt",
+        "settings.tutorials.replay_done": "Tutorials werden wieder angezeigt",
         "settings.on": "Ein",
         "settings.off": "Aus",
         "settings.info": "Info",

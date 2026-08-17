@@ -18,12 +18,12 @@
                     "fps": 8
                 },
                 {
-                    "id": "moon_blunt",
-                    "name": "Blunt",
-                    "imageName": "sprite_blunt",
-                    "animationID": "sprite_blunt",
+                    "id": "moon_slush",
+                    "name": "Slush",
+                    "imageName": "sprite_slush",
+                    "animationID": "sprite_slush",
                     "scale": 0.32,
-                    "columns": 3,
+                    "columns": 4,
                     "rows": 1,
                     "frameCount": 3,
                     "fps": 8

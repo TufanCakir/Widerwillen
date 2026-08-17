@@ -28,23 +28,23 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
 
         shouldPlay =
             defaults.object(forKey: "isMusicEnabled") == nil
-                ? true
-                : defaults.bool(forKey: "isMusicEnabled")
+            ? true
+            : defaults.bool(forKey: "isMusicEnabled")
 
         shouldPlaySoundEffects =
             defaults.object(forKey: "isSoundEffectsEnabled") == nil
-                ? true
-                : defaults.bool(forKey: "isSoundEffectsEnabled")
+            ? true
+            : defaults.bool(forKey: "isSoundEffectsEnabled")
 
         musicVolume =
             defaults.object(forKey: "musicVolume") == nil
-                ? 0.8
-                : Float(defaults.double(forKey: "musicVolume"))
+            ? 0.8
+            : Float(defaults.double(forKey: "musicVolume"))
 
         soundEffectsVolume =
             defaults.object(forKey: "soundEffectsVolume") == nil
-                ? 0.9
-                : Float(defaults.double(forKey: "soundEffectsVolume"))
+            ? 0.9
+            : Float(defaults.double(forKey: "soundEffectsVolume"))
 
         super.init()
     }
@@ -86,7 +86,9 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
 
     func playSoundEffect(_ id: String) {
         guard shouldPlaySoundEffects else { return }
-        guard let effect = configuration.soundEffects.first(where: { $0.id == id })
+        guard
+            let effect = configuration.soundEffects.first(where: { $0.id == id }
+            )
         else {
             print("[MusicPlayer] missing sound effect config: \(id)")
             return
@@ -110,7 +112,9 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
     }
 
     private func playCurrentTrack(attempts: Int = 0) {
-        let isMusicEnabled = UserDefaults.standard.bool(forKey: "isMusicEnabled")
+        let isMusicEnabled = UserDefaults.standard.bool(
+            forKey: "isMusicEnabled"
+        )
 
         guard shouldPlay, isMusicEnabled, !configuration.tracks.isEmpty else {
             player?.stop()
@@ -147,7 +151,9 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
 
             print("[MusicPlayer] playing \(track.resourceName): \(url.path)")
         } catch {
-            print("[MusicPlayer] failed to play \(track.resourceName): \(error)")
+            print(
+                "[MusicPlayer] failed to play \(track.resourceName): \(error)"
+            )
             advanceTrackIndex()
             playCurrentTrack(attempts: attempts + 1)
         }
@@ -190,10 +196,12 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
             return nil
         }
 
-        print("[MusicPlayer] effect cache hit \(effect.resourceName): \(url.path)")
+        print(
+            "[MusicPlayer] effect cache hit \(effect.resourceName): \(url.path)"
+        )
         return url
     }
-    
+
     func stopAllSoundEffects() {
         effectPlayers.values.forEach { $0.stop() }
         effectPlayers.removeAll()

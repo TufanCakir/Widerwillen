@@ -95,7 +95,11 @@ struct SpriteListView: View {
                 .padding(.horizontal, 16)
             }
             .onAppear {
-                scrollToCategory(selectedCategory, proxy: proxy, animated: false)
+                scrollToCategory(
+                    selectedCategory,
+                    proxy: proxy,
+                    animated: false
+                )
             }
             .onChange(of: selectedCategory) { _, category in
                 playSoundEffect("ui_page")

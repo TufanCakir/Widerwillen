@@ -103,7 +103,8 @@ struct MenuView: View {
                 playSoundEffect("ui_navigation")
                 openMode(.settings)
             }
-            shortcutButton(title: "Skills", assetImage: "icon_pixel_skill_book") {
+            shortcutButton(title: "Skills", assetImage: "icon_pixel_skill_book")
+            {
                 playSoundEffect("ui_navigation")
                 openMode(.skills)
             }

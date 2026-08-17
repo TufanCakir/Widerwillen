@@ -170,7 +170,7 @@ struct EventView: View {
                 LinearGradient(
                     colors: [
                         .black.opacity(0.12),
-                        .black.opacity(0.64)
+                        .black.opacity(0.64),
                     ],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
@@ -492,7 +492,7 @@ private struct EventBattleView: View {
                     name: event.victory.backgroundImageName,
                     contentMode: .fill
                 )
-                    .opacity(0.9)
+                .opacity(0.9)
             }
             .overlay {
                 RoundedRectangle(cornerRadius: 18)

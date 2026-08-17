@@ -44,7 +44,9 @@ struct Footer: View {
         HStack(spacing: 0) {
             ForEach(AppTab.allCases, id: \.self) { tab in
                 Button {
-                    playSoundEffect(selectedTab == tab ? "ui_tap" : "ui_navigation")
+                    playSoundEffect(
+                        selectedTab == tab ? "ui_tap" : "ui_navigation"
+                    )
                     selectedTab = tab
                 } label: {
                     VStack(spacing: 5) {

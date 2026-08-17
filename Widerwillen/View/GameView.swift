@@ -12,7 +12,7 @@ struct GameView: View {
     let playSoundEffect: (String) -> Void
     let onExit: (() -> Void)?
     let stopSoundEffects: () -> Void
-    
+
     @State private var isPrestigeTransitionVisible = false
     @State private var isPrestigeTransitionRunning = false
 
@@ -46,7 +46,9 @@ struct GameView: View {
                         return BattleAttackResult(damageDealt: 0)
                     }
 
-                    let result = progress.attackStage(damage: progress.tapDamage)
+                    let result = progress.attackStage(
+                        damage: progress.tapDamage
+                    )
                     playSoundEffect(
                         result.coinsAwarded > 0 ? "stage_clear" : "battle_tap"
                     )

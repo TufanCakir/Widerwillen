@@ -26,7 +26,7 @@ struct BattleSceneView: View {
     let onActiveSkillAttack: (BattleActiveSkill) -> BattleAttackResult
     let onPrestige: (() -> Void)?
     let onExit: (() -> Void)?
-  
+
     private let arena: ArenaConfiguration
     private let background: BackgroundConfiguration
     private let enemies: EnemyConfiguration
@@ -137,28 +137,23 @@ struct BattleSceneView: View {
                         alignment: .top
                     )
 
-                if let onExit {
-                    exitButton(onExit: onExit)
-                        .padding(.top, 142)
-                        .padding(.trailing, 18)
-                        .frame(
-                            maxWidth: .infinity,
-                            maxHeight: .infinity,
-                            alignment: .topTrailing
-                        )
-                }
+                VStack(spacing: 10) {
+                    if let onExit {
+                        exitButton(onExit: onExit)
+                    }
 
-                if let onPrestige, progress.canPrestige {
-                    prestigeButton(onPrestige: onPrestige)
-                        .padding(.top, onExit == nil ? 142 : 198)
-                        .padding(.trailing, 18)
-                        .frame(
-                            maxWidth: .infinity,
-                            maxHeight: .infinity,
-                            alignment: .topTrailing
-                        )
-                        .zIndex(12)
+                    if let onPrestige, progress.canPrestige {
+                        prestigeButton(onPrestige: onPrestige)
+                    }
                 }
+                .padding(.top, 250)
+                .padding(.trailing, 18)
+                .frame(
+                    maxWidth: .infinity,
+                    maxHeight: .infinity,
+                    alignment: .topTrailing
+                )
+                .zIndex(12)
 
                 if !activeSkills.isEmpty {
                     activeSkillBar
@@ -411,26 +406,32 @@ struct BattleSceneView: View {
         let enemySize =
             min(viewSize.width, viewSize.height)
             * CGFloat(currentEnemy.scale)
-        let baselineY = battleBaselineY(viewSize: viewSize, groundHeight: groundHeight)
+        let baselineY = battleBaselineY(
+            viewSize: viewSize,
+            groundHeight: groundHeight
+        )
 
-            return VStack(spacing: 4) {
-                Text(isBossStage ? "Boss · \(currentEnemy.name)" : currentEnemy.name)
-                    .font(.system(size: 13, weight: .heavy))
-                    .foregroundStyle(isBossStage ? .red : .white)
-                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+        return VStack(spacing: 4) {
+            Text(
+                isBossStage ? "Boss · \(currentEnemy.name)" : currentEnemy.name
+            )
+            .font(.system(size: 13, weight: .heavy))
+            .foregroundStyle(isBossStage ? .red : .white)
+            .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
 
-                SpriteSheetImageView(
-                    animationID: currentEnemy.animationID ?? currentEnemy.imageName,
-                    columns: currentEnemy.columns,
-                    rows: currentEnemy.rows,
-                    frameCount: currentEnemy.frameCount,
-                    fps: currentEnemy.fps
-                )
-                .frame(
-                    width: enemySize,
-                    height: enemySize
-                )
-                .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 5)
+            SpriteSheetImageView(
+                animationID: currentEnemy.animationID ?? currentEnemy.imageName,
+                columns: currentEnemy.columns,
+                rows: currentEnemy.rows,
+                frameCount: currentEnemy.frameCount,
+                fps: currentEnemy.fps
+            )
+            .frame(
+                width: enemySize,
+                height: enemySize
+            )
+            .scaleEffect(x: -1, y: 1)
+            .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 5)
         }
         .position(
             x: viewSize.width * 0.66,
@@ -577,7 +578,7 @@ struct BattleSceneView: View {
         )
         .allowsHitTesting(false)
     }
-    
+
     @ViewBuilder
     private func backgroundLayer(
         look: GameBackgroundLook,
@@ -660,7 +661,7 @@ struct BattleSceneView: View {
         Button {
             onPrestige()
         } label: {
-            VStack(spacing: 4) {
+            VStack(spacing: 0) {
                 RemoteImage(name: "icon_pixel_prestige")
                     .frame(width: 28, height: 28)
 
@@ -672,12 +673,6 @@ struct BattleSceneView: View {
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
             }
             .frame(width: 62, height: 58)
-            .background(.black.opacity(0.58))
-            .overlay {
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(.white.opacity(0.72), lineWidth: 1)
-            }
-            .clipShape(RoundedRectangle(cornerRadius: 8))
             .shadow(color: .black.opacity(0.9), radius: 4, x: 0, y: 2)
         }
         .buttonStyle(.plain)

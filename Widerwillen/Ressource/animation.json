@@ -78,6 +78,19 @@
         "scale": 0.14
     },
     {
+        "id": "sprite_slush",
+        "imageName": "sprite_slush",
+        "columns": 4,
+        "rows": 1,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 3,
+        "fps": 8,
+        "gridColumn": 3,
+        "gridRow": 4,
+        "scale": 0.14
+    },
+    {
         "id": "sprite_nimbi_night",
         "imageName": "sprite_nimbi_night",
         "columns": 3,

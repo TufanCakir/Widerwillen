@@ -47,7 +47,10 @@ struct CategoryBar: View {
                                 }
                                 .overlay {
                                     Capsule()
-                                        .stroke(.white.opacity(0.7), lineWidth: 1)
+                                        .stroke(
+                                            .white.opacity(0.7),
+                                            lineWidth: 1
+                                        )
                                 }
                                 .shadow(
                                     color: .black.opacity(0.9),
@@ -63,7 +66,11 @@ struct CategoryBar: View {
                 .padding(.horizontal, 16)
             }
             .onAppear {
-                scrollToCategory(selectedCategory, proxy: proxy, animated: false)
+                scrollToCategory(
+                    selectedCategory,
+                    proxy: proxy,
+                    animated: false
+                )
             }
             .onChange(of: selectedCategory) { _, newCategory in
                 playSoundEffect("ui_page")
