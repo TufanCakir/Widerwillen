@@ -83,8 +83,9 @@ final class SpriteSheetAnimation {
             resize: false,
             restore: false
         )
-        let returnToIdle = SKAction.run { [weak node, firstTexture] in
-            node?.texture = firstTexture
+        let returnToIdle = SKAction.run { [weak self, weak node] in
+            guard let node else { return }
+            self?.start(on: node)
         }
 
         node.run(

@@ -7,12 +7,17 @@
     "looks": [
         {
             "name": "Area 1",
-            "groundImageName": "bg_blue",
+            "groundImageName": "arena_pixel_green",
             "groundDarkening": 0.1
         },
         {
             "name": "Area 2",
-            "groundImageName": "bg_blue",
+            "groundImageName": "arena_pixel_yellow",
+            "groundDarkening": 0.1
+        },
+        {
+            "name": "Area 3",
+            "groundImageName": "arena_pixel_red",
             "groundDarkening": 0.1
         }
     ]

@@ -17,6 +17,7 @@ struct SpriteSheetImageView: View {
     var fps: Double?
 
     @State private var frameIndex = 0
+    @State private var frames: [UIImage] = []
 
     private let animations: [SpriteSheet]
 
@@ -39,7 +40,7 @@ struct SpriteSheetImageView: View {
 
     var body: some View {
         Group {
-            if let image = frameImage {
+            if let image = currentFrameImage {
                 renderedImage(Image(uiImage: image))
             } else if let config {
                 RemoteImage(name: config.imageName, contentMode: contentMode)
@@ -47,8 +48,8 @@ struct SpriteSheetImageView: View {
                 RemoteImage(name: animationID, contentMode: contentMode)
             }
         }
-        .task(id: animationID) {
-            await runAnimationLoop()
+        .task(id: animationCacheKey) {
+            await prepareAndRunAnimation()
         }
     }
 
@@ -84,25 +85,35 @@ struct SpriteSheetImageView: View {
         max(config?.margin ?? 0, 0)
     }
 
-    private var frameImage: UIImage? {
-        guard
-            let url = RemoteContentCache.cachedAssetURL(
-                named: resolvedImageName
-            ),
-            let sheet = UIImage(contentsOfFile: url.path)
-        else {
-            return nil
-        }
+    private var animationCacheKey: String {
+        [
+            resolvedImageName,
+            "\(resolvedColumns)",
+            "\(resolvedRows)",
+            "\(resolvedSpacing)",
+            "\(resolvedMargin)",
+            "\(resolvedFrameCount)"
+        ].joined(separator: "|")
+    }
 
-        return Self.frameImage(
-            from: sheet,
+    private var currentFrameImage: UIImage? {
+        guard !frames.isEmpty else { return nil }
+        return frames[min(max(frameIndex, 0), frames.count - 1)]
+    }
+
+    @MainActor
+    private func prepareAndRunAnimation() async {
+        frameIndex = 0
+        frames = Self.cachedFrames(
+            imageName: resolvedImageName,
             columns: resolvedColumns,
             rows: resolvedRows,
             spacing: resolvedSpacing,
             margin: resolvedMargin,
-            frameCount: resolvedFrameCount,
-            frameIndex: frameIndex
+            frameCount: resolvedFrameCount
         )
+
+        await runAnimationLoop(frameCount: frames.count, fps: resolvedFPS)
     }
 
     @ViewBuilder
@@ -123,20 +134,69 @@ struct SpriteSheetImageView: View {
         }
     }
 
-    private func runAnimationLoop() async {
-        frameIndex = 0
-
-        guard resolvedFrameCount > 1 else { return }
+    @MainActor
+    private func runAnimationLoop(frameCount: Int, fps: Double) async {
+        guard frameCount > 1 else { return }
 
         while !Task.isCancelled {
-            let delay = UInt64(1_000_000_000 / resolvedFPS)
+            let delay = UInt64(1_000_000_000 / max(fps, 1))
             try? await Task.sleep(nanoseconds: delay)
             guard !Task.isCancelled else { return }
 
-            await MainActor.run {
-                frameIndex = (frameIndex + 1) % resolvedFrameCount
-            }
+            frameIndex = (frameIndex + 1) % frameCount
         }
+    }
+
+    private static let frameCache = NSCache<NSString, SpriteFrameCacheEntry>()
+
+    private static func cachedFrames(
+        imageName: String,
+        columns: Int,
+        rows: Int,
+        spacing: Int,
+        margin: Int,
+        frameCount: Int
+    ) -> [UIImage] {
+        let safeColumns = max(columns, 1)
+        let safeRows = max(rows, 1)
+        let safeFrameCount = max(min(frameCount, safeColumns * safeRows), 1)
+        let cacheKey = [
+            imageName,
+            "\(safeColumns)",
+            "\(safeRows)",
+            "\(spacing)",
+            "\(margin)",
+            "\(safeFrameCount)"
+        ].joined(separator: "|") as NSString
+
+        if let cachedEntry = frameCache.object(forKey: cacheKey) {
+            return cachedEntry.frames
+        }
+
+        guard
+            let url = RemoteContentCache.cachedAssetURL(named: imageName),
+            let sheet = UIImage(contentsOfFile: url.path)
+        else {
+            return []
+        }
+
+        let generatedFrames = (0..<safeFrameCount).compactMap { index in
+            frameImage(
+                from: sheet,
+                columns: safeColumns,
+                rows: safeRows,
+                spacing: max(spacing, 0),
+                margin: max(margin, 0),
+                frameCount: safeFrameCount,
+                frameIndex: index
+            )
+        }
+
+        frameCache.setObject(
+            SpriteFrameCacheEntry(frames: generatedFrames),
+            forKey: cacheKey
+        )
+        return generatedFrames
     }
 
     private static func frameImage(
@@ -189,5 +249,13 @@ struct SpriteSheetImageView: View {
             scale: sheet.scale,
             orientation: sheet.imageOrientation
         )
+    }
+}
+
+private final class SpriteFrameCacheEntry {
+    let frames: [UIImage]
+
+    init(frames: [UIImage]) {
+        self.frames = frames
     }
 }

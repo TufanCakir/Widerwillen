@@ -16,6 +16,8 @@ struct RemoteImage: View {
 
     @AppStorage("remoteContentVersion") private var remoteContentVersion = 0
 
+    private static let imageCache = NSCache<NSString, UIImage>()
+
     var body: some View {
         Group {
             if let image = cachedImage {
@@ -25,20 +27,22 @@ struct RemoteImage: View {
             }
         }
         .id("\(name)-\(remoteContentVersion)")
-        .onAppear {
-            logCacheState()
-        }
-        .onChange(of: remoteContentVersion) {
-            logCacheState()
-        }
     }
 
     private var cachedImage: UIImage? {
+        let cacheKey = "\(name)-\(remoteContentVersion)" as NSString
+        if let cachedImage = Self.imageCache.object(forKey: cacheKey) {
+            return cachedImage
+        }
+
         guard let url = RemoteContentCache.cachedAssetURL(named: name) else {
             return nil
         }
 
-        return UIImage(contentsOfFile: url.path)
+        guard let image = UIImage(contentsOfFile: url.path) else { return nil }
+
+        Self.imageCache.setObject(image, forKey: cacheKey)
+        return image
     }
 
     @ViewBuilder
@@ -115,13 +119,4 @@ struct RemoteImage: View {
         }
     }
 
-    private func logCacheState() {
-        if let url = RemoteContentCache.cachedAssetURL(named: name) {
-            print("[RemoteImage] cache hit \(name): \(url.path)")
-        } else {
-            print(
-                "[RemoteImage] cache miss \(name). Showing SF Symbol fallback: \(systemImageName)"
-            )
-        }
-    }
 }

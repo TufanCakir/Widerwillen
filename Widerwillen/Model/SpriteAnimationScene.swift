@@ -177,11 +177,7 @@ final class SpriteAnimationScene: SKScene {
         animation: SpriteSheetAnimation,
         node: SKSpriteNode
     ) {
-        if id == heroAnimationID {
-            animation.showFirstFrame(on: node)
-        } else {
-            animation.start(on: node)
-        }
+        animation.start(on: node)
     }
 
     private func defaultXPosition(for index: Int, count: Int) -> CGFloat {

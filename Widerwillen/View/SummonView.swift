@@ -267,7 +267,7 @@ struct SummonView: View {
                                 x: 0,
                                 y: 0
                             )
-                        Text("\(Int(entry.weight))%")
+                        Text(percentageText(for: entry.weight))
                             .frame(width: 42, alignment: .trailing)
                             .shadow(
                                 color: .black.opacity(0.9),
@@ -391,6 +391,14 @@ struct SummonView: View {
         case .relic:
             progress.artifactShards
         }
+    }
+
+    private func percentageText(for weight: Double) -> String {
+        if weight.rounded() == weight {
+            return "\(Int(weight))%"
+        }
+
+        return String(format: "%.1f%%", weight)
     }
 }
 

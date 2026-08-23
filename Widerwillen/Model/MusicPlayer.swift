@@ -53,14 +53,11 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
         UserDefaults.standard.set(isEnabled, forKey: "isMusicEnabled")
         shouldPlay = isEnabled
 
-        print("[MusicPlayer] music enabled: \(isEnabled)")
-
         if isEnabled {
             playCurrentTrack()
         } else {
             player?.stop()
             player = nil
-            print("[MusicPlayer] music stopped")
         }
     }
 
@@ -71,7 +68,6 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
 
     func setSoundEffectsEnabled(_ isEnabled: Bool) {
         shouldPlaySoundEffects = isEnabled
-        print("[MusicPlayer] sound effects enabled: \(isEnabled)")
 
         if !isEnabled {
             effectPlayers.values.forEach { $0.stop() }
@@ -105,7 +101,6 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
             effectPlayer.prepareToPlay()
             effectPlayers[effectID] = effectPlayer
             effectPlayer.play()
-            print("[MusicPlayer] playing effect \(effect.id): \(url.path)")
         } catch {
             print("[MusicPlayer] failed effect \(effect.id): \(error)")
         }
@@ -119,10 +114,6 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
         guard shouldPlay, isMusicEnabled, !configuration.tracks.isEmpty else {
             player?.stop()
             player = nil
-
-            print(
-                "[MusicPlayer] play blocked. shouldPlay: \(shouldPlay), setting: \(isMusicEnabled)"
-            )
             return
         }
 
@@ -148,8 +139,6 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
             player?.volume = musicVolume * min(max(track.volume ?? 1, 0), 1)
             player?.prepareToPlay()
             player?.play()
-
-            print("[MusicPlayer] playing \(track.resourceName): \(url.path)")
         } catch {
             print(
                 "[MusicPlayer] failed to play \(track.resourceName): \(error)"
@@ -177,11 +166,9 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
                 fileExtension: track.fileExtension
             )
         else {
-            print("[MusicPlayer] cache miss \(track.resourceName)")
             return nil
         }
 
-        print("[MusicPlayer] cache hit \(track.resourceName): \(url.path)")
         return url
     }
 
@@ -192,20 +179,15 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
                 fileExtension: effect.fileExtension
             )
         else {
-            print("[MusicPlayer] effect cache miss \(effect.resourceName)")
             return nil
         }
 
-        print(
-            "[MusicPlayer] effect cache hit \(effect.resourceName): \(url.path)"
-        )
         return url
     }
 
     func stopAllSoundEffects() {
         effectPlayers.values.forEach { $0.stop() }
         effectPlayers.removeAll()
-        print("[MusicPlayer] all sound effects stopped")
     }
 
     func audioPlayerDidFinishPlaying(

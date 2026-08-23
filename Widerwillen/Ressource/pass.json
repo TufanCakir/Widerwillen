@@ -8,7 +8,7 @@
             "purchaseType": "nonConsumable",
             "pointName": "BP",
             "productID": "com.tufancakir.widerwillen.pass.moon_01",
-            "imageName": "icon_pixel_relic",
+            "imageName": "widerwillen_logo",
             "rewards": [
                 {
                     "id": "moon_pass_01_free_001",
@@ -76,6 +76,110 @@
                         {
                             "resource": "crystals",
                             "amount": 15
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_004",
+                    "requiredPoints": 320,
+                    "title": "Skill Book Pack",
+                    "imageName": "icon_pixel_skill_book",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "skill_books",
+                            "amount": 2
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_premium_003",
+                    "requiredPoints": 400,
+                    "title": "Battle Cache",
+                    "imageName": "icon_pixel_big_sword",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 1500
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 5
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_005",
+                    "requiredPoints": 500,
+                    "title": "Blue Chips",
+                    "imageName": "icon_pixel_chip_blue",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "blue_chips",
+                            "imageName": "icon_pixel_chip_blue",
+                            "amount": 25
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_premium_004",
+                    "requiredPoints": 620,
+                    "title": "Dazzle Cache",
+                    "imageName": "icon_dazzle",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 35
+                        },
+                        {
+                            "resource": "relics",
+                            "amount": 8
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_006",
+                    "requiredPoints": 760,
+                    "title": "Green Chips",
+                    "imageName": "icon_pixel_chip_green",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "green_chips",
+                            "imageName": "icon_pixel_chip_green",
+                            "amount": 35
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_premium_005",
+                    "requiredPoints": 900,
+                    "title": "Moon Vault",
+                    "imageName": "icon_molc",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 3500
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 50
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 8
+                        },
+                        {
+                            "resource": "event_chip",
+                            "chipID": "red_chips",
+                            "imageName": "icon_pixel_chip_red",
+                            "amount": 45
                         }
                     ]
                 }

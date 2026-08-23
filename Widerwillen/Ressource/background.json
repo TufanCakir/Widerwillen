@@ -7,7 +7,7 @@
                 "green": 0.015,
                 "blue": 0.04
             },
-            "backgroundImageName": "bg_white",
+            "backgroundImageName": "arena_pixel_green",
             "backgroundDarkening": 0.15
         },
         {
@@ -17,7 +17,17 @@
                 "green": 0.015,
                 "blue": 0.04
             },
-            "backgroundImageName": "bg_white",
+            "backgroundImageName": "arena_pixel_yellow",
+            "backgroundDarkening": 0.15
+        },
+        {
+            "name": "Area 3",
+            "backgroundColor": {
+                "red": 0.005,
+                "green": 0.015,
+                "blue": 0.04
+            },
+            "backgroundImageName": "arena_pixel_red",
             "backgroundDarkening": 0.15
         }
     ]

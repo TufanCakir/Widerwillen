@@ -42,7 +42,7 @@ struct BattleSceneView: View {
     @AppStorage("isLayerAnimationEnabled") private var isLayerAnimationEnabled =
         true
 
-    private let animationFrameInterval = 1.0 / 30.0
+    private let maxBattlePopupCount = 16
 
     init(
         progress: GameProgressStore,
@@ -353,6 +353,9 @@ struct BattleSceneView: View {
             imageName: imageName
         )
         battlePopups.append(popup)
+        if battlePopups.count > maxBattlePopupCount {
+            battlePopups.removeFirst(battlePopups.count - maxBattlePopupCount)
+        }
 
         Task {
             try? await Task.sleep(for: .milliseconds(850))
@@ -705,12 +708,16 @@ struct BattleSceneView: View {
             activateSkill(skill)
         } label: {
             ZStack {
-                // Fester Hintergrund für das Pixel-Icon
+                RemoteImage(name: "bg_white", contentMode: .fill)
+                    .frame(width: 54, height: 54)
+                    .clipShape(Circle())
+                    .opacity(isActive ? 0.95 : 0.78)
+
                 Circle()
                     .fill(
                         isActive
                             ? Color.cyan.opacity(0.30)
-                            : Color.white.opacity(0.18)
+                            : Color.black.opacity(0.12)
                     )
 
                 RemoteImage(name: skill.imageName)

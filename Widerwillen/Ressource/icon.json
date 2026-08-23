@@ -215,6 +215,24 @@
             "title": "Pass",
             "imageName": "icon_pixel_pass",
             "requiredAccountLevel": 46
+        },
+        {
+            "id": "big_sword",
+            "title": "Big Sword",
+            "imageName": "icon_pixel_big_sword",
+            "requiredAccountLevel": 46
+        },
+        {
+            "id": "dazzle",
+            "title": "Dazzle",
+            "imageName": "icon_dazzle",
+            "requiredAccountLevel": 46
+        },
+        {
+            "id": "molc",
+            "title": "Molc",
+            "imageName": "icon_molc",
+            "requiredAccountLevel": 46
         }
     ]
 }

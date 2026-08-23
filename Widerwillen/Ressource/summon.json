@@ -62,6 +62,26 @@
                     "rarity": "legendary",
                     "damageBonus": 18,
                     "weight": 0.5
+                },
+                {
+                    "id": "dazzle_front",
+                    "name": "Dazzle",
+                    "spriteIndex": 21,
+                    "companionID": "dazzle",
+                    "imageName": "icon_dazzle",
+                    "rarity": "legendary",
+                    "damageBonus": 18,
+                    "weight": 0.5
+                },
+                {
+                    "id": "molc_front",
+                    "name": "Molc",
+                    "spriteIndex": 21,
+                    "companionID": "molc",
+                    "imageName": "icon_molc",
+                    "rarity": "legendary",
+                    "damageBonus": 18,
+                    "weight": 0.5
                 }
             ]
         },
@@ -140,9 +160,9 @@
                     "weight": 30
                 },
                 {
-                    "id": "slayken_edge",
-                    "name": "Slayken Edge",
-                    "imageName": "icon_pixel_sword",
+                    "id": "fun_edge",
+                    "name": "Fun Edge",
+                    "imageName": "icon_pixel_big_sword",
                     "rarity": "epic",
                     "damageBonus": 14,
                     "weight": 10

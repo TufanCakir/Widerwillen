@@ -1,5 +1,5 @@
 {
-    "contentVersion": 101,
+    "contentVersion": 104,
     "json": [
         {
             "name": "arena",
@@ -146,6 +146,21 @@
             "version": 1
         },
         {
+            "name": "arena_pixel_green",
+            "path": "assets/arena_pixel_green.png",
+            "version": 1
+        },
+        {
+            "name": "arena_pixel_yellow",
+            "path": "assets/arena_pixel_yellow.png",
+            "version": 1
+        },
+        {
+            "name": "arena_pixel_red",
+            "path": "assets/arena_pixel_red.png",
+            "version": 1
+        },
+        {
             "name": "icon_cookieman",
             "path": "assets/icon_cookieman.png",
             "version": 1
@@ -281,6 +296,11 @@
             "version": 1
         },
         {
+            "name": "icon_pixel_big_sword",
+            "path": "assets/icon_pixel_big_sword.png",
+            "version": 1
+        },
+        {
             "name": "icon_pixel_trade",
             "path": "assets/icon_pixel_trade.png",
             "version": 1
@@ -294,6 +314,16 @@
             "name": "icon_blunt",
             "path": "assets/icon_blunt.png",
             "version": 2
+        },
+        {
+            "name": "icon_dazzle",
+            "path": "assets/icon_dazzle.png",
+            "version": 1
+        },
+        {
+            "name": "icon_molc",
+            "path": "assets/icon_molc.png",
+            "version": 1
         },
         {
             "name": "sprite_cookieman",
@@ -324,6 +354,16 @@
             "name": "sprite_slush",
             "path": "assets/sprite_slush.png",
             "version": 3
+        },
+        {
+            "name": "sprite_dazzle",
+            "path": "assets/sprite_dazzle.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_molc",
+            "path": "assets/sprite_molc.png",
+            "version": 1
         },
         {
             "name": "sprite_shadow_clone",

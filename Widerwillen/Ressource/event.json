@@ -8,8 +8,8 @@
             "categoryKey": "event.category.recommended",
             "bannerImageName": "icon_pixel_chip_blue",
             "cardBackgroundImageName": "bg_blue",
-            "battleBackgroundImageName": "bg_white",
-            "battleGroundImageName": "bg_blue",
+            "battleBackgroundImageName": "arena_pixel_green",
+            "battleGroundImageName": "arena_pixel_green",
             "chipID": "blue_chips",
             "victory": {
                 "title": "Chips Secured",
@@ -34,8 +34,8 @@
             "category": "Recommended",
             "categoryKey": "event.category.recommended",
             "bannerImageName": "icon_pixel_chip_yellow",
-            "cardBackgroundImageName": "bg_white",
-            "battleBackgroundImageName": "bg_white",
+            "cardBackgroundImageName": "arena_pixel_yellow",
+            "battleBackgroundImageName": "arena_pixel_yellow",
             "battleGroundImageName": "bg_yellow",
             "chipID": "yellow_chips",
             "victory": {
@@ -143,8 +143,8 @@
             "categoryKey": "event.category.daily_raid",
             "bannerImageName": "icon_pixel_chip_red",
             "cardBackgroundImageName": "bg_viollet",
-            "battleBackgroundImageName": "bg_white",
-            "battleGroundImageName": "bg_red",
+            "battleBackgroundImageName": "arena_pixel_red",
+            "battleGroundImageName": "arena_pixel_red",
             "chipID": "red_chips",
             "victory": {
                 "title": "Chips Secured",

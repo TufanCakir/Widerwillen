@@ -4,7 +4,7 @@
             "id": "moon_gate",
             "name": "Moon Gate",
             "startsAtStage": 1,
-            "transitionImageName": "bg_app",
+            "transitionImageName": "arena_pixel_green",
             "enemies": [
                 {
                     "id": "moon_cookieman",
@@ -27,6 +27,17 @@
                     "rows": 1,
                     "frameCount": 4,
                     "fps": 8
+                },
+                {
+                    "id": "moon_dazzle",
+                    "name": "Dazzle",
+                    "imageName": "sprite_dazzle",
+                    "animationID": "sprite_dazzle",
+                    "scale": 0.31,
+                    "columns": 5,
+                    "rows": 1,
+                    "frameCount": 5,
+                    "fps": 8
                 }
             ],
             "bosses": [
@@ -40,6 +51,17 @@
                     "rows": 1,
                     "frameCount": 5,
                     "fps": 8
+                },
+                {
+                    "id": "green_molch_guard",
+                    "name": "Molc",
+                    "imageName": "sprite_molc",
+                    "animationID": "sprite_molc",
+                    "scale": 0.34,
+                    "columns": 3,
+                    "rows": 1,
+                    "frameCount": 3,
+                    "fps": 8
                 }
             ]
         },
@@ -47,7 +69,7 @@
             "id": "relic_depths",
             "name": "Relic Depths",
             "startsAtStage": 21,
-            "transitionImageName": "icon_pixel_relic",
+            "transitionImageName": "arena_pixel_yellow",
             "enemies": [
                 {
                     "id": "relic_blunt",
@@ -70,6 +92,17 @@
                     "rows": 1,
                     "frameCount": 4,
                     "fps": 8
+                },
+                {
+                    "id": "relic_molch",
+                    "name": "Molch",
+                    "imageName": "sprite_molc",
+                    "animationID": "sprite_molc",
+                    "scale": 0.33,
+                    "columns": 3,
+                    "rows": 1,
+                    "frameCount": 3,
+                    "fps": 8
                 }
             ],
             "bosses": [
@@ -82,6 +115,82 @@
                     "columns": 4,
                     "rows": 1,
                     "frameCount": 4,
+                    "fps": 8
+                },
+                {
+                    "id": "depth_dazzle",
+                    "name": "Dazzle Prime",
+                    "imageName": "sprite_dazzle",
+                    "animationID": "sprite_dazzle",
+                    "scale": 0.36,
+                    "columns": 5,
+                    "rows": 1,
+                    "frameCount": 5,
+                    "fps": 8
+                }
+            ]
+        },
+        {
+            "id": "red_rift",
+            "name": "Red Rift",
+            "startsAtStage": 41,
+            "transitionImageName": "arena_pixel_red",
+            "enemies": [
+                {
+                    "id": "rift_nimbi",
+                    "name": "Nimbi",
+                    "imageName": "sprite_nimbi",
+                    "animationID": "sprite_nimbi",
+                    "scale": 0.32,
+                    "columns": 3,
+                    "rows": 1,
+                    "frameCount": 3,
+                    "fps": 8
+                },
+                {
+                    "id": "rift_nimbi_night",
+                    "name": "Nimbi Night",
+                    "imageName": "sprite_nimbi_night",
+                    "animationID": "sprite_nimbi_night",
+                    "scale": 0.34,
+                    "columns": 3,
+                    "rows": 1,
+                    "frameCount": 3,
+                    "fps": 8
+                },
+                {
+                    "id": "rift_slenderize",
+                    "name": "Slenderize",
+                    "imageName": "sprite_slenderize",
+                    "animationID": "sprite_slenderize",
+                    "scale": 0.33,
+                    "columns": 5,
+                    "rows": 1,
+                    "frameCount": 5,
+                    "fps": 8
+                }
+            ],
+            "bosses": [
+                {
+                    "id": "red_rift_molch",
+                    "name": "Red Molch",
+                    "imageName": "sprite_molc",
+                    "animationID": "sprite_molc",
+                    "scale": 0.38,
+                    "columns": 3,
+                    "rows": 1,
+                    "frameCount": 3,
+                    "fps": 8
+                },
+                {
+                    "id": "red_rift_dazzle",
+                    "name": "Red Dazzle",
+                    "imageName": "sprite_dazzle",
+                    "animationID": "sprite_dazzle",
+                    "scale": 0.38,
+                    "columns": 5,
+                    "rows": 1,
+                    "frameCount": 5,
                     "fps": 8
                 }
             ]

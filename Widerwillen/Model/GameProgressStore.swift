@@ -639,7 +639,7 @@ final class GameProgressStore {
         guard canClaimPassReward(reward, in: pass) else { return false }
 
         for amount in reward.rewards {
-            change(amount.resource, by: amount.amount)
+            change(amount, by: amount.amount)
         }
 
         claimedPassRewardIDs.insert(passRewardKey(reward, in: pass))
