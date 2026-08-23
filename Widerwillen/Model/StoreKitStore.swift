@@ -27,7 +27,6 @@ final class StoreKitStore {
         do {
             products = try await Product.products(for: ids)
                 .sorted { $0.displayPrice < $1.displayPrice }
-            await refreshCurrentEntitlements()
         } catch {
             message = "Store unavailable"
             print("[StoreKit] Failed to load products: \(error)")
@@ -77,13 +76,46 @@ final class StoreKitStore {
     }
 
     func refreshCurrentEntitlements() async {
+        var restoredProductIDs: Set<String> = []
+
         for await result in Transaction.currentEntitlements {
             guard let transaction = try? verifiedTransaction(result) else {
                 continue
             }
 
-            purchasedProductIDs.insert(transaction.productID)
+            restoredProductIDs.insert(transaction.productID)
         }
+
+        purchasedProductIDs = restoredProductIDs
+    }
+
+    @discardableResult
+    func restorePurchases() async -> Bool {
+        isLoading = true
+        defer { isLoading = false }
+
+        let previousProductIDs = purchasedProductIDs
+        var syncError: Error?
+
+        do {
+            try await AppStore.sync()
+        } catch {
+            syncError = error
+            print("[StoreKit] Restore failed: \(error)")
+        }
+
+        await refreshCurrentEntitlements()
+
+        if !purchasedProductIDs.isEmpty {
+            message =
+                purchasedProductIDs.subtracting(previousProductIDs).isEmpty
+                ? "Purchases already restored"
+                : "Purchases restored"
+            return true
+        }
+
+        message = syncError == nil ? "No purchases to restore" : "Restore failed"
+        return false
     }
 
     private func verifiedTransaction(

@@ -59,6 +59,9 @@ struct ShopView: View {
                         )
                 }
 
+                restorePurchasesButton
+                    .padding(.horizontal, 16)
+
                 if activeCategories.count > 1 {
                     CategoryBar(
                         categories: activeCategories.map(\.id),
@@ -96,6 +99,32 @@ struct ShopView: View {
 
     private var statusMessage: String {
         message.isEmpty ? store.message : message
+    }
+
+    private var restorePurchasesButton: some View {
+        Button {
+            playSoundEffect("ui_select")
+            Task {
+                await restorePurchases()
+            }
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "arrow.clockwise.circle.fill")
+                    .font(.system(size: 15, weight: .heavy))
+
+                Text("Restore Purchases")
+                    .font(.system(size: 13, weight: .heavy))
+            }
+            .foregroundStyle(.black)
+            .frame(maxWidth: .infinity)
+            .frame(height: 36)
+            .background(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .shadow(color: .black.opacity(0.82), radius: 4, x: 0, y: 2)
+        }
+        .buttonStyle(.plain)
+        .disabled(store.isLoading)
+        .opacity(store.isLoading ? 0.55 : 1)
     }
 
     private var activeCategories: [ShopCategory] {
@@ -541,6 +570,13 @@ struct ShopView: View {
         if await store.purchase(productID: pack.productID) {
             progress.unlockPurchasedCharacterPack(pack)
             showMessage("Pack unlocked")
+        }
+    }
+
+    private func restorePurchases() async {
+        if await store.restorePurchases() {
+            syncOwnedPasses()
+            syncOwnedCharacterPacks()
         }
     }
 
