@@ -127,7 +127,7 @@
                 {
                     "id": "moon_pass_01_premium_004",
                     "requiredPoints": 620,
-                    "title": "Dazzle Cache",
+                    "title": "Dazzle",
                     "imageName": "icon_dazzle",
                     "premium": true,
                     "rewards": [
@@ -159,7 +159,7 @@
                 {
                     "id": "moon_pass_01_premium_005",
                     "requiredPoints": 900,
-                    "title": "Moon Vault",
+                    "title": "Molc",
                     "imageName": "icon_molc",
                     "premium": true,
                     "rewards": [

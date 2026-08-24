@@ -257,9 +257,17 @@ struct DailyLoginView: View {
                 color: isClaimed ? .black.opacity(0.48) : .black
             )
             .strikethrough(isClaimed, color: .black.opacity(0.65))
+
+            if !reward.unlocks.isEmpty {
+                unlockPreviewRow(
+                    reward.unlocks,
+                    color: isClaimed ? .black.opacity(0.48) : .black
+                )
+                .strikethrough(isClaimed, color: .black.opacity(0.65))
+            }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: isCompactPresentation ? 92 : 112)
+        .frame(height: reward.unlocks.isEmpty ? (isCompactPresentation ? 92 : 112) : (isCompactPresentation ? 112 : 132))
         .padding(isCompactPresentation ? 6 : 8)
         .background(
             isClaimed
@@ -283,6 +291,31 @@ struct DailyLoginView: View {
                 claim(reward, in: login)
             } else {
                 playSoundEffect("ui_tap")
+            }
+        }
+    }
+
+    private func unlockPreviewRow(
+        _ unlocks: [TradeUnlockReward],
+        color: Color
+    ) -> some View {
+        HStack(spacing: 5) {
+            ForEach(unlocks) { unlock in
+                HStack(spacing: 4) {
+                    RemoteImage(name: unlock.imageName)
+                        .frame(width: isCompactPresentation ? 14 : 16, height: isCompactPresentation ? 14 : 16)
+
+                    Text(unlock.name)
+                        .font(
+                            .system(
+                                size: isCompactPresentation ? 8 : 9,
+                                weight: .heavy
+                            )
+                        )
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.65)
+                }
+                .foregroundStyle(color)
             }
         }
     }

@@ -137,6 +137,59 @@
                     "amount": 8
                 }
             ]
+        },
+        {
+            "id": "sprite_gift_molc_001",
+            "title": "Molc Sprite Gift",
+            "titleKey": "gift.sprite_gift_molc_001.title",
+            "category": "Event",
+            "categoryKey": "gift.category.event",
+            "imageName": "icon_molc",
+            "rewards": [
+                {
+                    "resource": "skill_books",
+                    "amount": 2
+                },
+                {
+                    "resource": "event_chip",
+                    "chipID": "green_chips",
+                    "imageName": "icon_pixel_chip_green",
+                    "amount": 60
+                }
+            ],
+            "unlocks": [
+                {
+                    "id": "gift_molc_sprite",
+                    "kind": "sprite",
+                    "spriteIndex": 24,
+                    "name": "Molc",
+                    "imageName": "icon_molc",
+                    "rarity": "legendary"
+                }
+            ]
+        },
+        {
+            "id": "skin_gift_nimbi_night_001",
+            "title": "Nimbi Night Skin Gift",
+            "titleKey": "gift.skin_gift_nimbi_night_001.title",
+            "category": "Event",
+            "categoryKey": "gift.category.event",
+            "imageName": "icon_nimbi_night",
+            "rewards": [
+                {
+                    "resource": "crystals",
+                    "amount": 10
+                }
+            ],
+            "unlocks": [
+                {
+                    "id": "gift_nimbi_night_skin",
+                    "kind": "skin",
+                    "skinID": "nimbi_night_skin",
+                    "name": "Nimbi Night",
+                    "imageName": "icon_nimbi_night"
+                }
+            ]
         }
     ]
 }

@@ -106,6 +106,148 @@
                             "resource": "skill_books",
                             "amount": 2
                         }
+                    ],
+                    "unlocks": [
+                        {
+                            "id": "daily_molc_sprite",
+                            "kind": "sprite",
+                            "spriteIndex": 24,
+                            "name": "Molc",
+                            "imageName": "icon_molc",
+                            "rarity": "legendary"
+                        }
+                    ]
+                },
+                {
+                    "day": 8,
+                    "title": "Day 8",
+                    "titleKey": "daily_login.day.8",
+                    "imageName": "icon_pixel_chip_blue",
+                    "rewards": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "blue_chips",
+                            "imageName": "icon_pixel_chip_blue",
+                            "amount": 80
+                        },
+                        {
+                            "resource": "coins",
+                            "amount": 1200
+                        }
+                    ]
+                },
+                {
+                    "day": 9,
+                    "title": "Day 9",
+                    "titleKey": "daily_login.day.9",
+                    "imageName": "icon_pixel_skill_book",
+                    "rewards": [
+                        {
+                            "resource": "skill_books",
+                            "amount": 3
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 10
+                        }
+                    ]
+                },
+                {
+                    "day": 10,
+                    "title": "Day 10",
+                    "titleKey": "daily_login.day.10",
+                    "imageName": "icon_pixel_relic",
+                    "rewards": [
+                        {
+                            "resource": "relics",
+                            "amount": 10
+                        },
+                        {
+                            "resource": "coins",
+                            "amount": 2000
+                        }
+                    ]
+                },
+                {
+                    "day": 11,
+                    "title": "Day 11",
+                    "titleKey": "daily_login.day.11",
+                    "imageName": "icon_pixel_chip_green",
+                    "rewards": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "green_chips",
+                            "imageName": "icon_pixel_chip_green",
+                            "amount": 120
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 2
+                        }
+                    ]
+                },
+                {
+                    "day": 12,
+                    "title": "Day 12",
+                    "titleKey": "daily_login.day.12",
+                    "imageName": "icon_pixel_crystal",
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 28
+                        },
+                        {
+                            "resource": "relics",
+                            "amount": 6
+                        }
+                    ]
+                },
+                {
+                    "day": 13,
+                    "title": "Day 13",
+                    "titleKey": "daily_login.day.13",
+                    "imageName": "icon_pixel_chip_red",
+                    "rewards": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "red_chips",
+                            "imageName": "icon_pixel_chip_red",
+                            "amount": 80
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 16
+                        }
+                    ]
+                },
+                {
+                    "day": 14,
+                    "title": "Day 14",
+                    "titleKey": "daily_login.day.14",
+                    "imageName": "icon_dazzle",
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 5000
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 45
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 6
+                        }
+                    ],
+                    "unlocks": [
+                        {
+                            "id": "daily_dazzle_sprite",
+                            "kind": "sprite",
+                            "spriteIndex": 23,
+                            "name": "Dazzle",
+                            "imageName": "icon_dazzle",
+                            "rarity": "legendary"
+                        }
                     ]
                 }
             ]
@@ -150,7 +292,7 @@
                     "day": 3,
                     "title": "Day 3",
                     "titleKey": "daily_login.day.3",
-                    "imageName": "icon_pixel_giftbox",
+                    "imageName": "icon_nimbi_night",
                     "rewards": [
                         {
                             "resource": "crystals",
@@ -159,6 +301,91 @@
                         {
                             "resource": "relics",
                             "amount": 8
+                        }
+                    ],
+                    "unlocks": [
+                        {
+                            "id": "launch_nimbi_night_skin",
+                            "kind": "skin",
+                            "skinID": "nimbi_night_skin",
+                            "name": "Nimbi Night",
+                            "imageName": "icon_nimbi_night"
+                        }
+                    ]
+                },
+                {
+                    "day": 4,
+                    "title": "Day 4",
+                    "titleKey": "daily_login.day.4",
+                    "imageName": "icon_pixel_chip_blue",
+                    "rewards": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "blue_chips",
+                            "imageName": "icon_pixel_chip_blue",
+                            "amount": 150
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 3
+                        }
+                    ]
+                },
+                {
+                    "day": 5,
+                    "title": "Day 5",
+                    "titleKey": "daily_login.day.5",
+                    "imageName": "icon_pixel_relic",
+                    "rewards": [
+                        {
+                            "resource": "relics",
+                            "amount": 14
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 20
+                        }
+                    ]
+                },
+                {
+                    "day": 6,
+                    "title": "Day 6",
+                    "titleKey": "daily_login.day.6",
+                    "imageName": "icon_pixel_big_sword",
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 4500
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 4
+                        }
+                    ]
+                },
+                {
+                    "day": 7,
+                    "title": "Day 7",
+                    "titleKey": "daily_login.day.7",
+                    "imageName": "icon_molc",
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 40
+                        },
+                        {
+                            "resource": "relics",
+                            "amount": 18
+                        }
+                    ],
+                    "unlocks": [
+                        {
+                            "id": "launch_molc_sprite",
+                            "kind": "sprite",
+                            "spriteIndex": 24,
+                            "name": "Molc",
+                            "imageName": "icon_molc",
+                            "rarity": "legendary"
                         }
                     ]
                 }
@@ -204,7 +431,7 @@
                     "day": 3,
                     "title": "Day 3",
                     "titleKey": "daily_login.day.3",
-                    "imageName": "icon_pixel_box",
+                    "imageName": "icon_dazzle",
                     "rewards": [
                         {
                             "resource": "coins",
@@ -217,6 +444,97 @@
                         {
                             "resource": "skill_books",
                             "amount": 2
+                        }
+                    ],
+                    "unlocks": [
+                        {
+                            "id": "summer_dazzle_sprite",
+                            "kind": "sprite",
+                            "spriteIndex": 23,
+                            "name": "Dazzle",
+                            "imageName": "icon_dazzle",
+                            "rarity": "legendary"
+                        }
+                    ]
+                },
+                {
+                    "day": 4,
+                    "title": "Day 4",
+                    "titleKey": "daily_login.day.4",
+                    "imageName": "icon_pixel_chip_yellow",
+                    "rewards": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "yellow_chips",
+                            "imageName": "icon_pixel_chip_yellow",
+                            "amount": 180
+                        },
+                        {
+                            "resource": "coins",
+                            "amount": 2200
+                        }
+                    ]
+                },
+                {
+                    "day": 5,
+                    "title": "Day 5",
+                    "titleKey": "daily_login.day.5",
+                    "imageName": "icon_pixel_chip_green",
+                    "rewards": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "green_chips",
+                            "imageName": "icon_pixel_chip_green",
+                            "amount": 140
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 3
+                        }
+                    ]
+                },
+                {
+                    "day": 6,
+                    "title": "Day 6",
+                    "titleKey": "daily_login.day.6",
+                    "imageName": "icon_pixel_crystal",
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 35
+                        },
+                        {
+                            "resource": "relics",
+                            "amount": 8
+                        }
+                    ]
+                },
+                {
+                    "day": 7,
+                    "title": "Day 7",
+                    "titleKey": "daily_login.day.7",
+                    "imageName": "icon_nimbi_night",
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 4200
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 35
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 5
+                        }
+                    ],
+                    "unlocks": [
+                        {
+                            "id": "summer_nimbi_night_skin",
+                            "kind": "skin",
+                            "skinID": "nimbi_night_skin",
+                            "name": "Nimbi Night",
+                            "imageName": "icon_nimbi_night"
                         }
                     ]
                 }

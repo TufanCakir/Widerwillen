@@ -456,6 +456,10 @@ final class GameProgressStore {
         coins += event.rewards.coins
         crystals += event.rewards.crystals
         artifactShards += event.rewards.relics
+        skillBooks += event.rewards.skillBooks
+        for unlock in event.unlocks {
+            applyTradeUnlock(unlock)
+        }
         addPassPoints(14)
         saveProgress()
         return true
@@ -505,6 +509,10 @@ final class GameProgressStore {
             change(reward, by: reward.amount)
         }
 
+        for unlock in gift.unlocks {
+            applyTradeUnlock(unlock)
+        }
+
         claimedGiftIDs.insert(gift.id)
         saveProgress()
         return true
@@ -518,6 +526,10 @@ final class GameProgressStore {
         for gift in availableGifts {
             for reward in gift.rewards {
                 change(reward, by: reward.amount)
+            }
+
+            for unlock in gift.unlocks {
+                applyTradeUnlock(unlock)
             }
 
             claimedGiftIDs.insert(gift.id)
@@ -560,6 +572,10 @@ final class GameProgressStore {
             change(amount, by: amount.amount)
         }
 
+        for unlock in reward.unlocks {
+            applyTradeUnlock(unlock)
+        }
+
         lastDailyLoginClaimDay = Self.todayKey()
         saveProgress()
         return true
@@ -574,6 +590,10 @@ final class GameProgressStore {
 
         for amount in reward.rewards {
             change(amount, by: amount.amount)
+        }
+
+        for unlock in reward.unlocks {
+            applyTradeUnlock(unlock)
         }
 
         let today = Self.todayKey()
@@ -1015,6 +1035,15 @@ final class GameProgressStore {
             if let skinID = unlock.skinID {
                 unlockSkin(skinID)
             }
+        case .sprite:
+            if let spriteIndex = unlock.spriteIndex {
+                unlockSprite(
+                    spriteIndex: spriteIndex,
+                    name: unlock.name,
+                    imageName: unlock.imageName,
+                    rarity: unlock.rarity ?? .rare
+                )
+            }
         case .item:
             let itemID = unlock.itemID ?? unlock.id
             let oldLevel = ownedItems[itemID]?.level ?? 0
@@ -1027,6 +1056,24 @@ final class GameProgressStore {
                 level: oldLevel + 1
             )
         }
+    }
+
+    private func unlockSprite(
+        spriteIndex: Int,
+        name: String,
+        imageName: String,
+        rarity: SpriteRarity
+    ) {
+        let companion =
+            Self.companionConfiguration.companion(spriteIndex: spriteIndex)
+        let oldStars = ownedSprites[spriteIndex]?.stars ?? 0
+        ownedSprites[spriteIndex] = OwnedSprite(
+            spriteIndex: spriteIndex,
+            name: companion?.name ?? name,
+            imageName: companion?.imageName ?? imageName,
+            rarity: companion?.rarity ?? rarity,
+            stars: oldStars + 1
+        )
     }
 
     private func rollSkillBookDrop(for stage: Int) -> Int {

@@ -271,6 +271,138 @@
             }
         },
         {
+            "id": "skill_book_training",
+            "title": "Skill Book Training",
+            "titleKey": "event.skill_book_training.title",
+            "category": "Recommended",
+            "categoryKey": "event.category.recommended",
+            "bannerImageName": "icon_pixel_skill_book",
+            "cardBackgroundImageName": "bg_white",
+            "battleBackgroundImageName": "arena_pixel_red",
+            "battleGroundImageName": "arena_pixel_red",
+            "chipID": "blue_chips",
+            "victory": {
+                "title": "Training Complete",
+                "titleKey": "event.victory.training_complete",
+                "imageName": "icon_pixel_skill_book",
+                "backgroundImageName": "bg_white",
+                "dismissDelaySeconds": 2.4
+            },
+            "dailyLimit": 5,
+            "hp": 64,
+            "rewards": {
+                "chipAmount": 35,
+                "coins": 90,
+                "crystals": 1,
+                "relics": 0,
+                "skillBooks": 2
+            }
+        },
+        {
+            "id": "skill_book_raid",
+            "title": "Skill Book Raid",
+            "titleKey": "event.skill_book_raid.title",
+            "category": "Daily Raid",
+            "categoryKey": "event.category.daily_raid",
+            "bannerImageName": "icon_pixel_skill_book",
+            "cardBackgroundImageName": "arena_pixel_red",
+            "battleBackgroundImageName": "arena_pixel_red",
+            "battleGroundImageName": "arena_pixel_green",
+            "chipID": "green_chips",
+            "victory": {
+                "title": "Books Secured",
+                "titleKey": "event.victory.books_secured",
+                "imageName": "icon_pixel_skill_book",
+                "backgroundImageName": "bg_blue",
+                "dismissDelaySeconds": 2.4
+            },
+            "dailyLimit": 3,
+            "hp": 126,
+            "rewards": {
+                "chipAmount": 70,
+                "coins": 120,
+                "crystals": 2,
+                "relics": 1,
+                "skillBooks": 5
+            }
+        },
+        {
+            "id": "dazzle_sprite_trial",
+            "title": "Dazzle Trial",
+            "titleKey": "event.dazzle_sprite_trial.title",
+            "category": "Recommended",
+            "categoryKey": "event.category.recommended",
+            "bannerImageName": "icon_dazzle",
+            "cardBackgroundImageName": "bg_blue",
+            "battleBackgroundImageName": "bg_white",
+            "battleGroundImageName": "arena_pixel_green",
+            "chipID": "blue_chips",
+            "victory": {
+                "title": "Sprite Unlocked",
+                "titleKey": "event.victory.sprite_unlocked",
+                "imageName": "icon_dazzle",
+                "backgroundImageName": "bg_blue",
+                "dismissDelaySeconds": 2.6
+            },
+            "dailyLimit": 1,
+            "hp": 170,
+            "rewards": {
+                "chipAmount": 90,
+                "coins": 160,
+                "crystals": 4,
+                "relics": 1,
+                "skillBooks": 2
+            },
+            "unlocks": [
+                {
+                    "id": "event_dazzle_sprite",
+                    "kind": "sprite",
+                    "spriteIndex": 23,
+                    "name": "Dazzle",
+                    "imageName": "icon_dazzle",
+                    "rarity": "legendary"
+                }
+            ]
+        },
+        {
+            "id": "thusax_sprite_trial",
+            "title": "Thusax Trial",
+            "titleKey": "event.thusax_sprite_trial.title",
+            "category": "Daily Raid",
+            "categoryKey": "event.category.daily_raid",
+            "bannerImageName": "icon_thusax",
+            "cardBackgroundImageName": "bg_viollet",
+            "battleBackgroundImageName": "bg_white",
+            "battleGroundImageName": "bg_viollet",
+            "chipID": "red_chips",
+            "victory": {
+                "title": "Sprite Unlocked",
+                "titleKey": "event.victory.sprite_unlocked",
+                "imageName": "icon_thusax",
+                "backgroundImageName": "bg_viollet",
+                "dismissDelaySeconds": 2.6
+            },
+            "dailyLimit": 1,
+            "hp": 210,
+            "rewards": {
+                "chipAmount": 120,
+                "coins": 120,
+                "crystals": 6,
+                "relics": 4,
+                "skillBooks": 3
+            },
+            "unlocks": [
+                {
+                    "id": "event_thusax_sprite",
+                    "kind": "sprite",
+                    "spriteIndex": 25,
+                    "name": "Thusax",
+                    "imageName": "icon_thusax",
+                    "rarity": "legendary"
+                }
+            ]
+        },
+        {
             "id": "void_trial",
             "title": "Void Raid",
             "titleKey": "event.void_trial.title",

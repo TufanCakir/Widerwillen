@@ -135,5 +135,16 @@
         "frameCount": 3,
         "fps": 8,
         "scale": 0.14
+    },
+    {
+        "id": "sprite_thusax",
+        "imageName": "sprite_thusax",
+        "columns": 5,
+        "rows": 1,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 5,
+        "fps": 8,
+        "scale": 0.14
     }
 ]

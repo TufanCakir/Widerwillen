@@ -25,4 +25,39 @@ struct GiftReward: Decodable, Identifiable {
     let categoryKey: String?
     let imageName: String
     let rewards: [TradeResourceAmount]
+    let unlocks: [TradeUnlockReward]
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case titleKey
+        case category
+        case categoryKey
+        case imageName
+        case rewards
+        case unlocks
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        title = try container.decode(String.self, forKey: .title)
+        titleKey = try container.decodeIfPresent(String.self, forKey: .titleKey)
+        category = try container.decode(String.self, forKey: .category)
+        categoryKey = try container.decodeIfPresent(
+            String.self,
+            forKey: .categoryKey
+        )
+        imageName = try container.decode(String.self, forKey: .imageName)
+        rewards =
+            try container.decodeIfPresent(
+                [TradeResourceAmount].self,
+                forKey: .rewards
+            ) ?? []
+        unlocks =
+            try container.decodeIfPresent(
+                [TradeUnlockReward].self,
+                forKey: .unlocks
+            ) ?? []
+    }
 }

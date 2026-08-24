@@ -181,6 +181,10 @@ struct GiftView: View {
                     )
 
                 ResourceAmountRow(amounts: gift.rewards, prefix: "+")
+
+                if !gift.unlocks.isEmpty {
+                    unlockPreviewRow(gift.unlocks)
+                }
             }
 
             Spacer()
@@ -193,6 +197,27 @@ struct GiftView: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+    }
+
+    private func unlockPreviewRow(_ unlocks: [TradeUnlockReward]) -> some View {
+        HStack(spacing: 8) {
+            ForEach(unlocks) { unlock in
+                HStack(spacing: 5) {
+                    RemoteImage(name: unlock.imageName)
+                        .frame(width: 20, height: 20)
+
+                    Text(unlock.name)
+                        .font(.system(size: 11, weight: .heavy))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                }
+                .foregroundStyle(.white)
+                .padding(.horizontal, 8)
+                .frame(height: 28)
+                .background(.black.opacity(0.34))
+                .clipShape(Capsule())
+            }
+        }
     }
 
     private func claimAll() {

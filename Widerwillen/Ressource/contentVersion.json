@@ -1,5 +1,5 @@
 {
-    "contentVersion": 104,
+    "contentVersion": 110,
     "json": [
         {
             "name": "arena",
@@ -191,6 +191,11 @@
             "version": 1
         },
         {
+            "name": "icon_thusax",
+            "path": "assets/icon_thusax.png",
+            "version": 1
+        },
+        {
             "name": "icon_pixel_box",
             "path": "assets/icon_pixel_box.png",
             "version": 1
@@ -363,6 +368,11 @@
         {
             "name": "sprite_molc",
             "path": "assets/sprite_molc.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_thusax",
+            "path": "assets/sprite_thusax.png",
             "version": 1
         },
         {

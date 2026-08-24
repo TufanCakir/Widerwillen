@@ -50,6 +50,7 @@ struct GameEvent: Decodable, Identifiable {
     let dailyLimit: Int
     let hp: Int
     let rewards: EventRewards
+    let unlocks: [TradeUnlockReward]
     var currencyStorageID: String { chipID ?? id }
 
     private enum CodingKeys: String, CodingKey {
@@ -70,6 +71,7 @@ struct GameEvent: Decodable, Identifiable {
         case dailyLimit
         case hp
         case rewards
+        case unlocks
     }
 
     init(
@@ -89,7 +91,8 @@ struct GameEvent: Decodable, Identifiable {
         victory: EventVictoryPresentation,
         dailyLimit: Int,
         hp: Int,
-        rewards: EventRewards
+        rewards: EventRewards,
+        unlocks: [TradeUnlockReward]
     ) {
         self.id = id
         self.title = title
@@ -108,6 +111,7 @@ struct GameEvent: Decodable, Identifiable {
         self.dailyLimit = dailyLimit
         self.hp = hp
         self.rewards = rewards
+        self.unlocks = unlocks
     }
 
     init(from decoder: Decoder) throws {
@@ -159,6 +163,11 @@ struct GameEvent: Decodable, Identifiable {
         dailyLimit = try container.decode(Int.self, forKey: .dailyLimit)
         hp = try container.decode(Int.self, forKey: .hp)
         rewards = try container.decode(EventRewards.self, forKey: .rewards)
+        unlocks =
+            try container.decodeIfPresent(
+                [TradeUnlockReward].self,
+                forKey: .unlocks
+            ) ?? []
     }
 
     func resolved(with chip: EventChip?) -> GameEvent {
@@ -181,7 +190,8 @@ struct GameEvent: Decodable, Identifiable {
             victory: victory,
             dailyLimit: dailyLimit,
             hp: hp,
-            rewards: rewards
+            rewards: rewards,
+            unlocks: unlocks
         )
     }
 }
@@ -243,6 +253,7 @@ struct EventRewards: Decodable {
     let coins: Int
     let crystals: Int
     let relics: Int
+    let skillBooks: Int
 
     private enum CodingKeys: String, CodingKey {
         case chipAmount
@@ -250,6 +261,7 @@ struct EventRewards: Decodable {
         case coins
         case crystals
         case relics
+        case skillBooks
     }
 
     init(from decoder: Decoder) throws {
@@ -260,5 +272,7 @@ struct EventRewards: Decodable {
         coins = try container.decode(Int.self, forKey: .coins)
         crystals = try container.decode(Int.self, forKey: .crystals)
         relics = try container.decodeIfPresent(Int.self, forKey: .relics) ?? 0
+        skillBooks =
+            try container.decodeIfPresent(Int.self, forKey: .skillBooks) ?? 0
     }
 }

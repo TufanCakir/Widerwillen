@@ -39,6 +39,36 @@
             "baseDPS": 82,
             "maxStars": 14,
             "legacySpriteIndex": 21
+        },
+        {
+            "id": "dazzle",
+            "name": "Dazzle",
+            "imageName": "icon_dazzle",
+            "animationID": "sprite_dazzle",
+            "rarity": "legendary",
+            "baseDPS": 86,
+            "maxStars": 14,
+            "legacySpriteIndex": 23
+        },
+        {
+            "id": "molc",
+            "name": "Molc",
+            "imageName": "icon_molc",
+            "animationID": "sprite_molc",
+            "rarity": "legendary",
+            "baseDPS": 90,
+            "maxStars": 14,
+            "legacySpriteIndex": 24
+        },
+        {
+            "id": "thusax",
+            "name": "Thusax",
+            "imageName": "icon_thusax",
+            "animationID": "sprite_thusax",
+            "rarity": "legendary",
+            "baseDPS": 90,
+            "maxStars": 14,
+            "legacySpriteIndex": 25
         }
     ]
 }

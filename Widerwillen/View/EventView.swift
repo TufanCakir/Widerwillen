@@ -246,6 +246,14 @@ struct EventView: View {
                                 imageName: "icon_pixel_relic",
                                 value: event.rewards.relics
                             )
+                            eventRewardLabel(
+                                imageName: "icon_pixel_skill_book",
+                                value: event.rewards.skillBooks
+                            )
+                        }
+
+                        if !event.unlocks.isEmpty {
+                            unlockPreviewRow(event.unlocks, iconSize: 18)
                         }
                     }
                 }
@@ -275,6 +283,29 @@ struct EventView: View {
             iconSize: 17,
             fontSize: 10
         )
+    }
+
+    private func unlockPreviewRow(
+        _ unlocks: [TradeUnlockReward],
+        iconSize: CGFloat
+    ) -> some View {
+        HStack(spacing: 8) {
+            ForEach(unlocks) { unlock in
+                HStack(spacing: 6) {
+                    RemoteImage(name: unlock.imageName)
+                        .frame(width: iconSize, height: iconSize)
+
+                    Text(unlock.name)
+                        .font(.system(size: 10, weight: .heavy))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                }
+                .padding(.horizontal, 8)
+                .frame(height: 24)
+                .background(.black.opacity(0.34))
+                .clipShape(Capsule())
+            }
+        }
     }
 }
 
@@ -482,6 +513,18 @@ private struct EventBattleView: View {
                         iconSize: 24,
                         fontSize: 13
                     )
+
+                    AppResourceLabel(
+                        imageName: "icon_pixel_skill_book",
+                        value: summary.rewards.skillBooks,
+                        prefix: "+",
+                        iconSize: 24,
+                        fontSize: 13
+                    )
+                }
+
+                if !event.unlocks.isEmpty {
+                    unlockPreviewRow(event.unlocks, iconSize: 26)
                 }
             }
             .foregroundStyle(.white)
@@ -515,6 +558,29 @@ private struct EventBattleView: View {
 
     private var localizedVictoryTitle: String {
         localizer.text(event.victory.titleKey, fallback: event.victory.title)
+    }
+
+    private func unlockPreviewRow(
+        _ unlocks: [TradeUnlockReward],
+        iconSize: CGFloat
+    ) -> some View {
+        HStack(spacing: 8) {
+            ForEach(unlocks) { unlock in
+                HStack(spacing: 6) {
+                    RemoteImage(name: unlock.imageName)
+                        .frame(width: iconSize, height: iconSize)
+
+                    Text(unlock.name)
+                        .font(.system(size: iconSize > 20 ? 13 : 10, weight: .heavy))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                }
+                .padding(.horizontal, 8)
+                .frame(height: iconSize > 20 ? 34 : 24)
+                .background(.black.opacity(0.34))
+                .clipShape(Capsule())
+            }
+        }
     }
 }
 

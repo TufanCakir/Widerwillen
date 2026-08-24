@@ -149,6 +149,7 @@ struct TradeUnlockReward: Decodable, Identifiable {
     let characterID: String?
     let skinID: String?
     let itemID: String?
+    let spriteIndex: Int?
     let rarity: SpriteRarity?
     let damageBonus: Int?
 }
@@ -156,5 +157,6 @@ struct TradeUnlockReward: Decodable, Identifiable {
 enum TradeUnlockKind: String, Codable {
     case character
     case skin
+    case sprite
     case item
 }

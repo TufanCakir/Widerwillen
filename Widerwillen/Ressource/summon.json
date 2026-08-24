@@ -66,7 +66,7 @@
                 {
                     "id": "dazzle_front",
                     "name": "Dazzle",
-                    "spriteIndex": 21,
+                    "spriteIndex": 23,
                     "companionID": "dazzle",
                     "imageName": "icon_dazzle",
                     "rarity": "legendary",
@@ -76,7 +76,7 @@
                 {
                     "id": "molc_front",
                     "name": "Molc",
-                    "spriteIndex": 21,
+                    "spriteIndex": 24,
                     "companionID": "molc",
                     "imageName": "icon_molc",
                     "rarity": "legendary",

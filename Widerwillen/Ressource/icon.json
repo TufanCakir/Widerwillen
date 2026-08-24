@@ -233,6 +233,13 @@
             "title": "Molc",
             "imageName": "icon_molc",
             "requiredAccountLevel": 46
+        },
+        {
+            "id": "thusax",
+            "title": "Thusax",
+            "imageName": "icon_thusax",
+            "requiredAccountLevel": 46
         }
     ]
 }
+
