@@ -95,7 +95,7 @@
                 },
                 {
                     "id": "relic_molch",
-                    "name": "Molch",
+                    "name": "Molc",
                     "imageName": "sprite_molc",
                     "animationID": "sprite_molc",
                     "scale": 0.33,
@@ -119,7 +119,7 @@
                 },
                 {
                     "id": "depth_dazzle",
-                    "name": "Dazzle Prime",
+                    "name": "Dazzle",
                     "imageName": "sprite_dazzle",
                     "animationID": "sprite_dazzle",
                     "scale": 0.36,
@@ -173,7 +173,7 @@
             "bosses": [
                 {
                     "id": "red_rift_molch",
-                    "name": "Red Molch",
+                    "name": "Molc",
                     "imageName": "sprite_molc",
                     "animationID": "sprite_molc",
                     "scale": 0.38,
@@ -184,7 +184,7 @@
                 },
                 {
                     "id": "red_rift_dazzle",
-                    "name": "Red Dazzle",
+                    "name": "Dazzle",
                     "imageName": "sprite_dazzle",
                     "animationID": "sprite_dazzle",
                     "scale": 0.38,
