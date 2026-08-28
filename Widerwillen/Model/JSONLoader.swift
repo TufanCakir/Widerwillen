@@ -15,9 +15,10 @@ enum JSONLoader {
         bundle: Bundle = .main,
         decoder: JSONDecoder = JSONDecoder()
     ) throws -> T {
-        if let remoteData = RemoteContentCache.cachedJSONData(
-            named: resourceName
-        ),
+        if shouldUseCachedRemoteContent(bundle: bundle),
+            let remoteData = RemoteContentCache.cachedJSONData(
+                named: resourceName
+            ),
             let remoteValue = try? decoder.decode(T.self, from: remoteData)
         {
             return remoteValue
@@ -34,6 +35,27 @@ enum JSONLoader {
 
         let data = try Data(contentsOf: url)
         return try decoder.decode(T.self, from: data)
+    }
+
+    private static func shouldUseCachedRemoteContent(bundle: Bundle) -> Bool {
+        let storedRemoteVersion = UserDefaults.standard.integer(
+            forKey: "remoteContentVersion"
+        )
+        guard
+            let url = bundle.url(
+                forResource: "contentVersion",
+                withExtension: "json"
+            ),
+            let data = try? Data(contentsOf: url),
+            let manifest = try? JSONDecoder().decode(
+                RemoteContentManifest.self,
+                from: data
+            )
+        else {
+            return storedRemoteVersion > 0
+        }
+
+        return storedRemoteVersion > manifest.contentVersion
     }
 }
 

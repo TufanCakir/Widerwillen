@@ -110,3 +110,129 @@ extension SpriteSheet {
         }
     }
 }
+
+struct SpriteRig: Codable, Identifiable {
+    let id: String
+    let title: String
+    let canvasSize: CGFloat
+    let parts: [String: String]
+    let joints: [String: SpriteRigJoint]
+
+    static func loadAll(
+        named resourceName: String = "rig",
+        bundle: Bundle = .main
+    ) throws -> [SpriteRig] {
+        try JSONLoader.load(
+            [SpriteRig].self,
+            named: resourceName,
+            bundle: bundle
+        )
+    }
+}
+
+struct SpriteRigJoint: Codable {
+    let x: CGFloat
+    let y: CGFloat
+}
+
+struct BattleCardConfiguration: Decodable {
+    let cards: [BattleCardDefinition]
+
+    init(cards: [BattleCardDefinition]) {
+        self.cards = cards
+    }
+
+    static func load(named resourceName: String = "battle_card") throws
+        -> BattleCardConfiguration
+    {
+        try JSONLoader.load(named: resourceName)
+    }
+}
+
+struct BattleCardDefinition: Decodable, Identifiable {
+    let id: String
+    let title: String
+    let move: BattleCardMove
+    let style: String
+    let imageName: String?
+    let cardImageName: String?
+    let backgroundImageName: String?
+    let cooldownSeconds: Double
+    let staminaCost: Int
+    let damageMultiplier: Double
+    let gradientColors: [String]
+    let requiredSkillID: String?
+    let requiredSkillLevel: Int
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case move
+        case style
+        case imageName
+        case cardImage
+        case cardImageName
+        case backgroundImageName
+        case cooldownSeconds
+        case staminaCost
+        case damageMultiplier
+        case gradientColors
+        case requiredSkillID
+        case requiredSkillLevel
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(String.self, forKey: .id)
+        title = try container.decode(String.self, forKey: .title)
+        move =
+            try container.decodeIfPresent(BattleCardMove.self, forKey: .move)
+            ?? .punch
+        style =
+            try container.decodeIfPresent(String.self, forKey: .style)
+            ?? "Strike"
+        imageName = try container.decodeIfPresent(String.self, forKey: .imageName)
+        cardImageName =
+            try container.decodeIfPresent(String.self, forKey: .cardImageName)
+            ?? container.decodeIfPresent(String.self, forKey: .cardImage)
+        backgroundImageName = try container.decodeIfPresent(
+            String.self,
+            forKey: .backgroundImageName
+        )
+        cooldownSeconds =
+            try container.decodeIfPresent(
+                Double.self,
+                forKey: .cooldownSeconds
+            ) ?? 0.45
+        staminaCost =
+            try container.decodeIfPresent(Int.self, forKey: .staminaCost) ?? 0
+        damageMultiplier =
+            try container.decodeIfPresent(
+                Double.self,
+                forKey: .damageMultiplier
+            ) ?? 1
+        gradientColors =
+            try container.decodeIfPresent(
+                [String].self,
+                forKey: .gradientColors
+            ) ?? ["#ffffff", "#a8d8ff"]
+        requiredSkillID =
+            try container.decodeIfPresent(String.self, forKey: .requiredSkillID)
+        requiredSkillLevel =
+            try container.decodeIfPresent(
+                Int.self,
+                forKey: .requiredSkillLevel
+            ) ?? 1
+    }
+}
+
+enum BattleCardMove: String, Codable, CaseIterable, Identifiable {
+    case punch
+    case kick
+    case dash
+    case tornado
+    case roundhouse
+    case airSpin
+
+    var id: String { rawValue }
+}

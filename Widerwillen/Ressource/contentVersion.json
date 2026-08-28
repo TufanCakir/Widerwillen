@@ -1,5 +1,5 @@
 {
-    "contentVersion": 111,
+    "contentVersion": 127,
     "json": [
         {
             "name": "arena",
@@ -8,6 +8,10 @@
         {
             "name": "animation",
             "path": "animation.json"
+        },
+        {
+            "name": "battle_card",
+            "path": "battle_card.json"
         },
         {
             "name": "artifact",
@@ -68,6 +72,10 @@
         {
             "name": "pass",
             "path": "pass.json"
+        },
+        {
+            "name": "rig",
+            "path": "rig.json"
         },
         {
             "name": "shop",
@@ -161,6 +169,21 @@
             "version": 1
         },
         {
+            "name": "bg_halloween",
+            "path": "assets/bg_halloween.png",
+            "version": 2
+        },
+        {
+            "name": "bg_dark_blue",
+            "path": "assets/bg_dark_blue.png",
+            "version": 1
+        },
+        {
+            "name": "bg_blue_white",
+            "path": "assets/bg_blue_white.png",
+            "version": 1
+        },
+        {
             "name": "icon_cookieman",
             "path": "assets/icon_cookieman.png",
             "version": 1
@@ -179,6 +202,16 @@
             "name": "icon_nimpi",
             "path": "assets/icon_nimpi.png",
             "version": 1
+        },
+        {
+            "name": "icon_birthday_nimbi",
+            "path": "assets/icon_birthday_nimbi.png",
+            "version": 1
+        },
+        {
+            "name": "icon_halloween_nimbi",
+            "path": "assets/icon_halloween_nimbi.png",
+            "version": 2
         },
         {
             "name": "icon_slenderize",
@@ -418,6 +451,311 @@
         {
             "name": "sprite_nimbi_night",
             "path": "assets/sprite_nimbi_night.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_blam_original_body",
+            "path": "assets/sprite_blam_original_body.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_blam_original_head",
+            "path": "assets/sprite_blam_original_head.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_blam_original_left_hand",
+            "path": "assets/sprite_blam_original_left_hand.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_blam_original_right_hand",
+            "path": "assets/sprite_blam_original_right_hand.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_blam_original_left_foot",
+            "path": "assets/sprite_blam_original_left_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_blam_original_right_foot",
+            "path": "assets/sprite_blam_original_right_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_slenderize_sword",
+            "path": "assets/sprite_original_slenderize_sword.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_nimbi_original_body",
+            "path": "assets/sprite_nimbi_original_body.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_nimbi_original_head",
+            "path": "assets/sprite_nimbi_original_head.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_nimbi_original_left_hand",
+            "path": "assets/sprite_nimbi_original_left_hand.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_nimbi_original_right_hand",
+            "path": "assets/sprite_nimbi_original_right_hand.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_nimbi_original_left_foot",
+            "path": "assets/sprite_nimbi_original_left_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_nimbi_original_right_foot",
+            "path": "assets/sprite_nimbi_original_right_foot.png",
+            "version": 1
+        },
+        {
+            "name": "skin_nimbi_night_body",
+            "path": "assets/skin_nimbi_night_body.png",
+            "version": 1
+        },
+        {
+            "name": "skin_nimbi_night_head",
+            "path": "assets/skin_nimbi_night_head.png",
+            "version": 1
+        },
+        {
+            "name": "skin_nimbi_night_left_hand",
+            "path": "assets/skin_nimbi_night_left_hand.png",
+            "version": 1
+        },
+        {
+            "name": "skin_nimbi_night_right_hand",
+            "path": "assets/skin_nimbi_night_right_hand.png",
+            "version": 1
+        },
+        {
+            "name": "skin_nimbi_night_left_foot",
+            "path": "assets/skin_nimbi_night_left_foot.png",
+            "version": 1
+        },
+        {
+            "name": "skin_nimbi_night_right_foot",
+            "path": "assets/skin_nimbi_night_right_foot.png",
+            "version": 1
+        },
+        {
+            "name": "skin_halloween_nimbi_body",
+            "path": "assets/skin_halloween_nimbi_body.png",
+            "version": 1
+        },
+        {
+            "name": "skin_halloween_nimbi_head",
+            "path": "assets/skin_halloween_nimbi_head.png",
+            "version": 1
+        },
+        {
+            "name": "skin_halloween_nimbi_left_hand",
+            "path": "assets/skin_halloween_nimbi_left_hand.png",
+            "version": 1
+        },
+        {
+            "name": "skin_halloween_nimbi_right_hand",
+            "path": "assets/skin_halloween_nimbi_right_hand.png",
+            "version": 1
+        },
+        {
+            "name": "skin_halloween_nimbi_left_foot",
+            "path": "assets/skin_halloween_nimbi_left_foot.png",
+            "version": 1
+        },
+        {
+            "name": "skin_halloween_nimbi_right_foot",
+            "path": "assets/skin_halloween_nimbi_right_foot.png",
+            "version": 1
+        },
+        {
+            "name": "skin_birthday_nimbi_body",
+            "path": "assets/skin_birthday_nimbi_body.png",
+            "version": 1
+        },
+        {
+            "name": "skin_birthday_nimbi_head",
+            "path": "assets/skin_birthday_nimbi_head.png",
+            "version": 1
+        },
+        {
+            "name": "skin_birthday_nimbi_left_hand",
+            "path": "assets/skin_birthday_nimbi_left_hand.png",
+            "version": 1
+        },
+        {
+            "name": "skin_birthday_nimbi_right_hand",
+            "path": "assets/skin_birthday_nimbi_right_hand.png",
+            "version": 1
+        },
+        {
+            "name": "skin_birthday_nimbi_left_foot",
+            "path": "assets/skin_birthday_nimbi_left_foot.png",
+            "version": 1
+        },
+        {
+            "name": "skin_birthday_nimbi_right_foot",
+            "path": "assets/skin_birthday_nimbi_right_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_slush_body",
+            "path": "assets/sprite_original_slush_body.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_slush_head",
+            "path": "assets/sprite_original_slush_head.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_slush_left_hand",
+            "path": "assets/sprite_original_slush_left_hand.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_slush_right_hand",
+            "path": "assets/sprite_original_slush_right_hand.png",
+            "version": 2
+        },
+        {
+            "name": "sprite_original_dazzle_body",
+            "path": "assets/sprite_original_dazzle_body.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_dazzle_head",
+            "path": "assets/sprite_original_dazzle_head.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_dazzle_tail",
+            "path": "assets/sprite_original_dazzle_tail.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_dompi_body",
+            "path": "assets/sprite_original_dompi_body.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_dompi_head",
+            "path": "assets/sprite_original_dompi_head.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_dompi_right_hand",
+            "path": "assets/sprite_original_dompi_right_hand.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_dompi_right_foot",
+            "path": "assets/sprite_original_dompi_right_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_dompi_tail",
+            "path": "assets/sprite_original_dompi_tail.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_klempi_body",
+            "path": "assets/sprite_original_klempi_body.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_klempi_head",
+            "path": "assets/sprite_original_klempi_head.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_klempi_left_foot",
+            "path": "assets/sprite_original_klempi_left_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_klempi_right_foot",
+            "path": "assets/sprite_original_klempi_right_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_klempi_tail",
+            "path": "assets/sprite_original_klempi_tail.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_cookieman_body",
+            "path": "assets/sprite_original_cookieman_body.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_cookieman_left_hand",
+            "path": "assets/sprite_original_cookieman_left_hand.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_cookieman_right_hand",
+            "path": "assets/sprite_original_cookieman_right_hand.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_slenderize_head",
+            "path": "assets/sprite_original_slenderize_head.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_slenderize_left_foot",
+            "path": "assets/sprite_original_slenderize_left_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_slenderize_right_foot",
+            "path": "assets/sprite_original_slenderize_right_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_slenderize_tail",
+            "path": "assets/sprite_original_slenderize_tail.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_thusax_original_body",
+            "path": "assets/sprite_thusax_original_body.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_thusax_original_left_foot",
+            "path": "assets/sprite_thusax_original_left_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_thusax_original_right_foot",
+            "path": "assets/sprite_thusax_original_right_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_thusax_original_tail",
+            "path": "assets/sprite_thusax_original_tail.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_thusax_original_left_ear",
+            "path": "assets/sprite_thusax_original_left_ear.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_thusax_original_right_ear",
+            "path": "assets/sprite_thusax_original_right_ear.png",
             "version": 1
         },
         {

@@ -169,25 +169,25 @@
             ]
         },
         {
-            "id": "skin_gift_nimbi_night_001",
-            "title": "Nimbi Night Skin Gift",
-            "titleKey": "gift.skin_gift_nimbi_night_001.title",
+            "id": "skin_gift_nimbi_birthday_001",
+            "title": "Nimbi Birthday Skin Gift",
+            "titleKey": "gift.skin_gift_nimbi_birthday_001.title",
             "category": "Event",
             "categoryKey": "gift.category.event",
-            "imageName": "icon_nimbi_night",
+            "imageName": "skin_birthday_nimbi_head",
             "rewards": [
                 {
                     "resource": "crystals",
-                    "amount": 10
+                    "amount": 12
                 }
             ],
             "unlocks": [
                 {
-                    "id": "gift_nimbi_night_skin",
+                    "id": "gift_nimbi_birthday_skin",
                     "kind": "skin",
-                    "skinID": "nimbi_night_skin",
-                    "name": "Nimbi Night",
-                    "imageName": "icon_nimbi_night"
+                    "skinID": "nimbi_birthday_skin",
+                    "name": "Nimbi Birthday",
+                    "imageName": "skin_birthday_nimbi_head"
                 }
             ]
         }

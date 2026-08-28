@@ -111,7 +111,7 @@ struct DailyLoginView: View {
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .frame(maxHeight: isCompactPresentation ? 430 : .infinity)
+                .frame(maxHeight: isCompactPresentation ? 360 : .infinity)
             }
         }
     }
@@ -123,8 +123,8 @@ struct DailyLoginView: View {
     private var columns: [GridItem] {
         [
             GridItem(
-                .adaptive(minimum: isCompactPresentation ? 74 : 92),
-                spacing: isCompactPresentation ? 8 : 10
+                .adaptive(minimum: isCompactPresentation ? 64 : 78),
+                spacing: isCompactPresentation ? 6 : 8
             )
         ]
     }
@@ -152,21 +152,21 @@ struct DailyLoginView: View {
 
     private func loginPage(for login: DailyLoginCampaign) -> some View {
         ScrollView {
-            LazyVStack(spacing: isCompactPresentation ? 8 : 12) {
+            LazyVStack(spacing: isCompactPresentation ? 6 : 10) {
                 loginSection(login)
             }
-            .padding(.horizontal, isCompactPresentation ? 10 : 14)
+            .padding(.horizontal, isCompactPresentation ? 8 : 12)
             .padding(.bottom, isCompactPresentation ? 14 : 110)
         }
     }
 
     private func loginSection(_ login: DailyLoginCampaign) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: isCompactPresentation ? 7 : 9) {
             HStack {
                 Text(localizedTitle(login))
                     .font(
                         .system(
-                            size: isCompactPresentation ? 17 : 20,
+                            size: isCompactPresentation ? 15 : 18,
                             weight: .heavy
                         )
                     )
@@ -192,13 +192,13 @@ struct DailyLoginView: View {
                 }
             }
 
-            LazyVGrid(columns: columns, spacing: 10) {
+            LazyVGrid(columns: columns, spacing: isCompactPresentation ? 6 : 8) {
                 ForEach(login.rewards.sorted { $0.day < $1.day }) { reward in
                     rewardCard(reward, in: login)
                 }
             }
         }
-        .padding(isCompactPresentation ? 10 : 12)
+        .padding(isCompactPresentation ? 8 : 10)
         .background {
             ZStack {
                 RemoteImage(name: login.backgroundImageName, contentMode: .fill)
@@ -230,11 +230,11 @@ struct DailyLoginView: View {
         let canClaim = isToday && progress.canClaimDailyLogin(for: login)
         let isClaimed = isToday && !progress.canClaimDailyLogin(for: login)
 
-        return VStack(spacing: 7) {
+        return VStack(spacing: isCompactPresentation ? 4 : 5) {
             RemoteImage(name: reward.imageName)
                 .frame(
-                    width: isCompactPresentation ? 30 : 38,
-                    height: isCompactPresentation ? 30 : 38
+                    width: isCompactPresentation ? 24 : 30,
+                    height: isCompactPresentation ? 24 : 30
                 )
                 .saturation(isClaimed ? 0 : 1)
                 .opacity(isClaimed ? 0.45 : 1)
@@ -242,7 +242,7 @@ struct DailyLoginView: View {
             Text(localizedTitle(reward))
                 .font(
                     .system(
-                        size: isCompactPresentation ? 10 : 11,
+                        size: isCompactPresentation ? 9 : 10,
                         weight: .heavy
                     )
                 )
@@ -254,7 +254,9 @@ struct DailyLoginView: View {
             ResourceAmountRow(
                 amounts: reward.rewards,
                 prefix: "+",
-                color: isClaimed ? .black.opacity(0.48) : .black
+                color: isClaimed ? .black.opacity(0.48) : .black,
+                iconSize: isCompactPresentation ? 13 : 15,
+                fontSize: isCompactPresentation ? 8 : 9
             )
             .strikethrough(isClaimed, color: .black.opacity(0.65))
 
@@ -267,8 +269,8 @@ struct DailyLoginView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: reward.unlocks.isEmpty ? (isCompactPresentation ? 92 : 112) : (isCompactPresentation ? 112 : 132))
-        .padding(isCompactPresentation ? 6 : 8)
+        .frame(height: reward.unlocks.isEmpty ? (isCompactPresentation ? 76 : 92) : (isCompactPresentation ? 94 : 108))
+        .padding(isCompactPresentation ? 5 : 6)
         .background(
             isClaimed
                 ? .gray.opacity(0.76)
@@ -303,12 +305,12 @@ struct DailyLoginView: View {
             ForEach(unlocks) { unlock in
                 HStack(spacing: 4) {
                     RemoteImage(name: unlock.imageName)
-                        .frame(width: isCompactPresentation ? 14 : 16, height: isCompactPresentation ? 14 : 16)
+                        .frame(width: isCompactPresentation ? 12 : 14, height: isCompactPresentation ? 12 : 14)
 
                     Text(unlock.name)
                         .font(
                             .system(
-                                size: isCompactPresentation ? 8 : 9,
+                                size: isCompactPresentation ? 7 : 8,
                                 weight: .heavy
                             )
                         )

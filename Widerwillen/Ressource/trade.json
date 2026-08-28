@@ -184,26 +184,61 @@
             ]
         },
         {
-            "id": "void_trial_nimbi_night",
-            "title": "Nimbi Night Skin",
-            "category": "Void Trial",
-            "imageName": "icon_nimbi_night",
-            "limit": 1,
+            "id": "skill_book_coin_bundle",
+            "title": "Skill Book Bundle",
+            "category": "Exchange",
+            "imageName": "icon_pixel_skill_book",
+            "limit": 12,
+            "costs": [
+                {
+                    "resource": "coins",
+                    "amount": 1600
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "skill_books",
+                    "amount": 3
+                }
+            ]
+        },
+        {
+            "id": "skill_book_crystal_bundle",
+            "title": "Skill Book Pack",
+            "category": "Exchange",
+            "imageName": "icon_pixel_skill_book",
+            "limit": 8,
+            "costs": [
+                {
+                    "resource": "crystals",
+                    "amount": 10
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "skill_books",
+                    "amount": 7
+                }
+            ]
+        },
+        {
+            "id": "chip_skill_book_bundle",
+            "title": "Chip Skill Books",
+            "category": "Crystal Hunt",
+            "imageName": "icon_pixel_skill_book",
+            "limit": 6,
             "costs": [
                 {
                     "resource": "event_chip",
-                    "chipID": "red_chips",
-                    "imageName": "icon_pixel_chip_red",
-                    "amount": 320
+                    "chipID": "blue_chips",
+                    "imageName": "icon_pixel_chip_blue",
+                    "amount": 90
                 }
             ],
-            "unlocks": [
+            "rewards": [
                 {
-                    "id": "nimbi_night_skin",
-                    "kind": "skin",
-                    "skinID": "nimbi_night_skin",
-                    "name": "Nimbi Night",
-                    "imageName": "icon_nimbi_night"
+                    "resource": "skill_books",
+                    "amount": 5
                 }
             ]
         }

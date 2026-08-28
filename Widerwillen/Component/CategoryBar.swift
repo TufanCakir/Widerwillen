@@ -100,6 +100,8 @@ struct ResourceAmountRow: View {
     let amounts: [TradeResourceAmount]
     var prefix = ""
     var color: Color = .white
+    var iconSize: CGFloat = 20
+    var fontSize: CGFloat = 12
 
     var body: some View {
         HStack(spacing: 8) {
@@ -108,8 +110,8 @@ struct ResourceAmountRow: View {
                     imageName: amount.imageName ?? amount.resource.imageName,
                     value: amount.amount,
                     prefix: prefix,
-                    iconSize: 20,
-                    fontSize: 12,
+                    iconSize: iconSize,
+                    fontSize: fontSize,
                     color: color
                 )
             }

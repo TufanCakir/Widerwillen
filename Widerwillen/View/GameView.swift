@@ -32,7 +32,7 @@ struct GameView: View {
         ZStack {
             BattleSceneView(
                 progress: progress,
-                title: "Stage \(progress.stage)",
+                title: "Stage \(max(progress.stage, 1))",
                 healthTitle: "Raid HP",
                 currentHP: progress.stageHP,
                 maxHP: progress.maxStageHP,
@@ -49,6 +49,24 @@ struct GameView: View {
                     let result = progress.attackStage(
                         damage: progress.tapDamage
                     )
+                    playSoundEffect(
+                        result.coinsAwarded > 0 ? "stage_clear" : "battle_tap"
+                    )
+                    return result
+                },
+                onBattleCardAttack: { card in
+                    guard !isPrestigeTransitionRunning else {
+                        return BattleAttackResult(damageDealt: 0)
+                    }
+
+                    let damage = max(
+                        1,
+                        Int(
+                            (Double(progress.tapDamage) * card.damageMultiplier)
+                                .rounded()
+                        )
+                    )
+                    let result = progress.attackStage(damage: damage)
                     playSoundEffect(
                         result.coinsAwarded > 0 ? "stage_clear" : "battle_tap"
                     )

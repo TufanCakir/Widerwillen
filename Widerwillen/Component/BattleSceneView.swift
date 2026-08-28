@@ -22,6 +22,7 @@ struct BattleSceneView: View {
     let backgroundImageName: String?
     let groundImageName: String?
     let onTapAttack: () -> BattleAttackResult
+    let onBattleCardAttack: ((BattleCardDefinition) -> BattleAttackResult)?
     let onSpriteAttack: () -> BattleAttackResult
     let onActiveSkillAttack: (BattleActiveSkill) -> BattleAttackResult
     let onPrestige: (() -> Void)?
@@ -30,6 +31,7 @@ struct BattleSceneView: View {
     private let arena: ArenaConfiguration
     private let background: BackgroundConfiguration
     private let enemies: EnemyConfiguration
+    private let battleCards: BattleCardConfiguration
 
     @State private var scene: SpriteAnimationScene
     @State private var selectedLookIndex: Int
@@ -39,6 +41,10 @@ struct BattleSceneView: View {
     @State private var transitionArea: EnemyArea?
     @State private var activeSkillIDs: Set<String> = []
     @State private var coolingDownSkillIDs: Set<String> = []
+    @State private var coolingDownCardIDs: Set<String> = []
+    @State private var cardCooldownEndDates: [String: Date] = [:]
+    @State private var skillCooldownEndDates: [String: Date] = [:]
+    @State private var cooldownClockDate = Date()
     @AppStorage("isLayerAnimationEnabled") private var isLayerAnimationEnabled =
         true
 
@@ -58,6 +64,7 @@ struct BattleSceneView: View {
         backgroundImageName: String? = nil,
         groundImageName: String? = nil,
         onTapAttack: @escaping () -> BattleAttackResult,
+        onBattleCardAttack: ((BattleCardDefinition) -> BattleAttackResult)? = nil,
         onSpriteAttack: @escaping () -> BattleAttackResult,
         onActiveSkillAttack:
             @escaping (BattleActiveSkill)
@@ -68,7 +75,10 @@ struct BattleSceneView: View {
         background: BackgroundConfiguration =
             try! BackgroundConfiguration.load(),
         enemies: EnemyConfiguration =
-            (try? EnemyConfiguration.load()) ?? EnemyConfiguration(areas: [])
+            (try? EnemyConfiguration.load()) ?? EnemyConfiguration(areas: []),
+        battleCards: BattleCardConfiguration =
+            (try? BattleCardConfiguration.load())
+            ?? BattleCardConfiguration(cards: [])
     ) {
         self.progress = progress
         self.title = title
@@ -83,6 +93,7 @@ struct BattleSceneView: View {
         self.backgroundImageName = backgroundImageName
         self.groundImageName = groundImageName
         self.onTapAttack = onTapAttack
+        self.onBattleCardAttack = onBattleCardAttack
         self.onSpriteAttack = onSpriteAttack
         self.onActiveSkillAttack = onActiveSkillAttack
         self.onPrestige = onPrestige
@@ -90,6 +101,7 @@ struct BattleSceneView: View {
         self.arena = arena
         self.background = background
         self.enemies = enemies
+        self.battleCards = battleCards
         _scene = State(
             initialValue: SpriteAnimationScene.makeDefaultScene(arena: arena)
         )
@@ -155,17 +167,15 @@ struct BattleSceneView: View {
                 )
                 .zIndex(12)
 
-                if !activeSkills.isEmpty {
-                    activeSkillBar
-                        .padding(.bottom, 26)
-                        .padding(.horizontal, 18)
-                        .frame(
-                            maxWidth: .infinity,
-                            maxHeight: .infinity,
-                            alignment: .bottom
-                        )
-                        .zIndex(12)
-                }
+                battleCardBar(viewSize: viewSize)
+                    .padding(.bottom, 24)
+                    .padding(.horizontal, 14)
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity,
+                        alignment: .bottom
+                    )
+                    .zIndex(12)
 
                 if let transitionArea {
                     BattleTransitionView(
@@ -179,10 +189,6 @@ struct BattleSceneView: View {
             .frame(width: viewSize.width, height: viewSize.height)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .contentShape(Rectangle())
-            .onTapGesture {
-                scene.playHeroAttackAnimation()
-                performAttack(onTapAttack(), in: viewSize)
-            }
         }
         .background(
             background.looks[backgroundLookIndex].backgroundColor.swiftUIColor
@@ -218,12 +224,15 @@ struct BattleSceneView: View {
         .task {
             await runSpriteAttackLoop()
         }
+        .task {
+            await runCooldownClock()
+        }
     }
 
     private func activateSkill(_ skill: BattleActiveSkill) {
         guard
             !activeSkillIDs.contains(skill.id),
-            !coolingDownSkillIDs.contains(skill.id)
+            skillCooldownRemaining(for: skill.id) <= 0
         else {
             return
         }
@@ -239,6 +248,28 @@ struct BattleSceneView: View {
 
         Task {
             await runActiveSkill(skill)
+        }
+    }
+
+    private func performCardAttack(
+        cardID: String,
+        cooldownSeconds: Double,
+        viewSize: CGSize
+    ) {
+        guard cardCooldownRemaining(for: cardID) <= 0 else { return }
+
+        if cooldownSeconds > 0 {
+            coolingDownCardIDs.insert(cardID)
+            cardCooldownEndDates[cardID] = Date().addingTimeInterval(
+                cooldownSeconds
+            )
+        }
+        let card = cardDefinition(for: cardID)
+        scene.playHeroAttackAnimation(move: card?.move ?? .punch)
+        if let card {
+            performAttack(onBattleCardAttack?(card) ?? onTapAttack(), in: viewSize)
+        } else {
+            performAttack(onTapAttack(), in: viewSize)
         }
     }
 
@@ -258,6 +289,9 @@ struct BattleSceneView: View {
         await MainActor.run {
             _ = activeSkillIDs.remove(skill.id)
             coolingDownSkillIDs.insert(skill.id)
+            skillCooldownEndDates[skill.id] = Date().addingTimeInterval(
+                max(skill.cooldownSeconds, 0)
+            )
         }
 
         try? await Task.sleep(
@@ -266,6 +300,7 @@ struct BattleSceneView: View {
 
         await MainActor.run {
             _ = coolingDownSkillIDs.remove(skill.id)
+            skillCooldownEndDates[skill.id] = nil
         }
     }
 
@@ -280,6 +315,31 @@ struct BattleSceneView: View {
             await MainActor.run {
                 performAttack(onSpriteAttack())
             }
+        }
+    }
+
+    private func runCooldownClock() async {
+        while !Task.isCancelled {
+            try? await Task.sleep(for: .milliseconds(160))
+
+            await MainActor.run {
+                cooldownClockDate = Date()
+                clearExpiredCooldowns()
+            }
+        }
+    }
+
+    private func clearExpiredCooldowns() {
+        for (id, endDate) in cardCooldownEndDates
+        where endDate <= cooldownClockDate {
+            cardCooldownEndDates[id] = nil
+            coolingDownCardIDs.remove(id)
+        }
+
+        for (id, endDate) in skillCooldownEndDates
+        where endDate <= cooldownClockDate {
+            skillCooldownEndDates[id] = nil
+            coolingDownSkillIDs.remove(id)
         }
     }
 
@@ -681,77 +741,319 @@ struct BattleSceneView: View {
         .buttonStyle(.plain)
     }
 
-    private var activeSkillBar: some View {
+    private func battleCardBar(viewSize: CGSize) -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
+            HStack(spacing: 10) {
+                ForEach(unlockedBattleCards) { card in
+                    battleCardButton(
+                        card: card,
+                        cooldownRemaining: cardCooldownRemaining(for: card.id),
+                        isActive: false
+                    ) {
+                        performCardAttack(
+                            cardID: card.id,
+                            cooldownSeconds: card.cooldownSeconds,
+                            viewSize: viewSize
+                        )
+                    }
+                }
+
                 ForEach(activeSkills) { skill in
-                    activeSkillButton(skill)
+                    let card = cardDefinition(for: skill.id)
+                    let isActive = activeSkillIDs.contains(skill.id)
+
+                    battleCardButton(
+                        card: card,
+                        fallbackTitle: skill.title,
+                        fallbackImageName: skill.imageName,
+                        cooldownRemaining: skillCooldownRemaining(for: skill.id),
+                        isActive: isActive
+                    ) {
+                        activateSkill(skill)
+                    }
                 }
             }
             .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+            .padding(.vertical, 10)
         }
         .frame(maxWidth: .infinity)
-        .background(.black.opacity(0.48))
-        .clipShape(Capsule())
+        .background(.black.opacity(0.5))
+        .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay {
-            Capsule()
+            RoundedRectangle(cornerRadius: 18)
                 .stroke(.white.opacity(0.45), lineWidth: 1)
         }
     }
 
-    private func activeSkillButton(_ skill: BattleActiveSkill) -> some View {
-        let isActive = activeSkillIDs.contains(skill.id)
-        let isCoolingDown = coolingDownSkillIDs.contains(skill.id)
+    private func battleCardButton(
+        card: BattleCardDefinition?,
+        fallbackTitle: String = "Tab",
+        fallbackImageName: String = "icon_pixel_sword",
+        cooldownRemaining: TimeInterval,
+        isActive: Bool,
+        action: @escaping () -> Void
+    ) -> some View {
+        let title = card?.title ?? fallbackTitle
+        let imageName = card?.imageName ?? fallbackImageName
+        let backgroundImageName = card?.backgroundImageName
+        let gradientColors = card?.gradientColors ?? []
+        let move = card?.move ?? .punch
+        let style = card?.style ?? "Strike"
+        let staminaCost = card?.staminaCost ?? 0
+        let damageMultiplier = card?.damageMultiplier ?? 1
+        let isCoolingDown = cooldownRemaining > 0
 
-        return Button {
-            activateSkill(skill)
-        } label: {
+        return Button(action: action) {
             ZStack {
-                RemoteImage(name: "bg_white", contentMode: .fill)
-                    .frame(width: 54, height: 54)
-                    .clipShape(Circle())
-                    .opacity(isActive ? 0.95 : 0.78)
-
-                Circle()
-                    .fill(
-                        isActive
-                            ? Color.cyan.opacity(0.30)
-                            : Color.black.opacity(0.12)
+                if let cardImageName = card?.cardImageName {
+                    RemoteImage(name: cardImageName, contentMode: .fill)
+                        .frame(width: 142, height: 138)
+                        .clipped()
+                } else if let backgroundImageName {
+                    RemoteImage(name: backgroundImageName, contentMode: .fill)
+                        .frame(width: 142, height: 138)
+                        .clipped()
+                } else {
+                    LinearGradient(
+                        colors: colors(from: gradientColors),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
                     )
+                }
 
-                RemoteImage(name: skill.imageName)
-                    .frame(width: 32, height: 32)
+                VStack(spacing: 6) {
+                    HStack(spacing: 6) {
+                        Text(title)
+                            .font(.system(size: 13, weight: .heavy))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.72)
+
+                        Spacer(minLength: 4)
+
+                        Text(style)
+                            .font(.system(size: 9, weight: .heavy))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                            .padding(.horizontal, 6)
+                            .frame(height: 18)
+                            .background(.white.opacity(0.22))
+                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                    }
+
+                    BattleCardMovePreview(move: move, fallbackImageName: imageName)
+                        .frame(width: 80, height: 64)
+                        .clipped()
+
+                    HStack(spacing: 8) {
+                        Text("DMG x\(damageText(damageMultiplier))")
+                        Text("STA \(staminaCost)")
+                    }
+                    .font(.system(size: 10, weight: .heavy))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.72)
+                }
+                .foregroundStyle(.white)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 9)
+                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 1)
 
                 if isCoolingDown {
-                    Circle()
-                        .fill(.black.opacity(0.65))
+                    Color.black.opacity(0.64)
 
-                    Image(systemName: "timer")
-                        .font(.system(size: 18, weight: .heavy))
-                        .foregroundStyle(.white)
+                    VStack(spacing: 4) {
+                        Image(systemName: "timer")
+                            .font(.system(size: 18, weight: .heavy))
+
+                        Text("\(Int(ceil(cooldownRemaining)))s")
+                            .font(.system(size: 15, weight: .heavy))
+                    }
+                    .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 1)
                 }
             }
-            .frame(width: 54, height: 54)
+            .frame(width: 142, height: 138)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay {
-                Circle()
+                RoundedRectangle(cornerRadius: 8)
                     .stroke(
-                        isActive ? .cyan : .white.opacity(0.72),
-                        lineWidth: isActive ? 3 : 2
+                        isActive ? .cyan : .white.opacity(0.7),
+                        lineWidth: isActive ? 3 : 1
                     )
             }
-            .shadow(
-                color: .black.opacity(0.85),
-                radius: 4,
-                x: 0,
-                y: 2
-            )
+            .shadow(color: .black.opacity(0.82), radius: 4, x: 0, y: 2)
         }
         .buttonStyle(.plain)
-        .disabled(isActive || isCoolingDown)
+        .disabled(isCoolingDown || isActive)
         .opacity(isCoolingDown ? 0.68 : 1)
     }
-    
+
+    private func cardDefinition(for id: String) -> BattleCardDefinition? {
+        battleCards.cards.first { $0.id == id }
+    }
+
+    private func cardCooldownRemaining(for id: String) -> TimeInterval {
+        max(
+            cardCooldownEndDates[id]?.timeIntervalSince(cooldownClockDate) ?? 0,
+            0
+        )
+    }
+
+    private func skillCooldownRemaining(for id: String) -> TimeInterval {
+        max(
+            skillCooldownEndDates[id]?.timeIntervalSince(cooldownClockDate) ?? 0,
+            0
+        )
+    }
+
+    private var unlockedBattleCards: [BattleCardDefinition] {
+        battleCards.cards.filter { card in
+            guard card.id != "shadow_clone_active" else { return false }
+            guard let skillID = card.requiredSkillID else { return true }
+
+            return progress.skillLevel(forSkillID: skillID)
+                >= card.requiredSkillLevel
+        }
+    }
+
+    private func damageText(_ multiplier: Double) -> String {
+        if multiplier.rounded() == multiplier {
+            return "\(Int(multiplier))"
+        }
+
+        return String(format: "%.1f", multiplier)
+    }
+
+    @MainActor
+    private func colors(from hexValues: [String]) -> [Color] {
+        let colors = hexValues.map(Color.init(hex:))
+        return colors.isEmpty ? [.white, .cyan] : colors
+    }
+
+    private struct BattleCardMovePreview: View {
+        let move: BattleCardMove
+        let fallbackImageName: String
+
+        var body: some View {
+            ZStack {
+                part("sprite_nimbi_original_left_foot", z: 0)
+                    .offset(pose.leftFootOffset)
+                    .rotationEffect(pose.leftFootRotation)
+
+                part("sprite_nimbi_original_right_foot", z: 1)
+                    .offset(pose.rightFootOffset)
+                    .rotationEffect(pose.rightFootRotation)
+
+                part("sprite_nimbi_original_body", z: 2)
+                    .rotationEffect(pose.bodyRotation)
+
+                part("sprite_nimbi_original_left_hand", z: 3)
+                    .offset(pose.leftHandOffset)
+                    .rotationEffect(pose.leftHandRotation)
+
+                part("sprite_nimbi_original_right_hand", z: 4)
+                    .offset(pose.rightHandOffset)
+                    .rotationEffect(pose.rightHandRotation)
+
+                part("sprite_original_slenderize_sword", z: 5, size: 16)
+                    .offset(pose.weaponOffset)
+                    .rotationEffect(pose.weaponRotation)
+
+                part("sprite_nimbi_original_head", z: 6)
+                    .offset(pose.headOffset)
+                    .rotationEffect(pose.headRotation)
+            }
+            .scaleEffect(pose.scale)
+            .rotationEffect(pose.characterRotation)
+            .offset(pose.characterOffset)
+        }
+
+        private func part(
+            _ imageName: String,
+            z: Double,
+            size: CGFloat = 32
+        ) -> some View {
+            RemoteImage(
+                name: imageName,
+                placeholderColor: .white.opacity(0.14),
+                fallbackSystemImage: fallbackImageName
+            )
+            .frame(width: size, height: size)
+            .zIndex(z)
+        }
+
+        private var pose: BattleCardPreviewPose {
+            BattleCardPreviewPose(move: move)
+        }
+    }
+
+    private struct BattleCardPreviewPose {
+        var scale: CGFloat = 1.7
+        var characterOffset = CGSize.zero
+        var characterRotation = Angle.zero
+        var bodyRotation = Angle.zero
+        var headOffset = CGSize.zero
+        var headRotation = Angle.zero
+        var leftHandOffset = CGSize.zero
+        var leftHandRotation = Angle.zero
+        var rightHandOffset = CGSize.zero
+        var rightHandRotation = Angle.zero
+        var weaponOffset = CGSize(width: 9, height: -2)
+        var weaponRotation = Angle.degrees(-18)
+        var leftFootOffset = CGSize.zero
+        var leftFootRotation = Angle.zero
+        var rightFootOffset = CGSize.zero
+        var rightFootRotation = Angle.zero
+
+        init(move: BattleCardMove) {
+            switch move {
+            case .punch:
+                rightHandOffset = CGSize(width: 11, height: -2)
+                rightHandRotation = .degrees(-28)
+                leftHandOffset = CGSize(width: -2, height: -3)
+                leftHandRotation = .degrees(16)
+                weaponOffset = CGSize(width: 15, height: -4)
+                weaponRotation = .degrees(-38)
+                bodyRotation = .degrees(-5)
+            case .kick:
+                rightFootOffset = CGSize(width: 12, height: 5)
+                rightFootRotation = .degrees(-24)
+                leftFootOffset = CGSize(width: -2, height: 1)
+                bodyRotation = .degrees(4)
+            case .dash:
+                characterOffset = CGSize(width: 9, height: -1)
+                scale = 1.6
+                rightHandOffset = CGSize(width: 4, height: 0)
+                weaponOffset = CGSize(width: 11, height: -2)
+                weaponRotation = .degrees(-32)
+                bodyRotation = .degrees(-8)
+            case .tornado:
+                characterOffset = CGSize(width: 2, height: -4)
+                characterRotation = .degrees(28)
+                weaponOffset = CGSize(width: 8, height: -2)
+                weaponRotation = .degrees(-60)
+                rightFootOffset = CGSize(width: 12, height: 7)
+                rightFootRotation = .degrees(-54)
+                leftFootRotation = .degrees(24)
+            case .roundhouse:
+                rightFootOffset = CGSize(width: 14, height: 5)
+                rightFootRotation = .degrees(-64)
+                leftHandRotation = .degrees(24)
+                weaponOffset = CGSize(width: 8, height: -1)
+                weaponRotation = .degrees(12)
+                bodyRotation = .degrees(10)
+            case .airSpin:
+                characterOffset = CGSize(width: 0, height: -5)
+                characterRotation = .degrees(180)
+                rightHandRotation = .degrees(-28)
+                weaponOffset = CGSize(width: 7, height: -1)
+                weaponRotation = .degrees(-54)
+                leftHandRotation = .degrees(28)
+                rightFootRotation = .degrees(-24)
+                leftFootRotation = .degrees(24)
+            }
+        }
+    }
+
     private struct BattlePopup: Identifiable {
         let id = UUID()
         let text: String
@@ -774,6 +1076,21 @@ extension SpriteAnimationScene {
         scene.scaleMode = .resizeFill
         scene.backgroundColor = .clear
         return scene
+    }
+}
+
+private extension Color {
+    init(hex: String) {
+        let cleaned = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
+        let scanner = Scanner(string: cleaned)
+        var value: UInt64 = 0
+        scanner.scanHexInt64(&value)
+
+        let red = Double((value >> 16) & 0xff) / 255
+        let green = Double((value >> 8) & 0xff) / 255
+        let blue = Double(value & 0xff) / 255
+
+        self.init(red: red, green: green, blue: blue)
     }
 }
 

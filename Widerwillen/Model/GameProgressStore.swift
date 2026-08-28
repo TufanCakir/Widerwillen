@@ -29,7 +29,7 @@ final class GameProgressStore {
     private static let skillConfiguration =
         (try? SkillConfiguration.load()) ?? SkillConfiguration(skills: [])
 
-    private(set) var stage = 0
+    private(set) var stage = 1
     private(set) var stageHP = 12
     private(set) var maxStageHP = 12
     private(set) var accountLevel = 1
@@ -84,7 +84,7 @@ final class GameProgressStore {
 
         UserDefaults.standard.removeObject(forKey: Self.saveKey)
 
-        stage = 0
+        stage = 1
         stageHP = 12
         maxStageHP = 12
         accountLevel = 1
@@ -365,18 +365,29 @@ final class GameProgressStore {
         let nextStage = stage + 1
         let skippedStages = rollStageSkipCount(from: nextStage)
         let reachedStage = nextStage + skippedStages
+        let stageDropMultiplier = 1.0 + Double(reachedStage) * 0.015
         let earnedCoins = Int(
-            (Double(25 + reachedStage * 3)
+            (Double(28 + reachedStage * 4)
+                * stageDropMultiplier
                 * (1.0 + skillBonus(for: .coinDrop))
                 * (1.0 + Double(skippedStages) * 0.65)).rounded()
         )
         let bossStagesCleared = (nextStage...reachedStage)
             .filter { $0.isMultiple(of: 10) }
             .count
+        let crystalDropChance = min(
+            0.04 + Double(reachedStage) * 0.0015
+                + skillBonus(for: .dropChance) * 0.25,
+            0.32
+        )
+        let randomCrystals =
+            Double.random(in: 0..<1) < crystalDropChance
+            ? max(1, reachedStage / 35 + 1)
+            : 0
         let earnedCrystals =
             bossStagesCleared > 0
-            ? bossStagesCleared + reachedStage / 50
-            : 0
+            ? bossStagesCleared + reachedStage / 35 + randomCrystals
+            : randomCrystals
         let earnedSkillBooks = rollSkillBookDrop(for: reachedStage)
 
         stage = reachedStage
@@ -759,6 +770,10 @@ final class GameProgressStore {
         ownedSkillLevels[skill.id, default: 0]
     }
 
+    func skillLevel(forSkillID skillID: String) -> Int {
+        ownedSkillLevels[skillID, default: 0]
+    }
+
     func canUpgradeSkill(_ skill: SkillNode) -> Bool {
         return skillLevel(for: skill) < skill.maxLevel
             && skillBooks >= skill.cost
@@ -1077,13 +1092,19 @@ final class GameProgressStore {
     }
 
     private func rollSkillBookDrop(for stage: Int) -> Int {
-        let isBossStage = stage.isMultiple(of: 10)
-        let baseChance = isBossStage ? 0.25 : 0.05
-        let chance = min(baseChance + skillBonus(for: .dropChance), 0.65)
-        guard Double.random(in: 0..<1) < chance else { return 0 }
+        let stageValue = max(stage, 1)
+        let isBossStage = stageValue.isMultiple(of: 10)
+        let guaranteedBooks = stageValue / 25
+        let bossBonus = isBossStage ? max(1, stageValue / 40) : 0
+        let chance = min(
+            (isBossStage ? 0.28 : 0.12)
+                + Double(stageValue) * 0.003
+                + skillBonus(for: .dropChance),
+            0.72
+        )
+        let randomBooks = Double.random(in: 0..<1) < chance ? 1 : 0
 
-        let bossBonus = isBossStage ? max(1, stage / 40) : 0
-        return 1 + bossBonus
+        return guaranteedBooks + bossBonus + randomBooks
     }
 
     private func addPassPoints(_ amount: Int) {
@@ -1383,7 +1404,7 @@ final class GameProgressStore {
     }
 
     private static func maxHP(for stage: Int, accountLevel: Int) -> Int {
-        let stageValue = max(stage, 0)
+        let stageValue = max(stage, 1)
         let levelValue = max(accountLevel, 1)
         let baseHP = 12.0 * pow(1.24, Double(stageValue))
         let levelMultiplier = pow(1.10, Double(levelValue - 1))
@@ -1546,7 +1567,10 @@ final class GameProgressStore {
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            stage = try container.decodeIfPresent(Int.self, forKey: .stage) ?? 0
+            stage = max(
+                try container.decodeIfPresent(Int.self, forKey: .stage) ?? 1,
+                1
+            )
             accountLevel =
                 try container.decodeIfPresent(Int.self, forKey: .accountLevel)
                 ?? 1

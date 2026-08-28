@@ -1,0 +1,93 @@
+{
+    "cards": [
+        {
+            "id": "tap_attack",
+            "title": "Tap",
+            "move": "punch",
+            "style": "Strike",
+            "imageName": "icon_pixel_sword",
+            "cooldownSeconds": 0,
+            "staminaCost": 0,
+            "damageMultiplier": 1,
+            "gradientColors": ["#101a3a", "#207cff"]
+        },
+        {
+            "id": "snap_kick",
+            "title": "Snap Kick",
+            "move": "kick",
+            "style": "Kick",
+            "imageName": "icon_pixel_sword",
+            "cooldownSeconds": 1.4,
+            "staminaCost": 6,
+            "damageMultiplier": 1.35,
+            "gradientColors": ["#123370", "#1d9bff"],
+            "requiredSkillID": "tap_focus_damage",
+            "requiredSkillLevel": 1
+        },
+        {
+            "id": "dash_slash",
+            "title": "Dash Slash",
+            "move": "dash",
+            "style": "Movement",
+            "imageName": "icon_pixel_sword",
+            "cooldownSeconds": 2.2,
+            "staminaCost": 5,
+            "damageMultiplier": 1.6,
+            "gradientColors": ["#2b2f3a", "#6fb8ff"],
+            "requiredSkillID": "tap_lucky_drop",
+            "requiredSkillLevel": 1
+        },
+        {
+            "id": "roundhouse_kick",
+            "title": "Roundhouse",
+            "move": "roundhouse",
+            "style": "Heavy Kick",
+            "imageName": "icon_pixel_big_sword",
+            "cooldownSeconds": 3.4,
+            "staminaCost": 12,
+            "damageMultiplier": 2.2,
+            "gradientColors": ["#ffffff", "#ffcf70"],
+            "requiredSkillID": "shadow_clone_duration",
+            "requiredSkillLevel": 1
+        },
+        {
+            "id": "tornado_kick",
+            "title": "Tornado",
+            "move": "tornado",
+            "style": "Aerial",
+            "imageName": "icon_pixel_dimension_rift",
+            "cooldownSeconds": 5,
+            "staminaCost": 16,
+            "damageMultiplier": 2.8,
+            "gradientColors": ["#3d1cff", "#ff5bd8"],
+            "requiredSkillID": "dimension_stage_skip",
+            "requiredSkillLevel": 1
+        },
+        {
+            "id": "air_spin",
+            "title": "Air Spin",
+            "move": "airSpin",
+            "style": "Launcher",
+            "imageName": "icon_pixel_dimension_break",
+            "cooldownSeconds": 6.5,
+            "staminaCost": 18,
+            "damageMultiplier": 3.1,
+            "gradientColors": ["#10172a", "#33d4ff"],
+            "requiredSkillID": "dimension_total_damage",
+            "requiredSkillLevel": 1
+        },
+        {
+            "id": "shadow_clone_active",
+            "title": "Shadow Clone",
+            "move": "dash",
+            "style": "Shadow",
+            "imageName": "icon_pixel_shadow_clone",
+            "cooldownSeconds": 12,
+            "staminaCost": 10,
+            "damageMultiplier": 0,
+            "gradientColors": ["#130052", "#3d1cff"],
+            "requiredSkillID": "shadow_clone_active",
+            "requiredSkillLevel": 1
+        }
+    ]
+}

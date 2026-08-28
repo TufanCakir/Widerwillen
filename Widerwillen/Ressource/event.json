@@ -250,7 +250,7 @@
             "category": "Daily Raid",
             "categoryKey": "event.category.daily_raid",
             "bannerImageName": "icon_pixel_chip_green",
-            "cardBackgroundImageName": "bg_summer",
+            "cardBackgroundImageName": "bg_white",
             "battleBackgroundImageName": "bg_white",
             "battleGroundImageName": "bg_green",
             "chipID": "green_chips",
@@ -258,7 +258,7 @@
                 "title": "Victory",
                 "titleKey": "event.victory",
                 "imageName": "icon_pixel_box",
-                "backgroundImageName": "bg_summer",
+                "backgroundImageName": "bg_white",
                 "dismissDelaySeconds": 2.4
             },
             "dailyLimit": 3,
@@ -399,6 +399,80 @@
                     "name": "Thusax",
                     "imageName": "icon_thusax",
                     "rarity": "legendary"
+                }
+            ]
+        },
+        {
+            "id": "birthday_skin_event",
+            "title": "Birthday Skin Event",
+            "titleKey": "event.birthday_skin_event.title",
+            "category": "Recommended",
+            "categoryKey": "event.category.recommended",
+            "bannerImageName": "icon_birthday_nimbi",
+            "cardBackgroundImageName": "bg_blue_white",
+            "battleBackgroundImageName": "bg_blue_white",
+            "battleGroundImageName": "bg_blue_white",
+            "chipID": "yellow_chips",
+            "victory": {
+                "title": "Skin Unlocked",
+                "titleKey": "event.victory.skin_unlocked",
+                "imageName": "icon_birthday_nimbi",
+                "backgroundImageName": "bg_white",
+                "dismissDelaySeconds": 2.6
+            },
+            "dailyLimit": 1,
+            "hp": 190,
+            "rewards": {
+                "chipAmount": 140,
+                "coins": 180,
+                "crystals": 8,
+                "relics": 2,
+                "skillBooks": 4
+            },
+            "unlocks": [
+                {
+                    "id": "event_nimbi_birthday_skin",
+                    "kind": "skin",
+                    "skinID": "nimbi_birthday_skin",
+                    "name": "Nimbi Birthday",
+                    "imageName": "skin_birthday_nimbi_head"
+                }
+            ]
+        },
+        {
+            "id": "halloween_skin_event",
+            "title": "Halloween Skin Event",
+            "titleKey": "event.halloween_skin_event.title",
+            "category": "Daily Raid",
+            "categoryKey": "event.category.daily_raid",
+            "bannerImageName": "icon_halloween_nimbi",
+            "cardBackgroundImageName": "bg_dark_blue",
+            "battleBackgroundImageName": "bg_dark_blue",
+            "battleGroundImageName": "bg_halloween",
+            "chipID": "red_chips",
+            "victory": {
+                "title": "Skin Unlocked",
+                "titleKey": "event.victory.skin_unlocked",
+                "imageName": "icon_halloween_nimbi",
+                "backgroundImageName": "bg_viollet",
+                "dismissDelaySeconds": 2.6
+            },
+            "dailyLimit": 1,
+            "hp": 230,
+            "rewards": {
+                "chipAmount": 170,
+                "coins": 220,
+                "crystals": 10,
+                "relics": 4,
+                "skillBooks": 5
+            },
+            "unlocks": [
+                {
+                    "id": "event_nimbi_halloween_skin",
+                    "kind": "skin",
+                    "skinID": "nimbi_halloween_skin",
+                    "name": "Nimbi Halloween",
+                    "imageName": "skin_halloween_nimbi_head"
                 }
             ]
         },

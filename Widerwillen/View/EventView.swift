@@ -357,6 +357,20 @@ private struct EventBattleView: View {
                     )
                     return result
                 },
+                onBattleCardAttack: { card in
+                    let damage = max(
+                        1,
+                        Int(
+                            (Double(progress.tapDamage) * card.damageMultiplier)
+                                .rounded()
+                        )
+                    )
+                    let result = attackEvent(damage: damage)
+                    playSoundEffect(
+                        result.coinsAwarded > 0 ? "event_win" : "battle_tap"
+                    )
+                    return result
+                },
                 onSpriteAttack: {
                     guard progress.hasCompanionSprites else {
                         return BattleAttackResult(damageDealt: 0)

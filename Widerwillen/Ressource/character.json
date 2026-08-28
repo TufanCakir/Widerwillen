@@ -22,6 +22,20 @@
                     "imageName": "icon_nimbi_night",
                     "animationID": "sprite_nimbi_night",
                     "unlockSource": "shop"
+                },
+                {
+                    "id": "nimbi_birthday_skin",
+                    "name": "Birthday Skin",
+                    "imageName": "skin_birthday_nimbi_head",
+                    "animationID": "nimbi_birthday",
+                    "unlockSource": "event"
+                },
+                {
+                    "id": "nimbi_halloween_skin",
+                    "name": "Halloween Skin",
+                    "imageName": "skin_halloween_nimbi_head",
+                    "animationID": "nimbi_halloween",
+                    "unlockSource": "event"
                 }
             ]
         }
