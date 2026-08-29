@@ -39,6 +39,7 @@ struct GameView: View {
                 lookIndex: lookIndex(for: progress.stage),
                 heroAnimationID: progress.battleHeroAnimationID,
                 equippedWeaponImageName: progress.equippedWeaponImageName,
+                equippedWeaponBattleAppearance: progress.equippedWeaponBattleAppearance,
                 companionAnimationIDs: progress.battleCompanionAnimationIDs,
                 spriteAttackInterval: progress.spriteAttackInterval,
                 activeSkills: progress.activeBattleSkills,

@@ -20,7 +20,7 @@ struct StartView: View {
               
 
                 Text("Widerwillen")
-                    .widerwillenFont(size: 50, weight: .bold)
+                    .widerwillenPixelFont(size: 50, weight: .bold)
                     .foregroundStyle(
                         LinearGradient(
                             colors: [
@@ -41,7 +41,7 @@ struct StartView: View {
                     .frame(height: 72)
 
                 Text("Tap to Start")
-                    .widerwillenFont(size: 24, weight: .heavy)
+                    .widerwillenPixelFont(size: 24, weight: .heavy)
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
 

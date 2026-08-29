@@ -1,7 +1,7 @@
 [
     {
-        "id": "sprite_cookieman",
-        "imageName": "sprite_cookieman",
+        "id": "cookieman_original",
+        "imageName": "cookieman_original",
         "columns": 4,
         "rows": 1,
         "spacing": 0,
@@ -13,8 +13,8 @@
         "scale": 0.13
     },
     {
-        "id": "sprite_klempi",
-        "imageName": "sprite_klempi",
+        "id": "klempi_original",
+        "imageName": "klempi_original",
         "columns": 4,
         "rows": 1,
         "spacing": 0,
@@ -26,8 +26,8 @@
         "scale": 0.17
     },
     {
-        "id": "sprite_dompi",
-        "imageName": "sprite_dompi",
+        "id": "dompi_original",
+        "imageName": "dompi_original",
         "columns": 4,
         "rows": 1,
         "spacing": 0,
@@ -39,8 +39,8 @@
         "scale": 0.12
     },
     {
-        "id": "sprite_blunt",
-        "imageName": "sprite_blunt",
+        "id": "blunt_original",
+        "imageName": "blunt_original",
         "columns": 3,
         "rows": 1,
         "spacing": 0,
@@ -52,8 +52,8 @@
         "scale": 0.15
     },
     {
-        "id": "sprite_nimbi",
-        "imageName": "sprite_nimbi",
+        "id": "nimbi_original",
+        "imageName": "nimbi_original",
         "columns": 3,
         "rows": 1,
         "spacing": 0,
@@ -65,8 +65,8 @@
         "scale": 0.14
     },
     {
-        "id": "sprite_slenderize",
-        "imageName": "sprite_slenderize",
+        "id": "slenderize_original",
+        "imageName": "slenderize_original",
         "columns": 5,
         "rows": 1,
         "spacing": 0,
@@ -78,8 +78,8 @@
         "scale": 0.14
     },
     {
-        "id": "sprite_slush",
-        "imageName": "sprite_slush",
+        "id": "slush_original",
+        "imageName": "slush_original",
         "columns": 4,
         "rows": 1,
         "spacing": 0,
@@ -91,8 +91,8 @@
         "scale": 0.14
     },
     {
-        "id": "sprite_nimbi_night",
-        "imageName": "sprite_nimbi_night",
+        "id": "nimbi_night",
+        "imageName": "nimbi_night",
         "columns": 3,
         "rows": 1,
         "spacing": 0,
@@ -115,8 +115,8 @@
         "scale": 0.14
     },
     {
-        "id": "sprite_dazzle",
-        "imageName": "sprite_dazzle",
+        "id": "dazzle_original",
+        "imageName": "dazzle_original",
         "columns": 5,
         "rows": 1,
         "spacing": 0,
@@ -126,8 +126,8 @@
         "scale": 0.14
     },
     {
-        "id": "sprite_molc",
-        "imageName": "sprite_molc",
+        "id": "molc_original",
+        "imageName": "molc_original",
         "columns": 3,
         "rows": 1,
         "spacing": 0,
@@ -137,8 +137,8 @@
         "scale": 0.14
     },
     {
-        "id": "sprite_thusax",
-        "imageName": "sprite_thusax",
+        "id": "thusax_original",
+        "imageName": "thusax_original",
         "columns": 5,
         "rows": 1,
         "spacing": 0,

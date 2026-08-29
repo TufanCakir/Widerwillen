@@ -183,7 +183,8 @@ struct SpriteListView: View {
                 isSelected: progress.isSelectedCharacter(character.id),
                 canSelect: owned != nil,
                 character: character,
-                skin: nil
+                skin: nil,
+                ownedItem: nil
             )
         }
     }
@@ -207,7 +208,8 @@ struct SpriteListView: View {
                     isSelected: progress.isSelectedSkin(skin),
                     canSelect: isUnlocked,
                     character: character,
-                    skin: skin
+                    skin: skin,
+                    ownedItem: nil
                 )
             }
         }
@@ -225,7 +227,8 @@ struct SpriteListView: View {
                 isSelected: false,
                 canSelect: false,
                 character: nil,
-                skin: nil
+                skin: nil,
+                ownedItem: nil
             )
         }
         .sorted { sortedCollectionItem($0, before: $1) }
@@ -243,7 +246,8 @@ struct SpriteListView: View {
                 isSelected: false,
                 canSelect: false,
                 character: nil,
-                skin: nil
+                skin: nil,
+                ownedItem: nil
             )
         }
         .sorted { sortedCollectionItem($0, before: $1) }
@@ -256,12 +260,15 @@ struct SpriteListView: View {
                 name: $0.name,
                 imageName: $0.imageName,
                 rarity: $0.rarity,
-                levelTitle: "Lv \($0.level)",
+                levelTitle: progress.isEquippedWeapon($0)
+                    ? "Equipped"
+                    : "Lv \($0.level)",
                 stars: nil,
-                isSelected: false,
-                canSelect: false,
+                isSelected: progress.isEquippedWeapon($0),
+                canSelect: true,
                 character: nil,
-                skin: nil
+                skin: nil,
+                ownedItem: $0
             )
         }
         .sorted { sortedCollectionItem($0, before: $1) }
@@ -274,6 +281,8 @@ struct SpriteListView: View {
             progress.selectSkin(skin, for: character)
         } else if let character = item.character {
             progress.selectCharacter(character)
+        } else if let ownedItem = item.ownedItem {
+            progress.equipWeapon(ownedItem)
         }
     }
 
@@ -357,6 +366,7 @@ private struct CollectionItem: Identifiable {
     let canSelect: Bool
     let character: CharacterDefinition?
     let skin: CharacterSkin?
+    let ownedItem: OwnedItem?
 }
 
 private enum SpriteCollectionCategory: CaseIterable {

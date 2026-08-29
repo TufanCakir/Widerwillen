@@ -19,6 +19,7 @@ struct EventView: View {
     @State private var message = ""
     @State private var selectedEvent: GameEvent?
     @State private var selectedCategory = ""
+    @State private var isEventShopPresented = false
 
     init(
         progress: GameProgressStore,
@@ -48,6 +49,15 @@ struct EventView: View {
                         self.selectedEvent = nil
                     }
                 )
+            } else if isEventShopPresented {
+                EventShopView(
+                    progress: progress,
+                    events: configuration.events,
+                    tradeConfiguration: tradeConfiguration,
+                    playSoundEffect: playSoundEffect
+                ) {
+                    isEventShopPresented = false
+                }
             } else {
                 eventList
             }
@@ -67,6 +77,7 @@ struct EventView: View {
     private var eventList: some View {
         VStack(spacing: 10) {
             categoryBar
+            eventShopEntryButton
 
             if !message.isEmpty {
                 Text(message)
@@ -118,14 +129,43 @@ struct EventView: View {
         )
     }
 
+    private var eventShopEntryButton: some View {
+        Button {
+            playSoundEffect("ui_select")
+            isEventShopPresented = true
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: "cart.fill")
+                    .font(.system(size: 14, weight: .heavy))
+
+                Text("Event Shops")
+                    .widerwillenFont(size: 13, weight: .heavy)
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .heavy))
+            }
+            .foregroundStyle(.white)
+            .padding(.horizontal, 14)
+            .frame(height: 40)
+            .background(.black.opacity(0.24))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.white.opacity(0.48), lineWidth: 1)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .shadow(color: .black.opacity(0.7), radius: 3, x: 0, y: 2)
+            .padding(.horizontal, 16)
+        }
+        .buttonStyle(.plain)
+    }
+
     private func eventPage(for category: String) -> some View {
         ScrollView {
             VStack(spacing: 20) {
                 ForEach(events(in: category)) { event in
-                    VStack(spacing: 8) {
-                        eventBanner(event)
-                        eventShop(for: event)
-                    }
+                    eventBanner(event)
                 }
             }
             .padding(.horizontal)
@@ -291,148 +331,6 @@ struct EventView: View {
         )
     }
 
-    @ViewBuilder
-    private func eventShop(for event: GameEvent) -> some View {
-        let offers = tradeConfiguration.eventOffers(
-            chipID: event.currencyStorageID
-        )
-
-        if !offers.isEmpty {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(spacing: 8) {
-                    RemoteImage(name: event.currencyImageName)
-                        .frame(width: 22, height: 22)
-
-                    Text("\(localizedCurrencyName(event)) Shop")
-                        .widerwillenFont(size: 13, weight: .heavy)
-                        .foregroundStyle(.white)
-
-                    Spacer()
-
-                    Text(
-                        progress.eventCurrencies[
-                            event.currencyStorageID,
-                            default: 0
-                        ].formatted()
-                    )
-                    .widerwillenFont(size: 12, weight: .heavy)
-                    .foregroundStyle(.white.opacity(0.86))
-                }
-
-                ForEach(offers) { offer in
-                    eventShopOfferCard(offer)
-                }
-            }
-            .padding(12)
-            .background(.black.opacity(0.2))
-            .overlay {
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(.white.opacity(0.42), lineWidth: 1)
-            }
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-        }
-    }
-
-    private func eventShopOfferCard(_ offer: TradeOffer) -> some View {
-        let canBuy = progress.canApplyTradeOffer(offer)
-        let boughtCount = progress.tradeOfferPurchaseCounts[
-            offer.id,
-            default: 0
-        ]
-
-        return HStack(spacing: 10) {
-            RemoteImage(name: offer.imageName)
-                .frame(width: 34, height: 34)
-
-            VStack(alignment: .leading, spacing: 5) {
-                Text(offer.title)
-                    .widerwillenFont(size: 12, weight: .heavy)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-
-                HStack(spacing: 8) {
-                    eventShopResourceRow(offer.costs, prefix: "-")
-                    Image(systemName: "arrow.right")
-                        .font(.system(size: 10, weight: .heavy))
-                    eventShopResourceRow(offer.rewards, prefix: "+")
-                    eventShopUnlockRow(offer.unlocks)
-                }
-                .foregroundStyle(.white.opacity(0.82))
-
-                if let limit = offer.limit {
-                    Text("Limit \(boughtCount)/\(limit)")
-                        .widerwillenFont(size: 9, weight: .heavy)
-                        .foregroundStyle(.white.opacity(0.62))
-                }
-            }
-
-            Spacer()
-
-            Button {
-                playSoundEffect("ui_confirm")
-                applyEventShopOffer(offer)
-            } label: {
-                Text(canBuy ? "Buy" : "Need")
-                    .widerwillenFont(size: 10, weight: .heavy)
-                    .foregroundStyle(canBuy ? .black : .white.opacity(0.54))
-                    .frame(width: 54, height: 28)
-                    .background(canBuy ? .white : .black.opacity(0.34))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-            }
-            .buttonStyle(.plain)
-            .disabled(!canBuy)
-        }
-        .foregroundStyle(.white)
-        .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
-        .padding(10)
-        .background(.black.opacity(0.22))
-        .overlay {
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(canBuy ? 0.62 : 0.24), lineWidth: 1)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-    }
-
-    private func eventShopResourceRow(
-        _ amounts: [TradeResourceAmount],
-        prefix: String
-    ) -> some View {
-        HStack(spacing: 5) {
-            ForEach(amounts) { amount in
-                AppResourceLabel(
-                    imageName: amount.imageName ?? amount.resource.imageName,
-                    value: amount.amount,
-                    prefix: prefix,
-                    iconSize: 16,
-                    fontSize: 9
-                )
-            }
-        }
-    }
-
-    private func eventShopUnlockRow(
-        _ unlocks: [TradeUnlockReward]
-    ) -> some View {
-        HStack(spacing: 5) {
-            ForEach(unlocks) { unlock in
-                RemoteImage(name: unlock.imageName)
-                    .frame(width: 16, height: 16)
-            }
-        }
-    }
-
-    private func applyEventShopOffer(_ offer: TradeOffer) {
-        let didApply = progress.applyTradeOffer(offer)
-        message = didApply ? "Bought" : "Not enough chips"
-
-        Task {
-            try? await Task.sleep(for: .seconds(1.1))
-            await MainActor.run {
-                message = ""
-            }
-        }
-    }
-
     private func unlockPreviewRow(
         _ unlocks: [TradeUnlockReward],
         iconSize: CGFloat
@@ -454,6 +352,305 @@ struct EventView: View {
                 .clipShape(Capsule())
             }
         }
+    }
+}
+
+private struct EventShopView: View {
+    let progress: GameProgressStore
+    let events: [GameEvent]
+    let tradeConfiguration: TradeConfiguration
+    let playSoundEffect: (String) -> Void
+    let onExit: () -> Void
+
+    @AppStorage("appLanguage") private var appLanguageCode =
+        AppLanguage.de.rawValue
+    @State private var selectedShopEvent: GameEvent?
+    @State private var message = ""
+
+    var body: some View {
+        ZStack {
+            AppBackground()
+
+            VStack(spacing: 14) {
+                header
+
+                if !message.isEmpty {
+                    Text(message)
+                        .widerwillenFont(size: 13, weight: .heavy)
+                        .foregroundStyle(.white.opacity(0.82))
+                        .shadow(
+                            color: .black.opacity(0.9),
+                            radius: 3,
+                            x: 0,
+                            y: 0
+                        )
+                }
+
+                ScrollView {
+                    LazyVStack(spacing: 12) {
+                        ForEach(shopEvents) { event in
+                            shopButton(for: event)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 110)
+                }
+            }
+            .padding(.top, 18)
+
+            if let selectedShopEvent {
+                shopWindow(for: selectedShopEvent)
+            }
+        }
+    }
+
+    private var header: some View {
+        HStack(spacing: 12) {
+            Button {
+                playSoundEffect("ui_back")
+                onExit()
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 16, weight: .heavy))
+                    .foregroundStyle(.white)
+                    .frame(width: 36, height: 36)
+                    .background(.black.opacity(0.32))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .buttonStyle(.plain)
+
+            Text("Event Shops")
+                .widerwillenFont(size: 22, weight: .heavy)
+                .foregroundStyle(.white)
+                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+    }
+
+    private var localizer: AppLocalizer {
+        AppLocalizer(languageCode: appLanguageCode)
+    }
+
+    private var shopEvents: [GameEvent] {
+        var seenChipIDs: Set<String> = []
+
+        return events.filter { event in
+            let chipID = event.currencyStorageID
+            guard !tradeConfiguration.eventOffers(chipID: chipID).isEmpty else {
+                return false
+            }
+            return seenChipIDs.insert(chipID).inserted
+        }
+    }
+
+    private func shopButton(for event: GameEvent) -> some View {
+        let chipBalance = progress.eventCurrencies[
+            event.currencyStorageID,
+            default: 0
+        ]
+        let offerCount = tradeConfiguration.eventOffers(
+            chipID: event.currencyStorageID
+        ).count
+
+        return Button {
+            playSoundEffect("ui_select")
+            selectedShopEvent = event
+        } label: {
+            HStack(spacing: 14) {
+                RemoteImage(name: event.currencyImageName)
+                    .frame(width: 48, height: 48)
+                    .padding(8)
+                    .background(.black.opacity(0.24))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("\(localizedCurrencyName(event)) Shop")
+                        .widerwillenFont(size: 17, weight: .heavy)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.72)
+
+                    Text("\(offerCount) Offers")
+                        .widerwillenFont(size: 11, weight: .bold)
+                        .foregroundStyle(.white.opacity(0.68))
+                }
+
+                Spacer()
+
+                Text(chipBalance.formatted())
+                    .widerwillenFont(size: 16, weight: .heavy)
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .heavy))
+            }
+            .foregroundStyle(.white)
+            .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+            .padding(14)
+            .background(.black.opacity(0.24))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.white.opacity(0.52), lineWidth: 1)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func shopWindow(for event: GameEvent) -> some View {
+        let offers = tradeConfiguration.eventOffers(
+            chipID: event.currencyStorageID
+        )
+
+        return ZStack {
+            Color.black.opacity(0.58)
+                .ignoresSafeArea()
+                .onTapGesture {
+                    selectedShopEvent = nil
+                }
+
+            VStack(spacing: 12) {
+                HStack(spacing: 10) {
+                    RemoteImage(name: event.currencyImageName)
+                        .frame(width: 28, height: 28)
+
+                    Text("\(localizedCurrencyName(event)) Shop")
+                        .widerwillenFont(size: 18, weight: .heavy)
+
+                    Spacer()
+
+                    Button {
+                        playSoundEffect("ui_back")
+                        selectedShopEvent = nil
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 13, weight: .heavy))
+                            .frame(width: 30, height: 30)
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                ScrollView {
+                    LazyVStack(spacing: 10) {
+                        ForEach(offers) { offer in
+                            offerCard(offer)
+                        }
+                    }
+                }
+                .frame(maxHeight: 360)
+            }
+            .foregroundStyle(.white)
+            .padding(16)
+            .frame(maxWidth: 360)
+            .background(.black.opacity(0.82))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.white.opacity(0.72), lineWidth: 1)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .shadow(color: .black.opacity(0.9), radius: 10, x: 0, y: 6)
+            .padding(.horizontal, 20)
+        }
+    }
+
+    private func offerCard(_ offer: TradeOffer) -> some View {
+        let canBuy = progress.canApplyTradeOffer(offer)
+        let boughtCount = progress.tradeOfferPurchaseCounts[
+            offer.id,
+            default: 0
+        ]
+
+        return HStack(spacing: 10) {
+            RemoteImage(name: offer.imageName)
+                .frame(width: 36, height: 36)
+
+            VStack(alignment: .leading, spacing: 5) {
+                Text(offer.title)
+                    .widerwillenFont(size: 13, weight: .heavy)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+
+                HStack(spacing: 7) {
+                    resourceRow(offer.costs, prefix: "-")
+                    Image(systemName: "arrow.right")
+                        .font(.system(size: 10, weight: .heavy))
+                    resourceRow(offer.rewards, prefix: "+")
+                    unlockRow(offer.unlocks)
+                }
+
+                if let limit = offer.limit {
+                    Text("Limit \(boughtCount)/\(limit)")
+                        .widerwillenFont(size: 9, weight: .heavy)
+                        .foregroundStyle(.white.opacity(0.62))
+                }
+            }
+
+            Spacer()
+
+            Button {
+                playSoundEffect("ui_confirm")
+                apply(offer)
+            } label: {
+                Text(canBuy ? "Buy" : "Need")
+                    .widerwillenFont(size: 10, weight: .heavy)
+                    .foregroundStyle(canBuy ? .black : .white.opacity(0.54))
+                    .frame(width: 54, height: 28)
+                    .background(canBuy ? .white : .black.opacity(0.34))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .buttonStyle(.plain)
+            .disabled(!canBuy)
+        }
+        .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+        .padding(10)
+        .background(.white.opacity(canBuy ? 0.1 : 0.04))
+        .overlay {
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(.white.opacity(canBuy ? 0.55 : 0.22), lineWidth: 1)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private func resourceRow(
+        _ amounts: [TradeResourceAmount],
+        prefix: String
+    ) -> some View {
+        HStack(spacing: 5) {
+            ForEach(amounts) { amount in
+                AppResourceLabel(
+                    imageName: amount.imageName ?? amount.resource.imageName,
+                    value: amount.amount,
+                    prefix: prefix,
+                    iconSize: 16,
+                    fontSize: 9
+                )
+            }
+        }
+    }
+
+    private func unlockRow(_ unlocks: [TradeUnlockReward]) -> some View {
+        HStack(spacing: 5) {
+            ForEach(unlocks) { unlock in
+                RemoteImage(name: unlock.imageName)
+                    .frame(width: 16, height: 16)
+            }
+        }
+    }
+
+    private func apply(_ offer: TradeOffer) {
+        let didApply = progress.applyTradeOffer(offer)
+        message = didApply ? "Bought" : "Not enough chips"
+
+        Task {
+            try? await Task.sleep(for: .seconds(1.1))
+            await MainActor.run {
+                message = ""
+            }
+        }
+    }
+
+    private func localizedCurrencyName(_ event: GameEvent) -> String {
+        localizer.text(event.currencyNameKey, fallback: event.currencyName)
     }
 }
 
@@ -603,7 +800,11 @@ private struct EventBattleView: View {
         return BattleAttackResult(
             damageDealt: actualDamage,
             coinsAwarded: didClear ? event.rewards.coins : 0,
-            crystalsAwarded: didClear ? event.rewards.crystals : 0
+            crystalsAwarded: didClear ? event.rewards.crystals : 0,
+            relicsAwarded: didClear ? event.rewards.relics : 0,
+            skillBooksAwarded: didClear ? event.rewards.skillBooks : 0,
+            eventChipsAwarded: didClear ? event.rewards.chipAmount : 0,
+            eventChipImageName: event.currencyImageName
         )
     }
 
@@ -625,7 +826,7 @@ private struct EventBattleView: View {
                 }
 
                 Text(localizedVictoryTitle)
-                    .widerwillenFont(size: 30, weight: .heavy)
+                    .widerwillenPixelFont(size: 30, weight: .heavy)
                     .shadow(
                         color: .black.opacity(0.9),
                         radius: 3,

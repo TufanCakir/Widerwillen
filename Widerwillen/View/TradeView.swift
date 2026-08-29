@@ -25,7 +25,7 @@ struct TradeView: View {
         self.playSoundEffect = playSoundEffect
         self.configuration = configuration
         _selectedCategory = State(
-            initialValue: configuration.offers.first?.category ?? ""
+            initialValue: configuration.globalOffers.first?.category ?? ""
         )
     }
 

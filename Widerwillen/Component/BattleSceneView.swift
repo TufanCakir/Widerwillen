@@ -17,6 +17,7 @@ struct BattleSceneView: View {
     let lookIndex: Int
     let heroAnimationID: String
     let equippedWeaponImageName: String?
+    let equippedWeaponBattleAppearance: WeaponBattleAppearance?
     let companionAnimationIDs: Set<String>
     let spriteAttackInterval: Duration
     let activeSkills: [BattleActiveSkill]
@@ -57,6 +58,7 @@ struct BattleSceneView: View {
         lookIndex: Int,
         heroAnimationID: String,
         equippedWeaponImageName: String? = nil,
+        equippedWeaponBattleAppearance: WeaponBattleAppearance? = nil,
         companionAnimationIDs: Set<String>,
         spriteAttackInterval: Duration,
         activeSkills: [BattleActiveSkill] = [],
@@ -87,6 +89,7 @@ struct BattleSceneView: View {
         self.lookIndex = lookIndex
         self.heroAnimationID = heroAnimationID
         self.equippedWeaponImageName = equippedWeaponImageName
+        self.equippedWeaponBattleAppearance = equippedWeaponBattleAppearance
         self.companionAnimationIDs = companionAnimationIDs
         self.spriteAttackInterval = spriteAttackInterval
         self.activeSkills = activeSkills
@@ -213,6 +216,7 @@ struct BattleSceneView: View {
             scene.updateBattleSprites(
                 heroAnimationID: heroAnimationID,
                 equippedWeaponImageName: equippedWeaponImageName,
+                equippedWeaponBattleAppearance: equippedWeaponBattleAppearance,
                 companionAnimationIDs: companionAnimationIDs
             )
             scene.updateEnemy(currentEnemy, isBoss: isBossStage)
@@ -225,6 +229,7 @@ struct BattleSceneView: View {
             scene.updateBattleSprites(
                 heroAnimationID: animationID,
                 equippedWeaponImageName: equippedWeaponImageName,
+                equippedWeaponBattleAppearance: equippedWeaponBattleAppearance,
                 companionAnimationIDs: companionAnimationIDs
             )
         }
@@ -232,6 +237,7 @@ struct BattleSceneView: View {
             scene.updateBattleSprites(
                 heroAnimationID: heroAnimationID,
                 equippedWeaponImageName: imageName,
+                equippedWeaponBattleAppearance: equippedWeaponBattleAppearance,
                 companionAnimationIDs: companionAnimationIDs
             )
         }
@@ -239,6 +245,7 @@ struct BattleSceneView: View {
             scene.updateBattleSprites(
                 heroAnimationID: heroAnimationID,
                 equippedWeaponImageName: equippedWeaponImageName,
+                equippedWeaponBattleAppearance: equippedWeaponBattleAppearance,
                 companionAnimationIDs: animationIDs
             )
         }
@@ -388,10 +395,19 @@ struct BattleSceneView: View {
         )
 
         if result.coinsAwarded > 0 {
-            addCoinPopups(count: min(max(result.coinsAwarded / 10, 3), 10))
+            addRewardPopups(
+                imageName: "icon_pixel_coin",
+                count: min(max(result.coinsAwarded / 10, 3), 10),
+                xRange: 0.22...0.78
+            )
         }
 
         if result.crystalsAwarded > 0 {
+            addRewardPopups(
+                imageName: "icon_pixel_crystal",
+                count: min(max(result.crystalsAwarded, 1), 6),
+                xRange: 0.44...0.82
+            )
             addPopup(
                 text: "+\(result.crystalsAwarded)",
                 color: .cyan,
@@ -401,7 +417,27 @@ struct BattleSceneView: View {
             )
         }
 
+        if result.relicsAwarded > 0 {
+            addRewardPopups(
+                imageName: "icon_pixel_relic",
+                count: min(max(result.relicsAwarded, 1), 6),
+                xRange: 0.18...0.56
+            )
+            addPopup(
+                text: "+\(result.relicsAwarded)",
+                color: .systemPurple,
+                xRatio: 0.22,
+                yRatio: 0.5,
+                imageName: "icon_pixel_relic"
+            )
+        }
+
         if result.skillBooksAwarded > 0 {
+            addRewardPopups(
+                imageName: "icon_pixel_skill_book",
+                count: min(max(result.skillBooksAwarded, 1), 6),
+                xRange: 0.24...0.64
+            )
             addPopup(
                 text: "+\(result.skillBooksAwarded)",
                 color: .systemMint,
@@ -410,9 +446,29 @@ struct BattleSceneView: View {
                 imageName: "icon_pixel_skill_book"
             )
         }
+
+        if result.eventChipsAwarded > 0 {
+            let imageName = result.eventChipImageName ?? "icon_pixel_chip_blue"
+            addRewardPopups(
+                imageName: imageName,
+                count: min(max(result.eventChipsAwarded / 20, 3), 8),
+                xRange: 0.22...0.78
+            )
+            addPopup(
+                text: "+\(result.eventChipsAwarded)",
+                color: .systemOrange,
+                xRatio: 0.5,
+                yRatio: 0.58,
+                imageName: imageName
+            )
+        }
     }
 
-    private func addCoinPopups(count: Int) {
+    private func addRewardPopups(
+        imageName: String,
+        count: Int,
+        xRange: ClosedRange<Double>
+    ) {
         for index in 0..<count {
             Task {
                 try? await Task.sleep(for: .milliseconds(index * 45))
@@ -420,9 +476,9 @@ struct BattleSceneView: View {
                     addPopup(
                         text: "",
                         color: .yellow,
-                        xRatio: Double.random(in: 0.22...0.78),
+                        xRatio: Double.random(in: xRange),
                         yRatio: Double.random(in: 0.62...0.78),
-                        imageName: "icon_pixel_coin"
+                        imageName: imageName
                     )
                 }
             }
@@ -634,7 +690,7 @@ extension SpriteAnimationScene {
         currentHP: 40,
         maxHP: 40,
         lookIndex: 0,
-        heroAnimationID: "sprite_nimbi",
+        heroAnimationID: "nimbi_original",
         equippedWeaponImageName: "icon_pixel_sword",
         companionAnimationIDs: [],
         spriteAttackInterval: .seconds(1.4),

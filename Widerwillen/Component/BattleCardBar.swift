@@ -21,12 +21,16 @@ struct BattleCardBar: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 10) {
-                ForEach(unlockedBattleCards) { card in
+                ForEach(visibleBattleCards) { card in
+                    let isUnlocked = isBattleCardUnlocked(card)
                     BattleCardButton(
                         card: card,
                         cooldownRemaining: cardCooldownRemaining(for: card.id),
-                        isActive: false
+                        isActive: false,
+                        isLocked: !isUnlocked,
+                        lockText: lockText(for: card)
                     ) {
+                        guard isUnlocked else { return }
                         onCardAttack(card)
                     }
                 }
@@ -58,13 +62,27 @@ struct BattleCardBar: View {
         }
     }
 
-    private var unlockedBattleCards: [BattleCardDefinition] {
+    private var visibleBattleCards: [BattleCardDefinition] {
         battleCards.cards.filter { card in
-            guard card.id != "shadow_clone_active" else { return false }
-            guard let skillID = card.requiredSkillID else { return true }
-
-            return progress.skillLevel(forSkillID: skillID) >= card.requiredSkillLevel
+            if card.id == "shadow_clone_active",
+                isBattleCardUnlocked(card)
+            {
+                return false
+            }
+            return true
         }
+    }
+
+    private func isBattleCardUnlocked(_ card: BattleCardDefinition) -> Bool {
+        progress.accountLevel >= card.requiredAccountLevel
+    }
+
+    private func lockText(for card: BattleCardDefinition) -> String? {
+        guard !isBattleCardUnlocked(card) else {
+            return nil
+        }
+
+        return "LV \(card.requiredAccountLevel)"
     }
 
     private func cardDefinition(for id: String) -> BattleCardDefinition? {
@@ -86,6 +104,8 @@ private struct BattleCardButton: View {
     var fallbackImageName = "icon_pixel_sword"
     let cooldownRemaining: TimeInterval
     let isActive: Bool
+    var isLocked = false
+    var lockText: String?
     let action: () -> Void
 
     var body: some View {
@@ -142,6 +162,20 @@ private struct BattleCardButton: View {
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 1)
                 }
+
+                if isLocked {
+                    Color.black.opacity(0.54)
+
+                    VStack(spacing: 5) {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 18, weight: .heavy))
+
+                        Text(lockText ?? "LOCKED")
+                            .widerwillenFont(size: 12, weight: .heavy)
+                    }
+                    .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 1)
+                }
             }
             .frame(width: 142, height: 138)
             .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -155,8 +189,8 @@ private struct BattleCardButton: View {
             .shadow(color: .black.opacity(0.82), radius: 4, x: 0, y: 2)
         }
         .buttonStyle(.plain)
-        .disabled(isCoolingDown || isActive)
-        .opacity(isCoolingDown ? 0.68 : 1)
+        .disabled(isCoolingDown || isActive || isLocked)
+        .opacity(isCoolingDown || isLocked ? 0.68 : 1)
     }
 
     private var title: String { card?.title ?? fallbackTitle }

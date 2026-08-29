@@ -89,6 +89,9 @@ struct SummonEntry: Decodable, Identifiable {
     let damageBonus: Int
     let weight: Double
 
+    // Darstellung der Waffe im Kampf
+    let battleAppearance: WeaponBattleAppearance?
+
     private enum CodingKeys: String, CodingKey {
         case id
         case name
@@ -100,30 +103,62 @@ struct SummonEntry: Decodable, Identifiable {
         case rarity
         case damageBonus
         case weight
+
+        // NEU
+        case battleAppearance
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+
         id = try container.decode(String.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
+
         spriteIndex = try container.decodeIfPresent(
             Int.self,
             forKey: .spriteIndex
         )
+
         characterID = try container.decodeIfPresent(
             String.self,
             forKey: .characterID
         )
-        skinID = try container.decodeIfPresent(String.self, forKey: .skinID)
+
+        skinID = try container.decodeIfPresent(
+            String.self,
+            forKey: .skinID
+        )
+
         companionID = try container.decodeIfPresent(
             String.self,
             forKey: .companionID
         )
-        imageName = try container.decode(String.self, forKey: .imageName)
-        rarity = try container.decode(SpriteRarity.self, forKey: .rarity)
+
+        imageName = try container.decode(
+            String.self,
+            forKey: .imageName
+        )
+
+        rarity = try container.decode(
+            SpriteRarity.self,
+            forKey: .rarity
+        )
+
         damageBonus =
-            try container.decodeIfPresent(Int.self, forKey: .damageBonus) ?? 1
-        weight = try container.decode(Double.self, forKey: .weight)
+            try container.decodeIfPresent(
+                Int.self,
+                forKey: .damageBonus
+            ) ?? 1
+
+        weight = try container.decode(
+            Double.self,
+            forKey: .weight
+        )
+
+        battleAppearance = try container.decodeIfPresent(
+            WeaponBattleAppearance.self,
+            forKey: .battleAppearance
+        )
     }
 }
 

@@ -13,14 +13,14 @@
                     "id": "nimbi_default",
                     "name": "Nimbi",
                     "imageName": "icon_nimpi",
-                    "animationID": "sprite_nimbi",
+                    "animationID": "nimbi_original",
                     "unlockSource": "default"
                 },
                 {
                     "id": "nimbi_night_skin",
                     "name": "Night Skin",
                     "imageName": "icon_nimbi_night",
-                    "animationID": "sprite_nimbi_night",
+                    "animationID": "nimbi_night",
                     "unlockSource": "shop"
                 },
                 {

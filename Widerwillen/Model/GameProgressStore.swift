@@ -16,7 +16,7 @@ final class GameProgressStore {
     private static let oldDefaultProfileIconImageName = "sprite_cookieman"
     private static let defaultCharacterID = "nimbi"
     private static let defaultCharacterSkinID = "nimbi_default"
-    private static let defaultHeroAnimationID = "sprite_nimbi"
+    private static let defaultHeroAnimationID = "nimbi_original"
     private static let defaultHeroBasePower = 6
     private static let characterConfiguration =
         (try? CharacterConfiguration.load())
@@ -28,6 +28,9 @@ final class GameProgressStore {
         (try? PassConfiguration.load()) ?? PassConfiguration(passes: [])
     private static let skillConfiguration =
         (try? SkillConfiguration.load()) ?? SkillConfiguration(skills: [])
+    private static let summonConfiguration =
+        (try? SummonConfiguration.load())
+        ?? SummonConfiguration(banners: [])
 
     private(set) var stage = 1
     private(set) var stageHP = 12
@@ -151,6 +154,17 @@ final class GameProgressStore {
 
     var equippedWeaponImageName: String? {
         equippedWeapon?.imageName
+    }
+    
+    var equippedWeaponBattleAppearance: WeaponBattleAppearance? {
+        guard let selectedWeaponItemID else {
+            return nil
+        }
+
+        return Self.summonConfiguration.banners
+            .flatMap(\.entries)
+            .first { $0.id == selectedWeaponItemID }?
+            .battleAppearance
     }
 
     var battleCompanionAnimationIDs: Set<String> {
@@ -796,6 +810,11 @@ final class GameProgressStore {
 
     func skillLevel(forSkillID skillID: String) -> Int {
         ownedSkillLevels[skillID, default: 0]
+    }
+
+    func requiredAccountLevel(forSkillID skillID: String) -> Int? {
+        Self.skillConfiguration.skills.first { $0.id == skillID }?
+            .requiredAccountLevel
     }
 
     func canUpgradeSkill(_ skill: SkillNode) -> Bool {
@@ -1796,7 +1815,10 @@ struct BattleAttackResult {
     let damageDealt: Int
     var coinsAwarded = 0
     var crystalsAwarded = 0
+    var relicsAwarded = 0
     var skillBooksAwarded = 0
+    var eventChipsAwarded = 0
+    var eventChipImageName: String?
 }
 
 struct BattleActiveSkill: Identifiable, Equatable {

@@ -36,14 +36,20 @@ extension Font {
 extension View {
     func widerwillenFont(size: CGFloat, weight: Font.Weight = .regular) -> some View {
         self
+            .font(.system(size: size, weight: weight))
+    }
+
+    func widerwillenPixelFont(
+        size: CGFloat,
+        weight: Font.Weight = .regular
+    ) -> some View {
+        self
             .font(.widerwillenPixel(size: size))
             .fontWeight(weight)
             .textCase(.uppercase)
     }
 
     func widerwillenTypography() -> some View {
-        self
-            .font(.widerwillenPixel(size: 14))
-            .textCase(.uppercase)
+        self.font(.system(size: 14))
     }
 }

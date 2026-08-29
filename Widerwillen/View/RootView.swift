@@ -269,6 +269,11 @@ struct RootView: View {
                 progress: progress,
                 playSoundEffect: musicPlayer.playSoundEffect
             )
+        case .equipment:
+            EquipmentView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
+            )
         case .warehouse:
             warehouseView(
                 progress: progress,
@@ -319,6 +324,8 @@ struct RootView: View {
                 return .news
             case .gift:
                 return .gift
+            case .equipment:
+                return .warehouse
             case .dailyLogin:
                 return .dailyLogin
             }
@@ -361,8 +368,8 @@ struct RootView: View {
 
     private func usesFooterShell(_ mode: MenuMode) -> Bool {
         switch mode {
-        case .event, .skills, .settings, .news, .gift, .warehouse, .pass,
-            .dailyLogin:
+        case .event, .skills, .settings, .news, .gift, .equipment, .warehouse,
+            .pass, .dailyLogin:
             true
         case .battle:
             false

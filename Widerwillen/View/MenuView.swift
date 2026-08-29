@@ -116,6 +116,10 @@ struct MenuView: View {
                 playSoundEffect("ui_navigation")
                 openMode(.gift)
             }
+            shortcutButton(title: "Equipment", assetImage: "icon_pixel_sword") {
+                playSoundEffect("ui_navigation")
+                openMode(.equipment)
+            }
             shortcutButton(title: "Warehouse", assetImage: "icon_pixel_box") {
                 playSoundEffect("ui_navigation")
                 openMode(.warehouse)
@@ -307,6 +311,7 @@ enum MenuMode {
     case settings
     case news
     case gift
+    case equipment
     case warehouse
     case pass
     case dailyLogin

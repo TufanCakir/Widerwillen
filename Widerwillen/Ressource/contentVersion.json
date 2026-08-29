@@ -1,5 +1,5 @@
 {
-    "contentVersion": 131,
+    "contentVersion": 159,
     "json": [
         {
             "name": "arena",
@@ -346,17 +346,12 @@
         {
             "name": "icon_pixel_gun",
             "path": "assets/icon_pixel_gun.png",
-            "version": 1
+            "version": 2
         },
         {
             "name": "icon_pixel_trade",
             "path": "assets/icon_pixel_trade.png",
             "version": 1
-        },
-        {
-            "name": "sprite_blunt",
-            "path": "assets/sprite_blunt.png",
-            "version": 2
         },
         {
             "name": "icon_blunt",
@@ -371,51 +366,6 @@
         {
             "name": "icon_molc",
             "path": "assets/icon_molc.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_cookieman",
-            "path": "assets/sprite_cookieman.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_dompi",
-            "path": "assets/sprite_dompi.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_klempi",
-            "path": "assets/sprite_klempi.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_nimbi",
-            "path": "assets/sprite_nimbi.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_slenderize",
-            "path": "assets/sprite_slenderize.png",
-            "version": 3
-        },
-        {
-            "name": "sprite_slush",
-            "path": "assets/sprite_slush.png",
-            "version": 3
-        },
-        {
-            "name": "sprite_dazzle",
-            "path": "assets/sprite_dazzle.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_molc",
-            "path": "assets/sprite_molc.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_thusax",
-            "path": "assets/sprite_thusax.png",
             "version": 1
         },
         {
@@ -456,11 +406,6 @@
         {
             "name": "icon_nimbi_night",
             "path": "assets/icon_nimbi_night.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_nimbi_night",
-            "path": "assets/sprite_nimbi_night.png",
             "version": 1
         },
         {
@@ -769,6 +714,66 @@
             "version": 1
         },
         {
+            "name": "sprite_original_blunt_body",
+            "path": "assets/sprite_original_blunt_body.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_blunt_head",
+            "path": "assets/sprite_original_blunt_head.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_blunt_left_hand",
+            "path": "assets/sprite_original_blunt_left_hand.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_blunt_right_hand",
+            "path": "assets/sprite_original_blunt_right_hand.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_blunt_left_foot",
+            "path": "assets/sprite_original_blunt_left_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_blunt_right_foot",
+            "path": "assets/sprite_original_blunt_right_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_molc_body",
+            "path": "assets/sprite_original_molc_body.png",
+            "version": 3
+        },
+        {
+            "name": "sprite_original_molc_head",
+            "path": "assets/sprite_original_molc_head.png",
+            "version": 3
+        },
+        {
+            "name": "sprite_original_molc_left_hand",
+            "path": "assets/sprite_original_molc_left_hand.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_molc_right_hand",
+            "path": "assets/sprite_original_molc_right_hand.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_molc_left_foot",
+            "path": "assets/sprite_original_molc_left_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_original_molc_right_foot",
+            "path": "assets/sprite_original_molc_right_foot.png",
+            "version": 1
+        },
+        {
             "name": "widerwillen_font_logo",
             "path": "assets/widerwillen_font_logo.png",
             "version": 6
@@ -776,7 +781,7 @@
         {
             "name": "widerwillen_logo",
             "path": "assets/widerwillen_logo.png",
-            "version": 7
+            "version": 8
         }
     ],
     "music": [

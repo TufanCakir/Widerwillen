@@ -16,7 +16,6 @@ struct WiderwillenApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
-                .widerwillenTypography()
         }
     }
 }

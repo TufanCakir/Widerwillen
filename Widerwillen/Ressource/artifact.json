@@ -34,7 +34,7 @@
             {
                 "id": "beast_mark",
                 "name": "Beast Mark",
-                "imageName": "sprite_cookieman",
+                "imageName": "icon_cookieman",
                 "rarity": "legendary",
                 "damageBonus": 20,
                 "weight": 3

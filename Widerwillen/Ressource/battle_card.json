@@ -22,7 +22,8 @@
             "damageMultiplier": 1.35,
             "gradientColors": ["#123370", "#1d9bff"],
             "requiredSkillID": "tap_focus_damage",
-            "requiredSkillLevel": 1
+            "requiredSkillLevel": 1,
+            "requiredAccountLevel": 1
         },
         {
             "id": "dash_slash",
@@ -35,7 +36,8 @@
             "damageMultiplier": 1.6,
             "gradientColors": ["#2b2f3a", "#6fb8ff"],
             "requiredSkillID": "tap_lucky_drop",
-            "requiredSkillLevel": 1
+            "requiredSkillLevel": 1,
+            "requiredAccountLevel": 1
         },
         {
             "id": "roundhouse_kick",
@@ -48,7 +50,8 @@
             "damageMultiplier": 2.2,
             "gradientColors": ["#ffffff", "#ffcf70"],
             "requiredSkillID": "shadow_clone_duration",
-            "requiredSkillLevel": 1
+            "requiredSkillLevel": 1,
+            "requiredAccountLevel": 1
         },
         {
             "id": "tornado_kick",
@@ -61,7 +64,8 @@
             "damageMultiplier": 2.8,
             "gradientColors": ["#3d1cff", "#ff5bd8"],
             "requiredSkillID": "dimension_stage_skip",
-            "requiredSkillLevel": 1
+            "requiredSkillLevel": 1,
+            "requiredAccountLevel": 1
         },
         {
             "id": "air_spin",
@@ -74,7 +78,8 @@
             "damageMultiplier": 3.1,
             "gradientColors": ["#10172a", "#33d4ff"],
             "requiredSkillID": "dimension_total_damage",
-            "requiredSkillLevel": 1
+            "requiredSkillLevel": 1,
+            "requiredAccountLevel": 1
         },
         {
             "id": "shadow_clone_active",
@@ -87,7 +92,8 @@
             "damageMultiplier": 0,
             "gradientColors": ["#130052", "#3d1cff"],
             "requiredSkillID": "shadow_clone_active",
-            "requiredSkillLevel": 1
+            "requiredSkillLevel": 1,
+            "requiredAccountLevel": 1
         }
     ]
 }

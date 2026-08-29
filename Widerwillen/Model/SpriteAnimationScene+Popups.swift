@@ -35,7 +35,7 @@ extension SpriteAnimationScene {
 
         if !text.isEmpty {
             let label = SKLabelNode(text: text)
-            label.fontName = "AvenirNext-Heavy"
+            label.fontName = WiderwillenTypography.fontName
             label.fontSize = 18
             label.fontColor = color
             label.verticalAlignmentMode = .center

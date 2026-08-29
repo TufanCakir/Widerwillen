@@ -165,6 +165,16 @@ struct SpriteRigJoint: Codable {
     let y: CGFloat
 }
 
+
+// MARK: - Weapon Battle Appearance
+
+struct WeaponBattleAppearance: Codable, Hashable {
+    let scale: CGFloat?
+    let offsetX: CGFloat?
+    let offsetY: CGFloat?
+    let rotation: CGFloat?
+}
+
 struct BattleCardConfiguration: Decodable {
     let cards: [BattleCardDefinition]
 
@@ -193,7 +203,8 @@ struct BattleCardDefinition: Decodable, Identifiable {
     let gradientColors: [String]
     let requiredSkillID: String?
     let requiredSkillLevel: Int
-
+    let requiredAccountLevel: Int
+    
     private enum CodingKeys: String, CodingKey {
         case id
         case title
@@ -209,50 +220,56 @@ struct BattleCardDefinition: Decodable, Identifiable {
         case gradientColors
         case requiredSkillID
         case requiredSkillLevel
+        case requiredAccountLevel
     }
-
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         title = try container.decode(String.self, forKey: .title)
         move =
-            try container.decodeIfPresent(BattleCardMove.self, forKey: .move)
-            ?? .punch
+        try container.decodeIfPresent(BattleCardMove.self, forKey: .move)
+        ?? .punch
         style =
-            try container.decodeIfPresent(String.self, forKey: .style)
-            ?? "Strike"
+        try container.decodeIfPresent(String.self, forKey: .style)
+        ?? "Strike"
         imageName = try container.decodeIfPresent(String.self, forKey: .imageName)
         cardImageName =
-            try container.decodeIfPresent(String.self, forKey: .cardImageName)
-            ?? container.decodeIfPresent(String.self, forKey: .cardImage)
+        try container.decodeIfPresent(String.self, forKey: .cardImageName)
+        ?? container.decodeIfPresent(String.self, forKey: .cardImage)
         backgroundImageName = try container.decodeIfPresent(
             String.self,
             forKey: .backgroundImageName
         )
         cooldownSeconds =
-            try container.decodeIfPresent(
-                Double.self,
-                forKey: .cooldownSeconds
-            ) ?? 0.45
+        try container.decodeIfPresent(
+            Double.self,
+            forKey: .cooldownSeconds
+        ) ?? 0.45
         staminaCost =
-            try container.decodeIfPresent(Int.self, forKey: .staminaCost) ?? 0
+        try container.decodeIfPresent(Int.self, forKey: .staminaCost) ?? 0
         damageMultiplier =
-            try container.decodeIfPresent(
-                Double.self,
-                forKey: .damageMultiplier
-            ) ?? 1
+        try container.decodeIfPresent(
+            Double.self,
+            forKey: .damageMultiplier
+        ) ?? 1
         gradientColors =
-            try container.decodeIfPresent(
-                [String].self,
-                forKey: .gradientColors
-            ) ?? ["#ffffff", "#a8d8ff"]
+        try container.decodeIfPresent(
+            [String].self,
+            forKey: .gradientColors
+        ) ?? ["#ffffff", "#a8d8ff"]
         requiredSkillID =
-            try container.decodeIfPresent(String.self, forKey: .requiredSkillID)
+        try container.decodeIfPresent(String.self, forKey: .requiredSkillID)
         requiredSkillLevel =
-            try container.decodeIfPresent(
-                Int.self,
-                forKey: .requiredSkillLevel
-            ) ?? 1
+        try container.decodeIfPresent(
+            Int.self,
+            forKey: .requiredSkillLevel
+        ) ?? 1
+        requiredAccountLevel =
+        try container.decodeIfPresent(
+            Int.self,
+            forKey: .requiredAccountLevel
+        ) ?? 0
     }
 }
 

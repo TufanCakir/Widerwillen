@@ -26,9 +26,9 @@ struct EnemyConfiguration: Decodable {
             return EnemyDefinition(
                 id: "fallback_enemy",
                 name: "Enemy",
-                imageName: "sprite_blunt",
+                imageName: "blunt_original",
                 scale: 0.30,
-                animationID: "sprite_blunt",
+                animationID: "blunt_original",
                 columns: 1,
                 rows: 1,
                 frameCount: 1,

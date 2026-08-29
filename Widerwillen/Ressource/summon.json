@@ -149,7 +149,13 @@
                     "imageName": "icon_pixel_sword",
                     "rarity": "common",
                     "damageBonus": 10,
-                    "weight": 50
+                    "weight": 50,
+                    "battleAppearance": {
+                        "scale": 1.0,
+                        "offsetX": 10,
+                        "offsetY": 10,
+                        "rotation": -10
+                    }
                 },
                 {
                     "id": "fun_edge",
@@ -157,7 +163,13 @@
                     "imageName": "icon_pixel_big_sword",
                     "rarity": "epic",
                     "damageBonus": 14,
-                    "weight": 10
+                    "weight": 10,
+                    "battleAppearance": {
+                        "scale": 1.0,
+                        "offsetX": 10,
+                        "offsetY": 10,
+                        "rotation": -10
+                    }
                 },
                 {
                     "id": "moon_blaster",
@@ -165,7 +177,13 @@
                     "imageName": "icon_pixel_gun",
                     "rarity": "rare",
                     "damageBonus": 14,
-                    "weight": 30
+                    "weight": 30,
+                    "battleAppearance": {
+                        "scale": 1.0,
+                        "offsetX": 20,
+                        "offsetY": 10,
+                        "rotation": -10
+                    }
                 },
                 {
                     "id": "slasher",
@@ -173,7 +191,13 @@
                     "imageName": "icon_pixel_slasher",
                     "rarity": "legendary",
                     "damageBonus": 20,
-                    "weight": 1
+                    "weight": 1,
+                    "battleAppearance": {
+                        "scale": 1.0,
+                        "offsetX": 10,
+                        "offsetY": 10,
+                        "rotation": -10
+                    }
                 }
             ]
         }

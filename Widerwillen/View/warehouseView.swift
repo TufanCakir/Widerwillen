@@ -52,8 +52,8 @@ struct warehouseView: View {
                     relicsPage
                         .tag(WarehouseCategory.relics.rawValue)
 
-                    equipmentPage
-                        .tag(WarehouseCategory.equipment.rawValue)
+                    itemsPage
+                        .tag(WarehouseCategory.items.rawValue)
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
             }
@@ -254,14 +254,14 @@ struct warehouseView: View {
         }
     }
 
-    private var equipmentPage: some View {
+    private var itemsPage: some View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 if progress.ownedItems.isEmpty {
                     emptyState(
                         imageName: "icon_pixel_box",
-                        titleKey: "warehouse.empty.equipment",
-                        fallbackTitle: "No equipment"
+                        titleKey: "warehouse.empty.items",
+                        fallbackTitle: "No items"
                     )
                 } else {
                     ForEach(
@@ -273,15 +273,8 @@ struct warehouseView: View {
                             imageName: item.imageName,
                             subtitle: "Lv \(item.level)",
                             valueText: "+\(item.damageBonus)",
-                            rarity: item.rarity,
-                            isEquipped: progress.isEquippedWeapon(item),
-                            actionTitle: progress.isEquippedWeapon(item)
-                                ? "Equipped"
-                                : "Equip"
-                        ) {
-                            playSoundEffect("ui_confirm")
-                            progress.equipWeapon(item)
-                        }
+                            rarity: item.rarity
+                        )
                     }
                 }
             }
@@ -439,7 +432,7 @@ private enum WarehouseCategory: String, CaseIterable {
     case currencies
     case eventChips
     case relics
-    case equipment
+    case items
 
     var titleKey: String {
         switch self {
@@ -449,8 +442,8 @@ private enum WarehouseCategory: String, CaseIterable {
             "warehouse.category.event_chips"
         case .relics:
             "warehouse.category.relics"
-        case .equipment:
-            "warehouse.category.equipment"
+        case .items:
+            "warehouse.category.items"
         }
     }
 
@@ -462,8 +455,8 @@ private enum WarehouseCategory: String, CaseIterable {
             "Event Chips"
         case .relics:
             "Relics"
-        case .equipment:
-            "Equipment"
+        case .items:
+            "Items"
         }
     }
 }

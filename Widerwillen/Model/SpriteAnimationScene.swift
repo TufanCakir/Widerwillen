@@ -16,10 +16,13 @@ final class SpriteAnimationScene: SKScene {
     private var characters: [CharacterInstance] = []
     private var enemyNode: SKNode?
     private var enemySpriteNode: SKSpriteNode?
+    private var enemyRigNode: SKNode?
+    private var enemyRig: SpriteRig?
     private var enemyLabelNode: SKLabelNode?
     private var shadowCloneNode: SKSpriteNode?
-    private var heroAnimationID = "sprite_nimbi"
+    private var heroAnimationID = "nimbi_original"
     private var equippedWeaponImageName: String?
+    private var equippedWeaponBattleAppearance: WeaponBattleAppearance?
     private var companionAnimationIDs: Set<String> = []
     private var currentEnemy: EnemyDefinition?
     private var isCurrentEnemyBoss = false
@@ -46,9 +49,11 @@ final class SpriteAnimationScene: SKScene {
     private let heroXRatio: CGFloat = 0.34
     private let heroYRatio: CGFloat = 0.54
     private let heroScale: CGFloat = 0.28
-
+    private let enemyXRatio: CGFloat = 0.75
+    private let weaponVisualOffset = CGPoint(x: 10, y: 10)
+    
     private var floorHeight: CGFloat {
-        size.height * arena.floorHeightRatio
+        size.height * arena.floorHeightRatio 
     }
 
     private var gridBaseY: CGFloat {
@@ -78,6 +83,8 @@ final class SpriteAnimationScene: SKScene {
         view.ignoresSiblingOrder = true
 
         setupCharactersIfNeeded()
+        updateCharacterVisibility()
+        updateRigWeapons()
 
         layoutCharacters()
     }
@@ -85,11 +92,15 @@ final class SpriteAnimationScene: SKScene {
     func updateBattleSprites(
         heroAnimationID: String,
         equippedWeaponImageName: String?,
+        equippedWeaponBattleAppearance: WeaponBattleAppearance?,
         companionAnimationIDs: Set<String>
     ) {
         self.heroAnimationID = heroAnimationID
         self.equippedWeaponImageName = equippedWeaponImageName
+        self.equippedWeaponBattleAppearance = equippedWeaponBattleAppearance
         self.companionAnimationIDs = companionAnimationIDs
+
+        setupCharactersIfNeeded()
         updateCharacterVisibility()
         updateRigWeapons()
         layoutCharacters()
@@ -109,6 +120,10 @@ final class SpriteAnimationScene: SKScene {
         }
 
         enemyNode?.removeFromParent()
+        enemySpriteNode = nil
+        enemyRigNode = nil
+        enemyRig = nil
+        enemyLabelNode = nil
 
         let container = SKNode()
         container.name = "enemy"
@@ -124,26 +139,37 @@ final class SpriteAnimationScene: SKScene {
         label.horizontalAlignmentMode = .center
         label.zPosition = 2
 
-        let sprite = SKSpriteNode()
-        sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        sprite.xScale = -1
-        sprite.zPosition = 1
-        configureSprite(
-            sprite,
-            animationID: enemy.animationID ?? enemy.imageName,
-            columns: enemy.columns,
-            rows: enemy.rows,
-            frameCount: enemy.frameCount,
-            fps: enemy.fps,
-            actionKey: "enemyAnimation"
-        )
+        let animationID = enemy.animationID ?? enemy.imageName
+        if let rig = rig(for: animationID) ?? rig(for: enemy.imageName) {
+            let rigNode = makeRigNode(for: rig)
+            rigNode.zPosition = 1
+            container.addChild(rigNode)
+            enemyRigNode = rigNode
+            enemyRig = rig
+            startRigIdle(on: rigNode)
+            scheduleEnemyRigMotion()
+        } else {
+            let sprite = SKSpriteNode()
+            sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+            sprite.xScale = -1
+            sprite.zPosition = 1
+            configureSprite(
+                sprite,
+                animationID: animationID,
+                columns: enemy.columns,
+                rows: enemy.rows,
+                frameCount: enemy.frameCount,
+                fps: enemy.fps,
+                actionKey: "enemyAnimation"
+            )
+            container.addChild(sprite)
+            enemySpriteNode = sprite
+        }
 
-        container.addChild(sprite)
         container.addChild(label)
         addChild(container)
 
         enemyNode = container
-        enemySpriteNode = sprite
         enemyLabelNode = label
         layoutEnemy()
     }
@@ -184,7 +210,7 @@ final class SpriteAnimationScene: SKScene {
 
     func playHeroAttackAnimation(move: BattleCardMove = .punch) {
         guard
-            let hero = characters.first(where: { $0.id == heroAnimationID }),
+            let hero = characters.first(where: { isHeroAnimation(id: $0.id) }),
             !hero.node.isHidden
         else {
             return
@@ -257,10 +283,11 @@ final class SpriteAnimationScene: SKScene {
             spriteSheets.isEmpty
             ? [try? SpriteSheet.load()].compactMap { $0 } : spriteSheets
         var knownIDs = Set(configuredSheets.map(\.id))
+        let knownRigIDs = Set(configuredSheets.compactMap { rig(for: $0.id)?.id })
         var allSheets = configuredSheets
 
         for rig in rigsByID.values.sorted(by: { $0.id < $1.id })
-        where !knownIDs.contains(rig.id) {
+        where !knownIDs.contains(rig.id) && !knownRigIDs.contains(rig.id) {
             allSheets.append(
                 SpriteSheet(
                     id: rig.id,
@@ -278,7 +305,7 @@ final class SpriteAnimationScene: SKScene {
         for index in characters.indices {
             let character = characters[index]
             let scale =
-                character.id == heroAnimationID
+                isHeroAnimation(id: character.id)
                 ? heroScale
                 : character.config.scale ?? arena.characterScale
             let xPosition =
@@ -378,9 +405,9 @@ final class SpriteAnimationScene: SKScene {
         )
 
         if let rightHandBone {
-            addWeapon(from: rig, to: rightHandBone)
+            addWeapon(from: rig, to: rightHandBone, attachesToRightHand: true)
         } else {
-            addWeapon(from: rig, to: torsoBone)
+            addWeapon(from: rig, to: torsoBone, attachesToRightHand: false)
         }
 
         cacheRigNodes(for: root)
@@ -442,7 +469,11 @@ final class SpriteAnimationScene: SKScene {
         parent.addChild(sprite)
     }
 
-    private func addWeapon(from rig: SpriteRig, to parent: SKNode) {
+    private func addWeapon(
+        from rig: SpriteRig,
+        to parent: SKNode,
+        attachesToRightHand: Bool
+    ) {
         guard
             let imageName = rig.parts["weapon"],
             let joint = rig.joints["weapon"]
@@ -452,16 +483,33 @@ final class SpriteAnimationScene: SKScene {
 
         let weaponBone = SKNode()
         weaponBone.name = "weapon"
-        weaponBone.position = CGPoint(x: joint.x, y: joint.y)
-        weaponBone.zPosition = -1
+        if attachesToRightHand, let handJoint = rig.joints["rightHand"] {
+            weaponBone.position = CGPoint(
+                x: joint.x - handJoint.x,
+                y: joint.y - handJoint.y
+            )
+        } else {
+            weaponBone.position = CGPoint(x: joint.x, y: joint.y)
+        }
+        weaponBone.zPosition = 12
         weaponBone.zRotation = -0.18
+        weaponBone.isHidden = true
         storeRestTransform(for: weaponBone)
 
-        let sprite = makeRigSprite(named: imageName, canvasSize: rig.canvasSize)
-        sprite.anchorPoint = CGPoint(x: 0.08, y: 0.5)
+        let sprite = makeRigSprite(
+            named: imageName,
+            canvasSize: rig.canvasSize
+        )
+
+        sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         sprite.name = "weaponSprite"
-        sprite.position = CGPoint(x: -0.8, y: 0)
-        sprite.setScale(0.3)
+
+        // Waffe etwas von der Hand wegschieben
+        sprite.position = weaponVisualOffset
+
+        sprite.zPosition = 1
+        sprite.setScale(1)
+
         weaponBone.addChild(sprite)
         parent.addChild(weaponBone)
     }
@@ -477,14 +525,31 @@ final class SpriteAnimationScene: SKScene {
                 continue
             }
 
-            weaponBone.isHidden = character.id != heroAnimationID
-
-            if character.id == heroAnimationID,
-                let equippedWeaponImageName
+            if isHeroAnimation(id: character.id),
+               let equippedWeaponImageName
             {
+                weaponBone.isHidden = false
+
                 let weaponTexture = texture(named: equippedWeaponImageName)
                 weaponTexture.filteringMode = .nearest
                 weaponSprite.texture = weaponTexture
+
+                let appearance = equippedWeaponBattleAppearance
+
+                weaponSprite.position = CGPoint(
+                    x: appearance?.offsetX ?? weaponVisualOffset.x,
+                    y: appearance?.offsetY ?? weaponVisualOffset.y
+                )
+
+                weaponSprite.setScale(
+                    appearance?.scale ?? 1.0
+                )
+
+                weaponSprite.zRotation = radians(
+                    appearance?.rotation ?? 0
+                )
+            } else {
+                weaponBone.isHidden = true
             }
         }
     }
@@ -503,15 +568,40 @@ final class SpriteAnimationScene: SKScene {
     }
 
     private func layoutEnemy() {
-        guard let enemy = currentEnemy, let enemyNode, let enemySpriteNode else {
+        guard let enemy = currentEnemy, let enemyNode else {
             return
         }
 
         let enemySize = min(size.width, size.height) * CGFloat(enemy.scale)
-        let yPosition = floorHeight * 0.56 + enemySize * 0.5
-        enemyNode.position = CGPoint(x: size.width * 0.66, y: yPosition)
-        enemySpriteNode.size = CGSize(width: enemySize, height: enemySize)
-        enemyLabelNode?.position = CGPoint(x: 0, y: enemySize * 0.5 + 18)
+
+        if let enemySpriteNode {
+            let yPosition = floorHeight * 0.56 + enemySize * 0.5
+
+            enemyNode.position = CGPoint(
+                x: size.width * enemyXRatio,
+                y: yPosition
+            )
+
+            enemySpriteNode.size = CGSize(
+                width: enemySize,
+                height: enemySize
+            )
+
+        } else if let enemyRigNode, let enemyRig {
+            enemyNode.position = CGPoint(
+                x: size.width * enemyXRatio,
+                y: floorHeight * 0.56
+            )
+
+            let scaleFactor = enemySize / max(enemyRig.canvasSize, 1)
+            enemyRigNode.xScale = -scaleFactor
+            enemyRigNode.yScale = scaleFactor
+        }
+
+        enemyLabelNode?.position = CGPoint(
+            x: 0,
+            y: enemySize * 0.5 + 18
+        )
     }
 
     private func layoutShadowClone() {
@@ -526,81 +616,995 @@ final class SpriteAnimationScene: SKScene {
     }
 
     private func startRigIdle(on node: SKNode) {
-        node.removeAllActions()
-
+        node.removeAction(forKey: "rigIdle")
+        
+        // Alte Idle-Aktionen sauber entfernen.
         for child in animatedRigNodes(in: node) {
-            let amount: CGFloat =
-                child.name == "tail" || child.name?.contains("Ear") == true
-                ? 8
-                : 4
+            child.removeAction(forKey: "rigPartIdle")
+        }
+        
+        // Der komplette Charakter wippt minimal gemeinsam.
+        // Dadurch bleiben Kopf und Körper optisch verbunden.
+        let torsoMotion = SKAction.sequence([
+            .moveBy(x: 0, y: 0.35, duration: 0.45),
+            .moveBy(x: 0, y: -0.35, duration: 0.45)
+        ])
+        
+        node.run(
+            .repeatForever(torsoMotion),
+            withKey: "rigIdle"
+        )
+        
+        for child in animatedRigNodes(in: node) {
+            let amount: CGFloat
+            
+            switch child.name {
+            case "head":
+                amount = 0
+                
+            case "leftHand", "rightHand":
+                amount = 2.5
+                
+            case "leftFoot", "rightFoot":
+                amount = 1.5
+                
+            case "weapon":
+                amount = 2.0
+                
+            case "tail", "leftEar", "rightEar":
+                amount = 6.0
+                
+            default:
+                amount = 0
+            }
+            
+            guard amount != 0 else { continue }
+            
             let motion = SKAction.sequence([
                 .rotate(
                     toAngle: -radians(amount),
-                    duration: 0.36,
+                    duration: 0.45,
                     shortestUnitArc: true
                 ),
                 .rotate(
                     toAngle: radians(amount),
-                    duration: 0.36,
+                    duration: 0.45,
                     shortestUnitArc: true
-                ),
+                )
             ])
-            child.run(.repeatForever(motion), withKey: "rigPartIdle")
+            
+            child.run(
+                .repeatForever(motion),
+                withKey: "rigPartIdle"
+            )
         }
     }
 
     private func playRigAttack(on node: SKNode, move: BattleCardMove) {
+        let resumeKey = "resumeRigIdle-\(ObjectIdentifier(node).hashValue)"
+
+        // Alte Animationen vollständig stoppen.
         node.removeAction(forKey: "rigAttack")
         node.removeAction(forKey: "rigIdle")
-        animatedRigNodes(in: node).forEach {
-            $0.removeAction(forKey: "rigPartIdle")
-            $0.removeAction(forKey: "rigPartAttack")
+        removeAction(forKey: resumeKey)
+
+        for child in namedDescendants(in: node) {
+            child.removeAction(forKey: "rigPartIdle")
+            child.removeAction(forKey: "rigPartAttack")
+            child.removeAction(forKey: "rigTorsoAttack")
         }
+
         resetRigPose(in: node)
 
-        switch move {
-        case .punch:
-            movePart("rightHand", on: node, x: 18, y: 2, angle: -55)
-            rotatePart("leftHand", on: node, angle: 28)
-            rotatePart("weapon", on: node, angle: -70)
-            rotatePart("head", on: node, angle: -8)
-        case .kick:
-            movePart("rightFoot", on: node, x: 20, y: 8, angle: -62)
-            rotatePart("leftFoot", on: node, angle: 26)
-            rotatePart("head", on: node, angle: 6)
-        case .dash:
-            movePart("rightHand", on: node, x: 22, y: 3, angle: -44)
-            movePart("leftHand", on: node, x: -8, y: -3, angle: 26)
-            rotatePart("weapon", on: node, angle: -78)
-        case .tornado:
-            movePart("rightFoot", on: node, x: 18, y: 12, angle: -92)
-            rotatePart("leftFoot", on: node, angle: 45)
-            rotatePart("rightHand", on: node, angle: -55)
-            rotatePart("leftHand", on: node, angle: 55)
-            rotatePart("weapon", on: node, angle: -110)
-            rotatePart("head", on: node, angle: 24)
-        case .roundhouse:
-            movePart("rightFoot", on: node, x: 22, y: 9, angle: -98)
-            rotatePart("leftHand", on: node, angle: 40)
-            rotatePart("rightHand", on: node, angle: -30)
-            rotatePart("weapon", on: node, angle: 32)
-            rotatePart("head", on: node, angle: 10)
-        case .airSpin:
-            for child in animatedRigNodes(in: node) {
-                rotatePart(child.name, on: node, angle: 62)
-            }
+        guard let torso = rigNode(named: "torso", in: node) else {
+            startRigIdle(on: node)
+            return
         }
 
+        let rightHand = rigNode(named: "rightHand", in: node)
+        let leftHand = rigNode(named: "leftHand", in: node)
+        let rightFoot = rigNode(named: "rightFoot", in: node)
+        let leftFoot = rigNode(named: "leftFoot", in: node)
+        let head = rigNode(named: "head", in: node)
+        let weapon = rigNode(named: "weapon", in: node)
+
+        // Hero = +1
+        // gespiegelt dargestellter Enemy = -1
+        let facing: CGFloat = node.xScale < 0 ? -1 : 1
+
+        var attackDuration: TimeInterval = 0.5
+
+        switch move {
+
+        // MARK: - Punch
+
+        case .punch:
+            attackDuration = 0.52
+
+            // Körper: zurückziehen -> explosiv vor -> Recovery
+            let bodyPrepare = SKAction.group([
+                .moveBy(x: -2 * facing, y: -1, duration: 0.11),
+                .rotate(
+                    toAngle: radians(8),
+                    duration: 0.11,
+                    shortestUnitArc: true
+                )
+            ])
+            bodyPrepare.timingMode = .easeOut
+
+            let bodyStrike = SKAction.group([
+                .moveBy(x: 9 * facing, y: 1, duration: 0.065),
+                .rotate(
+                    toAngle: radians(-11),
+                    duration: 0.065,
+                    shortestUnitArc: true
+                )
+            ])
+            bodyStrike.timingMode = .easeIn
+
+            let bodyRecover = SKAction.group([
+                .moveBy(x: -7 * facing, y: 0, duration: 0.20),
+                .rotate(
+                    toAngle: 0,
+                    duration: 0.20,
+                    shortestUnitArc: true
+                )
+            ])
+            bodyRecover.timingMode = .easeOut
+
+            node.run(
+                .sequence([
+                    bodyPrepare,
+                    bodyStrike,
+                    .wait(forDuration: 0.045),
+                    bodyRecover
+                ]),
+                withKey: "rigAttack"
+            )
+
+            rightHand?.run(
+                .sequence([
+                    // Faust weit zurück
+                    .group([
+                        .moveBy(x: -4, y: 1, duration: 0.11),
+                        .rotate(
+                            toAngle: radians(24),
+                            duration: 0.11,
+                            shortestUnitArc: true
+                        )
+                    ]),
+
+                    // Schneller Schlag
+                    .group([
+                        .moveBy(x: 15, y: 0, duration: 0.065),
+                        .rotate(
+                            toAngle: radians(-55),
+                            duration: 0.065,
+                            shortestUnitArc: true
+                        )
+                    ]),
+
+                    // Impact
+                    .wait(forDuration: 0.045),
+
+                    // Zurück
+                    .group([
+                        .moveBy(x: -11, y: -1, duration: 0.20),
+                        .rotate(
+                            toAngle: 0,
+                            duration: 0.20,
+                            shortestUnitArc: true
+                        )
+                    ])
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            leftHand?.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(18),
+                        duration: 0.11,
+                        shortestUnitArc: true
+                    ),
+                    .wait(forDuration: 0.11),
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.20,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            head?.run(
+                .sequence([
+                    .wait(forDuration: 0.08),
+                    .rotate(
+                        toAngle: radians(-7),
+                        duration: 0.07,
+                        shortestUnitArc: true
+                    ),
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.20,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+        // MARK: - Kick
+
+        case .kick:
+            attackDuration = 0.62
+
+            // Gewicht erst auf das Standbein verlagern.
+            node.run(
+                .sequence([
+                    .group([
+                        .moveBy(
+                            x: -3 * facing,
+                            y: -2,
+                            duration: 0.12
+                        )
+                    ]),
+
+                    .group([
+                        .moveBy(
+                            x: 7 * facing,
+                            y: 3,
+                            duration: 0.09
+                        )
+                    ]),
+
+                    .wait(forDuration: 0.055),
+
+                    .moveBy(
+                        x: -4 * facing,
+                        y: -1,
+                        duration: 0.22
+                    )
+                ]),
+                withKey: "rigAttack"
+            )
+
+            torso.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(12),
+                        duration: 0.12,
+                        shortestUnitArc: true
+                    ),
+                    .rotate(
+                        toAngle: radians(-8),
+                        duration: 0.09,
+                        shortestUnitArc: true
+                    ),
+                    .wait(forDuration: 0.055),
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.22,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigTorsoAttack"
+            )
+
+            rightFoot?.run(
+                .sequence([
+                    // Knie anziehen
+                    .group([
+                        .moveBy(x: -2, y: 5, duration: 0.12),
+                        .rotate(
+                            toAngle: radians(24),
+                            duration: 0.12,
+                            shortestUnitArc: true
+                        )
+                    ]),
+
+                    // Kick
+                    .group([
+                        .moveBy(x: 15, y: 5, duration: 0.09),
+                        .rotate(
+                            toAngle: radians(-62),
+                            duration: 0.09,
+                            shortestUnitArc: true
+                        )
+                    ]),
+
+                    .wait(forDuration: 0.055),
+
+                    // Bein zurück
+                    .group([
+                        .moveBy(x: -13, y: -10, duration: 0.22),
+                        .rotate(
+                            toAngle: 0,
+                            duration: 0.22,
+                            shortestUnitArc: true
+                        )
+                    ])
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            leftFoot?.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(9),
+                        duration: 0.12,
+                        shortestUnitArc: true
+                    ),
+                    .wait(forDuration: 0.145),
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.22,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            leftHand?.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(-18),
+                        duration: 0.12,
+                        shortestUnitArc: true
+                    ),
+                    .rotate(
+                        toAngle: radians(22),
+                        duration: 0.12,
+                        shortestUnitArc: true
+                    ),
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.22,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+        // MARK: - Dash Slash
+
+        case .dash:
+            attackDuration = 0.56
+
+            // Kurz Spannung aufbauen.
+            torso.run(
+                .sequence([
+                    .group([
+                        .rotate(
+                            toAngle: radians(12),
+                            duration: 0.11,
+                            shortestUnitArc: true
+                        ),
+                        .scaleX(
+                            to: 1.04,
+                            y: 0.96,
+                            duration: 0.11
+                        )
+                    ]),
+
+                    // Dash-Pose
+                    .group([
+                        .rotate(
+                            toAngle: radians(-15),
+                            duration: 0.07,
+                            shortestUnitArc: true
+                        ),
+                        .scaleX(
+                            to: 0.98,
+                            y: 1.03,
+                            duration: 0.07
+                        )
+                    ]),
+
+                    .wait(forDuration: 0.05),
+
+                    .group([
+                        .rotate(
+                            toAngle: 0,
+                            duration: 0.20,
+                            shortestUnitArc: true
+                        ),
+                        .scaleX(
+                            to: 1,
+                            y: 1,
+                            duration: 0.20
+                        )
+                    ])
+                ]),
+                withKey: "rigTorsoAttack"
+            )
+
+            // Explosiv vor und etwas langsamer zurück.
+            node.run(
+                .sequence([
+                    .moveBy(
+                        x: -3 * facing,
+                        y: -2,
+                        duration: 0.11
+                    ),
+
+                    .moveBy(
+                        x: 28 * facing,
+                        y: 2,
+                        duration: 0.075
+                    ),
+
+                    .wait(forDuration: 0.05),
+
+                    .moveBy(
+                        x: -25 * facing,
+                        y: 0,
+                        duration: 0.22
+                    )
+                ]),
+                withKey: "rigAttack"
+            )
+
+            rightHand?.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(28),
+                        duration: 0.11,
+                        shortestUnitArc: true
+                    ),
+
+                    .group([
+                        .moveBy(x: 8, y: 0, duration: 0.075),
+                        .rotate(
+                            toAngle: radians(-52),
+                            duration: 0.075,
+                            shortestUnitArc: true
+                        )
+                    ]),
+
+                    .wait(forDuration: 0.05),
+
+                    .group([
+                        .moveBy(x: -8, y: 0, duration: 0.22),
+                        .rotate(
+                            toAngle: 0,
+                            duration: 0.22,
+                            shortestUnitArc: true
+                        )
+                    ])
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            weapon?.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(30),
+                        duration: 0.11,
+                        shortestUnitArc: true
+                    ),
+
+                    .rotate(
+                        toAngle: radians(-72),
+                        duration: 0.075,
+                        shortestUnitArc: true
+                    ),
+
+                    .wait(forDuration: 0.05),
+
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.22,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+        // MARK: - Roundhouse
+
+        case .roundhouse:
+            attackDuration = 0.76
+
+            // Erst in Gegenrichtung aufladen.
+            node.run(
+                .sequence([
+                    .moveBy(
+                        x: -3 * facing,
+                        y: -1,
+                        duration: 0.14
+                    ),
+
+                    .moveBy(
+                        x: 9 * facing,
+                        y: 2,
+                        duration: 0.11
+                    ),
+
+                    .wait(forDuration: 0.055),
+
+                    .moveBy(
+                        x: -6 * facing,
+                        y: -1,
+                        duration: 0.24
+                    )
+                ]),
+                withKey: "rigAttack"
+            )
+
+            torso.run(
+                .sequence([
+                    // Wind-up
+                    .rotate(
+                        toAngle: radians(20),
+                        duration: 0.14,
+                        shortestUnitArc: true
+                    ),
+
+                    // Ganze Hüfte schnappt herum
+                    .rotate(
+                        toAngle: radians(-32),
+                        duration: 0.11,
+                        shortestUnitArc: true
+                    ),
+
+                    .wait(forDuration: 0.055),
+
+                    // Follow-through
+                    .rotate(
+                        toAngle: radians(-8),
+                        duration: 0.10,
+                        shortestUnitArc: true
+                    ),
+
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.16,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigTorsoAttack"
+            )
+
+            rightFoot?.run(
+                .sequence([
+                    // Bein laden
+                    .group([
+                        .moveBy(x: -3, y: 5, duration: 0.14),
+                        .rotate(
+                            toAngle: radians(30),
+                            duration: 0.14,
+                            shortestUnitArc: true
+                        )
+                    ]),
+
+                    // Großer Bogen
+                    .group([
+                        .moveBy(x: 17, y: 5, duration: 0.11),
+                        .rotate(
+                            toAngle: radians(-82),
+                            duration: 0.11,
+                            shortestUnitArc: true
+                        )
+                    ]),
+
+                    .wait(forDuration: 0.055),
+
+                    // Überschwingen
+                    .group([
+                        .moveBy(x: -4, y: -2, duration: 0.10),
+                        .rotate(
+                            toAngle: radians(-28),
+                            duration: 0.10,
+                            shortestUnitArc: true
+                        )
+                    ]),
+
+                    // zurück
+                    .group([
+                        .moveBy(x: -10, y: -8, duration: 0.16),
+                        .rotate(
+                            toAngle: 0,
+                            duration: 0.16,
+                            shortestUnitArc: true
+                        )
+                    ])
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            leftHand?.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(-28),
+                        duration: 0.14,
+                        shortestUnitArc: true
+                    ),
+                    .rotate(
+                        toAngle: radians(34),
+                        duration: 0.11,
+                        shortestUnitArc: true
+                    ),
+                    .wait(forDuration: 0.055),
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.26,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            rightHand?.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(22),
+                        duration: 0.14,
+                        shortestUnitArc: true
+                    ),
+                    .rotate(
+                        toAngle: radians(-28),
+                        duration: 0.11,
+                        shortestUnitArc: true
+                    ),
+                    .wait(forDuration: 0.055),
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.26,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+        // MARK: - Tornado
+
+        case .tornado:
+            attackDuration = 1.02
+
+            // Arme/Füße öffnen sich erst.
+            leftHand?.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(38),
+                        duration: 0.12,
+                        shortestUnitArc: true
+                    ),
+                    .wait(forDuration: 0.66),
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.16,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            rightHand?.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(-38),
+                        duration: 0.12,
+                        shortestUnitArc: true
+                    ),
+                    .wait(forDuration: 0.66),
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.16,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            leftFoot?.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(24),
+                        duration: 0.12,
+                        shortestUnitArc: true
+                    ),
+                    .wait(forDuration: 0.66),
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.16,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            rightFoot?.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(-24),
+                        duration: 0.12,
+                        shortestUnitArc: true
+                    ),
+                    .wait(forDuration: 0.66),
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.16,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            // Crouch
+            let crouch = SKAction.moveBy(
+                x: 0,
+                y: -4,
+                duration: 0.11
+            )
+            crouch.timingMode = .easeIn
+
+            // Explosiver Absprung
+            let launch = SKAction.moveBy(
+                x: 0,
+                y: 39,
+                duration: 0.16
+            )
+            launch.timingMode = .easeOut
+
+            // Kleine seitliche Bewegung während des Wirbels.
+            let airborneDrift = SKAction.sequence([
+                .moveBy(
+                    x: 7 * facing,
+                    y: 5,
+                    duration: 0.23
+                ),
+                .moveBy(
+                    x: -14 * facing,
+                    y: -3,
+                    duration: 0.23
+                ),
+                .moveBy(
+                    x: 7 * facing,
+                    y: -2,
+                    duration: 0.12
+                )
+            ])
+
+            // Landung exakt zurück.
+            let land = SKAction.moveBy(
+                x: 0,
+                y: -35,
+                duration: 0.17
+            )
+            land.timingMode = .easeIn
+
+            node.run(
+                .sequence([
+                    crouch,
+                    launch,
+                    airborneDrift,
+                    land
+                ]),
+                withKey: "rigAttack"
+            )
+
+            // WICHTIG:
+            // torso statt Root drehen.
+            torso.run(
+                .sequence([
+                    // Squash vorm Absprung
+                    .scaleX(
+                        to: 1.06,
+                        y: 0.93,
+                        duration: 0.11
+                    ),
+
+                    // Körper streckt sich
+                    .scaleX(
+                        to: 0.97,
+                        y: 1.05,
+                        duration: 0.12
+                    ),
+
+                    // Drei komplette Spins in der Luft
+                    .rotate(
+                        byAngle: -.pi * 6,
+                        duration: 0.58
+                    ),
+
+                    // Landing Squash
+                    .scaleX(
+                        to: 1.08,
+                        y: 0.91,
+                        duration: 0.07
+                    ),
+
+                    // zurück
+                    .scaleX(
+                        to: 1,
+                        y: 1,
+                        duration: 0.13
+                    )
+                ]),
+                withKey: "rigTorsoAttack"
+            )
+
+        // MARK: - Air Spin
+
+        case .airSpin:
+            attackDuration = 1.08
+
+            // kompaktere Flugpose
+            leftHand?.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(26),
+                        duration: 0.12,
+                        shortestUnitArc: true
+                    ),
+                    .wait(forDuration: 0.66),
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.18,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            rightHand?.run(
+                .sequence([
+                    .rotate(
+                        toAngle: radians(-24),
+                        duration: 0.12,
+                        shortestUnitArc: true
+                    ),
+                    .wait(forDuration: 0.66),
+                    .rotate(
+                        toAngle: 0,
+                        duration: 0.18,
+                        shortestUnitArc: true
+                    )
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            rightFoot?.run(
+                .sequence([
+                    .group([
+                        .moveBy(x: 1, y: 3, duration: 0.12),
+                        .rotate(
+                            toAngle: radians(-28),
+                            duration: 0.12,
+                            shortestUnitArc: true
+                        )
+                    ]),
+                    .wait(forDuration: 0.66),
+                    .group([
+                        .moveBy(x: -1, y: -3, duration: 0.18),
+                        .rotate(
+                            toAngle: 0,
+                            duration: 0.18,
+                            shortestUnitArc: true
+                        )
+                    ])
+                ]),
+                withKey: "rigPartAttack"
+            )
+
+            let crouch = SKAction.moveBy(
+                x: 0,
+                y: -4,
+                duration: 0.12
+            )
+            crouch.timingMode = .easeIn
+
+            // höher und leicht nach vorne
+            let launch = SKAction.moveBy(
+                x: 5 * facing,
+                y: 54,
+                duration: 0.19
+            )
+            launch.timingMode = .easeOut
+
+            // echte Flugkurve
+            let flightArc = SKAction.sequence([
+                .moveBy(
+                    x: 12 * facing,
+                    y: 8,
+                    duration: 0.20
+                ),
+                .moveBy(
+                    x: -12 * facing,
+                    y: -8,
+                    duration: 0.20
+                )
+            ])
+
+            let land = SKAction.moveBy(
+                x: -5 * facing,
+                y: -50,
+                duration: 0.19
+            )
+            land.timingMode = .easeIn
+
+            node.run(
+                .sequence([
+                    crouch,
+                    launch,
+                    flightArc,
+                    land
+                ]),
+                withKey: "rigAttack"
+            )
+
+            torso.run(
+                .sequence([
+                    // vor dem Sprung komprimieren
+                    .scaleX(
+                        to: 1.05,
+                        y: 0.94,
+                        duration: 0.12
+                    ),
+
+                    // Streckung beim Absprung
+                    .scaleX(
+                        to: 0.97,
+                        y: 1.05,
+                        duration: 0.13
+                    ),
+
+                    // Eine kontrollierte 360°-Drehung
+                    .rotate(
+                        byAngle: -.pi * 2,
+                        duration: 0.43
+                    ),
+
+                    // Landungs-Squash
+                    .scaleX(
+                        to: 1.07,
+                        y: 0.92,
+                        duration: 0.08
+                    ),
+
+                    .scaleX(
+                        to: 1,
+                        y: 1,
+                        duration: 0.15
+                    )
+                ]),
+                withKey: "rigTorsoAttack"
+            )
+        }
+
+        // Idle erst nach der wirklichen Animationsdauer starten.
         run(
             .sequence([
-                .wait(forDuration: 0.64),
+                .wait(forDuration: attackDuration),
+
                 .run { [weak self, weak node] in
-                    guard let node else { return }
-                    self?.startRigIdle(on: node)
-                },
+                    guard let self, let node else { return }
+
+                    self.resetRigPose(in: node)
+                    self.startRigIdle(on: node)
+                }
             ]),
-            withKey: "resumeRigIdle"
+            withKey: resumeKey
         )
+    }
+
+    private func scheduleEnemyRigMotion() {
+        guard let enemyNode, let enemyRigNode else { return }
+
+        enemyNode.removeAction(forKey: "enemyRigMotion")
+        let moves: [BattleCardMove] = [.punch, .kick, .dash, .tornado, .airSpin]
+        let loop = SKAction.repeatForever(
+            .sequence([
+                .wait(forDuration: Double.random(in: 1.2...2.4)),
+                .run { [weak self, weak enemyRigNode] in
+                    guard let self, let enemyRigNode else { return }
+                    let move = moves.randomElement() ?? .punch
+                    self.playRigAttack(on: enemyRigNode, move: move)
+                },
+            ])
+        )
+        enemyNode.run(loop, withKey: "enemyRigMotion")
     }
 
     private func movePart(
@@ -677,9 +1681,13 @@ final class SpriteAnimationScene: SKScene {
 
     private func storeRestTransform(for node: SKNode) {
         let userData = node.userData ?? NSMutableDictionary()
+
         userData["restX"] = node.position.x
         userData["restY"] = node.position.y
         userData["restRotation"] = node.zRotation
+        userData["restScaleX"] = node.xScale
+        userData["restScaleY"] = node.yScale
+
         node.userData = userData
     }
 
@@ -687,14 +1695,36 @@ final class SpriteAnimationScene: SKScene {
         for child in namedDescendants(in: node) {
             child.removeAction(forKey: "rigPartIdle")
             child.removeAction(forKey: "rigPartAttack")
+            child.removeAction(forKey: "rigTorsoAttack")
 
-            guard let userData = child.userData else { continue }
+            guard let userData = child.userData else {
+                continue
+            }
 
-            let x = userData["restX"] as? CGFloat ?? child.position.x
-            let y = userData["restY"] as? CGFloat ?? child.position.y
-            let rotation = userData["restRotation"] as? CGFloat ?? 0
+            let x =
+                userData["restX"] as? CGFloat
+                ?? child.position.x
+
+            let y =
+                userData["restY"] as? CGFloat
+                ?? child.position.y
+
+            let rotation =
+                userData["restRotation"] as? CGFloat
+                ?? 0
+
+            let scaleX =
+                userData["restScaleX"] as? CGFloat
+                ?? 1
+
+            let scaleY =
+                userData["restScaleY"] as? CGFloat
+                ?? 1
+
             child.position = CGPoint(x: x, y: y)
             child.zRotation = rotation
+            child.xScale = scaleX
+            child.yScale = scaleY
         }
     }
 
@@ -718,13 +1748,17 @@ final class SpriteAnimationScene: SKScene {
     }
 
     private func rig(for animationID: String) -> SpriteRig? {
-        rigsByID[animationID]
-            ?? rigsByID[animationID.replacingOccurrences(of: "sprite_", with: "") + "_original"]
-            ?? rigsByID[
-                animationID
-                    .replacingOccurrences(of: "sprite_", with: "")
-                    .replacingOccurrences(of: "_original", with: "")
-            ]
+        let normalized = animationID
+            .replacingOccurrences(of: "sprite_", with: "")
+            .replacingOccurrences(of: "_original", with: "")
+        let candidates = [
+            animationID,
+            "\(normalized)_original",
+            normalized,
+            "sprite_\(normalized)",
+        ]
+
+        return candidates.lazy.compactMap { self.rigsByID[$0] }.first
     }
 
     private func radians(_ degrees: CGFloat) -> CGFloat {
@@ -763,7 +1797,7 @@ final class SpriteAnimationScene: SKScene {
         fallbackXPosition: CGFloat,
         fallbackYOffset: CGFloat
     ) -> CGPoint {
-        if id == heroAnimationID {
+        if isHeroAnimation(id: id) {
             return CGPoint(
                 x: size.width * heroXRatio,
                 y: floorHeight * heroYRatio + fallbackYOffset
@@ -814,7 +1848,30 @@ final class SpriteAnimationScene: SKScene {
     }
 
     private func isVisibleAnimation(id: String) -> Bool {
-        id == heroAnimationID || companionAnimationIDs.contains(id)
+        isHeroAnimation(id: id) || isCompanionAnimation(id: id)
+    }
+
+    private func isHeroAnimation(id: String) -> Bool {
+        animationID(id, matches: heroAnimationID)
+    }
+
+    private func isCompanionAnimation(id: String) -> Bool {
+        companionAnimationIDs.contains { animationID(id, matches: $0) }
+    }
+
+    private func animationID(_ id: String, matches otherID: String) -> Bool {
+        if id == otherID {
+            return true
+        }
+
+        guard
+            let leftRigID = rig(for: id)?.id,
+            let rightRigID = rig(for: otherID)?.id
+        else {
+            return false
+        }
+
+        return leftRigID == rightRigID
     }
 
     private func alternatingRowOffset(for row: Int) -> CGFloat {
