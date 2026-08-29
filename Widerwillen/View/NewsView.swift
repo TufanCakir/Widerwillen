@@ -98,7 +98,7 @@ struct NewsView: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(localizedTitle(post))
-                    .font(.system(size: 18, weight: .heavy))
+                    .widerwillenFont(size: 18, weight: .heavy)
                     .foregroundStyle(.white)
                     .shadow(
                         color: .black.opacity(0.9),
@@ -108,7 +108,7 @@ struct NewsView: View {
                     )
 
                 Text(post.date)
-                    .font(.system(size: 11, weight: .bold))
+                    .widerwillenFont(size: 11, weight: .bold)
                     .foregroundStyle(.white.opacity(0.68))
                     .shadow(
                         color: .black.opacity(0.9),
@@ -118,7 +118,7 @@ struct NewsView: View {
                     )
 
                 Text(localizedBody(post))
-                    .font(.system(size: 13, weight: .bold))
+                    .widerwillenFont(size: 13, weight: .bold)
                     .foregroundStyle(.white.opacity(0.82))
                     .shadow(
                         color: .black.opacity(0.9),

@@ -16,6 +16,7 @@ struct BattleSceneView: View {
     let maxHP: Int
     let lookIndex: Int
     let heroAnimationID: String
+    let equippedWeaponImageName: String?
     let companionAnimationIDs: Set<String>
     let spriteAttackInterval: Duration
     let activeSkills: [BattleActiveSkill]
@@ -36,7 +37,6 @@ struct BattleSceneView: View {
     @State private var scene: SpriteAnimationScene
     @State private var selectedLookIndex: Int
     @State private var animationStartDate = Date()
-    @State private var battlePopups: [BattlePopup] = []
     @State private var previousAreaID: String?
     @State private var transitionArea: EnemyArea?
     @State private var activeSkillIDs: Set<String> = []
@@ -48,8 +48,6 @@ struct BattleSceneView: View {
     @AppStorage("isLayerAnimationEnabled") private var isLayerAnimationEnabled =
         true
 
-    private let maxBattlePopupCount = 16
-
     init(
         progress: GameProgressStore,
         title: String,
@@ -58,6 +56,7 @@ struct BattleSceneView: View {
         maxHP: Int,
         lookIndex: Int,
         heroAnimationID: String,
+        equippedWeaponImageName: String? = nil,
         companionAnimationIDs: Set<String>,
         spriteAttackInterval: Duration,
         activeSkills: [BattleActiveSkill] = [],
@@ -87,6 +86,7 @@ struct BattleSceneView: View {
         self.maxHP = maxHP
         self.lookIndex = lookIndex
         self.heroAnimationID = heroAnimationID
+        self.equippedWeaponImageName = equippedWeaponImageName
         self.companionAnimationIDs = companionAnimationIDs
         self.spriteAttackInterval = spriteAttackInterval
         self.activeSkills = activeSkills
@@ -131,16 +131,13 @@ struct BattleSceneView: View {
 
                 SpriteView(scene: scene, options: [.allowsTransparency])
 
-                enemyLayer(viewSize: viewSize, groundHeight: groundHeight)
-
-                activeSkillVisualLayer(
-                    viewSize: viewSize,
-                    groundHeight: groundHeight
+                BattleHUD(
+                    progress: progress,
+                    title: title,
+                    healthTitle: healthTitle,
+                    currentHP: currentHP,
+                    maxHP: maxHP
                 )
-
-                popupLayer(viewSize: viewSize)
-
-                headerHUD
                     .padding(.horizontal)
                     .padding(.top, 54)
                     .frame(
@@ -167,7 +164,23 @@ struct BattleSceneView: View {
                 )
                 .zIndex(12)
 
-                battleCardBar(viewSize: viewSize)
+                BattleCardBar(
+                    progress: progress,
+                    battleCards: battleCards,
+                    activeSkills: activeSkills,
+                    activeSkillIDs: activeSkillIDs,
+                    cooldownClockDate: cooldownClockDate,
+                    cardCooldownEndDates: cardCooldownEndDates,
+                    skillCooldownEndDates: skillCooldownEndDates,
+                    onCardAttack: { card in
+                        performCardAttack(
+                            cardID: card.id,
+                            cooldownSeconds: card.cooldownSeconds,
+                            viewSize: viewSize
+                        )
+                    },
+                    onSkillActivation: activateSkill
+                )
                     .padding(.bottom, 24)
                     .padding(.horizontal, 14)
                     .frame(
@@ -199,8 +212,11 @@ struct BattleSceneView: View {
             previousAreaID = currentArea.id
             scene.updateBattleSprites(
                 heroAnimationID: heroAnimationID,
+                equippedWeaponImageName: equippedWeaponImageName,
                 companionAnimationIDs: companionAnimationIDs
             )
+            scene.updateEnemy(currentEnemy, isBoss: isBossStage)
+            scene.updateShadowClone(animationID: activeShadowCloneAnimationID)
         }
         .onChange(of: lookIndex) { _, newLookIndex in
             selectedLookIndex = newLookIndex
@@ -208,14 +224,29 @@ struct BattleSceneView: View {
         .onChange(of: heroAnimationID) { _, animationID in
             scene.updateBattleSprites(
                 heroAnimationID: animationID,
+                equippedWeaponImageName: equippedWeaponImageName,
+                companionAnimationIDs: companionAnimationIDs
+            )
+        }
+        .onChange(of: equippedWeaponImageName) { _, imageName in
+            scene.updateBattleSprites(
+                heroAnimationID: heroAnimationID,
+                equippedWeaponImageName: imageName,
                 companionAnimationIDs: companionAnimationIDs
             )
         }
         .onChange(of: companionAnimationIDs) { _, animationIDs in
             scene.updateBattleSprites(
                 heroAnimationID: heroAnimationID,
+                equippedWeaponImageName: equippedWeaponImageName,
                 companionAnimationIDs: animationIDs
             )
+        }
+        .onChange(of: currentEnemy.id) { _, _ in
+            scene.updateEnemy(currentEnemy, isBoss: isBossStage)
+        }
+        .onChange(of: activeSkillIDs) { _, _ in
+            scene.updateShadowClone(animationID: activeShadowCloneAnimationID)
         }
         .onChange(of: currentArea.id) { oldAreaID, newAreaID in
             guard oldAreaID != newAreaID else { return }
@@ -320,7 +351,7 @@ struct BattleSceneView: View {
 
     private func runCooldownClock() async {
         while !Task.isCancelled {
-            try? await Task.sleep(for: .milliseconds(160))
+            try? await Task.sleep(for: .milliseconds(250))
 
             await MainActor.run {
                 cooldownClockDate = Date()
@@ -373,7 +404,7 @@ struct BattleSceneView: View {
         if result.skillBooksAwarded > 0 {
             addPopup(
                 text: "+\(result.skillBooksAwarded)",
-                color: .mint,
+                color: .systemMint,
                 xRatio: 0.28,
                 yRatio: 0.58,
                 imageName: "icon_pixel_skill_book"
@@ -400,29 +431,18 @@ struct BattleSceneView: View {
 
     private func addPopup(
         text: String,
-        color: Color,
+        color: UIColor,
         xRatio: Double,
         yRatio: Double,
         imageName: String? = nil
     ) {
-        let popup = BattlePopup(
+        scene.showPopup(
             text: text,
             color: color,
             xRatio: xRatio,
             yRatio: yRatio,
             imageName: imageName
         )
-        battlePopups.append(popup)
-        if battlePopups.count > maxBattlePopupCount {
-            battlePopups.removeFirst(battlePopups.count - maxBattlePopupCount)
-        }
-
-        Task {
-            try? await Task.sleep(for: .milliseconds(850))
-            await MainActor.run {
-                battlePopups.removeAll { $0.id == popup.id }
-            }
-        }
     }
 
     private var backgroundLookIndex: Int {
@@ -451,6 +471,16 @@ struct BattleSceneView: View {
         currentStage.isMultiple(of: 10)
     }
 
+    private var activeShadowCloneAnimationID: String? {
+        guard let skill = activeSkills.first(where: {
+            activeSkillIDs.contains($0.id) && $0.kind == .shadowClone
+        }) else {
+            return nil
+        }
+
+        return skill.companionAnimationID ?? heroAnimationID
+    }
+
     private func showAreaTransition(_ area: EnemyArea) {
         transitionArea = area
 
@@ -461,185 +491,6 @@ struct BattleSceneView: View {
                 transitionArea = nil
             }
         }
-    }
-
-    private func enemyLayer(viewSize: CGSize, groundHeight: CGFloat)
-        -> some View
-    {
-        let enemySize =
-            min(viewSize.width, viewSize.height)
-            * CGFloat(currentEnemy.scale)
-        let baselineY = battleBaselineY(
-            viewSize: viewSize,
-            groundHeight: groundHeight
-        )
-
-        return VStack(spacing: 4) {
-            Text(
-                isBossStage ? "Boss · \(currentEnemy.name)" : currentEnemy.name
-            )
-            .font(.system(size: 13, weight: .heavy))
-            .foregroundStyle(isBossStage ? .red : .white)
-            .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
-
-            SpriteSheetImageView(
-                animationID: currentEnemy.animationID ?? currentEnemy.imageName,
-                columns: currentEnemy.columns,
-                rows: currentEnemy.rows,
-                frameCount: currentEnemy.frameCount,
-                fps: currentEnemy.fps
-            )
-            .frame(
-                width: enemySize,
-                height: enemySize
-            )
-            .scaleEffect(x: -1, y: 1)
-            .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 5)
-        }
-        .position(
-            x: viewSize.width * 0.66,
-            y: baselineY - enemySize * 0.5
-        )
-        .allowsHitTesting(false)
-    }
-
-    private func battleBaselineY(viewSize: CGSize, groundHeight: CGFloat)
-        -> CGFloat
-    {
-        viewSize.height - groundHeight * 0.56
-    }
-
-    private func activeSkillVisualLayer(
-        viewSize: CGSize,
-        groundHeight: CGFloat
-    ) -> some View {
-        ZStack {
-            ForEach(activeSkills.filter { activeSkillIDs.contains($0.id) }) {
-                skill in
-                if skill.kind == .shadowClone {
-                    let cloneSize = min(viewSize.width, viewSize.height) * 0.26
-                    let baselineY = battleBaselineY(
-                        viewSize: viewSize,
-                        groundHeight: groundHeight
-                    )
-
-                    SpriteSheetImageView(
-                        animationID: skill.companionAnimationID
-                            ?? heroAnimationID,
-                        columns: 3,
-                        rows: 1,
-                        frameCount: 3,
-                        fps: 8
-                    )
-                    .frame(width: cloneSize, height: cloneSize)
-                    .opacity(0.62)
-                    .scaleEffect(x: -1, y: 1)
-                    .shadow(color: .cyan.opacity(0.8), radius: 8, x: 0, y: 0)
-                    .position(
-                        x: viewSize.width * 0.44,
-                        y: baselineY - cloneSize * 0.5
-                    )
-                    .transition(.scale.combined(with: .opacity))
-                }
-            }
-        }
-        .animation(.easeInOut(duration: 0.22), value: activeSkillIDs)
-        .allowsHitTesting(false)
-    }
-
-    private var headerHUD: some View {
-        VStack(spacing: 14) {
-            GameHeader(progress: progress)
-
-            combatStatus
-        }
-    }
-
-    private var combatStatus: some View {
-        VStack(spacing: 6) {
-            Text(title)
-                .font(.system(size: 22, weight: .heavy))
-                .foregroundStyle(.white)
-                .lineLimit(1)
-                .minimumScaleFactor(0.75)
-                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
-
-            healthBar
-        }
-        .padding(.horizontal, 52)
-        .frame(maxWidth: .infinity)
-    }
-
-    private var healthBar: some View {
-        VStack(spacing: 5) {
-            GeometryReader { proxy in
-                let ratio = CGFloat(currentHP) / CGFloat(max(maxHP, 1))
-
-                ZStack(alignment: .leading) {
-                    Rectangle()
-                        .fill(.black.opacity(0.58))
-
-                    Rectangle()
-                        .fill(.red)
-                        .frame(width: proxy.size.width * min(max(ratio, 0), 1))
-                }
-            }
-            .frame(height: 14)
-            .overlay {
-                Rectangle()
-                    .stroke(.white.opacity(0.55), lineWidth: 1)
-            }
-
-            HStack {
-                Text(healthTitle)
-                Spacer()
-                Text("\(currentHP)/\(maxHP)")
-            }
-            .font(.system(size: 10, weight: .bold))
-            .foregroundStyle(.white)
-            .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
-        }
-        .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
-    }
-
-    private func popupLayer(viewSize: CGSize) -> some View {
-        ZStack {
-            ForEach(battlePopups) { popup in
-                VStack(spacing: 3) {
-                    if let imageName = popup.imageName {
-                        RemoteImage(name: imageName)
-                            .frame(width: 28, height: 28)
-                    }
-
-                    if !popup.text.isEmpty {
-                        Text(popup.text)
-                            .font(.system(size: 18, weight: .heavy))
-                            .foregroundStyle(popup.color)
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 0
-                            )
-                    }
-                }
-                .position(
-                    x: viewSize.width * popup.xRatio,
-                    y: viewSize.height * popup.yRatio
-                )
-                .transition(
-                    .asymmetric(
-                        insertion: .scale.combined(with: .opacity),
-                        removal: .move(edge: .top).combined(with: .opacity)
-                    )
-                )
-            }
-        }
-        .animation(
-            .spring(response: 0.28, dampingFraction: 0.7),
-            value: battlePopups.count
-        )
-        .allowsHitTesting(false)
     }
 
     @ViewBuilder
@@ -729,7 +580,7 @@ struct BattleSceneView: View {
                     .frame(width: 28, height: 28)
 
                 Text("Prestige")
-                    .font(.system(size: 9, weight: .heavy))
+                    .widerwillenFont(size: 9, weight: .heavy)
                     .foregroundStyle(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
@@ -739,152 +590,6 @@ struct BattleSceneView: View {
             .shadow(color: .black.opacity(0.9), radius: 4, x: 0, y: 2)
         }
         .buttonStyle(.plain)
-    }
-
-    private func battleCardBar(viewSize: CGSize) -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
-                ForEach(unlockedBattleCards) { card in
-                    battleCardButton(
-                        card: card,
-                        cooldownRemaining: cardCooldownRemaining(for: card.id),
-                        isActive: false
-                    ) {
-                        performCardAttack(
-                            cardID: card.id,
-                            cooldownSeconds: card.cooldownSeconds,
-                            viewSize: viewSize
-                        )
-                    }
-                }
-
-                ForEach(activeSkills) { skill in
-                    let card = cardDefinition(for: skill.id)
-                    let isActive = activeSkillIDs.contains(skill.id)
-
-                    battleCardButton(
-                        card: card,
-                        fallbackTitle: skill.title,
-                        fallbackImageName: skill.imageName,
-                        cooldownRemaining: skillCooldownRemaining(for: skill.id),
-                        isActive: isActive
-                    ) {
-                        activateSkill(skill)
-                    }
-                }
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-        }
-        .frame(maxWidth: .infinity)
-        .background(.black.opacity(0.5))
-        .clipShape(RoundedRectangle(cornerRadius: 18))
-        .overlay {
-            RoundedRectangle(cornerRadius: 18)
-                .stroke(.white.opacity(0.45), lineWidth: 1)
-        }
-    }
-
-    private func battleCardButton(
-        card: BattleCardDefinition?,
-        fallbackTitle: String = "Tab",
-        fallbackImageName: String = "icon_pixel_sword",
-        cooldownRemaining: TimeInterval,
-        isActive: Bool,
-        action: @escaping () -> Void
-    ) -> some View {
-        let title = card?.title ?? fallbackTitle
-        let imageName = card?.imageName ?? fallbackImageName
-        let backgroundImageName = card?.backgroundImageName
-        let gradientColors = card?.gradientColors ?? []
-        let move = card?.move ?? .punch
-        let style = card?.style ?? "Strike"
-        let staminaCost = card?.staminaCost ?? 0
-        let damageMultiplier = card?.damageMultiplier ?? 1
-        let isCoolingDown = cooldownRemaining > 0
-
-        return Button(action: action) {
-            ZStack {
-                if let cardImageName = card?.cardImageName {
-                    RemoteImage(name: cardImageName, contentMode: .fill)
-                        .frame(width: 142, height: 138)
-                        .clipped()
-                } else if let backgroundImageName {
-                    RemoteImage(name: backgroundImageName, contentMode: .fill)
-                        .frame(width: 142, height: 138)
-                        .clipped()
-                } else {
-                    LinearGradient(
-                        colors: colors(from: gradientColors),
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                }
-
-                VStack(spacing: 6) {
-                    HStack(spacing: 6) {
-                        Text(title)
-                            .font(.system(size: 13, weight: .heavy))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.72)
-
-                        Spacer(minLength: 4)
-
-                        Text(style)
-                            .font(.system(size: 9, weight: .heavy))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
-                            .padding(.horizontal, 6)
-                            .frame(height: 18)
-                            .background(.white.opacity(0.22))
-                            .clipShape(RoundedRectangle(cornerRadius: 5))
-                    }
-
-                    BattleCardMovePreview(move: move, fallbackImageName: imageName)
-                        .frame(width: 80, height: 64)
-                        .clipped()
-
-                    HStack(spacing: 8) {
-                        Text("DMG x\(damageText(damageMultiplier))")
-                        Text("STA \(staminaCost)")
-                    }
-                    .font(.system(size: 10, weight: .heavy))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.72)
-                }
-                .foregroundStyle(.white)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 9)
-                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 1)
-
-                if isCoolingDown {
-                    Color.black.opacity(0.64)
-
-                    VStack(spacing: 4) {
-                        Image(systemName: "timer")
-                            .font(.system(size: 18, weight: .heavy))
-
-                        Text("\(Int(ceil(cooldownRemaining)))s")
-                            .font(.system(size: 15, weight: .heavy))
-                    }
-                    .foregroundStyle(.white)
-                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 1)
-                }
-            }
-            .frame(width: 142, height: 138)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay {
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(
-                        isActive ? .cyan : .white.opacity(0.7),
-                        lineWidth: isActive ? 3 : 1
-                    )
-            }
-            .shadow(color: .black.opacity(0.82), radius: 4, x: 0, y: 2)
-        }
-        .buttonStyle(.plain)
-        .disabled(isCoolingDown || isActive)
-        .opacity(isCoolingDown ? 0.68 : 1)
     }
 
     private func cardDefinition(for id: String) -> BattleCardDefinition? {
@@ -905,164 +610,6 @@ struct BattleSceneView: View {
         )
     }
 
-    private var unlockedBattleCards: [BattleCardDefinition] {
-        battleCards.cards.filter { card in
-            guard card.id != "shadow_clone_active" else { return false }
-            guard let skillID = card.requiredSkillID else { return true }
-
-            return progress.skillLevel(forSkillID: skillID)
-                >= card.requiredSkillLevel
-        }
-    }
-
-    private func damageText(_ multiplier: Double) -> String {
-        if multiplier.rounded() == multiplier {
-            return "\(Int(multiplier))"
-        }
-
-        return String(format: "%.1f", multiplier)
-    }
-
-    @MainActor
-    private func colors(from hexValues: [String]) -> [Color] {
-        let colors = hexValues.map(Color.init(hex:))
-        return colors.isEmpty ? [.white, .cyan] : colors
-    }
-
-    private struct BattleCardMovePreview: View {
-        let move: BattleCardMove
-        let fallbackImageName: String
-
-        var body: some View {
-            ZStack {
-                part("sprite_nimbi_original_left_foot", z: 0)
-                    .offset(pose.leftFootOffset)
-                    .rotationEffect(pose.leftFootRotation)
-
-                part("sprite_nimbi_original_right_foot", z: 1)
-                    .offset(pose.rightFootOffset)
-                    .rotationEffect(pose.rightFootRotation)
-
-                part("sprite_nimbi_original_body", z: 2)
-                    .rotationEffect(pose.bodyRotation)
-
-                part("sprite_nimbi_original_left_hand", z: 3)
-                    .offset(pose.leftHandOffset)
-                    .rotationEffect(pose.leftHandRotation)
-
-                part("sprite_nimbi_original_right_hand", z: 4)
-                    .offset(pose.rightHandOffset)
-                    .rotationEffect(pose.rightHandRotation)
-
-                part("sprite_original_slenderize_sword", z: 5, size: 16)
-                    .offset(pose.weaponOffset)
-                    .rotationEffect(pose.weaponRotation)
-
-                part("sprite_nimbi_original_head", z: 6)
-                    .offset(pose.headOffset)
-                    .rotationEffect(pose.headRotation)
-            }
-            .scaleEffect(pose.scale)
-            .rotationEffect(pose.characterRotation)
-            .offset(pose.characterOffset)
-        }
-
-        private func part(
-            _ imageName: String,
-            z: Double,
-            size: CGFloat = 32
-        ) -> some View {
-            RemoteImage(
-                name: imageName,
-                placeholderColor: .white.opacity(0.14),
-                fallbackSystemImage: fallbackImageName
-            )
-            .frame(width: size, height: size)
-            .zIndex(z)
-        }
-
-        private var pose: BattleCardPreviewPose {
-            BattleCardPreviewPose(move: move)
-        }
-    }
-
-    private struct BattleCardPreviewPose {
-        var scale: CGFloat = 1.7
-        var characterOffset = CGSize.zero
-        var characterRotation = Angle.zero
-        var bodyRotation = Angle.zero
-        var headOffset = CGSize.zero
-        var headRotation = Angle.zero
-        var leftHandOffset = CGSize.zero
-        var leftHandRotation = Angle.zero
-        var rightHandOffset = CGSize.zero
-        var rightHandRotation = Angle.zero
-        var weaponOffset = CGSize(width: 9, height: -2)
-        var weaponRotation = Angle.degrees(-18)
-        var leftFootOffset = CGSize.zero
-        var leftFootRotation = Angle.zero
-        var rightFootOffset = CGSize.zero
-        var rightFootRotation = Angle.zero
-
-        init(move: BattleCardMove) {
-            switch move {
-            case .punch:
-                rightHandOffset = CGSize(width: 11, height: -2)
-                rightHandRotation = .degrees(-28)
-                leftHandOffset = CGSize(width: -2, height: -3)
-                leftHandRotation = .degrees(16)
-                weaponOffset = CGSize(width: 15, height: -4)
-                weaponRotation = .degrees(-38)
-                bodyRotation = .degrees(-5)
-            case .kick:
-                rightFootOffset = CGSize(width: 12, height: 5)
-                rightFootRotation = .degrees(-24)
-                leftFootOffset = CGSize(width: -2, height: 1)
-                bodyRotation = .degrees(4)
-            case .dash:
-                characterOffset = CGSize(width: 9, height: -1)
-                scale = 1.6
-                rightHandOffset = CGSize(width: 4, height: 0)
-                weaponOffset = CGSize(width: 11, height: -2)
-                weaponRotation = .degrees(-32)
-                bodyRotation = .degrees(-8)
-            case .tornado:
-                characterOffset = CGSize(width: 2, height: -4)
-                characterRotation = .degrees(28)
-                weaponOffset = CGSize(width: 8, height: -2)
-                weaponRotation = .degrees(-60)
-                rightFootOffset = CGSize(width: 12, height: 7)
-                rightFootRotation = .degrees(-54)
-                leftFootRotation = .degrees(24)
-            case .roundhouse:
-                rightFootOffset = CGSize(width: 14, height: 5)
-                rightFootRotation = .degrees(-64)
-                leftHandRotation = .degrees(24)
-                weaponOffset = CGSize(width: 8, height: -1)
-                weaponRotation = .degrees(12)
-                bodyRotation = .degrees(10)
-            case .airSpin:
-                characterOffset = CGSize(width: 0, height: -5)
-                characterRotation = .degrees(180)
-                rightHandRotation = .degrees(-28)
-                weaponOffset = CGSize(width: 7, height: -1)
-                weaponRotation = .degrees(-54)
-                leftHandRotation = .degrees(28)
-                rightFootRotation = .degrees(-24)
-                leftFootRotation = .degrees(24)
-            }
-        }
-    }
-
-    private struct BattlePopup: Identifiable {
-        let id = UUID()
-        let text: String
-        let color: Color
-        let xRatio: Double
-        let yRatio: Double
-        let imageName: String?
-    }
-
 }
 
 extension SpriteAnimationScene {
@@ -1079,21 +626,6 @@ extension SpriteAnimationScene {
     }
 }
 
-private extension Color {
-    init(hex: String) {
-        let cleaned = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
-        let scanner = Scanner(string: cleaned)
-        var value: UInt64 = 0
-        scanner.scanHexInt64(&value)
-
-        let red = Double((value >> 16) & 0xff) / 255
-        let green = Double((value >> 8) & 0xff) / 255
-        let blue = Double(value & 0xff) / 255
-
-        self.init(red: red, green: green, blue: blue)
-    }
-}
-
 #Preview {
     BattleSceneView(
         progress: GameProgressStore(),
@@ -1103,6 +635,7 @@ private extension Color {
         maxHP: 40,
         lookIndex: 0,
         heroAnimationID: "sprite_nimbi",
+        equippedWeaponImageName: "icon_pixel_sword",
         companionAnimationIDs: [],
         spriteAttackInterval: .seconds(1.4),
         onTapAttack: { BattleAttackResult(damageDealt: 1) },

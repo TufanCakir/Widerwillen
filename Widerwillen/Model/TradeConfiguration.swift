@@ -15,6 +15,14 @@ struct TradeConfiguration: Decodable {
     {
         try JSONLoader.load(named: resourceName)
     }
+
+    var globalOffers: [TradeOffer] {
+        offers.filter { !$0.isEventChipOffer }
+    }
+
+    func eventOffers(chipID: String) -> [TradeOffer] {
+        offers.filter { $0.usesEventChip(chipID) }
+    }
 }
 
 struct TradeOffer: Decodable, Identifiable {
@@ -60,6 +68,16 @@ struct TradeOffer: Decodable, Identifiable {
                 [TradeUnlockReward].self,
                 forKey: .unlocks
             ) ?? []
+    }
+
+    var isEventChipOffer: Bool {
+        costs.contains { $0.resource == .eventChip }
+    }
+
+    func usesEventChip(_ chipID: String) -> Bool {
+        costs.contains { amount in
+            amount.resource == .eventChip && amount.eventID == chipID
+        }
     }
 }
 

@@ -136,7 +136,7 @@ struct SummonView: View {
 
             VStack(spacing: 8) {
                 Text(banner.title)
-                    .font(.system(size: 26, weight: .heavy))
+                    .widerwillenFont(size: 26, weight: .heavy)
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
             }
@@ -182,7 +182,7 @@ struct SummonView: View {
         } label: {
             HStack(spacing: 6) {
                 Text(title)
-                    .font(.system(size: 14, weight: .heavy))
+                    .widerwillenFont(size: 14, weight: .heavy)
                     .shadow(
                         color: .black.opacity(0.9),
                         radius: 3,
@@ -194,7 +194,7 @@ struct SummonView: View {
                     .frame(width: 16, height: 16)
 
                 Text("\(cost)")
-                    .font(.system(size: 13, weight: .heavy))
+                    .widerwillenFont(size: 13, weight: .heavy)
                     .shadow(
                         color: .black.opacity(0.9),
                         radius: 3,
@@ -226,7 +226,7 @@ struct SummonView: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Text("Rates")
-                        .font(.system(size: 22, weight: .heavy))
+                        .widerwillenFont(size: 22, weight: .heavy)
                         .shadow(
                             color: .black.opacity(0.9),
                             radius: 3,
@@ -276,7 +276,7 @@ struct SummonView: View {
                                 y: 0
                             )
                     }
-                    .font(.system(size: 13, weight: .bold))
+                    .widerwillenFont(size: 13, weight: .bold)
                 }
             }
             .foregroundStyle(.white)
@@ -294,7 +294,7 @@ struct SummonView: View {
 
             VStack(spacing: 16) {
                 Text("Summon?")
-                    .font(.system(size: 24, weight: .heavy))
+                    .widerwillenFont(size: 24, weight: .heavy)
                     .shadow(
                         color: .black.opacity(0.9),
                         radius: 3,
@@ -334,7 +334,7 @@ struct SummonView: View {
             Spacer()
 
             Text(message)
-                .font(.system(size: 14, weight: .heavy))
+                .widerwillenFont(size: 14, weight: .heavy)
                 .foregroundStyle(.white)
                 .shadow(
                     color: .black.opacity(0.9),

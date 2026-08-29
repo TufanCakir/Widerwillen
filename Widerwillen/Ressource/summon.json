@@ -7,10 +7,10 @@
             "kind": "sprite",
             "bannerImageName": "icon_cookieman",
             "currencyImageName": "icon_pixel_crystal",
-            "singleCost": 8,
-            "multiCost": 70,
+            "singleCost": 5,
+            "multiCost": 50,
             "multiCount": 10,
-            "requiredAccountLevel": 3,
+            "requiredAccountLevel": 1,
             "entries": [
                 {
                     "id": "cookieman_front",
@@ -40,7 +40,7 @@
                     "imageName": "icon_dompi",
                     "rarity": "epic",
                     "damageBonus": 8,
-                    "weight": 10
+                    "weight": 20
                 },
                 {
                     "id": "nimbi_front",
@@ -51,7 +51,7 @@
                     "imageName": "icon_nimpi",
                     "rarity": "legendary",
                     "damageBonus": 18,
-                    "weight": 0.5
+                    "weight": 1
                 },
                 {
                     "id": "blunt_front",
@@ -59,9 +59,9 @@
                     "spriteIndex": 21,
                     "companionID": "blunt",
                     "imageName": "icon_blunt",
-                    "rarity": "legendary",
+                    "rarity": "common",
                     "damageBonus": 18,
-                    "weight": 0.5
+                    "weight": 50
                 },
                 {
                     "id": "dazzle_front",
@@ -69,9 +69,9 @@
                     "spriteIndex": 23,
                     "companionID": "dazzle",
                     "imageName": "icon_dazzle",
-                    "rarity": "legendary",
+                    "rarity": "epic",
                     "damageBonus": 18,
-                    "weight": 0.5
+                    "weight": 20
                 },
                 {
                     "id": "molc_front",
@@ -81,7 +81,7 @@
                     "imageName": "icon_molc",
                     "rarity": "legendary",
                     "damageBonus": 18,
-                    "weight": 0.5
+                    "weight": 1
                 }
             ]
         },
@@ -92,10 +92,10 @@
             "kind": "relic",
             "bannerImageName": "icon_pixel_relic",
             "currencyImageName": "icon_pixel_relic",
-            "singleCost": 6,
+            "singleCost": 5,
             "multiCost": 50,
             "multiCount": 10,
-            "requiredAccountLevel": 5,
+            "requiredAccountLevel": 1,
             "entries": [
                 {
                     "id": "moon_totem",
@@ -138,26 +138,18 @@
             "kind": "item",
             "bannerImageName": "icon_pixel_sword",
             "currencyImageName": "icon_pixel_crystal",
-            "singleCost": 10,
-            "multiCost": 85,
+            "singleCost": 5,
+            "multiCost": 50,
             "multiCount": 10,
-            "requiredAccountLevel": 7,
+            "requiredAccountLevel": 1,
             "entries": [
                 {
-                    "id": "training_sword",
-                    "name": "Training Sword",
+                    "id": "widerwillen_sword",
+                    "name": "Widerwillen Sword",
                     "imageName": "icon_pixel_sword",
                     "rarity": "common",
-                    "damageBonus": 2,
+                    "damageBonus": 10,
                     "weight": 50
-                },
-                {
-                    "id": "moon_blade",
-                    "name": "Moon Blade",
-                    "imageName": "icon_pixel_sword",
-                    "rarity": "rare",
-                    "damageBonus": 6,
-                    "weight": 30
                 },
                 {
                     "id": "fun_edge",
@@ -168,11 +160,19 @@
                     "weight": 10
                 },
                 {
-                    "id": "widerwillen_edge",
-                    "name": "Widerwillen Edge",
-                    "imageName": "icon_pixel_sword",
+                    "id": "moon_blaster",
+                    "name": "Moon Blster",
+                    "imageName": "icon_pixel_gun",
+                    "rarity": "rare",
+                    "damageBonus": 14,
+                    "weight": 30
+                },
+                {
+                    "id": "slasher",
+                    "name": "Slasher",
+                    "imageName": "icon_pixel_slasher",
                     "rarity": "legendary",
-                    "damageBonus": 26,
+                    "damageBonus": 20,
                     "weight": 1
                 }
             ]

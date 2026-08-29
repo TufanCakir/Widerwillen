@@ -55,7 +55,7 @@ struct SkillView: View {
 
             if !message.isEmpty {
                 Text(message)
-                    .font(.system(size: 13, weight: .heavy))
+                    .widerwillenFont(size: 13, weight: .heavy)
                     .foregroundStyle(.white.opacity(0.84))
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
             }
@@ -146,7 +146,7 @@ struct SkillView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(tree?.title ?? "\(category) Path")
-                    .font(.system(size: 22, weight: .heavy))
+                    .widerwillenFont(size: 22, weight: .heavy)
             }
             .foregroundStyle(.white)
             .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
@@ -170,21 +170,21 @@ struct SkillView: View {
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(skill.title)
-                    .font(.system(size: 17, weight: .heavy))
+                    .widerwillenFont(size: 17, weight: .heavy)
                     .foregroundStyle(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
 
                 Text(effectTitle(for: skill))
-                    .font(.system(size: 11, weight: .bold))
+                    .widerwillenFont(size: 11, weight: .bold)
                     .foregroundStyle(.white.opacity(0.76))
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
 
                 Text("Lv \(level)/\(skill.maxLevel)")
-                    .font(.system(size: 11, weight: .heavy))
+                    .widerwillenFont(size: 11, weight: .heavy)
                     .foregroundStyle(.white.opacity(0.86))
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
             }
@@ -199,7 +199,7 @@ struct SkillView: View {
                         .frame(width: 22, height: 22)
 
                     Text("\(skill.cost)")
-                        .font(.system(size: 12, weight: .heavy))
+                        .widerwillenFont(size: 12, weight: .heavy)
                         .foregroundStyle(.white)
                         .shadow(
                             color: .black.opacity(0.9),

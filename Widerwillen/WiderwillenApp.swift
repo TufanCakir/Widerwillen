@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct WiderwillenApp: App {
+    init() {
+        WiderwillenTypography.registerFontIfNeeded()
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()
+                .widerwillenTypography()
         }
     }
 }

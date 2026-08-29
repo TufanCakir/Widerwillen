@@ -66,6 +66,7 @@ final class GameProgressStore {
     private(set) var selectedCharacterID = GameProgressStore.defaultCharacterID
     private(set) var selectedCharacterSkinID =
         GameProgressStore.defaultCharacterSkinID
+    private(set) var selectedWeaponItemID: String?
     private var lastIdleRewardUpdate = Date()
 
     init() {
@@ -74,6 +75,7 @@ final class GameProgressStore {
         unlockDefaultCharacterIfNeeded()
         normalizeSelectedCharacterIfNeeded()
         normalizeProfileIconSelectionIfNeeded()
+        normalizeEquippedWeaponIfNeeded()
         recalculateStageHPIfNeeded()
         refreshIdleRewards()
     }
@@ -119,11 +121,13 @@ final class GameProgressStore {
         selectedProfileIconImageName = Self.defaultProfileIconImageName
         selectedCharacterID = Self.defaultCharacterID
         selectedCharacterSkinID = Self.defaultCharacterSkinID
+        selectedWeaponItemID = nil
         lastIdleRewardUpdate = Date()
 
         unlockDefaultCharacterIfNeeded()
         normalizeSelectedCharacterIfNeeded()
         normalizeProfileIconSelectionIfNeeded()
+        normalizeEquippedWeaponIfNeeded()
         recalculateStageHPIfNeeded()
         saveProgress()
     }
@@ -138,6 +142,15 @@ final class GameProgressStore {
 
     var battleHeroAnimationID: String {
         selectedCharacterSkin?.animationID ?? Self.defaultHeroAnimationID
+    }
+
+    var equippedWeapon: OwnedItem? {
+        guard let selectedWeaponItemID else { return nil }
+        return ownedItems[selectedWeaponItemID]
+    }
+
+    var equippedWeaponImageName: String? {
+        equippedWeapon?.imageName
     }
 
     var battleCompanionAnimationIDs: Set<String> {
@@ -204,6 +217,17 @@ final class GameProgressStore {
 
         selectedCharacterID = character.id
         selectedCharacterSkinID = skin.id
+        saveProgress()
+    }
+
+    func isEquippedWeapon(_ item: OwnedItem) -> Bool {
+        selectedWeaponItemID == item.itemID
+    }
+
+    func equipWeapon(_ item: OwnedItem) {
+        guard ownedItems[item.itemID] != nil else { return }
+
+        selectedWeaponItemID = item.itemID
         saveProgress()
     }
 
@@ -975,6 +999,9 @@ final class GameProgressStore {
                 damageBonus: entry.damageBonus,
                 level: newLevel
             )
+            if selectedWeaponItemID == nil {
+                selectedWeaponItemID = entry.id
+            }
             return SummonResult(
                 entry: entry,
                 kind: kind,
@@ -1070,6 +1097,9 @@ final class GameProgressStore {
                 damageBonus: unlock.damageBonus ?? 1,
                 level: oldLevel + 1
             )
+            if selectedWeaponItemID == nil {
+                selectedWeaponItemID = itemID
+            }
         }
     }
 
@@ -1244,6 +1274,7 @@ final class GameProgressStore {
         unlockedCharacterSkinIDs = Set(snapshot.unlockedCharacterSkinIDs)
         selectedCharacterID = snapshot.selectedCharacterID
         selectedCharacterSkinID = snapshot.selectedCharacterSkinID
+        selectedWeaponItemID = snapshot.selectedWeaponItemID
         ownedArtifacts = Dictionary(
             uniqueKeysWithValues: snapshot.ownedArtifacts.map {
                 ($0.artifactID, $0)
@@ -1254,6 +1285,7 @@ final class GameProgressStore {
                 ($0.itemID, $0)
             }
         )
+        normalizeEquippedWeaponIfNeeded()
     }
 
     private func saveProgress() {
@@ -1283,6 +1315,7 @@ final class GameProgressStore {
             selectedProfileIconImageName: selectedProfileIconImageName,
             selectedCharacterID: selectedCharacterID,
             selectedCharacterSkinID: selectedCharacterSkinID,
+            selectedWeaponItemID: selectedWeaponItemID,
             ownedSkillLevels: ownedSkillLevels,
             passPointsByID: passPointsByID,
             claimedPassRewardIDs: Array(claimedPassRewardIDs),
@@ -1369,6 +1402,28 @@ final class GameProgressStore {
 
         selectedProfileIconImageName = fallbackIconName
         saveProgress()
+    }
+
+    private func normalizeEquippedWeaponIfNeeded() {
+        if let selectedWeaponItemID,
+            ownedItems[selectedWeaponItemID] != nil
+        {
+            return
+        }
+
+        selectedWeaponItemID = ownedItems.values.max {
+            lhs,
+            rhs in
+            let lhsPower = Self.scaledPower(
+                base: lhs.damageBonus,
+                level: lhs.level
+            )
+            let rhsPower = Self.scaledPower(
+                base: rhs.damageBonus,
+                level: rhs.level
+            )
+            return lhsPower < rhsPower
+        }?.itemID
     }
 
     private func recalculateStageHPIfNeeded() {
@@ -1489,6 +1544,7 @@ final class GameProgressStore {
         let selectedProfileIconImageName: String
         let selectedCharacterID: String
         let selectedCharacterSkinID: String
+        let selectedWeaponItemID: String?
         let ownedSkillLevels: [String: Int]
         let passPointsByID: [String: Int]
         let claimedPassRewardIDs: [String]
@@ -1523,6 +1579,7 @@ final class GameProgressStore {
             selectedProfileIconImageName: String,
             selectedCharacterID: String,
             selectedCharacterSkinID: String,
+            selectedWeaponItemID: String?,
             ownedSkillLevels: [String: Int],
             passPointsByID: [String: Int],
             claimedPassRewardIDs: [String],
@@ -1556,6 +1613,7 @@ final class GameProgressStore {
             self.selectedProfileIconImageName = selectedProfileIconImageName
             self.selectedCharacterID = selectedCharacterID
             self.selectedCharacterSkinID = selectedCharacterSkinID
+            self.selectedWeaponItemID = selectedWeaponItemID
             self.ownedSkillLevels = ownedSkillLevels
             self.passPointsByID = passPointsByID
             self.claimedPassRewardIDs = claimedPassRewardIDs
@@ -1670,6 +1728,11 @@ final class GameProgressStore {
                     String.self,
                     forKey: .selectedCharacterSkinID
                 ) ?? GameProgressStore.defaultCharacterSkinID
+            selectedWeaponItemID =
+                try container.decodeIfPresent(
+                    String.self,
+                    forKey: .selectedWeaponItemID
+                )
             ownedSkillLevels =
                 try container.decodeIfPresent(
                     [String: Int].self,

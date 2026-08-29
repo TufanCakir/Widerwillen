@@ -44,7 +44,7 @@ struct PassListView: View {
 
                 if !store.message.isEmpty {
                     Text(store.message)
-                        .font(.system(size: 12, weight: .heavy))
+                        .widerwillenFont(size: 12, weight: .heavy)
                         .foregroundStyle(.white.opacity(0.82))
                         .shadow(
                             color: .black.opacity(0.9),
@@ -92,7 +92,7 @@ struct PassListView: View {
                     .font(.system(size: 15, weight: .heavy))
 
                 Text("Restore Purchases")
-                    .font(.system(size: 13, weight: .heavy))
+                    .widerwillenFont(size: 13, weight: .heavy)
             }
             .foregroundStyle(.black)
             .frame(maxWidth: .infinity)

@@ -53,7 +53,7 @@ struct DailyLoginView: View {
                                 fallback: "Daily Login"
                             )
                         )
-                        .font(.system(size: 22, weight: .heavy))
+                        .widerwillenFont(size: 22, weight: .heavy)
                         .foregroundStyle(.white)
                         .shadow(
                             color: .black.opacity(0.9),
@@ -177,7 +177,7 @@ struct DailyLoginView: View {
 
                 if progress.canClaimDailyLogin(for: login) {
                     Text(localizer.text("daily_login.ready", fallback: "Ready"))
-                        .font(.system(size: 11, weight: .heavy))
+                        .widerwillenFont(size: 11, weight: .heavy)
                         .foregroundStyle(.black)
                         .padding(.horizontal, 9)
                         .frame(height: 24)
@@ -345,7 +345,7 @@ struct DailyLoginView: View {
 
     private func statusText(_ text: String) -> some View {
         Text(text)
-            .font(.system(size: 13, weight: .heavy))
+            .widerwillenFont(size: 13, weight: .heavy)
             .foregroundStyle(.white.opacity(0.86))
             .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
     }

@@ -17,21 +17,38 @@ struct StartView: View {
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
 
-                RemoteImage(name: "widerwillen_logo")
-                    .frame(maxWidth: 200)
+              
 
-                RemoteImage(name: "widerwillen_font_logo")
-                    .frame(maxWidth: 280)
+                Text("Widerwillen")
+                    .widerwillenFont(size: 50, weight: .bold)
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [
+                                .blue, .white,
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 0
+                    )
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 72)
 
                 Text("Tap to Start")
-                    .font(.system(size: 24, weight: .heavy))
+                    .widerwillenFont(size: 24, weight: .heavy)
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
 
                 Spacer(minLength: 44)
 
                 Text("Copyright © Tufan Cakir. All rights reserved.")
-                    .font(.system(size: 11, weight: .bold))
+                    .widerwillenFont(size: 11, weight: .bold)
                     .foregroundStyle(.white.opacity(0.82))
                     .multilineTextAlignment(.center)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)

@@ -122,7 +122,7 @@ struct warehouseView: View {
                             fallback: "Idle Rewards"
                         )
                     )
-                    .font(.system(size: 18, weight: .heavy))
+                    .widerwillenFont(size: 18, weight: .heavy)
 
                     Text(
                         localizer.text(
@@ -130,7 +130,7 @@ struct warehouseView: View {
                             fallback: "Rewards collected while away"
                         )
                     )
-                    .font(.system(size: 11, weight: .bold))
+                    .widerwillenFont(size: 11, weight: .bold)
                     .opacity(0.72)
                 }
 
@@ -171,7 +171,7 @@ struct warehouseView: View {
                         fallback: "Claim"
                     )
                 )
-                .font(.system(size: 14, weight: .heavy))
+                .widerwillenFont(size: 14, weight: .heavy)
                 .foregroundStyle(
                     progress.hasPendingRewards ? .black : .white.opacity(0.52)
                 )
@@ -243,7 +243,8 @@ struct warehouseView: View {
                             title: artifact.name,
                             imageName: artifact.imageName,
                             subtitle: "Lv \(artifact.level)",
-                            valueText: "+\(artifact.damageBonus)"
+                            valueText: "+\(artifact.damageBonus)",
+                            rarity: artifact.rarity
                         )
                     }
                 }
@@ -271,8 +272,16 @@ struct warehouseView: View {
                             title: item.name,
                             imageName: item.imageName,
                             subtitle: "Lv \(item.level)",
-                            valueText: "+\(item.damageBonus)"
-                        )
+                            valueText: "+\(item.damageBonus)",
+                            rarity: item.rarity,
+                            isEquipped: progress.isEquippedWeapon(item),
+                            actionTitle: progress.isEquippedWeapon(item)
+                                ? "Equipped"
+                                : "Equip"
+                        ) {
+                            playSoundEffect("ui_confirm")
+                            progress.equipWeapon(item)
+                        }
                     }
                 }
             }
@@ -307,11 +316,11 @@ struct warehouseView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(.system(size: 18, weight: .heavy))
+                    .widerwillenFont(size: 18, weight: .heavy)
 
                 if let subtitle {
                     Text(subtitle)
-                        .font(.system(size: 11, weight: .bold))
+                        .widerwillenFont(size: 11, weight: .bold)
                         .opacity(0.66)
                 }
             }
@@ -319,7 +328,7 @@ struct warehouseView: View {
             Spacer()
 
             Text(amount.formatted())
-                .font(.system(size: 19, weight: .heavy))
+                .widerwillenFont(size: 19, weight: .heavy)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
         }
@@ -338,7 +347,11 @@ struct warehouseView: View {
         title: String,
         imageName: String,
         subtitle: String,
-        valueText: String
+        valueText: String,
+        rarity: SpriteRarity? = nil,
+        isEquipped: Bool = false,
+        actionTitle: String? = nil,
+        action: (() -> Void)? = nil
     ) -> some View {
         HStack(spacing: 14) {
             RemoteImage(name: imageName)
@@ -346,28 +359,50 @@ struct warehouseView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .font(.system(size: 17, weight: .heavy))
+                    .widerwillenFont(size: 17, weight: .heavy)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
 
                 Text(subtitle)
-                    .font(.system(size: 11, weight: .bold))
+                    .widerwillenFont(size: 11, weight: .bold)
                     .opacity(0.68)
             }
 
             Spacer()
 
             Text(valueText)
-                .font(.system(size: 15, weight: .heavy))
-                .opacity(0.84)
+                .widerwillenFont(size: 15, weight: .heavy)
+
+            if let actionTitle {
+                Button {
+                    action?()
+                } label: {
+                    Text(actionTitle)
+                        .widerwillenFont(size: 10, weight: .heavy)
+                        .foregroundStyle(isEquipped ? .black : .white)
+                        .padding(.horizontal, 10)
+                        .frame(height: 28)
+                        .background(
+                            isEquipped ? .white : .white.opacity(0.14)
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+                .buttonStyle(.plain)
+                .disabled(isEquipped)
+            }
         }
         .foregroundStyle(.white)
         .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
         .padding(14)
-        .background(.black.opacity(0.24))
+        .background(isEquipped ? .white.opacity(0.12) : .black.opacity(0.18))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.52), lineWidth: 1)
+                .stroke(
+                    isEquipped
+                        ? .white.opacity(0.9)
+                        : (rarity?.color ?? .white).opacity(0.62),
+                    lineWidth: isEquipped ? 2 : 1
+                )
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
@@ -383,7 +418,7 @@ struct warehouseView: View {
                 .opacity(0.45)
 
             Text(localizer.text(titleKey, fallback: fallbackTitle))
-                .font(.system(size: 16, weight: .heavy))
+                .widerwillenFont(size: 16, weight: .heavy)
                 .foregroundStyle(.white.opacity(0.72))
                 .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
         }

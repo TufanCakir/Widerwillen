@@ -11,11 +11,32 @@ import UIKit
 final class SpriteAnimationScene: SKScene {
 
     private let arena: ArenaConfiguration
-    private let spriteSheets: [SpriteSheet]
+    let spriteSheets: [SpriteSheet]
     private let rigsByID: [String: SpriteRig]
     private var characters: [CharacterInstance] = []
+    private var enemyNode: SKNode?
+    private var enemySpriteNode: SKSpriteNode?
+    private var enemyLabelNode: SKLabelNode?
+    private var shadowCloneNode: SKSpriteNode?
     private var heroAnimationID = "sprite_nimbi"
+    private var equippedWeaponImageName: String?
     private var companionAnimationIDs: Set<String> = []
+    private var currentEnemy: EnemyDefinition?
+    private var isCurrentEnemyBoss = false
+    private var activeShadowCloneAnimationID: String?
+    private var rigNodeLookup: [ObjectIdentifier: [String: SKNode]] = [:]
+    private var rigDescendantLookup: [ObjectIdentifier: [SKNode]] = [:]
+    private let animatedRigPartNames: Set<String> = [
+        "head",
+        "leftHand",
+        "rightHand",
+        "weapon",
+        "leftFoot",
+        "rightFoot",
+        "tail",
+        "leftEar",
+        "rightEar",
+    ]
     private let gridColumns = 5
     private let gridCellWidthRatio: CGFloat = 0.15
     private let gridCellHeightRatio: CGFloat = 0.18
@@ -54,6 +75,7 @@ final class SpriteAnimationScene: SKScene {
 
     override func didMove(to view: SKView) {
         backgroundColor = .clear
+        view.ignoresSiblingOrder = true
 
         setupCharactersIfNeeded()
 
@@ -62,12 +84,102 @@ final class SpriteAnimationScene: SKScene {
 
     func updateBattleSprites(
         heroAnimationID: String,
+        equippedWeaponImageName: String?,
         companionAnimationIDs: Set<String>
     ) {
         self.heroAnimationID = heroAnimationID
+        self.equippedWeaponImageName = equippedWeaponImageName
         self.companionAnimationIDs = companionAnimationIDs
         updateCharacterVisibility()
+        updateRigWeapons()
         layoutCharacters()
+    }
+
+    func updateEnemy(_ enemy: EnemyDefinition, isBoss: Bool) {
+        let didChange = currentEnemy?.id != enemy.id
+            || currentEnemy?.animationID != enemy.animationID
+            || currentEnemy?.imageName != enemy.imageName
+            || isCurrentEnemyBoss != isBoss
+        currentEnemy = enemy
+        isCurrentEnemyBoss = isBoss
+
+        guard didChange || enemyNode == nil else {
+            layoutEnemy()
+            return
+        }
+
+        enemyNode?.removeFromParent()
+
+        let container = SKNode()
+        container.name = "enemy"
+        container.zPosition = 3_000
+
+        let label = SKLabelNode(
+            text: isBoss ? "Boss · \(enemy.name)" : enemy.name
+        )
+        label.fontName = "AvenirNext-Heavy"
+        label.fontSize = 13
+        label.fontColor = isBoss ? .red : .white
+        label.verticalAlignmentMode = .center
+        label.horizontalAlignmentMode = .center
+        label.zPosition = 2
+
+        let sprite = SKSpriteNode()
+        sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        sprite.xScale = -1
+        sprite.zPosition = 1
+        configureSprite(
+            sprite,
+            animationID: enemy.animationID ?? enemy.imageName,
+            columns: enemy.columns,
+            rows: enemy.rows,
+            frameCount: enemy.frameCount,
+            fps: enemy.fps,
+            actionKey: "enemyAnimation"
+        )
+
+        container.addChild(sprite)
+        container.addChild(label)
+        addChild(container)
+
+        enemyNode = container
+        enemySpriteNode = sprite
+        enemyLabelNode = label
+        layoutEnemy()
+    }
+
+    func updateShadowClone(animationID: String?) {
+        guard activeShadowCloneAnimationID != animationID else {
+            layoutShadowClone()
+            return
+        }
+
+        activeShadowCloneAnimationID = animationID
+        shadowCloneNode?.removeFromParent()
+        shadowCloneNode = nil
+
+        guard let animationID else { return }
+
+        let sprite = SKSpriteNode()
+        sprite.name = "shadowClone"
+        sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        sprite.alpha = 0.62
+        sprite.xScale = -1
+        sprite.zPosition = 2_900
+        configureSprite(
+            sprite,
+            animationID: animationID,
+            columns: 3,
+            rows: 1,
+            frameCount: 3,
+            fps: 8,
+            actionKey: "shadowCloneAnimation"
+        )
+        sprite.run(.fadeIn(withDuration: 0.16))
+
+        addChild(sprite)
+        shadowCloneNode = sprite
+        layoutShadowClone()
     }
 
     func playHeroAttackAnimation(move: BattleCardMove = .punch) {
@@ -90,14 +202,14 @@ final class SpriteAnimationScene: SKScene {
     override func didChangeSize(_ oldSize: CGSize) {
         super.didChangeSize(oldSize)
         layoutCharacters()
+        layoutEnemy()
+        layoutShadowClone()
     }
 
     private func setupCharactersIfNeeded() {
         guard characters.isEmpty else { return }
 
-        let sheets =
-            spriteSheets.isEmpty
-            ? [try? SpriteSheet.load()].compactMap { $0 } : spriteSheets
+        let sheets = allCharacterConfigurations()
 
         characters = sheets.enumerated().map { index, sheet in
             let rig = rig(for: sheet.id)
@@ -140,6 +252,28 @@ final class SpriteAnimationScene: SKScene {
         }
     }
 
+    private func allCharacterConfigurations() -> [SpriteSheet] {
+        let configuredSheets =
+            spriteSheets.isEmpty
+            ? [try? SpriteSheet.load()].compactMap { $0 } : spriteSheets
+        var knownIDs = Set(configuredSheets.map(\.id))
+        var allSheets = configuredSheets
+
+        for rig in rigsByID.values.sorted(by: { $0.id < $1.id })
+        where !knownIDs.contains(rig.id) {
+            allSheets.append(
+                SpriteSheet(
+                    id: rig.id,
+                    imageName: rig.id,
+                    scale: arena.characterScale
+                )
+            )
+            knownIDs.insert(rig.id)
+        }
+
+        return allSheets
+    }
+
     private func layoutCharacters() {
         for index in characters.indices {
             let character = characters[index]
@@ -171,8 +305,12 @@ final class SpriteAnimationScene: SKScene {
                 fallbackXPosition: xPosition,
                 fallbackYOffset: yOffset
             )
-            let yPosition = position.y
-            character.node.position = position
+            let clampedPosition = clampedCharacterPosition(
+                position,
+                characterSize: characterSize
+            )
+            let yPosition = clampedPosition.y
+            character.node.position = clampedPosition
             character.node.zPosition = zPosition(for: yPosition)
         }
 
@@ -221,15 +359,16 @@ final class SpriteAnimationScene: SKScene {
         let torsoBone = SKNode()
         torsoBone.name = "torso"
         torsoBone.position = CGPoint(x: 0, y: rig.canvasSize * 0.5)
+        storeRestTransform(for: torsoBone)
         root.addChild(torsoBone)
 
-        addStaticRigPart("tail", from: rig, to: torsoBone, zPosition: 1)
+        addRigBone("tail", from: rig, to: torsoBone, zPosition: 1)
         addRigBone("leftFoot", from: rig, to: torsoBone, zPosition: 2)
         addRigBone("rightFoot", from: rig, to: torsoBone, zPosition: 2)
         addStaticRigPart("body", from: rig, to: torsoBone, zPosition: 3)
         addRigBone("head", from: rig, to: torsoBone, zPosition: 6)
-        addStaticRigPart("leftEar", from: rig, to: torsoBone, zPosition: 7)
-        addStaticRigPart("rightEar", from: rig, to: torsoBone, zPosition: 7)
+        addRigBone("leftEar", from: rig, to: torsoBone, zPosition: 7)
+        addRigBone("rightEar", from: rig, to: torsoBone, zPosition: 7)
         addRigBone("leftHand", from: rig, to: torsoBone, zPosition: 5)
         let rightHandBone = addRigBone(
             "rightHand",
@@ -244,7 +383,22 @@ final class SpriteAnimationScene: SKScene {
             addWeapon(from: rig, to: torsoBone)
         }
 
+        cacheRigNodes(for: root)
         return root
+    }
+
+    private func cacheRigNodes(for root: SKNode) {
+        let descendants = namedDescendants(in: root)
+        let namedNodes = descendants.reduce(into: [String: SKNode]()) {
+            result,
+            node in
+            guard let name = node.name else { return }
+            result[name] = node
+        }
+
+        let id = ObjectIdentifier(root)
+        rigDescendantLookup[id] = descendants
+        rigNodeLookup[id] = namedNodes
     }
 
     @discardableResult
@@ -265,6 +419,7 @@ final class SpriteAnimationScene: SKScene {
         bone.name = partName
         bone.position = CGPoint(x: joint.x, y: joint.y)
         bone.zPosition = zPosition
+        storeRestTransform(for: bone)
 
         let sprite = makeRigSprite(named: imageName, canvasSize: rig.canvasSize)
         sprite.position = CGPoint(x: -joint.x, y: -joint.y)
@@ -300,13 +455,38 @@ final class SpriteAnimationScene: SKScene {
         weaponBone.position = CGPoint(x: joint.x, y: joint.y)
         weaponBone.zPosition = -1
         weaponBone.zRotation = -0.18
+        storeRestTransform(for: weaponBone)
 
         let sprite = makeRigSprite(named: imageName, canvasSize: rig.canvasSize)
         sprite.anchorPoint = CGPoint(x: 0.08, y: 0.5)
+        sprite.name = "weaponSprite"
         sprite.position = CGPoint(x: -0.8, y: 0)
         sprite.setScale(0.3)
         weaponBone.addChild(sprite)
         parent.addChild(weaponBone)
+    }
+
+    private func updateRigWeapons() {
+        for character in characters where character.rig != nil {
+            guard
+                let weaponBone = rigNode(named: "weapon", in: character.node),
+                let weaponSprite = weaponBone.childNode(
+                    withName: "weaponSprite"
+                ) as? SKSpriteNode
+            else {
+                continue
+            }
+
+            weaponBone.isHidden = character.id != heroAnimationID
+
+            if character.id == heroAnimationID,
+                let equippedWeaponImageName
+            {
+                let weaponTexture = texture(named: equippedWeaponImageName)
+                weaponTexture.filteringMode = .nearest
+                weaponSprite.texture = weaponTexture
+            }
+        }
     }
 
     private func makeRigSprite(
@@ -322,14 +502,27 @@ final class SpriteAnimationScene: SKScene {
         return node
     }
 
-    private func texture(named imageName: String) -> SKTexture {
-        if let url = RemoteContentCache.cachedAssetURL(named: imageName),
-            let image = UIImage(contentsOfFile: url.path)
-        {
-            return SKTexture(image: image)
+    private func layoutEnemy() {
+        guard let enemy = currentEnemy, let enemyNode, let enemySpriteNode else {
+            return
         }
 
-        return SKTexture(imageNamed: imageName)
+        let enemySize = min(size.width, size.height) * CGFloat(enemy.scale)
+        let yPosition = floorHeight * 0.56 + enemySize * 0.5
+        enemyNode.position = CGPoint(x: size.width * 0.66, y: yPosition)
+        enemySpriteNode.size = CGSize(width: enemySize, height: enemySize)
+        enemyLabelNode?.position = CGPoint(x: 0, y: enemySize * 0.5 + 18)
+    }
+
+    private func layoutShadowClone() {
+        guard let shadowCloneNode else { return }
+
+        let cloneSize = min(size.width, size.height) * 0.26
+        shadowCloneNode.position = CGPoint(
+            x: size.width * 0.44,
+            y: floorHeight * 0.56 + cloneSize * 0.5
+        )
+        shadowCloneNode.size = CGSize(width: cloneSize, height: cloneSize)
     }
 
     private func startRigIdle(on node: SKNode) {
@@ -363,6 +556,7 @@ final class SpriteAnimationScene: SKScene {
             $0.removeAction(forKey: "rigPartIdle")
             $0.removeAction(forKey: "rigPartAttack")
         }
+        resetRigPose(in: node)
 
         switch move {
         case .punch:
@@ -464,6 +658,10 @@ final class SpriteAnimationScene: SKScene {
     }
 
     private func rigNode(named name: String, in node: SKNode) -> SKNode? {
+        if let cached = rigNodeLookup[ObjectIdentifier(node)]?[name] {
+            return cached
+        }
+
         if node.name == name {
             return node
         }
@@ -477,26 +675,44 @@ final class SpriteAnimationScene: SKScene {
         return nil
     }
 
+    private func storeRestTransform(for node: SKNode) {
+        let userData = node.userData ?? NSMutableDictionary()
+        userData["restX"] = node.position.x
+        userData["restY"] = node.position.y
+        userData["restRotation"] = node.zRotation
+        node.userData = userData
+    }
+
+    private func resetRigPose(in node: SKNode) {
+        for child in namedDescendants(in: node) {
+            child.removeAction(forKey: "rigPartIdle")
+            child.removeAction(forKey: "rigPartAttack")
+
+            guard let userData = child.userData else { continue }
+
+            let x = userData["restX"] as? CGFloat ?? child.position.x
+            let y = userData["restY"] as? CGFloat ?? child.position.y
+            let rotation = userData["restRotation"] as? CGFloat ?? 0
+            child.position = CGPoint(x: x, y: y)
+            child.zRotation = rotation
+        }
+    }
+
     private func animatedRigNodes(in node: SKNode) -> [SKNode] {
-        let animatedNames: Set<String> = [
-            "head",
-            "leftHand",
-            "rightHand",
-            "weapon",
-            "leftFoot",
-            "rightFoot",
-            "tail",
-            "leftEar",
-            "rightEar",
-        ]
-        return namedDescendants(in: node).filter { child in
+        let descendants =
+            rigDescendantLookup[ObjectIdentifier(node)] ?? namedDescendants(in: node)
+        return descendants.filter { child in
             guard let name = child.name else { return false }
-            return animatedNames.contains(name)
+            return animatedRigPartNames.contains(name)
         }
     }
 
     private func namedDescendants(in node: SKNode) -> [SKNode] {
-        node.children.flatMap { child -> [SKNode] in
+        if let cached = rigDescendantLookup[ObjectIdentifier(node)] {
+            return cached
+        }
+
+        return node.children.flatMap { child -> [SKNode] in
             [child] + namedDescendants(in: child)
         }
     }
@@ -528,19 +744,7 @@ final class SpriteAnimationScene: SKScene {
 
     private func updateShadowPositions() {
         for character in characters {
-            let xPosition =
-                character.config.xPosition
-                ?? defaultXPosition(
-                    for: character.index,
-                    count: characters.count
-                )
-            let position = characterPosition(
-                for: character.config,
-                id: character.id,
-                index: character.index,
-                fallbackXPosition: xPosition,
-                fallbackYOffset: character.config.yOffset ?? 0
-            )
+            let position = character.node.position
             character.shadow.position = CGPoint(
                 x: position.x,
                 y: position.y + 2
@@ -589,6 +793,24 @@ final class SpriteAnimationScene: SKScene {
         let y = gridBaseY + rowOffset * floorHeight * gridCellHeightRatio
 
         return CGPoint(x: x, y: y)
+    }
+
+    private func clampedCharacterPosition(
+        _ position: CGPoint,
+        characterSize: CGSize
+    ) -> CGPoint {
+        guard size.width > 0, size.height > 0 else { return position }
+
+        let horizontalInset = max(characterSize.width * 0.5, 12)
+        let minimumX = min(horizontalInset, size.width * 0.5)
+        let maximumX = max(minimumX, size.width - horizontalInset)
+        let minimumY = max(characterSize.height * 0.08, 0)
+        let maximumY = max(minimumY, size.height - characterSize.height * 0.35)
+
+        return CGPoint(
+            x: min(max(position.x, minimumX), maximumX),
+            y: min(max(position.y, minimumY), maximumY)
+        )
     }
 
     private func isVisibleAnimation(id: String) -> Bool {

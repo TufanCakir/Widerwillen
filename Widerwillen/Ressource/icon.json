@@ -239,6 +239,18 @@
             "title": "Thusax",
             "imageName": "icon_thusax",
             "requiredAccountLevel": 46
+        },
+        {
+            "id": "moon_blaster",
+            "title": "Moon Blaster",
+            "imageName": "icon_pixel_gun",
+            "requiredAccountLevel": 46
+        },
+        {
+            "id": "slasher",
+            "title": "Slasher",
+            "imageName": "icon_pixel_slasher",
+            "requiredAccountLevel": 46
         }
     ]
 }

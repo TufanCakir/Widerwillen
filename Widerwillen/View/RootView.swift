@@ -66,6 +66,9 @@ struct RootView: View {
             }
         }
         .statusBarHidden(true)
+        .animation(.easeInOut(duration: 0.25), value: hasFinishedLaunchLoading)
+        .animation(.easeInOut(duration: 0.2), value: remoteContentStore.isRefreshing)
+        .animation(.easeInOut(duration: 0.2), value: remoteContentStore.hasPendingUpdate)
         .onAppear {
             progress.refreshIdleRewards()
             musicPlayer.setMusicVolume(musicVolume)
@@ -137,48 +140,35 @@ struct RootView: View {
     }
 
     private var remoteContentProgressView: some View {
-        VStack(spacing: 6) {
-            if let progress = remoteContentStore.progress {
-                ProgressView(value: progress)
-                    .progressViewStyle(.linear)
-            } else {
-                ProgressView()
-                    .progressViewStyle(.linear)
-            }
+        VStack {
+            progressBar
+                .frame(maxWidth: 240)
+                .padding(.top, 12)
+
+            Spacer()
         }
-        .tint(.white)
-        .frame(minWidth: 180)
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
-        .background(.black.opacity(0.68))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .shadow(color: .black.opacity(0.9), radius: 4, x: 0, y: 2)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .transition(.opacity)
     }
 
     private var remoteUpdatePrompt: some View {
         VStack(spacing: 14) {
             Text("Content Update")
-                .font(.system(size: 18, weight: .heavy))
+                .widerwillenFont(size: 18, weight: .heavy)
 
             if let version = remoteContentStore.pendingUpdateVersion {
                 Text(
                     "Version \(version) • \(remoteContentStore.pendingUpdateSizeText)"
                 )
-                .font(.system(size: 12, weight: .bold))
+                .widerwillenFont(size: 12, weight: .bold)
                 .opacity(0.78)
             }
 
             if remoteContentStore.isRefreshing {
-                if let progress = remoteContentStore.progress {
-                    ProgressView(value: progress)
-                        .progressViewStyle(.linear)
-                } else {
-                    ProgressView()
-                        .progressViewStyle(.linear)
-                }
+                progressBar
 
                 Text(remoteContentStore.progressDetailText)
-                    .font(.system(size: 11, weight: .bold))
+                    .widerwillenFont(size: 11, weight: .bold)
                     .opacity(0.78)
             } else {
                 HStack(spacing: 12) {
@@ -198,7 +188,7 @@ struct RootView: View {
                             .frame(maxWidth: .infinity)
                     }
                 }
-                .font(.system(size: 14, weight: .heavy))
+                .widerwillenFont(size: 14, weight: .heavy)
                 .buttonStyle(.bordered)
                 .tint(.white)
             }
@@ -215,6 +205,18 @@ struct RootView: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 5)
+        .transition(.opacity)
+    }
+
+    @ViewBuilder
+    private var progressBar: some View {
+        if let progress = remoteContentStore.progress {
+            ProgressView(value: progress)
+                .progressViewStyle(.linear)
+        } else {
+            ProgressView(value: 0.16)
+                .progressViewStyle(.linear)
+        }
     }
 
     @ViewBuilder

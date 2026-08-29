@@ -31,6 +31,8 @@ final class RemoteContentStore {
         forKey: versionKey
     )
     private var pendingUpdateManifest: RemoteContentManifest?
+    private var lastUpdateCheckDate: Date?
+    private let updateCheckCooldown: TimeInterval = 45
 
     init() {
         let cache = URLCache(
@@ -80,6 +82,15 @@ final class RemoteContentStore {
 
     func checkForAvailableUpdate() async {
         guard !isRefreshing else { return }
+        guard pendingUpdateManifest == nil else { return }
+
+        let now = Date()
+        if let lastUpdateCheckDate,
+            now.timeIntervalSince(lastUpdateCheckDate) < updateCheckCooldown
+        {
+            return
+        }
+        lastUpdateCheckDate = now
 
         do {
             let manifest = try await fetchManifest()

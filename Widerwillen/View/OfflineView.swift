@@ -39,17 +39,17 @@ struct OfflineView: View {
 
                 VStack(spacing: 8) {
                     Text("No Internet")
-                        .font(.system(size: 28, weight: .heavy))
+                        .widerwillenFont(size: 28, weight: .heavy)
 
                     Text(
                         "Widerwillen needs an internet connection to load game content."
                     )
-                    .font(.system(size: 13, weight: .bold))
+                    .widerwillenFont(size: 13, weight: .bold)
                     .multilineTextAlignment(.center)
                     .opacity(0.82)
 
                     Text(connectionName)
-                        .font(.system(size: 11, weight: .heavy))
+                        .widerwillenFont(size: 11, weight: .heavy)
                         .opacity(0.7)
                 }
                 .foregroundStyle(.white)

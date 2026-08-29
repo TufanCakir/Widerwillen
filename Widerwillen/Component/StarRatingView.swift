@@ -27,7 +27,7 @@ struct StarRatingView: View {
             }
 
             if stars > maxVisibleStars {
-                Text("+\(stars - maxVisibleStars)")
+                Image(systemName: "plus.circle.fill")
                     .font(.system(size: size, weight: .heavy))
             }
         }

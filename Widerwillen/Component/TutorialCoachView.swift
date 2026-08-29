@@ -69,11 +69,11 @@ struct TutorialCoachView: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(speakerName(for: tutorial))
-                                .font(.system(size: 12, weight: .heavy))
+                                .widerwillenFont(size: 12, weight: .heavy)
                                 .opacity(0.78)
 
                             Text(title(for: tutorial))
-                                .font(.system(size: 18, weight: .heavy))
+                                .widerwillenFont(size: 18, weight: .heavy)
                         }
 
                         Spacer()
@@ -89,7 +89,7 @@ struct TutorialCoachView: View {
                     }
 
                     Text(currentMessage(for: tutorial))
-                        .font(.system(size: 13, weight: .bold))
+                        .widerwillenFont(size: 13, weight: .bold)
                         .lineSpacing(3)
                         .fixedSize(horizontal: false, vertical: true)
 
@@ -104,7 +104,7 @@ struct TutorialCoachView: View {
                                     fallback: "Next"
                                 )
                         )
-                        .font(.system(size: 13, weight: .heavy))
+                        .widerwillenFont(size: 13, weight: .heavy)
                         .frame(maxWidth: .infinity)
                         .frame(height: 36)
                         .background(.white.opacity(0.18))

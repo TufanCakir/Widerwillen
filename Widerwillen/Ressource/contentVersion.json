@@ -1,5 +1,5 @@
 {
-    "contentVersion": 127,
+    "contentVersion": 131,
     "json": [
         {
             "name": "arena",
@@ -336,6 +336,16 @@
         {
             "name": "icon_pixel_big_sword",
             "path": "assets/icon_pixel_big_sword.png",
+            "version": 1
+        },
+        {
+            "name": "icon_pixel_slasher",
+            "path": "assets/icon_pixel_slasher.png",
+            "version": 1
+        },
+        {
+            "name": "icon_pixel_gun",
+            "path": "assets/icon_pixel_gun.png",
             "version": 1
         },
         {
@@ -766,7 +776,7 @@
         {
             "name": "widerwillen_logo",
             "path": "assets/widerwillen_logo.png",
-            "version": 6
+            "version": 7
         }
     ],
     "music": [

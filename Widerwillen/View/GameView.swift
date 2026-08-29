@@ -38,6 +38,7 @@ struct GameView: View {
                 maxHP: progress.maxStageHP,
                 lookIndex: lookIndex(for: progress.stage),
                 heroAnimationID: progress.battleHeroAnimationID,
+                equippedWeaponImageName: progress.equippedWeaponImageName,
                 companionAnimationIDs: progress.battleCompanionAnimationIDs,
                 spriteAttackInterval: progress.spriteAttackInterval,
                 activeSkills: progress.activeBattleSkills,

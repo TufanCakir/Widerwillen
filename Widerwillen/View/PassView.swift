@@ -23,9 +23,9 @@ struct PassView: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(pass.title)
-                        .font(.system(size: 20, weight: .heavy))
+                        .widerwillenFont(size: 20, weight: .heavy)
                     Text(pass.season)
-                        .font(.system(size: 12, weight: .bold))
+                        .widerwillenFont(size: 12, weight: .bold)
                         .opacity(0.75)
                 }
 
@@ -33,9 +33,9 @@ struct PassView: View {
 
                 VStack(alignment: .trailing, spacing: 4) {
                     Text("\(progress.passPoints(for: pass))")
-                        .font(.system(size: 18, weight: .heavy))
+                        .widerwillenFont(size: 18, weight: .heavy)
                     Text(pass.pointName)
-                        .font(.system(size: 10, weight: .bold))
+                        .widerwillenFont(size: 10, weight: .bold)
                         .opacity(0.75)
                 }
             }
@@ -51,13 +51,14 @@ struct PassView: View {
                 } label: {
                     HStack {
                         Image(systemName: "lock.open.fill")
+                            .font(.system(size: 14, weight: .heavy))
                         Text(
                             store.purchasedProductIDs.contains(productID)
                                 ? "Premium Pass Unlocked"
                                 : "Premium Pass \(store.displayPrice(for: productID))"
                         )
                     }
-                    .font(.system(size: 14, weight: .heavy))
+                    .widerwillenFont(size: 14, weight: .heavy)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 42)
@@ -102,7 +103,7 @@ struct PassView: View {
             VStack(alignment: .leading, spacing: 5) {
                 HStack(spacing: 6) {
                     Text(reward.title)
-                        .font(.system(size: 14, weight: .heavy))
+                        .widerwillenFont(size: 14, weight: .heavy)
                         .lineLimit(1)
 
                     if reward.premium {
@@ -114,7 +115,7 @@ struct PassView: View {
 
                 HStack(spacing: 8) {
                     Text("\(reward.requiredPoints) \(pass.pointName)")
-                        .font(.system(size: 10, weight: .bold))
+                        .widerwillenFont(size: 10, weight: .bold)
                         .opacity(0.72)
 
                     ForEach(reward.rewards) { amount in
@@ -140,7 +141,7 @@ struct PassView: View {
                         ? "checkmark.seal.fill"
                         : canClaim ? "gift.fill" : "lock.fill"
                 )
-                .font(.system(size: 20, weight: .heavy))
+                .widerwillenFont(size: 20, weight: .heavy)
                 .foregroundStyle(isClaimed ? .green : .white)
                 .frame(width: 42, height: 42)
                 .background(.black.opacity(0.3))

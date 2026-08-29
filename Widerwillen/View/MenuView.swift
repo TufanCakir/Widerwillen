@@ -51,7 +51,7 @@ struct MenuView: View {
                         isModePickerPresented = true
                     } label: {
                         Text("Start")
-                            .font(.system(size: 50, weight: .bold))
+                            .widerwillenFont(size: 30, weight: .bold)
                             .foregroundStyle(.white)
                             .shadow(
                                 color: .black.opacity(0.9),
@@ -160,7 +160,7 @@ struct MenuView: View {
                 }
 
                 Text(title)
-                    .font(.system(size: 13, weight: .bold))
+                    .widerwillenFont(size: 13, weight: .bold)
                     .lineLimit(1)
             }
             .foregroundStyle(.white)
@@ -268,7 +268,7 @@ struct MenuView: View {
                     .frame(width: 34, height: 34)
 
                 Text(title)
-                    .font(.system(size: 24, weight: .bold))
+                    .widerwillenFont(size: 24, weight: .bold)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
             }
             .foregroundStyle(.white)

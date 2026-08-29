@@ -63,7 +63,7 @@ struct SpriteListView: View {
                                     .frame(width: 20, height: 20)
 
                                 Text(category.title)
-                                    .font(.system(size: 13, weight: .heavy))
+                                    .widerwillenFont(size: 13, weight: .heavy)
                             }
                             .foregroundStyle(.white)
                             .lineLimit(1)
@@ -290,7 +290,7 @@ struct SpriteListView: View {
 
     private func sectionTitle(_ title: String) -> some View {
         Text(title)
-            .font(.system(size: 18, weight: .heavy))
+            .widerwillenFont(size: 18, weight: .heavy)
             .foregroundStyle(.white)
             .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -302,7 +302,7 @@ struct SpriteListView: View {
                 .frame(width: 58, height: 58)
 
             Text(item.name)
-                .font(.system(size: 11, weight: .heavy))
+                .widerwillenFont(size: 11, weight: .heavy)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
                 .shadow(
@@ -316,7 +316,7 @@ struct SpriteListView: View {
                 StarRatingView(stars: stars, maxVisibleStars: 7, size: 8)
             } else if let levelTitle = item.levelTitle {
                 Text(levelTitle)
-                    .font(.system(size: 10, weight: .bold))
+                    .widerwillenFont(size: 10, weight: .bold)
                     .foregroundStyle(item.rarity.color)
                     .shadow(
                         color: .black.opacity(0.9),

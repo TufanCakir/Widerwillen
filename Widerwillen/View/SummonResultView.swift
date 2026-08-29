@@ -51,12 +51,12 @@ struct SummonResultView: View {
     private var header: some View {
         VStack(spacing: 6) {
             Text("Summon Result")
-                .font(.system(size: 30, weight: .heavy))
+                .widerwillenFont(size: 30, weight: .heavy)
                 .foregroundStyle(.white)
                 .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
 
             Text("\(results.count) rewards")
-                .font(.system(size: 13, weight: .bold))
+                .widerwillenFont(size: 13, weight: .bold)
                 .foregroundStyle(.white.opacity(0.78))
                 .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
         }
@@ -80,7 +80,7 @@ struct SummonResultView: View {
             .frame(width: 72, height: 72)
 
             Text(result.entry.name)
-                .font(.system(size: 12, weight: .heavy))
+                .widerwillenFont(size: 12, weight: .heavy)
                 .foregroundStyle(.white)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
@@ -93,7 +93,7 @@ struct SummonResultView: View {
                     result.isDuplicate
                         ? "Duplicate  Lv \(result.level)" : "New  Lv 1"
                 )
-                .font(.system(size: 10, weight: .bold))
+                .widerwillenFont(size: 10, weight: .bold)
                 .foregroundStyle(.white.opacity(0.76))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
@@ -101,7 +101,7 @@ struct SummonResultView: View {
             }
 
             Text(result.entry.rarity.title)
-                .font(.system(size: 10, weight: .heavy))
+                .widerwillenFont(size: 10, weight: .heavy)
                 .foregroundStyle(result.entry.rarity.color)
                 .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
         }
@@ -136,7 +136,7 @@ struct SummonResultView: View {
             onClose()
         } label: {
             Text("Continue")
-                .font(.system(size: 18, weight: .heavy))
+                .widerwillenFont(size: 18, weight: .heavy)
                 .foregroundStyle(.white)
                 .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
                 .frame(maxWidth: .infinity)

@@ -21,7 +21,7 @@ struct AppResourceLabel: View {
                 .frame(width: iconSize, height: iconSize)
 
             Text("\(prefix)\(value)")
-                .font(.system(size: fontSize, weight: .bold))
+                .widerwillenFont(size: fontSize, weight: .bold)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
         }

@@ -37,7 +37,7 @@ struct GameHeader: View {
                 profileIconButton
 
                 Text("LV \(progress.accountLevel)")
-                    .font(.system(size: 18, weight: .heavy))
+                    .widerwillenFont(size: 18, weight: .heavy)
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
 
@@ -127,7 +127,7 @@ struct GameHeader: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Profile Icon")
-                    .font(.system(size: 15, weight: .heavy))
+                    .widerwillenFont(size: 15, weight: .heavy)
                     .foregroundStyle(.white)
                     .shadow(
                         color: .black.opacity(0.9),
@@ -196,7 +196,7 @@ struct GameHeader: View {
                 profileIconImage(icon.imageName, size: 34)
 
                 Text(icon.title)
-                    .font(.system(size: 8, weight: .heavy))
+                    .widerwillenFont(size: 8, weight: .heavy)
                     .foregroundStyle(.white.opacity(0.86))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)

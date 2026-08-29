@@ -111,7 +111,7 @@ struct GiftView: View {
             claimAll()
         } label: {
             Text(localizer.text("gift.claim_all", fallback: "Claim All"))
-                .font(.system(size: 18, weight: .heavy))
+                .widerwillenFont(size: 18, weight: .heavy)
                 .foregroundStyle(hasGifts ? .black : .white.opacity(0.54))
                 .shadow(
                     color: hasGifts
@@ -171,7 +171,7 @@ struct GiftView: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(localizedTitle(gift))
-                    .font(.system(size: 18, weight: .heavy))
+                    .widerwillenFont(size: 18, weight: .heavy)
                     .foregroundStyle(.white)
                     .shadow(
                         color: .black.opacity(0.9),
@@ -207,7 +207,7 @@ struct GiftView: View {
                         .frame(width: 20, height: 20)
 
                     Text(unlock.name)
-                        .font(.system(size: 11, weight: .heavy))
+                        .widerwillenFont(size: 11, weight: .heavy)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }
@@ -244,7 +244,7 @@ struct GiftView: View {
                 .opacity(0.45)
 
             Text(localizer.text("gift.empty", fallback: "No gifts"))
-                .font(.system(size: 16, weight: .heavy))
+                .widerwillenFont(size: 16, weight: .heavy)
                 .foregroundStyle(.white.opacity(0.72))
                 .shadow(
                     color: .black.opacity(0.9),
@@ -264,7 +264,7 @@ struct GiftView: View {
 
     private func statusText(_ text: String) -> some View {
         Text(text)
-            .font(.system(size: 13, weight: .heavy))
+            .widerwillenFont(size: 13, weight: .heavy)
             .foregroundStyle(.white.opacity(0.82))
             .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
     }

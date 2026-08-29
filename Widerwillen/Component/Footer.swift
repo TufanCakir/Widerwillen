@@ -55,7 +55,7 @@ struct Footer: View {
                             .clipped()
 
                         Text(tab.title)
-                            .font(.system(size: 10, weight: .bold))
+                            .widerwillenFont(size: 10, weight: .bold)
                             .lineLimit(1)
                             .minimumScaleFactor(0.65)
                             .shadow(

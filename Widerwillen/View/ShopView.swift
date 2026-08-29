@@ -49,7 +49,7 @@ struct ShopView: View {
 
                 if !statusMessage.isEmpty {
                     Text(statusMessage)
-                        .font(.system(size: 12, weight: .heavy))
+                        .widerwillenFont(size: 12, weight: .heavy)
                         .foregroundStyle(.white.opacity(0.82))
                         .shadow(
                             color: .black.opacity(0.9),
@@ -113,7 +113,7 @@ struct ShopView: View {
                     .font(.system(size: 15, weight: .heavy))
 
                 Text("Restore Purchases")
-                    .font(.system(size: 13, weight: .heavy))
+                    .widerwillenFont(size: 13, weight: .heavy)
             }
             .foregroundStyle(.black)
             .frame(maxWidth: .infinity)
@@ -207,7 +207,7 @@ struct ShopView: View {
                     && characterPacks.isEmpty
                 {
                     Text("No offers")
-                        .font(.system(size: 16, weight: .heavy))
+                        .widerwillenFont(size: 16, weight: .heavy)
                         .foregroundStyle(.white.opacity(0.78))
                         .shadow(
                             color: .black.opacity(0.9),
@@ -236,19 +236,19 @@ struct ShopView: View {
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(pass.title)
-                    .font(.system(size: 20, weight: .heavy))
+                    .widerwillenFont(size: 20, weight: .heavy)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
 
                 Text(pass.season)
-                    .font(.system(size: 12, weight: .bold))
+                    .widerwillenFont(size: 12, weight: .bold)
                     .opacity(0.74)
 
                 HStack(spacing: 8) {
                     Text("\(pass.rewards.count) rewards")
                     Text("\(progress.passPoints(for: pass)) \(pass.pointName)")
                 }
-                .font(.system(size: 11, weight: .bold))
+                .widerwillenFont(size: 11, weight: .bold)
                 .opacity(0.78)
             }
 
@@ -276,7 +276,7 @@ struct ShopView: View {
                             ? "Owned"
                             : productID.map(store.displayPrice) ?? "Free"
                     )
-                    .font(.system(size: 13, weight: .heavy))
+                    .widerwillenFont(size: 13, weight: .heavy)
                     .foregroundStyle(
                         isUnlocked || isPurchased ? .white : .black
                     )
@@ -312,13 +312,13 @@ struct ShopView: View {
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(pack.title)
-                    .font(.system(size: 18, weight: .heavy))
+                    .widerwillenFont(size: 18, weight: .heavy)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
 
                 if let subtitle = pack.subtitle {
                     Text(subtitle)
-                        .font(.system(size: 12, weight: .bold))
+                        .widerwillenFont(size: 12, weight: .bold)
                         .opacity(0.74)
                 }
 
@@ -333,7 +333,7 @@ struct ShopView: View {
 
                     if pack.bonusCrystals > 0 {
                         Text("+\(pack.bonusCrystals) Bonus")
-                            .font(.system(size: 11, weight: .heavy))
+                            .widerwillenFont(size: 11, weight: .heavy)
                             .foregroundStyle(.yellow)
                     }
                 }
@@ -364,13 +364,13 @@ struct ShopView: View {
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(pack.title)
-                    .font(.system(size: 18, weight: .heavy))
+                    .widerwillenFont(size: 18, weight: .heavy)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
 
                 if let subtitle = pack.subtitle {
                     Text(subtitle)
-                        .font(.system(size: 12, weight: .bold))
+                        .widerwillenFont(size: 12, weight: .bold)
                         .opacity(0.74)
                         .lineLimit(2)
                 }
@@ -415,7 +415,7 @@ struct ShopView: View {
     private func limitedText(_ value: String?) -> some View {
         if let value, !value.isEmpty {
             Text("Bis \(value)")
-                .font(.system(size: 10, weight: .heavy))
+                .widerwillenFont(size: 10, weight: .heavy)
                 .foregroundStyle(.yellow)
         }
     }
@@ -430,7 +430,7 @@ struct ShopView: View {
             action()
         } label: {
             Text(title)
-                .font(.system(size: 13, weight: .heavy))
+                .widerwillenFont(size: 13, weight: .heavy)
                 .foregroundStyle(isDisabled ? .white : .black)
                 .frame(minWidth: 74)
                 .frame(height: 34)
@@ -458,10 +458,10 @@ struct ShopView: View {
                 HStack {
                     VStack(alignment: .leading, spacing: 3) {
                         Text(pass.title)
-                            .font(.system(size: 20, weight: .heavy))
+                            .widerwillenFont(size: 20, weight: .heavy)
 
                         Text(pass.season)
-                            .font(.system(size: 12, weight: .bold))
+                            .widerwillenFont(size: 12, weight: .bold)
                             .opacity(0.74)
                     }
 
@@ -514,7 +514,7 @@ struct ShopView: View {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
                     Text(reward.title)
-                        .font(.system(size: 13, weight: .heavy))
+                        .widerwillenFont(size: 13, weight: .heavy)
                         .lineLimit(1)
                         .minimumScaleFactor(0.72)
 
@@ -527,7 +527,7 @@ struct ShopView: View {
 
                 HStack(spacing: 8) {
                     Text("\(reward.requiredPoints) \(pass.pointName)")
-                        .font(.system(size: 10, weight: .bold))
+                        .widerwillenFont(size: 10, weight: .bold)
                         .opacity(0.7)
 
                     ForEach(reward.rewards) { amount in

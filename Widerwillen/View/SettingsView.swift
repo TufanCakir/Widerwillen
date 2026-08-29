@@ -99,7 +99,7 @@ struct SettingsView: View {
 
                         if !tutorialMessage.isEmpty {
                             Text(tutorialMessage)
-                                .font(.system(size: 12, weight: .heavy))
+                                .widerwillenFont(size: 12, weight: .heavy)
                                 .foregroundStyle(.white.opacity(0.84))
                                 .shadow(
                                     color: .black.opacity(0.9),
@@ -115,7 +115,7 @@ struct SettingsView: View {
 
                         if !resetMessage.isEmpty {
                             Text(resetMessage)
-                                .font(.system(size: 12, weight: .heavy))
+                                .widerwillenFont(size: 12, weight: .heavy)
                                 .foregroundStyle(.white.opacity(0.84))
                                 .shadow(
                                     color: .black.opacity(0.9),
@@ -198,7 +198,7 @@ struct SettingsView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 8))
 
                 Text(localizer.text("settings.language", fallback: "Language"))
-                    .font(.system(size: 17, weight: .heavy))
+                    .widerwillenFont(size: 17, weight: .heavy)
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
 
@@ -244,10 +244,10 @@ struct SettingsView: View {
 
                 VStack(alignment: .leading, spacing: 1) {
                     Text(title)
-                        .font(.system(size: 14, weight: .bold))
+                        .widerwillenFont(size: 14, weight: .bold)
 
                     Text(subtitle)
-                        .font(.system(size: 10, weight: .semibold))
+                        .widerwillenFont(size: 10, weight: .semibold)
                         .opacity(0.7)
                 }
                 .foregroundStyle(.white)
@@ -281,12 +281,12 @@ struct SettingsView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 6))
 
                 Text(title)
-                    .font(.system(size: 13, weight: .bold))
+                    .widerwillenFont(size: 13, weight: .bold)
 
                 Spacer()
 
                 Text("\(Int(value.wrappedValue * 100))%")
-                    .font(.system(size: 11, weight: .bold))
+                    .widerwillenFont(size: 11, weight: .bold)
                     .opacity(0.8)
             }
 
@@ -337,7 +337,7 @@ struct SettingsView: View {
                             fallback: "Show Tutorials Again"
                         )
                     )
-                    .font(.system(size: 17, weight: .heavy))
+                    .widerwillenFont(size: 17, weight: .heavy)
 
                     Text(
                         localizer.text(
@@ -345,7 +345,7 @@ struct SettingsView: View {
                             fallback: "Reset viewed tutorial messages"
                         )
                     )
-                    .font(.system(size: 12, weight: .bold))
+                    .widerwillenFont(size: 12, weight: .bold)
                     .opacity(0.78)
                 }
 
@@ -386,7 +386,7 @@ struct SettingsView: View {
                             fallback: "Reset Game"
                         )
                     )
-                    .font(.system(size: 17, weight: .heavy))
+                    .widerwillenFont(size: 17, weight: .heavy)
 
                     Text(
                         localizer.text(
@@ -394,7 +394,7 @@ struct SettingsView: View {
                             fallback: "Start gameplay from the beginning"
                         )
                     )
-                    .font(.system(size: 12, weight: .bold))
+                    .widerwillenFont(size: 12, weight: .bold)
                     .opacity(0.78)
                 }
 
@@ -434,7 +434,7 @@ struct SettingsView: View {
     private func infoRow(title: String, value: String) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 16) {
             Text(title)
-                .font(.system(size: 14, weight: .heavy))
+                .widerwillenFont(size: 14, weight: .heavy)
                 .foregroundStyle(.white.opacity(0.82))
                 .shadow(
                     color: .black.opacity(0.9),
@@ -446,7 +446,7 @@ struct SettingsView: View {
             Spacer(minLength: 12)
 
             Text(value)
-                .font(.system(size: 13, weight: .bold))
+                .widerwillenFont(size: 13, weight: .bold)
                 .foregroundStyle(.white)
                 .multilineTextAlignment(.trailing)
                 .lineLimit(2)

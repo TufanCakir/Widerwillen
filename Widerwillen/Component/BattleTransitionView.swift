@@ -19,7 +19,7 @@ struct BattleTransitionView: View {
             Color.black.opacity(0.58)
                 .ignoresSafeArea()
 
-            VStack(spacing: 16) {
+            VStack(spacing: 14) {
                 RemoteImage(name: imageName)
                     .frame(width: 96, height: 96)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -29,20 +29,14 @@ struct BattleTransitionView: View {
                     }
 
                 Text(areaName)
-                    .font(.system(size: 28, weight: .heavy))
+                    .widerwillenFont(size: 28, weight: .heavy)
                     .foregroundStyle(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
-
-                ProgressView()
-                    .tint(.white)
-                    .frame(width: 120)
             }
             .padding(24)
-            .background(.black.opacity(0.45))
-            .clipShape(RoundedRectangle(cornerRadius: 8))
         }
-        .transition(.opacity.combined(with: .scale(scale: 1.05)))
+        .transition(.opacity)
     }
 }

@@ -26,7 +26,7 @@ struct CategoryBar: View {
                             scrollToCategory(category, proxy: proxy)
                         } label: {
                             Text(displayName(category))
-                                .font(.system(size: 13, weight: .heavy))
+                                .widerwillenFont(size: 13, weight: .heavy)
                                 .foregroundStyle(.white)
                                 .shadow(
                                     color: .black.opacity(0.9),

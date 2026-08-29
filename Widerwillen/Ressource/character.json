@@ -26,14 +26,14 @@
                 {
                     "id": "nimbi_birthday_skin",
                     "name": "Birthday Skin",
-                    "imageName": "skin_birthday_nimbi_head",
+                    "imageName": "icon_birthday_nimbi",
                     "animationID": "nimbi_birthday",
                     "unlockSource": "event"
                 },
                 {
                     "id": "nimbi_halloween_skin",
                     "name": "Halloween Skin",
-                    "imageName": "skin_halloween_nimbi_head",
+                    "imageName": "icon_halloween_nimbi",
                     "animationID": "nimbi_halloween",
                     "unlockSource": "event"
                 }

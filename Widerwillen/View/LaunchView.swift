@@ -12,48 +12,16 @@ struct LaunchView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(
-                stops: [
-                    .init(color: .blue, location: 0),
-                    .init(color: .blue, location: 0.5),
-                    .init(color: .white, location: 0.5),
-                    .init(color: .white, location: 1),
-                ],
-                startPoint: .leading,
-                endPoint: .trailing
-            )
-            .ignoresSafeArea()
+            AppBackground()
 
-            VStack(spacing: 20) {
+            Color.black.opacity(0.18)
+                .ignoresSafeArea()
 
-                VStack(spacing: 10) {
-                    if let progress = remoteContentStore.progress {
-                        ProgressView(value: progress)
-                            .progressViewStyle(.linear)
-                    } else {
-                        ProgressView()
-                            .progressViewStyle(.linear)
-                    }
-
-                    Text(remoteContentStore.progressDetailText)
-                        .font(.system(size: 12, weight: .heavy))
-                        .foregroundStyle(.white)
-                        .shadow(
-                            color: .black.opacity(0.9),
-                            radius: 3,
-                            x: 0,
-                            y: 0
-                        )
-                }
-                .tint(.white)
-                .frame(maxWidth: 260)
-                .padding(.horizontal, 18)
-                .padding(.vertical, 14)
-                .background(.black.opacity(0.42))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .shadow(color: .black.opacity(0.5), radius: 8, x: 0, y: 4)
-            }
-            .padding(.horizontal, 28)
+            Text("Widerwillen")
+                .widerwillenFont(size: 34, weight: .heavy)
+                .foregroundStyle(.white)
+                .shadow(color: .black.opacity(0.9), radius: 5, x: 0, y: 2)
         }
+        .transition(.opacity)
     }
 }

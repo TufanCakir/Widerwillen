@@ -39,6 +39,36 @@ struct SpriteSheet: Codable {
         case gridRow
     }
 
+    init(
+        id: String,
+        imageName: String,
+        columns: Int = 1,
+        rows: Int = 1,
+        spacing: Int = 0,
+        margin: Int = 0,
+        frameCount: Int = 1,
+        fps: Double = 8,
+        xPosition: CGFloat? = nil,
+        yOffset: CGFloat? = nil,
+        scale: CGFloat? = nil,
+        gridColumn: Int? = nil,
+        gridRow: Int? = nil
+    ) {
+        self.id = id
+        self.imageName = imageName
+        self.columns = columns
+        self.rows = rows
+        self.spacing = spacing
+        self.margin = margin
+        self.frameCount = frameCount
+        self.fps = fps
+        self.xPosition = xPosition
+        self.yOffset = yOffset
+        self.scale = scale
+        self.gridColumn = gridColumn
+        self.gridRow = gridRow
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         imageName = try container.decode(String.self, forKey: .imageName)
