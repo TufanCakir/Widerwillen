@@ -41,8 +41,6 @@ struct GameView: View {
                 equippedWeaponImageName: progress.equippedWeaponImageName,
                 equippedWeaponBattleAppearance: progress
                     .equippedWeaponBattleAppearance,
-                companionAnimationIDs: progress.battleCompanionAnimationIDs,
-                spriteAttackInterval: progress.spriteAttackInterval,
                 activeSkills: progress.activeBattleSkills,
                 onTapAttack: {
                     guard !isPrestigeTransitionRunning else {
@@ -72,24 +70,6 @@ struct GameView: View {
                     let result = progress.attackStage(damage: damage)
                     playSoundEffect(
                         result.coinsAwarded > 0 ? "stage_clear" : "battle_tap"
-                    )
-                    return result
-                },
-                onSpriteAttack: {
-                    guard
-                        !isPrestigeTransitionRunning,
-                        progress.hasCompanionSprites
-                    else {
-                        return BattleAttackResult(damageDealt: 0)
-                    }
-
-                    let result = progress.attackStage(
-                        damage: progress.spriteDamage
-                    )
-                    playSoundEffect(
-                        result.coinsAwarded > 0
-                            ? "stage_clear"
-                            : "battle_sprite_attack"
                     )
                     return result
                 },

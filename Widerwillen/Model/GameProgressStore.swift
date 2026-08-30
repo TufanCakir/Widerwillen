@@ -152,6 +152,17 @@ final class GameProgressStore {
         return ownedItems[selectedWeaponItemID]
     }
 
+    var equippedWeaponShadowCloneImageName: String? {
+        guard let selectedWeaponItemID else {
+            return nil
+        }
+
+        return Self.summonConfiguration.banners
+            .flatMap(\.entries)
+            .first { $0.id == selectedWeaponItemID }?
+            .shadowCloneImageName
+    }
+
     var equippedWeaponImageName: String? {
         equippedWeapon?.imageName
     }
@@ -165,19 +176,6 @@ final class GameProgressStore {
             .flatMap(\.entries)
             .first { $0.id == selectedWeaponItemID }?
             .battleAppearance
-    }
-
-    var battleCompanionAnimationIDs: Set<String> {
-        Set(
-            ownedSprites.keys.compactMap {
-                Self.companionConfiguration.companion(spriteIndex: $0)?
-                    .animationID
-            }
-        )
-    }
-
-    var hasCompanionSprites: Bool {
-        !ownedSprites.isEmpty
     }
 
     var selectedCharacter: CharacterDefinition? {
@@ -246,10 +244,10 @@ final class GameProgressStore {
     }
 
     var battlePower: Int {
-        manualAttackPower + companionAttackPower
+        characterAttackPower
     }
 
-    private var manualAttackPower: Int {
+    private var characterAttackPower: Int {
         let heroPower =
             if let character = selectedCharacter,
                 let ownedCharacter = ownedCharacters[character.id]
@@ -261,64 +259,81 @@ final class GameProgressStore {
             } else {
                 Self.defaultHeroBasePower
             }
+
         let artifactPower = ownedArtifacts.values.reduce(0) {
-            $0 + Self.scaledPower(base: $1.damageBonus, level: $1.level)
+            $0
+                + Self.scaledPower(
+                    base: $1.damageBonus,
+                    level: $1.level
+                )
         }
+
         let itemPower = ownedItems.values.reduce(0) {
-            $0 + Self.scaledPower(base: $1.damageBonus, level: $1.level)
+            $0
+                + Self.scaledPower(
+                    base: $1.damageBonus,
+                    level: $1.level
+                )
         }
+
         let accountPower = max(accountLevel - 1, 0) * 2
         let prestigePower = prestigeCount * 4
+
         let rawPower =
-            heroPower + artifactPower + itemPower
-            + accountPower + prestigePower
+            heroPower
+            + passiveCompanionPower
+            + artifactPower
+            + itemPower
+            + accountPower
+            + prestigePower
+
         return max(
             1,
             Int(
-                (Double(rawPower) * (1.0 + skillBonus(for: .damage)))
-                    .rounded()
+                (Double(rawPower)
+                    * (1.0 + skillBonus(for: .damage))).rounded()
             )
         )
     }
 
-    private var companionAttackPower: Int {
-        ownedSprites.values
-            .reduce(0) {
-                let basePower =
-                    Self.companionConfiguration.companion(
-                        spriteIndex: $1.spriteIndex
-                    )?.baseDPS ?? Self.rarityPower($1.rarity)
-                return $0
-                    + Self.scaledPower(
-                        base: basePower,
-                        level: $1.stars
-                    )
-            }
+    private var passiveCompanionPower: Int {
+        ownedSprites.values.reduce(0) { total, sprite in
+            let basePower =
+                Self.companionConfiguration.companion(
+                    spriteIndex: sprite.spriteIndex
+                )?.baseDPS ?? Self.rarityPower(sprite.rarity)
+
+            let power = Self.scaledPower(
+                base: basePower,
+                level: sprite.stars
+            )
+
+            return total + power
+        }
     }
 
     var tapDamage: Int {
         let multiplier = 0.45 + skillBonus(for: .tapDamage)
-        return max(1, Int((Double(manualAttackPower) * multiplier).rounded()))
-    }
 
-    var spriteDamage: Int {
-        guard companionAttackPower > 0 else { return 0 }
-
-        let multiplier = 1.0 + skillBonus(for: .spriteDamage)
-        let prestigeMultiplier = 1.0 + Double(prestigeCount) * 0.12
         return max(
             1,
             Int(
-                (Double(companionAttackPower) * multiplier * prestigeMultiplier)
+                (Double(characterAttackPower) * multiplier)
                     .rounded()
             )
         )
     }
 
-    var spriteAttackInterval: Duration {
-        let speedBonus = min(skillBonus(for: .attackSpeed), 0.65)
-        let seconds = max(0.45, 1.45 * (1.0 - speedBonus))
-        return .milliseconds(Int(seconds * 1000))
+    func passivePower(for sprite: OwnedSprite) -> Int {
+        let basePower =
+            Self.companionConfiguration.companion(
+                spriteIndex: sprite.spriteIndex
+            )?.baseDPS ?? Self.rarityPower(sprite.rarity)
+
+        return Self.scaledPower(
+            base: basePower,
+            level: sprite.stars
+        )
     }
 
     var activeBattleSkills: [BattleActiveSkill] {
@@ -330,13 +345,15 @@ final class GameProgressStore {
                 return nil
             }
 
-            let level = skillLevel(for: skill)
             let damageMultiplier =
                 activation.damageMultiplier
-                * (1.0 + Double(max(level - 1, 0)) * skill.valuePerLevel)
+                * (1.0 + skillBonus(for: .shadowCloneDamage))
             let damage = max(
                 1,
-                Int((Double(manualAttackPower) * damageMultiplier).rounded())
+                Int(
+                    (Double(characterAttackPower) * damageMultiplier)
+                        .rounded()
+                )
             )
 
             return BattleActiveSkill(

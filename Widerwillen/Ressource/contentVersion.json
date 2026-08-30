@@ -1,5 +1,5 @@
 {
-    "contentVersion": 162,
+    "contentVersion": 165,
     "json": [
         {
             "name": "arena",
@@ -52,6 +52,10 @@
         {
             "name": "event",
             "path": "event.json"
+        },
+        {
+            "name": "event_shop",
+            "path": "event_shop.json"
         },
         {
             "name": "gift",
@@ -244,6 +248,16 @@
             "version": 1
         },
         {
+            "name": "icon_pixel_chip_halloween",
+            "path": "assets/icon_pixel_chip_halloween.png",
+            "version": 1
+        },
+        {
+            "name": "icon_pixel_chip_birthday",
+            "path": "assets/icon_pixel_chip_birthday.png",
+            "version": 1
+        },
+        {
             "name": "icon_pixel_chip_blue",
             "path": "assets/icon_pixel_chip_blue.png",
             "version": 1
@@ -366,6 +380,26 @@
         {
             "name": "icon_molc",
             "path": "assets/icon_molc.png",
+            "version": 1
+        },
+        {
+            "name": "shadow_clone_nimbi_sword",
+            "path": "assets/shadow_clone_nimbi_sword.png",
+            "version": 1
+        },
+        {
+            "name": "shadow_clone_nimbi_big_sword",
+            "path": "assets/shadow_clone_nimbi_big_sword.png",
+            "version": 1
+        },
+        {
+            "name": "shadow_clone_nimbi_moon_blaster",
+            "path": "assets/shadow_clone_nimbi_moon_blaster.png",
+            "version": 1
+        },
+        {
+            "name": "shadow_clone_nimbi_slasher",
+            "path": "assets/shadow_clone_nimbi_slasher.png",
             "version": 1
         },
         {

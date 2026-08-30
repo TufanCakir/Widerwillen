@@ -516,7 +516,7 @@
             "rightHand": "shadow_clone_nimbi_right_hand",
             "leftFoot": "shadow_clone_nimbi_left_foot",
             "rightFoot": "shadow_clone_nimbi_right_foot",
-            "weapon": "sprite_original_slenderize_sword"
+            "weapon": "shadow_clone_nimbi_sword"
         },
         "joints": {
             "body": {

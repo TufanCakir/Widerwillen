@@ -53,8 +53,8 @@
             "title": "Shadow Clone",
             "category": "Shadow",
             "imageName": "icon_pixel_shadow_clone",
-            "effect": "spriteDamage",
-            "valuePerLevel": 0.08,
+            "effect": "shadowCloneDamage",
+            "valuePerLevel": 0.03,
             "cost": 2,
             "maxLevel": 25,
             "requiredAccountLevel": 20,
@@ -62,7 +62,7 @@
                 "kind": "shadowClone",
                 "durationSeconds": 8,
                 "cooldownSeconds": 22,
-                "damageMultiplier": 0.55,
+                "damageMultiplier": 0.45,
                 "intervalSeconds": 0.75,
                 "companionAnimationID": "shadow_clone_nimbi"
             }

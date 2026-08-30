@@ -18,14 +18,11 @@ struct BattleSceneView: View {
     let heroAnimationID: String
     let equippedWeaponImageName: String?
     let equippedWeaponBattleAppearance: WeaponBattleAppearance?
-    let companionAnimationIDs: Set<String>
-    let spriteAttackInterval: Duration
     let activeSkills: [BattleActiveSkill]
     let backgroundImageName: String?
     let groundImageName: String?
     let onTapAttack: () -> BattleAttackResult
     let onBattleCardAttack: ((BattleCardDefinition) -> BattleAttackResult)?
-    let onSpriteAttack: () -> BattleAttackResult
     let onActiveSkillAttack: (BattleActiveSkill) -> BattleAttackResult
     let onPrestige: (() -> Void)?
     let onExit: (() -> Void)?
@@ -59,15 +56,12 @@ struct BattleSceneView: View {
         heroAnimationID: String,
         equippedWeaponImageName: String? = nil,
         equippedWeaponBattleAppearance: WeaponBattleAppearance? = nil,
-        companionAnimationIDs: Set<String>,
-        spriteAttackInterval: Duration,
         activeSkills: [BattleActiveSkill] = [],
         backgroundImageName: String? = nil,
         groundImageName: String? = nil,
         onTapAttack: @escaping () -> BattleAttackResult,
         onBattleCardAttack: ((BattleCardDefinition) -> BattleAttackResult)? =
             nil,
-        onSpriteAttack: @escaping () -> BattleAttackResult,
         onActiveSkillAttack:
             @escaping (BattleActiveSkill)
             -> BattleAttackResult = { _ in BattleAttackResult(damageDealt: 0) },
@@ -91,14 +85,11 @@ struct BattleSceneView: View {
         self.heroAnimationID = heroAnimationID
         self.equippedWeaponImageName = equippedWeaponImageName
         self.equippedWeaponBattleAppearance = equippedWeaponBattleAppearance
-        self.companionAnimationIDs = companionAnimationIDs
-        self.spriteAttackInterval = spriteAttackInterval
         self.activeSkills = activeSkills
         self.backgroundImageName = backgroundImageName
         self.groundImageName = groundImageName
         self.onTapAttack = onTapAttack
         self.onBattleCardAttack = onBattleCardAttack
-        self.onSpriteAttack = onSpriteAttack
         self.onActiveSkillAttack = onActiveSkillAttack
         self.onPrestige = onPrestige
         self.onExit = onExit
@@ -116,8 +107,14 @@ struct BattleSceneView: View {
         GeometryReader { proxy in
             let viewSize = proxy.size
             let groundHeight = viewSize.height * arena.floorHeightRatio
-            let backgroundLook = background.looks[backgroundLookIndex]
-            let groundLook = arena.looks[groundLookIndex]
+            let backgroundLook = selectedBackgroundLook
+            let groundLook = selectedGroundLook
+            let hudTopPadding = max(proxy.safeAreaInsets.top + 10, 54)
+            let sideButtonTopPadding = max(
+                proxy.safeAreaInsets.top + 140,
+                viewSize.height * 0.22
+            )
+            let cardBottomPadding = max(proxy.safeAreaInsets.bottom + 10, 24)
 
             ZStack(alignment: .bottom) {
                 backgroundLayer(look: backgroundLook, viewSize: viewSize)
@@ -143,7 +140,7 @@ struct BattleSceneView: View {
                     maxHP: maxHP
                 )
                 .padding(.horizontal)
-                .padding(.top, 54)
+                .padding(.top, hudTopPadding)
                 .frame(
                     maxWidth: .infinity,
                     maxHeight: .infinity,
@@ -159,7 +156,7 @@ struct BattleSceneView: View {
                         prestigeButton(onPrestige: onPrestige)
                     }
                 }
-                .padding(.top, 250)
+                .padding(.top, sideButtonTopPadding)
                 .padding(.trailing, 18)
                 .frame(
                     maxWidth: .infinity,
@@ -185,7 +182,7 @@ struct BattleSceneView: View {
                     },
                     onSkillActivation: activateSkill
                 )
-                .padding(.bottom, 24)
+                .padding(.bottom, cardBottomPadding)
                 .padding(.horizontal, 14)
                 .frame(
                     maxWidth: .infinity,
@@ -208,18 +205,13 @@ struct BattleSceneView: View {
             .contentShape(Rectangle())
         }
         .background(
-            background.looks[backgroundLookIndex].backgroundColor.swiftUIColor
+            selectedBackgroundLook.backgroundColor.swiftUIColor
         )
         .ignoresSafeArea()
         .onAppear {
             selectedLookIndex = lookIndex
             previousAreaID = currentArea.id
-            scene.updateBattleSprites(
-                heroAnimationID: heroAnimationID,
-                equippedWeaponImageName: equippedWeaponImageName,
-                equippedWeaponBattleAppearance: equippedWeaponBattleAppearance,
-                companionAnimationIDs: companionAnimationIDs
-            )
+            updateBattleCharacter()
             scene.updateEnemy(currentEnemy, isBoss: isBossStage)
             scene.updateShadowClone(animationID: activeShadowCloneAnimationID)
         }
@@ -227,28 +219,13 @@ struct BattleSceneView: View {
             selectedLookIndex = newLookIndex
         }
         .onChange(of: heroAnimationID) { _, animationID in
-            scene.updateBattleSprites(
-                heroAnimationID: animationID,
-                equippedWeaponImageName: equippedWeaponImageName,
-                equippedWeaponBattleAppearance: equippedWeaponBattleAppearance,
-                companionAnimationIDs: companionAnimationIDs
-            )
+            updateBattleCharacter(heroAnimationID: animationID)
         }
         .onChange(of: equippedWeaponImageName) { _, imageName in
-            scene.updateBattleSprites(
-                heroAnimationID: heroAnimationID,
-                equippedWeaponImageName: imageName,
-                equippedWeaponBattleAppearance: equippedWeaponBattleAppearance,
-                companionAnimationIDs: companionAnimationIDs
-            )
+            updateBattleCharacter(equippedWeaponImageName: imageName)
         }
-        .onChange(of: companionAnimationIDs) { _, animationIDs in
-            scene.updateBattleSprites(
-                heroAnimationID: heroAnimationID,
-                equippedWeaponImageName: equippedWeaponImageName,
-                equippedWeaponBattleAppearance: equippedWeaponBattleAppearance,
-                companionAnimationIDs: animationIDs
-            )
+        .onChange(of: equippedWeaponBattleAppearance) { _, appearance in
+            updateBattleCharacter(equippedWeaponBattleAppearance: appearance)
         }
         .onChange(of: currentEnemy.id) { _, _ in
             scene.updateEnemy(currentEnemy, isBoss: isBossStage)
@@ -261,11 +238,24 @@ struct BattleSceneView: View {
             showAreaTransition(currentArea)
         }
         .task {
-            await runSpriteAttackLoop()
-        }
-        .task {
             await runCooldownClock()
         }
+    }
+
+    private func updateBattleCharacter(
+        heroAnimationID: String? = nil,
+        equippedWeaponImageName: String? = nil,
+        equippedWeaponBattleAppearance: WeaponBattleAppearance? = nil
+    ) {
+        scene.updateBattleCharacter(
+            heroAnimationID: heroAnimationID ?? self.heroAnimationID,
+            equippedWeaponImageName: equippedWeaponImageName
+                ?? self.equippedWeaponImageName,
+            equippedWeaponShadowCloneImageName: progress
+                .equippedWeaponShadowCloneImageName,
+            equippedWeaponBattleAppearance: equippedWeaponBattleAppearance
+                ?? self.equippedWeaponBattleAppearance
+        )
     }
 
     private func activateSkill(_ skill: BattleActiveSkill) {
@@ -348,16 +338,6 @@ struct BattleSceneView: View {
 
     private func nanoseconds(for seconds: Double) -> UInt64 {
         UInt64(max(seconds, 0) * 1_000_000_000)
-    }
-
-    private func runSpriteAttackLoop() async {
-        while !Task.isCancelled {
-            try? await Task.sleep(for: spriteAttackInterval)
-
-            await MainActor.run {
-                performAttack(onSpriteAttack())
-            }
-        }
     }
 
     private func runCooldownClock() async {
@@ -514,6 +494,35 @@ struct BattleSceneView: View {
         guard !arena.looks.isEmpty else { return 0 }
         return min(max(selectedLookIndex, 0), arena.looks.count - 1)
     }
+
+    private var selectedBackgroundLook: GameBackgroundLook {
+        guard !background.looks.isEmpty else {
+            return Self.fallbackBackgroundLook
+        }
+
+        return background.looks[backgroundLookIndex]
+    }
+
+    private var selectedGroundLook: ArenaLook {
+        guard !arena.looks.isEmpty else {
+            return Self.fallbackGroundLook
+        }
+
+        return arena.looks[groundLookIndex]
+    }
+
+    private static let fallbackBackgroundLook = GameBackgroundLook(
+        name: "Fallback",
+        backgroundColor: RGBColor(red: 0.03, green: 0.06, blue: 0.12),
+        backgroundImageName: nil,
+        backgroundDarkening: 0
+    )
+
+    private static let fallbackGroundLook = ArenaLook(
+        name: "Fallback",
+        groundImageName: nil,
+        groundDarkening: 0
+    )
 
     private var currentStage: Int {
         max(progress.stage, 1)
@@ -699,10 +708,7 @@ extension SpriteAnimationScene {
         lookIndex: 0,
         heroAnimationID: "nimbi_original",
         equippedWeaponImageName: "icon_pixel_sword",
-        companionAnimationIDs: [],
-        spriteAttackInterval: .seconds(1.4),
         onTapAttack: { BattleAttackResult(damageDealt: 1) },
-        onSpriteAttack: { BattleAttackResult(damageDealt: 1) },
         onExit: {}
     )
 }

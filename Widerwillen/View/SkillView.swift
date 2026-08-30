@@ -240,23 +240,32 @@ struct SkillView: View {
 
         switch skill.effect {
         case .damage:
-            return "+\(percent)% all damage per level"
+            return "+\(percent)% total damage per level"
+
         case .tapDamage:
             return "+\(percent)% tap damage per level"
-        case .spriteDamage:
-            return "+\(percent)% sprite damage per level"
+
+        case .shadowCloneDamage:
+            return "+\(percent)% Shadow Clone damage per level"
+
         case .attackSpeed:
-            return "+\(percent)% sprite speed per level"
+            return "+\(percent)% Shadow Clone attack speed per level"
+
         case .coinDrop:
             return "+\(percent)% coins per level"
+
         case .dropChance:
             return "+\(percent)% drop chance per level"
+
         case .prestigeRelics:
-            return "+\(percent)% prestige relics per level"
+            return "+\(percent)% Prestige Relics per level"
+
         case .activeSkillDuration:
             return "+\(percent)% active skill duration per level"
+
         case .activeSkillCooldown:
             return "-\(percent)% active skill cooldown per level"
+
         case .stageSkipChance:
             return "+\(percent)% stage skip chance per level"
         }

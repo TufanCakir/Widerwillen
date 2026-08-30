@@ -78,6 +78,7 @@ struct SummonBanner: Decodable, Identifiable {
 }
 
 struct SummonEntry: Decodable, Identifiable {
+
     let id: String
     let name: String
     let spriteIndex: Int?
@@ -85,11 +86,14 @@ struct SummonEntry: Decodable, Identifiable {
     let skinID: String?
     let companionID: String?
     let imageName: String
+
+    // Alternative Darstellung nur für den Shadow-Clone-Skill
+    let shadowCloneImageName: String?
+
     let rarity: SpriteRarity
     let damageBonus: Int
     let weight: Double
 
-    // Darstellung der Waffe im Kampf
     let battleAppearance: WeaponBattleAppearance?
 
     private enum CodingKeys: String, CodingKey {
@@ -106,6 +110,8 @@ struct SummonEntry: Decodable, Identifiable {
 
         // NEU
         case battleAppearance
+
+        case shadowCloneImageName
     }
 
     init(from decoder: Decoder) throws {
@@ -158,6 +164,10 @@ struct SummonEntry: Decodable, Identifiable {
         battleAppearance = try container.decodeIfPresent(
             WeaponBattleAppearance.self,
             forKey: .battleAppearance
+        )
+        shadowCloneImageName = try container.decodeIfPresent(
+            String.self,
+            forKey: .shadowCloneImageName
         )
     }
 }

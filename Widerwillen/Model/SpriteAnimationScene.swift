@@ -23,6 +23,7 @@ final class SpriteAnimationScene: SKScene {
     private var shadowCloneRig: SpriteRig?
     private var heroAnimationID = "nimbi_original"
     private var equippedWeaponImageName: String?
+    private var equippedWeaponShadowCloneImageName: String?
     private var equippedWeaponBattleAppearance: WeaponBattleAppearance?
     private var companionAnimationIDs: Set<String> = []
     private var currentEnemy: EnemyDefinition?
@@ -100,16 +101,18 @@ final class SpriteAnimationScene: SKScene {
         layoutCharacters()
     }
 
-    func updateBattleSprites(
+    func updateBattleCharacter(
         heroAnimationID: String,
         equippedWeaponImageName: String?,
-        equippedWeaponBattleAppearance: WeaponBattleAppearance?,
-        companionAnimationIDs: Set<String>
+        equippedWeaponShadowCloneImageName: String?,
+        equippedWeaponBattleAppearance: WeaponBattleAppearance?
     ) {
         self.heroAnimationID = heroAnimationID
         self.equippedWeaponImageName = equippedWeaponImageName
-        self.equippedWeaponBattleAppearance = equippedWeaponBattleAppearance
-        self.companionAnimationIDs = companionAnimationIDs
+        self.equippedWeaponShadowCloneImageName =
+            equippedWeaponShadowCloneImageName
+        self.equippedWeaponBattleAppearance =
+            equippedWeaponBattleAppearance
 
         setupCharactersIfNeeded()
         updateCharacterVisibility()
@@ -204,6 +207,7 @@ final class SpriteAnimationScene: SKScene {
         }
 
         activeShadowCloneAnimationID = animationID
+
         shadowCloneNode?.removeFromParent()
         shadowCloneNode = nil
         shadowCloneRig = nil
@@ -211,25 +215,39 @@ final class SpriteAnimationScene: SKScene {
         guard let animationID else { return }
 
         if let rig = rig(for: animationID) {
+
             let clone = makeRigNode(for: rig)
+
             clone.name = "shadowClone"
             clone.alpha = 0.62
             clone.zPosition = 2_900
-            configureEquippedWeapon(on: clone, isVisible: true)
+
+            // Shadow-Version der ausgerüsteten Waffe
+            configureShadowCloneWeapon(
+                on: clone,
+                isVisible: true
+            )
+
             startRigIdle(on: clone)
             scheduleShadowCloneMotion(on: clone)
+
             clone.run(.fadeIn(withDuration: 0.16))
 
             addChild(clone)
+
             shadowCloneNode = clone
             shadowCloneRig = rig
+
         } else {
+
             let sprite = SKSpriteNode()
+
             sprite.name = "shadowClone"
             sprite.anchorPoint = CGPoint(x: 0.5, y: 0.5)
             sprite.alpha = 0.62
             sprite.xScale = -1
             sprite.zPosition = 2_900
+
             configureSprite(
                 sprite,
                 animationID: animationID,
@@ -239,12 +257,15 @@ final class SpriteAnimationScene: SKScene {
                 fps: 8,
                 actionKey: "shadowCloneAnimation"
             )
+
             sprite.run(.fadeIn(withDuration: 0.16))
 
             addChild(sprite)
             shadowCloneNode = sprite
         }
+
         layoutShadowClone()
+
         if let shadowCloneNode {
             spawnBattleParticles(
                 .shadow,
@@ -573,8 +594,52 @@ final class SpriteAnimationScene: SKScene {
         }
 
         if let shadowCloneNode {
-            configureEquippedWeapon(on: shadowCloneNode, isVisible: true)
+            configureShadowCloneWeapon(
+                on: shadowCloneNode,
+                isVisible: true
+            )
         }
+    }
+
+    private func configureShadowCloneWeapon(
+        on node: SKNode,
+        isVisible: Bool
+    ) {
+        guard
+            let weaponBone = rigNode(named: "weapon", in: node),
+            let weaponSprite = weaponBone.childNode(
+                withName: "weaponSprite"
+            ) as? SKSpriteNode
+        else {
+            return
+        }
+
+        guard
+            isVisible,
+            let shadowWeaponImageName = equippedWeaponShadowCloneImageName
+        else {
+            weaponBone.isHidden = true
+            return
+        }
+
+        weaponBone.isHidden = false
+
+        let weaponTexture = texture(named: shadowWeaponImageName)
+        weaponTexture.filteringMode = .nearest
+        weaponSprite.texture = weaponTexture
+
+        let appearance = equippedWeaponBattleAppearance
+
+        weaponSprite.position = CGPoint(
+            x: appearance?.offsetX ?? weaponVisualOffset.x,
+            y: appearance?.offsetY ?? weaponVisualOffset.y
+        )
+
+        weaponSprite.setScale(appearance?.scale ?? 1.0)
+
+        weaponSprite.zRotation = radians(
+            appearance?.rotation ?? 0
+        )
     }
 
     private func configureEquippedWeapon(on node: SKNode, isVisible: Bool) {

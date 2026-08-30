@@ -56,18 +56,18 @@ struct MenuView: View {
                             .foregroundStyle(.white)
                             .shadow(
                                 color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 0
+                                radius: 3
                             )
                             .frame(maxWidth: .infinity)
                             .frame(height: 60)
                             .background {
-                                RemoteImage(
-                                    name: "icon_pixel_menü",
-                                    contentMode: .fill
-                                )
+                                AppBackground()
                             }
+                            .overlay {
+                                Capsule()
+                                    .stroke(.white.opacity(0.65), lineWidth: 1)
+                            }
+                            .clipShape(Capsule())
                     }
                     .buttonStyle(.plain)
                     .padding(.horizontal)
@@ -204,22 +204,18 @@ struct MenuView: View {
                 popupButton(
                     title: "Battle",
                     iconImage: "icon_pixel_sword",
-                    backgroundImage: "bg_app",
                     mode: .battle
                 )
                 popupButton(
                     title: "Events",
                     iconImage: "icon_pixel_sword",
-                    backgroundImage: "bg_app",
                     mode: .event
                 )
             }
             .padding(18)
             .frame(maxWidth: 360)
             .background {
-                RemoteImage(name: "bg_app", contentMode: .fill)
-                    .opacity(0.88)
-                    .allowsHitTesting(false)
+                AppBackground()
             }
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
@@ -266,7 +262,6 @@ struct MenuView: View {
     private func popupButton(
         title: String,
         iconImage: String,
-        backgroundImage: String,
         mode: MenuMode
     ) -> some View {
         Button {
@@ -280,18 +275,20 @@ struct MenuView: View {
 
                 Text(title)
                     .widerwillenFont(size: 24, weight: .bold)
-                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3
+                    )
             }
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
             .frame(height: 74)
             .background {
-                RemoteImage(name: backgroundImage, contentMode: .fill)
-                    .opacity(0.72)
+                AppBackground()
             }
             .overlay {
                 Capsule()
-                    .stroke(.white, lineWidth: 2)
+                    .stroke(.white.opacity(0.7), lineWidth: 1)
             }
             .clipShape(Capsule())
             .contentShape(Capsule())

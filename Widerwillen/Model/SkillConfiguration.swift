@@ -63,8 +63,8 @@ struct SkillNode: Decodable, Identifiable {
 enum SkillEffect: String, Codable {
     case damage
     case tapDamage
-    case spriteDamage
     case attackSpeed
+    case shadowCloneDamage
     case coinDrop
     case dropChance
     case prestigeRelics

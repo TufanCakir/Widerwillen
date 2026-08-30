@@ -95,14 +95,24 @@ struct GameHeader: View {
                 isShowingProfilePicker.toggle()
             }
         } label: {
-            profileIconImage(progress.selectedProfileIconImageName, size: 52)
-                .background(.black.opacity(0.32))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(.white.opacity(0.78), lineWidth: 2)
-                }
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+            profileIconImage(
+                progress.selectedProfileIconImageName,
+                size: 52
+            )
+            .background {
+                AppBackground()
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.white.opacity(0.78), lineWidth: 2)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .shadow(
+                color: .black.opacity(0.9),
+                radius: 3,
+                x: 0,
+                y: 2
+            )
         }
         .buttonStyle(.plain)
     }
@@ -165,7 +175,9 @@ struct GameHeader: View {
         .padding(12)
         .frame(width: width)
         .frame(maxHeight: maxHeight)
-        .background(.black.opacity(0.76))
+        .background {
+            AppBackground()
+        }
         .overlay {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(.white.opacity(0.62), lineWidth: 1)
@@ -208,12 +220,15 @@ struct GameHeader: View {
                     )
             }
             .frame(width: 58, height: 58)
-            .background(.white.opacity(isSelected ? 0.2 : 0.08))
+            .background {
+                AppBackground()
+            }
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(
                         isSelected
-                            ? .white.opacity(0.92) : .white.opacity(0.28),
+                            ? .white.opacity(0.95)
+                            : .white.opacity(0.28),
                         lineWidth: isSelected ? 2 : 1
                     )
             }

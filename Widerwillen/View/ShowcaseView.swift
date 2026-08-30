@@ -5,6 +5,7 @@
 //  Created by Tufan Cakir on 30.08.26.
 //
 
+import Photos
 import SpriteKit
 import SwiftUI
 import UIKit
@@ -18,10 +19,9 @@ struct ShowcaseView: View {
     @State private var selectedMove: BattleCardMove = .bladeStorm
     @State private var exportStatus = ""
     @State private var isExporting = false
-    @State private var lastExportURL: URL?
     @State private var activeSkillIDs: Set<String> = []
-    @State private var isLooping = true
     @State private var isCleanMode = false
+    @AppStorage("isShowcaseAnimationLoopEnabled") private var isLooping = true
 
     private let arena: ArenaConfiguration
     private let battleCards: BattleCardConfiguration
@@ -186,55 +186,56 @@ struct ShowcaseView: View {
         VStack(spacing: 8) {
             HStack(spacing: 10) {
                 Button {
-                    Task { await captureSnapshot() }
+                    Task {
+                        await captureSnapshot()
+                    }
                 } label: {
-                    Label("Camera Snapshot", systemImage: "camera.fill")
-                        .frame(maxWidth: .infinity)
+                    Label(
+                        "Save to Photos",
+                        systemImage: "photo.badge.arrow.down"
+                    )
+                    .frame(maxWidth: .infinity)
                 }
-            }
-            .font(.system(size: 14, weight: .heavy))
-            .buttonStyle(.borderedProminent)
-            .tint(.white)
-            .foregroundStyle(.black)
-            .disabled(isExporting)
-
-            if let lastExportURL {
-                ShareLink(item: lastExportURL) {
-                    Label("Share snapshot", systemImage: "square.and.arrow.up")
-                        .font(.system(size: 13, weight: .heavy))
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.bordered)
+                .font(.system(size: 14, weight: .heavy))
+                .buttonStyle(.borderedProminent)
                 .tint(.white)
-            }
+                .foregroundStyle(.black)
+                .disabled(isExporting)
 
-            if !exportStatus.isEmpty {
-                Text(exportStatus)
-                    .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(.white.opacity(0.78))
-                    .multilineTextAlignment(.center)
+                if !exportStatus.isEmpty {
+                    Text(exportStatus)
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.78))
+                        .multilineTextAlignment(.center)
+                }
             }
+            .foregroundStyle(.white)
         }
-        .foregroundStyle(.white)
     }
 
     private func configureScene(size: CGSize) {
         scene.size = size
         scene.scaleMode = .resizeFill
         scene.backgroundColor = .clear
-        scene.updateBattleSprites(
+
+        scene.updateBattleCharacter(
             heroAnimationID: progress.battleHeroAnimationID,
             equippedWeaponImageName: progress.equippedWeaponImageName,
+            equippedWeaponShadowCloneImageName: progress
+                .equippedWeaponShadowCloneImageName,
             equippedWeaponBattleAppearance: progress
-                .equippedWeaponBattleAppearance,
-            companionAnimationIDs: []
+                .equippedWeaponBattleAppearance
         )
+
         scene.updateShowcaseLayout(
             heroXRatio: 0.5,
             heroYRatio: 1.28,
             heroScale: 0.34
         )
-        scene.updateShadowClone(animationID: activeShadowCloneAnimationID)
+
+        scene.updateShadowClone(
+            animationID: activeShadowCloneAnimationID
+        )
     }
 
     private func playCard(_ card: BattleCardDefinition) {
@@ -283,39 +284,61 @@ struct ShowcaseView: View {
         guard !isExporting else { return }
 
         isExporting = true
-        exportStatus = "Capturing snapshot..."
-        defer { isExporting = false }
+        exportStatus = "Saving snapshot..."
+
+        defer {
+            isExporting = false
+        }
 
         do {
             let wasCleanMode = isCleanMode
+
             withAnimation(.easeInOut(duration: 0.12)) {
                 isCleanMode = true
             }
+
             try await Task.sleep(for: .milliseconds(180))
 
             let image = try snapshotCurrentScreen()
-            let url = FileManager.default.temporaryDirectory
-                .appending(path: "widerwillen-showcase-snapshot.png")
-            guard let data = image.pngData() else {
-                throw ShowcaseExportError.renderFailed
-            }
-            try data.write(to: url, options: .atomic)
 
-            lastExportURL = url
-            exportStatus = "Snapshot ready."
+            try await saveToPhotoLibrary(image)
+
+            exportStatus = "Saved to Photos"
+
             if !wasCleanMode {
                 withAnimation(.easeInOut(duration: 0.12)) {
                     isCleanMode = false
                 }
             }
+
             playSoundEffect("ui_confirm")
+
         } catch {
-            exportStatus = "Snapshot failed"
+            exportStatus = "Could not save snapshot"
+
             withAnimation(.easeInOut(duration: 0.12)) {
                 isCleanMode = false
             }
+
             playSoundEffect("ui_back")
-            print("[ShowcaseView] snapshot failed: \(error)")
+
+            print("[ShowcaseView] Photo save failed: \(error)")
+        }
+    }
+
+    // MARK: - PhotoKit
+
+    private func saveToPhotoLibrary(_ image: UIImage) async throws {
+        let status = await PHPhotoLibrary.requestAuthorization(
+            for: .addOnly
+        )
+
+        guard status == .authorized || status == .limited else {
+            throw ShowcaseExportError.photoLibraryDenied
+        }
+
+        try await PHPhotoLibrary.shared().performChanges {
+            PHAssetChangeRequest.creationRequestForAsset(from: image)
         }
     }
 
@@ -332,11 +355,14 @@ struct ShowcaseView: View {
         }
 
         let renderer = UIGraphicsImageRenderer(bounds: window.bounds)
+
         return renderer.image { _ in
-            window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+            window.drawHierarchy(
+                in: window.bounds,
+                afterScreenUpdates: true
+            )
         }
     }
-
 }
 
 private struct CinematicShowcaseBackground: View {
@@ -385,6 +411,7 @@ extension Color {
 
 private enum ShowcaseExportError: Error {
     case renderFailed
+    case photoLibraryDenied
 }
 
 extension BattleCardMove {

@@ -16,21 +16,7 @@ struct EventShopConfiguration: Decodable {
     }
 
     static func load() throws -> EventShopConfiguration {
-        guard
-            let url = Bundle.main.url(
-                forResource: "event_shop",
-                withExtension: "json"
-            )
-        else {
-            throw EventShopError.fileNotFound
-        }
-
-        let data = try Data(contentsOf: url)
-
-        return try JSONDecoder().decode(
-            EventShopConfiguration.self,
-            from: data
-        )
+        try JSONLoader.load(named: "event_shop")
     }
 }
 
@@ -45,8 +31,4 @@ struct EventShop: Decodable, Identifiable {
     let currencyID: String
     let currencyImageName: String
     let offers: [TradeOffer]
-}
-
-enum EventShopError: Error {
-    case fileNotFound
 }

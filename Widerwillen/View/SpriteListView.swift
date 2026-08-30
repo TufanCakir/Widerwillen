@@ -178,6 +178,8 @@ struct SpriteListView: View {
                 rarity: character.rarity,
                 levelTitle: owned == nil ? "Locked" : nil,
                 stars: owned?.stars,
+                isOwned: owned != nil,
+                passivePower: nil,
                 isSelected: progress.isSelectedCharacter(character.id),
                 canSelect: owned != nil,
                 character: character
@@ -186,14 +188,16 @@ struct SpriteListView: View {
     }
 
     private var companionItems: [CollectionItem] {
-        progress.ownedSprites.values.map {
+        progress.ownedSprites.values.map { sprite in
             CollectionItem(
-                id: "sprite-\($0.spriteIndex)",
-                name: $0.name,
-                imageName: $0.imageName,
-                rarity: $0.rarity,
+                id: "sprite-\(sprite.spriteIndex)",
+                name: sprite.name,
+                imageName: sprite.imageName,
+                rarity: sprite.rarity,
                 levelTitle: nil,
-                stars: $0.stars,
+                stars: sprite.stars,
+                isOwned: true,
+                passivePower: progress.passivePower(for: sprite),
                 isSelected: false,
                 canSelect: false,
                 character: nil
@@ -211,6 +215,8 @@ struct SpriteListView: View {
                 rarity: $0.rarity,
                 levelTitle: "Lv \($0.level)",
                 stars: nil,
+                isOwned: true,
+                passivePower: nil,
                 isSelected: false,
                 canSelect: false,
                 character: nil
@@ -228,6 +234,8 @@ struct SpriteListView: View {
                 rarity: $0.rarity,
                 levelTitle: "Lv \($0.level)",
                 stars: nil,
+                isOwned: true,
+                passivePower: nil,
                 isSelected: false,
                 canSelect: false,
                 character: nil
@@ -278,7 +286,11 @@ struct SpriteListView: View {
                 )
 
             if let stars = item.stars {
-                StarRatingView(stars: stars, maxVisibleStars: 7, size: 8)
+                StarRatingView(
+                    stars: stars,
+                    maxVisibleStars: 7,
+                    size: 8
+                )
             } else if let levelTitle = item.levelTitle {
                 Text(levelTitle)
                     .widerwillenFont(size: 10, weight: .bold)
@@ -290,6 +302,22 @@ struct SpriteListView: View {
                         y: 0
                     )
             }
+
+            // Nur Companions haben passive Power
+            if let passivePower = item.passivePower {
+                HStack(spacing: 4) {
+                    Image(systemName: "bolt.fill")
+                        .font(.system(size: 8))
+
+                    Text("+\(passivePower) Power")
+                        .widerwillenFont(size: 9, weight: .bold)
+                }
+                .foregroundStyle(item.rarity.color)
+
+                Text("PASSIVE")
+                    .widerwillenFont(size: 8, weight: .heavy)
+                    .foregroundStyle(.white.opacity(0.65))
+            }
         }
         .foregroundStyle(.white)
         .opacity(
@@ -297,17 +325,38 @@ struct SpriteListView: View {
                 ? 1 : 0.45
         )
         .frame(maxWidth: .infinity)
-        .frame(height: 118)
-        .background(.black.opacity(0.24))
+        .frame(height: 145)
+        .background {
+            if item.isOwned {
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.02, green: 0.18, blue: 0.45),
+                        .black,
+                        Color(red: 0.02, green: 0.18, blue: 0.45),
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            } else {
+                Color.black
+            }
+        }
         .overlay {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(
-                    item.isSelected ? .white : item.rarity.color.opacity(0.75),
+                    item.isSelected
+                        ? .white
+                        : item.rarity.color.opacity(0.75),
                     lineWidth: item.isSelected ? 2 : 1
                 )
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+        .shadow(
+            color: .black.opacity(0.9),
+            radius: 3,
+            x: 0,
+            y: 2
+        )
     }
 }
 
@@ -318,6 +367,11 @@ private struct CollectionItem: Identifiable {
     let rarity: SpriteRarity
     let levelTitle: String?
     let stars: Int?
+    let isOwned: Bool
+
+    // Nur für passive Companion-Boni
+    let passivePower: Int?
+
     let isSelected: Bool
     let canSelect: Bool
     let character: CharacterDefinition?

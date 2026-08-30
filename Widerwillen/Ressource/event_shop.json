@@ -5,116 +5,391 @@
             "title": "Blue Chip Shop",
             "currencyID": "blue_chips",
             "currencyImageName": "icon_pixel_chip_blue",
-
             "offers": [
                 {
-                    "id": "blue_chip_coins_01",
-                    "title": "Coin Pack",
+                    "id": "blue_chip_run_coins_01",
+                    "title": "Blue Chip Coins",
+                    "category": "Blue Chip Run",
                     "imageName": "icon_pixel_coin",
-
+                    "limit": 8,
                     "costs": [
                         {
-                            "resource": "blue_chips",
-                            "amount": 100
+                            "resource": "event_chip",
+                            "chipID": "blue_chips",
+                            "imageName": "icon_pixel_chip_blue",
+                            "amount": 80
                         }
                     ],
-
                     "rewards": [
                         {
                             "resource": "coins",
-                            "amount": 500
+                            "amount": 900
                         }
                     ],
-
-                    "unlocks": [],
-                    "limit": 5
+                    "unlocks": []
                 },
-
                 {
-                    "id": "blue_chip_crystals_01",
-                    "title": "Crystal Pack",
-                    "imageName": "icon_pixel_crystal",
-
+                    "id": "blue_chip_run_skill_books_01",
+                    "title": "Blue Chip Skill Books",
+                    "category": "Blue Chip Run",
+                    "imageName": "icon_pixel_skill_book",
+                    "limit": 4,
                     "costs": [
                         {
-                            "resource": "blue_chips",
-                            "amount": 250
+                            "resource": "event_chip",
+                            "chipID": "blue_chips",
+                            "imageName": "icon_pixel_chip_blue",
+                            "amount": 120
                         }
                     ],
-
+                    "rewards": [
+                        {
+                            "resource": "skill_books",
+                            "amount": 5
+                        }
+                    ],
+                    "unlocks": []
+                }
+            ]
+        },
+        {
+            "eventID": "yellow_chip_run",
+            "title": "Yellow Chip Shop",
+            "currencyID": "yellow_chips",
+            "currencyImageName": "icon_pixel_chip_yellow",
+            "offers": [
+                {
+                    "id": "yellow_chip_run_coins_01",
+                    "title": "Yellow Chip Coins",
+                    "category": "Yellow Chip Run",
+                    "imageName": "icon_pixel_coin",
+                    "limit": 8,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "yellow_chips",
+                            "imageName": "icon_pixel_chip_yellow",
+                            "amount": 90
+                        }
+                    ],
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 1100
+                        }
+                    ],
+                    "unlocks": []
+                },
+                {
+                    "id": "yellow_chip_run_crystals_01",
+                    "title": "Yellow Chip Crystals",
+                    "category": "Yellow Chip Run",
+                    "imageName": "icon_pixel_crystal",
+                    "limit": 3,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "yellow_chips",
+                            "imageName": "icon_pixel_chip_yellow",
+                            "amount": 160
+                        }
+                    ],
                     "rewards": [
                         {
                             "resource": "crystals",
                             "amount": 10
                         }
                     ],
-
-                    "unlocks": [],
-                    "limit": 2
+                    "unlocks": []
                 }
             ]
         },
-
         {
-            "eventID": "yellow_chip_run",
-            "title": "Yellow Chip Shop",
-            "currencyID": "yellow_chips",
-            "currencyImageName": "icon_pixel_chip_yellow",
-
+            "eventID": "red_chip_raid",
+            "title": "Red Chip Shop",
+            "currencyID": "red_chips",
+            "currencyImageName": "icon_pixel_chip_red",
             "offers": [
                 {
-                    "id": "yellow_chip_coin_pack",
-                    "title": "Large Coin Pack",
-                    "imageName": "icon_pixel_coin",
-
+                    "id": "red_chip_raid_relics_01",
+                    "title": "Red Chip Relics",
+                    "category": "Red Chip Raid",
+                    "imageName": "icon_pixel_relic",
+                    "limit": 5,
                     "costs": [
                         {
-                            "resource": "yellow_chips",
-                            "amount": 150
+                            "resource": "event_chip",
+                            "chipID": "red_chips",
+                            "imageName": "icon_pixel_chip_red",
+                            "amount": 140
                         }
                     ],
-
                     "rewards": [
                         {
-                            "resource": "coins",
-                            "amount": 1000
+                            "resource": "relics",
+                            "amount": 12
                         }
                     ],
-
-                    "unlocks": [],
-                    "limit": 3
+                    "unlocks": []
                 }
             ]
         },
-
         {
             "eventID": "birthday_skin_event",
             "title": "Birthday Shop",
-            "currencyID": "yellow_chips",
-            "currencyImageName": "icon_pixel_chip_yellow",
-
+            "currencyID": "birthday_chips",
+            "currencyImageName": "icon_pixel_chip_birthday",
             "offers": [
                 {
-                    "id": "birthday_skill_books",
-                    "title": "Birthday Skill Books",
-                    "imageName": "icon_pixel_skill_book",
-
+                    "id": "birthday_skin_event_skin_01",
+                    "title": "Birthday Nimbi Skin",
+                    "category": "Birthday Skin Event",
+                    "imageName": "icon_birthday_nimbi",
+                    "limit": 1,
                     "costs": [
                         {
-                            "resource": "yellow_chips",
-                            "amount": 300
+                            "resource": "event_chip",
+                            "chipID": "birthday_chips",
+                            "imageName": "icon_pixel_chip_birthday",
+                            "amount": 260
                         }
                     ],
-
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "birthday_shop_nimbi_skin",
+                            "kind": "skin",
+                            "skinID": "nimbi_birthday_skin",
+                            "name": "Birthday Nimbi",
+                            "imageName": "icon_birthday_nimbi",
+                            "rarity": "legendary"
+                        }
+                    ]
+                },
+                {
+                    "id": "birthday_skin_event_fun_edge_01",
+                    "title": "Fun Edge",
+                    "category": "Birthday Skin Event",
+                    "imageName": "icon_pixel_big_sword",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "birthday_chips",
+                            "imageName": "icon_pixel_chip_birthday",
+                            "amount": 320
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "birthday_shop_fun_edge",
+                            "kind": "item",
+                            "itemID": "fun_edge",
+                            "name": "Fun Edge",
+                            "imageName": "icon_pixel_big_sword",
+                            "rarity": "epic",
+                            "damageBonus": 14
+                        }
+                    ]
+                },
+                {
+                    "id": "birthday_skin_event_skill_books_01",
+                    "title": "Birthday Skill Books",
+                    "category": "Birthday Skin Event",
+                    "imageName": "icon_pixel_skill_book",
+                    "limit": 3,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "birthday_chips",
+                            "imageName": "icon_pixel_chip_birthday",
+                            "amount": 180
+                        }
+                    ],
                     "rewards": [
                         {
-                            "resource": "skillBooks",
+                            "resource": "skill_books",
                             "amount": 10
                         }
                     ],
-
-                    "unlocks": [],
-                    "limit": 1
+                    "unlocks": []
+                },
+                {
+                    "id": "birthday_skin_event_crystals_01",
+                    "title": "Birthday Crystals",
+                    "category": "Birthday Skin Event",
+                    "imageName": "icon_pixel_crystal",
+                    "limit": 2,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "birthday_chips",
+                            "imageName": "icon_pixel_chip_birthday",
+                            "amount": 220
+                        }
+                    ],
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 16
+                        }
+                    ],
+                    "unlocks": []
+                },
+                {
+                    "id": "birthday_skin_event_coin_burst_01",
+                    "title": "Birthday Coin Burst",
+                    "category": "Birthday Skin Event",
+                    "imageName": "icon_pixel_coin",
+                    "limit": 5,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "birthday_chips",
+                            "imageName": "icon_pixel_chip_birthday",
+                            "amount": 90
+                        }
+                    ],
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 1800
+                        }
+                    ],
+                    "unlocks": []
+                }
+            ]
+        },
+        {
+            "eventID": "halloween_skin_event",
+            "title": "Halloween Shop",
+            "currencyID": "halloween_chips",
+            "currencyImageName": "icon_pixel_chip_halloween",
+            "offers": [
+                {
+                    "id": "halloween_skin_event_skin_01",
+                    "title": "Halloween Nimbi Skin",
+                    "category": "Halloween Skin Event",
+                    "imageName": "icon_halloween_nimbi",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "halloween_chips",
+                            "imageName": "icon_pixel_chip_halloween",
+                            "amount": 320
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "halloween_shop_nimbi_skin",
+                            "kind": "skin",
+                            "skinID": "nimbi_halloween_skin",
+                            "name": "Halloween Nimbi",
+                            "imageName": "icon_halloween_nimbi",
+                            "rarity": "legendary"
+                        }
+                    ]
+                },
+                {
+                    "id": "halloween_skin_event_slasher_01",
+                    "title": "Slasher",
+                    "category": "Halloween Skin Event",
+                    "imageName": "icon_pixel_slasher",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "halloween_chips",
+                            "imageName": "icon_pixel_chip_halloween",
+                            "amount": 420
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "halloween_shop_slasher",
+                            "kind": "item",
+                            "itemID": "slasher",
+                            "name": "Slasher",
+                            "imageName": "icon_pixel_slasher",
+                            "rarity": "legendary",
+                            "damageBonus": 20
+                        }
+                    ]
+                },
+                {
+                    "id": "halloween_skin_event_moon_blaster_01",
+                    "title": "Moon Blaster",
+                    "category": "Halloween Skin Event",
+                    "imageName": "icon_pixel_gun",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "halloween_chips",
+                            "imageName": "icon_pixel_chip_halloween",
+                            "amount": 300
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "halloween_shop_moon_blaster",
+                            "kind": "item",
+                            "itemID": "moon_blaster",
+                            "name": "Moon Blaster",
+                            "imageName": "icon_pixel_gun",
+                            "rarity": "rare",
+                            "damageBonus": 14
+                        }
+                    ]
+                },
+                {
+                    "id": "halloween_skin_event_relics_01",
+                    "title": "Halloween Relics",
+                    "category": "Halloween Skin Event",
+                    "imageName": "icon_pixel_relic",
+                    "limit": 3,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "halloween_chips",
+                            "imageName": "icon_pixel_chip_halloween",
+                            "amount": 220
+                        }
+                    ],
+                    "rewards": [
+                        {
+                            "resource": "relics",
+                            "amount": 18
+                        }
+                    ],
+                    "unlocks": []
+                },
+                {
+                    "id": "halloween_skin_event_skill_books_01",
+                    "title": "Halloween Skill Books",
+                    "category": "Halloween Skin Event",
+                    "imageName": "icon_pixel_skill_book",
+                    "limit": 2,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "halloween_chips",
+                            "imageName": "icon_pixel_chip_halloween",
+                            "amount": 260
+                        }
+                    ],
+                    "rewards": [
+                        {
+                            "resource": "skill_books",
+                            "amount": 14
+                        }
+                    ],
+                    "unlocks": []
                 }
             ]
         }

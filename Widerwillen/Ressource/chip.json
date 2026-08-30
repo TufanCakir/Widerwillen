@@ -23,6 +23,18 @@
             "name": "Red Chips",
             "nameKey": "event.currency.red_chips",
             "imageName": "icon_pixel_chip_red"
+        },
+        {
+            "id": "birthday_chips",
+            "name": "Birthday Chips",
+            "nameKey": "event.currency.birthday_chips",
+            "imageName": "icon_pixel_chip_birthday"
+        },
+        {
+            "id": "halloween_chips",
+            "name": "Halloween Chips",
+            "nameKey": "event.currency.halloween_chips",
+            "imageName": "icon_pixel_chip_halloween"
         }
     ]
 }

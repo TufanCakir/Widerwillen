@@ -450,30 +450,23 @@ private struct EventShopView: View {
     }
 
     private func shopButton(for event: GameEvent) -> some View {
-        let chipBalance = progress.eventCurrencies[
-            event.currencyStorageID,
-            default: 0
-        ]
-
-        let offerCount =
-            eventShopConfiguration
-            .shop(for: event.id)?
-            .offers
-            .count ?? 0
+        let shop = eventShopConfiguration.shop(for: event.id)!
+        let chipBalance = progress.eventCurrencies[shop.currencyID, default: 0]
+        let offerCount = shop.offers.count
 
         return Button {
             playSoundEffect("ui_select")
             selectedShopEvent = event
         } label: {
             HStack(spacing: 14) {
-                RemoteImage(name: event.currencyImageName)
+                RemoteImage(name: shop.currencyImageName)
                     .frame(width: 48, height: 48)
                     .padding(8)
                     .background(.black.opacity(0.24))
                     .clipShape(RoundedRectangle(cornerRadius: 8))
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("\(localizedCurrencyName(event)) Shop")
+                    Text(shop.title)
                         .widerwillenFont(size: 17, weight: .heavy)
                         .lineLimit(1)
                         .minimumScaleFactor(0.72)
@@ -505,10 +498,8 @@ private struct EventShopView: View {
     }
 
     private func shopWindow(for event: GameEvent) -> some View {
-        let offers =
-            eventShopConfiguration
-            .shop(for: event.id)?
-            .offers ?? []
+        let shop = eventShopConfiguration.shop(for: event.id)
+        let offers = shop?.offers ?? []
 
         return ZStack {
             Color.black.opacity(0.58)
@@ -519,10 +510,10 @@ private struct EventShopView: View {
 
             VStack(spacing: 12) {
                 HStack(spacing: 10) {
-                    RemoteImage(name: event.currencyImageName)
+                    RemoteImage(name: shop?.currencyImageName ?? event.currencyImageName)
                         .frame(width: 28, height: 28)
 
-                    Text("\(localizedCurrencyName(event)) Shop")
+                    Text(shop?.title ?? "\(localizedCurrencyName(event)) Shop")
                         .widerwillenFont(size: 18, weight: .heavy)
 
                     Spacer()
@@ -699,8 +690,6 @@ private struct EventBattleView: View {
                 lookIndex: eventLookIndex,
                 heroAnimationID: progress.battleHeroAnimationID,
                 equippedWeaponImageName: progress.equippedWeaponImageName,
-                companionAnimationIDs: progress.battleCompanionAnimationIDs,
-                spriteAttackInterval: progress.spriteAttackInterval,
                 activeSkills: progress.activeBattleSkills,
                 backgroundImageName: event.battleBackgroundImageName,
                 groundImageName: event.battleGroundImageName,
@@ -722,19 +711,6 @@ private struct EventBattleView: View {
                     let result = attackEvent(damage: damage)
                     playSoundEffect(
                         result.coinsAwarded > 0 ? "event_win" : "battle_tap"
-                    )
-                    return result
-                },
-                onSpriteAttack: {
-                    guard progress.hasCompanionSprites else {
-                        return BattleAttackResult(damageDealt: 0)
-                    }
-
-                    let result = attackEvent(damage: progress.spriteDamage)
-                    playSoundEffect(
-                        result.coinsAwarded > 0
-                            ? "event_win"
-                            : "battle_sprite_attack"
                     )
                     return result
                 },
