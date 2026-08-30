@@ -60,7 +60,7 @@ struct BattleCardBar: View {
         .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay {
             RoundedRectangle(cornerRadius: 18)
-                .stroke(.white.opacity(0.45), lineWidth: 1)
+                .stroke(.blue, lineWidth: 1)
         }
     }
 
@@ -194,7 +194,7 @@ private struct BattleCardButton: View {
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(
-                        isActive ? .cyan : .white.opacity(0.7),
+                        isActive ? .blue : .white,
                         lineWidth: isActive ? 3 : 1
                     )
             }

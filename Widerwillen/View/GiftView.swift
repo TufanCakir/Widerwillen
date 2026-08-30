@@ -126,7 +126,7 @@ struct GiftView: View {
                 .overlay {
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(
-                            .white.opacity(hasGifts ? 0.88 : 0.28),
+                            .blue.opacity(hasGifts ? 0.88 : 0.28),
                             lineWidth: 1
                         )
                 }
@@ -193,7 +193,7 @@ struct GiftView: View {
         .background(.black.opacity(0.24))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.55), lineWidth: 1)
+                .stroke(.blue, lineWidth: 1)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)

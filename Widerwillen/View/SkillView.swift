@@ -155,7 +155,7 @@ struct SkillView: View {
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.44), lineWidth: 1)
+                .stroke(.blue, lineWidth: 1)
         }
     }
 
@@ -213,7 +213,7 @@ struct SkillView: View {
                 .overlay {
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(
-                            .white.opacity(canUpgrade ? 0.72 : 0.24),
+                            .blue.opacity(canUpgrade ? 0.72 : 0.24),
                             lineWidth: 1
                         )
                 }
@@ -226,7 +226,7 @@ struct SkillView: View {
         .background(.black.opacity(0.26))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.48), lineWidth: 1)
+                .stroke(.blue, lineWidth: 1)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }

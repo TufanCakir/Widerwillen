@@ -27,123 +27,14 @@ struct SettingsView: View {
             AppBackground()
 
             ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 12) {
-
-                    VStack(spacing: 6) {
-                        languagePicker
-
-                        settingsToggle(
-                            title: localizer.text(
-                                "settings.music",
-                                fallback: "Music"
-                            ),
-                            subtitle: isMusicEnabled
-                                ? localizer.text("settings.on", fallback: "On")
-                                : localizer.text(
-                                    "settings.off",
-                                    fallback: "Off"
-                                ),
-                            systemImage: "music.note",
-                            isOn: $isMusicEnabled
-                        )
-
-                        settingsSlider(
-                            title: localizer.text(
-                                "settings.music_volume",
-                                fallback: "Music Volume"
-                            ),
-                            systemImage: "speaker.wave.2.fill",
-                            value: $musicVolume
-                        )
-
-                        settingsToggle(
-                            title: localizer.text(
-                                "settings.sound_effects",
-                                fallback: "Sound Effects"
-                            ),
-                            subtitle: isSoundEffectsEnabled
-                                ? localizer.text("settings.on", fallback: "On")
-                                : localizer.text(
-                                    "settings.off",
-                                    fallback: "Off"
-                                ),
-                            systemImage: "speaker.wave.3.fill",
-                            isOn: $isSoundEffectsEnabled
-                        )
-
-                        settingsSlider(
-                            title: localizer.text(
-                                "settings.sound_effects_volume",
-                                fallback: "Sound Effects Volume"
-                            ),
-                            systemImage: "waveform",
-                            value: $soundEffectsVolume
-                        )
-
-                        settingsToggle(
-                            title: localizer.text(
-                                "settings.tutorials",
-                                fallback: "Tutorials"
-                            ),
-                            subtitle: isTutorialEnabled
-                                ? localizer.text("settings.on", fallback: "On")
-                                : localizer.text(
-                                    "settings.off",
-                                    fallback: "Off"
-                                ),
-                            systemImage: "questionmark.bubble.fill",
-                            isOn: $isTutorialEnabled
-                        )
-
-                        replayTutorialsButton
-
-                        if !tutorialMessage.isEmpty {
-                            Text(tutorialMessage)
-                                .widerwillenFont(size: 12, weight: .heavy)
-                                .foregroundStyle(.white.opacity(0.84))
-                                .shadow(
-                                    color: .black.opacity(0.9),
-                                    radius: 3,
-                                    x: 0,
-                                    y: 0
-                                )
-                        }
-                    }
-
-                    VStack(spacing: 10) {
-                        resetButton
-
-                        if !resetMessage.isEmpty {
-                            Text(resetMessage)
-                                .widerwillenFont(size: 12, weight: .heavy)
-                                .foregroundStyle(.white.opacity(0.84))
-                                .shadow(
-                                    color: .black.opacity(0.9),
-                                    radius: 3,
-                                    x: 0,
-                                    y: 0
-                                )
-                        }
-                    }
-
-                    VStack(spacing: 10) {
-                        infoRow(title: "App", value: appInfo.name)
-                        infoRow(title: "Version", value: appInfo.version)
-                        infoRow(title: "Build", value: appInfo.build)
-                        infoRow(
-                            title: localizer.text(
-                                "settings.content",
-                                fallback: "Content"
-                            ),
-                            value: contentVersionTitle
-                        )
-                        infoRow(
-                            title: "Bundle",
-                            value: appInfo.bundleIdentifier
-                        )
-                    }
+                VStack(alignment: .leading, spacing: 18) {
+                    header
+                    preferencesSection
+                    dangerSection
+                    appInfoSection
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
                 .padding(.bottom, 120)
             }
         }
@@ -187,6 +78,183 @@ struct SettingsView: View {
         AppLocalizer(languageCode: appLanguageCode)
     }
 
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(localizer.text("settings.title", fallback: "Settings"))
+                .widerwillenFont(size: 30, weight: .heavy)
+                .foregroundStyle(.white)
+                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+
+            Text(
+                localizer.text(
+                    "settings.subtitle",
+                    fallback: "Adjust language, audio and account options."
+                )
+            )
+            .widerwillenFont(size: 13, weight: .bold)
+            .foregroundStyle(.white.opacity(0.78))
+            .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+        }
+        .padding(.top, 4)
+    }
+
+    private var preferencesSection: some View {
+        settingsSection(
+            title: localizer.text(
+                "settings.preferences",
+                fallback: "Preferences"
+            ),
+            systemImage: "slider.horizontal.3"
+        ) {
+            languagePicker
+
+            settingsToggle(
+                title: localizer.text(
+                    "settings.music",
+                    fallback: "Music"
+                ),
+                subtitle: isMusicEnabled
+                    ? localizer.text("settings.on", fallback: "On")
+                    : localizer.text(
+                        "settings.off",
+                        fallback: "Off"
+                    ),
+                systemImage: "music.note",
+                isOn: $isMusicEnabled
+            )
+
+            settingsSlider(
+                title: localizer.text(
+                    "settings.music_volume",
+                    fallback: "Music Volume"
+                ),
+                systemImage: "speaker.wave.2.fill",
+                value: $musicVolume,
+                isEnabled: isMusicEnabled
+            )
+
+            settingsToggle(
+                title: localizer.text(
+                    "settings.sound_effects",
+                    fallback: "Sound Effects"
+                ),
+                subtitle: isSoundEffectsEnabled
+                    ? localizer.text("settings.on", fallback: "On")
+                    : localizer.text(
+                        "settings.off",
+                        fallback: "Off"
+                    ),
+                systemImage: "speaker.wave.3.fill",
+                isOn: $isSoundEffectsEnabled
+            )
+
+            settingsSlider(
+                title: localizer.text(
+                    "settings.sound_effects_volume",
+                    fallback: "Sound Effects Volume"
+                ),
+                systemImage: "waveform",
+                value: $soundEffectsVolume,
+                isEnabled: isSoundEffectsEnabled
+            )
+
+            settingsToggle(
+                title: localizer.text(
+                    "settings.tutorials",
+                    fallback: "Tutorials"
+                ),
+                subtitle: isTutorialEnabled
+                    ? localizer.text("settings.on", fallback: "On")
+                    : localizer.text(
+                        "settings.off",
+                        fallback: "Off"
+                    ),
+                systemImage: "questionmark.bubble.fill",
+                isOn: $isTutorialEnabled
+            )
+
+            replayTutorialsButton
+
+            feedbackMessage(tutorialMessage)
+        }
+    }
+
+    private var dangerSection: some View {
+        settingsSection(
+            title: localizer.text("settings.account", fallback: "Account"),
+            systemImage: "person.crop.circle.badge.exclamationmark"
+        ) {
+            resetButton
+            feedbackMessage(resetMessage)
+        }
+    }
+
+    private var appInfoSection: some View {
+        settingsSection(
+            title: localizer.text("settings.about", fallback: "About"),
+            systemImage: "info.circle.fill"
+        ) {
+            infoRow(title: "App", value: appInfo.name)
+            infoRow(title: "Version", value: appInfo.version)
+            infoRow(title: "Build", value: appInfo.build)
+            infoRow(
+                title: localizer.text(
+                    "settings.content",
+                    fallback: "Content"
+                ),
+                value: contentVersionTitle
+            )
+            infoRow(
+                title: "Bundle",
+                value: appInfo.bundleIdentifier
+            )
+        }
+    }
+
+    private func settingsSection<Content: View>(
+        title: String,
+        systemImage: String,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 13, weight: .heavy))
+                    .frame(width: 24, height: 24)
+                    .background(.white.opacity(0.12))
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+
+                Text(title)
+                    .widerwillenFont(size: 16, weight: .heavy)
+
+                Spacer()
+            }
+            .foregroundStyle(.white)
+            .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
+
+            VStack(spacing: 8) {
+                content()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func feedbackMessage(_ message: String) -> some View {
+        if !message.isEmpty {
+            Text(message)
+                .widerwillenFont(size: 12, weight: .heavy)
+                .foregroundStyle(.white.opacity(0.86))
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, 4)
+                .shadow(
+                    color: .black.opacity(0.9),
+                    radius: 3,
+                    x: 0,
+                    y: 0
+                )
+        }
+    }
+
     private var languagePicker: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 14) {
@@ -219,12 +287,7 @@ struct SettingsView: View {
         .padding(.horizontal, 18)
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity)
-        .background {
-            RemoteImage(name: "bg_app", contentMode: .fill)
-                .opacity(0.72)
-                .allowsHitTesting(false)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .settingsPanelStyle()
     }
 
     private func settingsToggle(
@@ -242,7 +305,7 @@ struct SettingsView: View {
                     .background(.black.opacity(0.28))
                     .clipShape(RoundedRectangle(cornerRadius: 6))
 
-                VStack(alignment: .leading, spacing: 1) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .widerwillenFont(size: 14, weight: .bold)
 
@@ -253,24 +316,22 @@ struct SettingsView: View {
                 .foregroundStyle(.white)
 
                 Spacer()
+
+                statusPill(isOn: isOn.wrappedValue)
             }
         }
         .toggleStyle(.switch)
         .padding(.horizontal, 12)
         .frame(maxWidth: .infinity)
         .frame(minHeight: 50)
-        .background {
-            RemoteImage(name: "bg_app", contentMode: .fill)
-                .opacity(0.72)
-                .allowsHitTesting(false)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .settingsPanelStyle()
     }
 
     private func settingsSlider(
         title: String,
         systemImage: String,
-        value: Binding<Double>
+        value: Binding<Double>,
+        isEnabled: Bool
     ) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 10) {
@@ -292,17 +353,28 @@ struct SettingsView: View {
 
             Slider(value: value, in: 0...1)
                 .tint(.white)
+                .disabled(!isEnabled)
         }
         .foregroundStyle(.white)
+        .opacity(isEnabled ? 1 : 0.48)
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
         .frame(maxWidth: .infinity)
-        .background {
-            RemoteImage(name: "bg_app", contentMode: .fill)
-                .opacity(0.72)
-                .allowsHitTesting(false)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .settingsPanelStyle()
+    }
+
+    private func statusPill(isOn: Bool) -> some View {
+        Text(
+            isOn
+                ? localizer.text("settings.on", fallback: "On")
+                : localizer.text("settings.off", fallback: "Off")
+        )
+        .widerwillenFont(size: 10, weight: .heavy)
+        .foregroundStyle(isOn ? .white : .white.opacity(0.62))
+        .padding(.horizontal, 8)
+        .frame(height: 24)
+        .background(isOn ? .blue.opacity(0.34) : .black.opacity(0.26))
+        .clipShape(Capsule())
     }
 
     private var replayTutorialsButton: some View {
@@ -356,12 +428,7 @@ struct SettingsView: View {
             .padding(.horizontal, 18)
             .frame(maxWidth: .infinity)
             .frame(minHeight: 68)
-            .background {
-                RemoteImage(name: "bg_app", contentMode: .fill)
-                    .opacity(0.72)
-                    .allowsHitTesting(false)
-            }
-            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .settingsPanelStyle()
         }
         .buttonStyle(.plain)
     }
@@ -405,10 +472,10 @@ struct SettingsView: View {
             .padding(.horizontal, 18)
             .frame(maxWidth: .infinity)
             .frame(minHeight: 68)
-            .background(.red.opacity(0.72))
+            .background(.red.opacity(0.62))
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(.white.opacity(0.58), lineWidth: 1)
+                    .stroke(.white.opacity(0.28), lineWidth: 1)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
         }
@@ -462,12 +529,7 @@ struct SettingsView: View {
         .padding(.horizontal, 18)
         .frame(maxWidth: .infinity)
         .frame(minHeight: 52)
-        .background {
-            RemoteImage(name: "bg_app", contentMode: .fill)
-                .opacity(0.56)
-                .allowsHitTesting(false)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .settingsPanelStyle()
     }
 
     private var contentVersionTitle: String {
@@ -500,6 +562,18 @@ private struct AppInfo {
 extension Bundle {
     fileprivate func string(for key: String) -> String? {
         object(forInfoDictionaryKey: key) as? String
+    }
+}
+
+extension View {
+    fileprivate func settingsPanelStyle() -> some View {
+        self
+            .background(.black.opacity(0.32))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.white.opacity(0.14), lineWidth: 1)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
 

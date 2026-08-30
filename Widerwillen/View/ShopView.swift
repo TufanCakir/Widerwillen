@@ -299,7 +299,7 @@ struct ShopView: View {
         .background(.black.opacity(0.26))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.58), lineWidth: 1)
+                .stroke(.blue, lineWidth: 1)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
@@ -494,7 +494,7 @@ struct ShopView: View {
             .background(.black.opacity(0.84))
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(.white.opacity(0.66), lineWidth: 1)
+                    .stroke(.blue, lineWidth: 1)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .shadow(color: .black.opacity(0.92), radius: 10, x: 0, y: 5)
@@ -627,7 +627,7 @@ extension View {
             .background(.black.opacity(0.26))
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(.white.opacity(0.58), lineWidth: 1)
+                    .stroke(.blue, lineWidth: 1)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
     }

@@ -192,7 +192,7 @@ struct warehouseView: View {
         .background(.black.opacity(0.28))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.55), lineWidth: 1)
+                .stroke(.blue, lineWidth: 1)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
@@ -331,7 +331,7 @@ struct warehouseView: View {
         .background(.black.opacity(0.24))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.52), lineWidth: 1)
+                .stroke(.blue, lineWidth: 1)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
@@ -393,7 +393,7 @@ struct warehouseView: View {
                 .stroke(
                     isEquipped
                         ? .white.opacity(0.9)
-                        : (rarity?.color ?? .white).opacity(0.62),
+                        : (rarity?.color ?? .blue).opacity(0.62),
                     lineWidth: isEquipped ? 2 : 1
                 )
         }

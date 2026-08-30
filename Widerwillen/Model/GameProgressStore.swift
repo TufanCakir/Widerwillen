@@ -17,6 +17,7 @@ final class GameProgressStore {
     private static let defaultCharacterID = "nimbi"
     private static let defaultCharacterSkinID = "nimbi_default"
     private static let defaultHeroAnimationID = "nimbi_original"
+    private static let defaultWeaponItemID = "widerwillen_sword"
     private static let defaultHeroBasePower = 6
     private static let characterConfiguration =
         (try? CharacterConfiguration.load())
@@ -76,6 +77,7 @@ final class GameProgressStore {
         loadProgress()
         removeOldStarterCompanionIfNeeded()
         unlockDefaultCharacterIfNeeded()
+        unlockDefaultWeaponIfNeeded()
         normalizeSelectedCharacterIfNeeded()
         normalizeProfileIconSelectionIfNeeded()
         normalizeEquippedWeaponIfNeeded()
@@ -128,6 +130,7 @@ final class GameProgressStore {
         lastIdleRewardUpdate = Date()
 
         unlockDefaultCharacterIfNeeded()
+        unlockDefaultWeaponIfNeeded()
         normalizeSelectedCharacterIfNeeded()
         normalizeProfileIconSelectionIfNeeded()
         normalizeEquippedWeaponIfNeeded()
@@ -1397,6 +1400,32 @@ final class GameProgressStore {
         saveProgress()
     }
 
+    private func unlockDefaultWeaponIfNeeded() {
+        guard ownedItems[Self.defaultWeaponItemID] == nil,
+            let starterWeapon = Self.summonConfiguration.banners
+                .first(where: { $0.kind == .item })?
+                .entries
+                .first(where: { $0.id == Self.defaultWeaponItemID })
+        else {
+            return
+        }
+
+        ownedItems[starterWeapon.id] = OwnedItem(
+            itemID: starterWeapon.id,
+            name: starterWeapon.name,
+            imageName: starterWeapon.imageName,
+            rarity: starterWeapon.rarity,
+            damageBonus: starterWeapon.damageBonus,
+            level: 1
+        )
+
+        if selectedWeaponItemID == nil {
+            selectedWeaponItemID = starterWeapon.id
+        }
+
+        saveProgress()
+    }
+
     private func normalizeSelectedCharacterIfNeeded() {
         let fallbackCharacter =
             Self.characterConfiguration.defaultCharacter?.id
@@ -1441,6 +1470,8 @@ final class GameProgressStore {
     }
 
     private func normalizeEquippedWeaponIfNeeded() {
+        unlockDefaultWeaponIfNeeded()
+
         if let selectedWeaponItemID,
             ownedItems[selectedWeaponItemID] != nil
         {

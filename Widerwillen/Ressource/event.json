@@ -409,9 +409,9 @@
             "category": "Special Events",
             "categoryKey": "event.category.special",
             "bannerImageName": "icon_birthday_nimbi",
-            "cardBackgroundImageName": "bg_blue_white",
-            "battleBackgroundImageName": "bg_blue_white",
-            "battleGroundImageName": "bg_blue_white",
+            "cardBackgroundImageName": "bg_birthday",
+            "battleBackgroundImageName": "bg_birthday",
+            "battleGroundImageName": "bg_birthday",
             "chipID": "birthday_chips",
             "victory": {
                 "title": "Skin Unlocked",

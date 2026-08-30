@@ -70,7 +70,7 @@ struct BattleTransitionView: View {
             .clipShape(Circle())
             .overlay {
                 Circle()
-                    .stroke(.white.opacity(0.82), lineWidth: 2)
+                    .stroke(.blue, lineWidth: 2)
             }
             .shadow(color: .black.opacity(0.75), radius: 8, x: 0, y: 5)
             .offset(

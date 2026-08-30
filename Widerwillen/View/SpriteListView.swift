@@ -79,7 +79,7 @@ struct SpriteListView: View {
                             }
                             .overlay {
                                 Capsule()
-                                    .stroke(.white.opacity(0.7), lineWidth: 1)
+                                    .stroke(.blue, lineWidth: 1)
                             }
                             .shadow(
                                 color: .black.opacity(0.9),
@@ -345,8 +345,8 @@ struct SpriteListView: View {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(
                     item.isSelected
-                        ? .white
-                        : item.rarity.color.opacity(0.75),
+                        ? .blue
+                        : item.rarity.color,
                     lineWidth: item.isSelected ? 2 : 1
                 )
         }

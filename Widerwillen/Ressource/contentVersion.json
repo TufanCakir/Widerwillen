@@ -1,5 +1,5 @@
 {
-    "contentVersion": 166,
+    "contentVersion": 170,
     "json": [
         {
             "name": "arena",
@@ -183,9 +183,9 @@
             "version": 1
         },
         {
-            "name": "bg_blue_white",
-            "path": "assets/bg_blue_white.png",
-            "version": 1
+            "name": "bg_birthday",
+            "path": "assets/bg_birthday.png",
+            "version": 2
         },
         {
             "name": "icon_cookieman",
@@ -468,36 +468,6 @@
             "version": 1
         },
         {
-            "name": "sprite_blam_original_body",
-            "path": "assets/sprite_blam_original_body.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_blam_original_head",
-            "path": "assets/sprite_blam_original_head.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_blam_original_left_hand",
-            "path": "assets/sprite_blam_original_left_hand.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_blam_original_right_hand",
-            "path": "assets/sprite_blam_original_right_hand.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_blam_original_left_foot",
-            "path": "assets/sprite_blam_original_left_foot.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_blam_original_right_foot",
-            "path": "assets/sprite_blam_original_right_foot.png",
-            "version": 1
-        },
-        {
             "name": "sprite_original_slenderize_sword",
             "path": "assets/sprite_original_slenderize_sword.png",
             "version": 1
@@ -623,214 +593,49 @@
             "version": 1
         },
         {
-            "name": "sprite_original_slush_body",
-            "path": "assets/sprite_original_slush_body.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_slush_head",
-            "path": "assets/sprite_original_slush_head.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_slush_left_hand",
-            "path": "assets/sprite_original_slush_left_hand.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_slush_right_hand",
-            "path": "assets/sprite_original_slush_right_hand.png",
+            "name": "sprite_slush",
+            "path": "assets/sprite_slush.png",
             "version": 2
         },
         {
-            "name": "sprite_original_dazzle_body",
-            "path": "assets/sprite_original_dazzle_body.png",
+            "name": "sprite_dazzle",
+            "path": "assets/sprite_dazzle.png",
             "version": 1
         },
         {
-            "name": "sprite_original_dazzle_head",
-            "path": "assets/sprite_original_dazzle_head.png",
+            "name": "sprite_dompi",
+            "path": "assets/sprite_dompi.png",
             "version": 1
         },
         {
-            "name": "sprite_original_dazzle_tail",
-            "path": "assets/sprite_original_dazzle_tail.png",
+            "name": "sprite_klempi",
+            "path": "assets/sprite_klempi.png",
             "version": 1
         },
         {
-            "name": "sprite_original_dompi_body",
-            "path": "assets/sprite_original_dompi_body.png",
+            "name": "sprite_cookieman",
+            "path": "assets/sprite_cookieman.png",
             "version": 1
         },
         {
-            "name": "sprite_original_dompi_head",
-            "path": "assets/sprite_original_dompi_head.png",
+            "name": "sprite_slenderize",
+            "path": "assets/sprite_slenderize.png",
             "version": 1
         },
         {
-            "name": "sprite_original_dompi_right_hand",
-            "path": "assets/sprite_original_dompi_right_hand.png",
+            "name": "sprite_thusax",
+            "path": "assets/sprite_thusax.png",
             "version": 1
         },
         {
-            "name": "sprite_original_dompi_right_foot",
-            "path": "assets/sprite_original_dompi_right_foot.png",
+            "name": "sprite_blunt",
+            "path": "assets/sprite_blunt.png",
             "version": 1
         },
         {
-            "name": "sprite_original_dompi_tail",
-            "path": "assets/sprite_original_dompi_tail.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_klempi_body",
-            "path": "assets/sprite_original_klempi_body.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_klempi_head",
-            "path": "assets/sprite_original_klempi_head.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_klempi_left_foot",
-            "path": "assets/sprite_original_klempi_left_foot.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_klempi_right_foot",
-            "path": "assets/sprite_original_klempi_right_foot.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_klempi_tail",
-            "path": "assets/sprite_original_klempi_tail.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_cookieman_body",
-            "path": "assets/sprite_original_cookieman_body.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_cookieman_left_hand",
-            "path": "assets/sprite_original_cookieman_left_hand.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_cookieman_right_hand",
-            "path": "assets/sprite_original_cookieman_right_hand.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_slenderize_head",
-            "path": "assets/sprite_original_slenderize_head.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_slenderize_left_foot",
-            "path": "assets/sprite_original_slenderize_left_foot.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_slenderize_right_foot",
-            "path": "assets/sprite_original_slenderize_right_foot.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_slenderize_tail",
-            "path": "assets/sprite_original_slenderize_tail.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_thusax_original_body",
-            "path": "assets/sprite_thusax_original_body.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_thusax_original_left_foot",
-            "path": "assets/sprite_thusax_original_left_foot.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_thusax_original_right_foot",
-            "path": "assets/sprite_thusax_original_right_foot.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_thusax_original_tail",
-            "path": "assets/sprite_thusax_original_tail.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_thusax_original_left_ear",
-            "path": "assets/sprite_thusax_original_left_ear.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_thusax_original_right_ear",
-            "path": "assets/sprite_thusax_original_right_ear.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_blunt_body",
-            "path": "assets/sprite_original_blunt_body.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_blunt_head",
-            "path": "assets/sprite_original_blunt_head.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_blunt_left_hand",
-            "path": "assets/sprite_original_blunt_left_hand.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_blunt_right_hand",
-            "path": "assets/sprite_original_blunt_right_hand.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_blunt_left_foot",
-            "path": "assets/sprite_original_blunt_left_foot.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_blunt_right_foot",
-            "path": "assets/sprite_original_blunt_right_foot.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_molc_body",
-            "path": "assets/sprite_original_molc_body.png",
+            "name": "sprite_molc",
+            "path": "assets/sprite_molc.png",
             "version": 3
-        },
-        {
-            "name": "sprite_original_molc_head",
-            "path": "assets/sprite_original_molc_head.png",
-            "version": 3
-        },
-        {
-            "name": "sprite_original_molc_left_hand",
-            "path": "assets/sprite_original_molc_left_hand.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_molc_right_hand",
-            "path": "assets/sprite_original_molc_right_hand.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_molc_left_foot",
-            "path": "assets/sprite_original_molc_left_foot.png",
-            "version": 1
-        },
-        {
-            "name": "sprite_original_molc_right_foot",
-            "path": "assets/sprite_original_molc_right_foot.png",
-            "version": 1
         },
         {
             "name": "widerwillen_font_logo",

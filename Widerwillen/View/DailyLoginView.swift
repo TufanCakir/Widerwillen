@@ -214,7 +214,7 @@ struct DailyLoginView: View {
         }
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.46), lineWidth: 1)
+                .stroke(.blue, lineWidth: 1)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(color: .black.opacity(0.85), radius: 4, x: 0, y: 3)
@@ -284,7 +284,7 @@ struct DailyLoginView: View {
         .overlay {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(
-                    canClaim ? .white.opacity(0.95) : .black.opacity(0.16),
+                    canClaim ? .white.opacity(0.95) : .blue,
                     lineWidth: canClaim ? 2 : 1
                 )
         }

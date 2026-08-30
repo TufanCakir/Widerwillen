@@ -104,7 +104,7 @@ struct GameHeader: View {
             }
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(.white.opacity(0.78), lineWidth: 2)
+                    .stroke(.blue, lineWidth: 2)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .shadow(
@@ -180,7 +180,7 @@ struct GameHeader: View {
         }
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.62), lineWidth: 1)
+                .stroke(.blue, lineWidth: 1)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 6)
@@ -227,8 +227,8 @@ struct GameHeader: View {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(
                         isSelected
-                            ? .white.opacity(0.95)
-                            : .white.opacity(0.28),
+                            ? .blue.opacity(0.95)
+                            : .blue.opacity(0.28),
                         lineWidth: isSelected ? 2 : 1
                     )
             }

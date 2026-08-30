@@ -46,7 +46,7 @@ struct MenuView: View {
 
                 Spacer()
 
-                VStack(spacing: 16) {
+                VStack(spacing: 10) {
                     Button {
                         playSoundEffect("ui_select")
                         isModePickerPresented = true
@@ -65,7 +65,7 @@ struct MenuView: View {
                             }
                             .overlay {
                                 Capsule()
-                                    .stroke(.white.opacity(0.65), lineWidth: 1)
+                                    .stroke(.blue, lineWidth: 1)
                             }
                             .clipShape(Capsule())
                     }
@@ -140,7 +140,6 @@ struct MenuView: View {
                 openMode(.dailyLogin)
             }
         }
-        .padding(.top, 108)
     }
 
     private var claimableDailyLogins: [DailyLoginCampaign] {
@@ -203,12 +202,10 @@ struct MenuView: View {
             VStack(spacing: 22) {
                 popupButton(
                     title: "Battle",
-                    iconImage: "icon_pixel_sword",
                     mode: .battle
                 )
                 popupButton(
                     title: "Events",
-                    iconImage: "icon_pixel_sword",
                     mode: .event
                 )
             }
@@ -219,11 +216,11 @@ struct MenuView: View {
             }
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(.white.opacity(0.72), lineWidth: 2)
+                    .stroke(.blue, lineWidth: 2)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 4)
-            .padding(.horizontal, 36)
+            .padding(.horizontal)
             .zIndex(1)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -250,7 +247,7 @@ struct MenuView: View {
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(.white.opacity(0.64), lineWidth: 1)
+                    .stroke(.blue, lineWidth: 1)
             }
             .padding(.horizontal, 22)
             .padding(.vertical, 44)
@@ -261,7 +258,6 @@ struct MenuView: View {
 
     private func popupButton(
         title: String,
-        iconImage: String,
         mode: MenuMode
     ) -> some View {
         Button {
@@ -270,8 +266,6 @@ struct MenuView: View {
             openMode(mode)
         } label: {
             HStack(spacing: 20) {
-                RemoteImage(name: iconImage)
-                    .frame(width: 34, height: 34)
 
                 Text(title)
                     .widerwillenFont(size: 24, weight: .bold)
@@ -288,7 +282,7 @@ struct MenuView: View {
             }
             .overlay {
                 Capsule()
-                    .stroke(.white.opacity(0.7), lineWidth: 1)
+                    .stroke(.blue, lineWidth: 1)
             }
             .clipShape(Capsule())
             .contentShape(Capsule())

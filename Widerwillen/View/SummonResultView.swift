@@ -144,7 +144,7 @@ struct SummonResultView: View {
                 .background(.black.opacity(0.56))
                 .overlay {
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(.white.opacity(0.74), lineWidth: 2)
+                        .stroke(.blue, lineWidth: 2)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 8))
         }

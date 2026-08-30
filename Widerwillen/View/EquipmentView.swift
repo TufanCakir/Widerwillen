@@ -65,7 +65,7 @@ struct EquipmentView: View {
         .background(.black.opacity(0.24))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.52), lineWidth: 1)
+                .stroke(.blue, lineWidth: 1)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
@@ -96,7 +96,7 @@ struct EquipmentView: View {
         .background(.white.opacity(isEmpty ? 0.05 : 0.1))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(isEmpty ? 0.24 : 0.62), lineWidth: 1)
+                .stroke(.blue.opacity(isEmpty ? 0.24 : 0.62), lineWidth: 1)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
@@ -231,8 +231,8 @@ struct EquipmentView: View {
             RoundedRectangle(cornerRadius: 8)
                 .stroke(
                     isEquipped
-                        ? .white.opacity(0.9)
-                        : (rarity?.color ?? .white).opacity(0.62),
+                        ? .blue.opacity(0.9)
+                        : (rarity?.color ?? .blue).opacity(0.62),
                     lineWidth: isEquipped ? 2 : 1
                 )
         }

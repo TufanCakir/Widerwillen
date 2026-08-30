@@ -1,7 +1,7 @@
 [
     {
         "id": "cookieman_original",
-        "imageName": "cookieman_original",
+        "imageName": "sprite_cookieman",
         "columns": 4,
         "rows": 1,
         "spacing": 0,
@@ -14,7 +14,7 @@
     },
     {
         "id": "klempi_original",
-        "imageName": "klempi_original",
+        "imageName": "sprite_klempi",
         "columns": 4,
         "rows": 1,
         "spacing": 0,
@@ -27,7 +27,7 @@
     },
     {
         "id": "dompi_original",
-        "imageName": "dompi_original",
+        "imageName": "sprite_dompi",
         "columns": 4,
         "rows": 1,
         "spacing": 0,
@@ -40,7 +40,7 @@
     },
     {
         "id": "blunt_original",
-        "imageName": "blunt_original",
+        "imageName": "sprite_blunt",
         "columns": 3,
         "rows": 1,
         "spacing": 0,
@@ -66,7 +66,7 @@
     },
     {
         "id": "slenderize_original",
-        "imageName": "slenderize_original",
+        "imageName": "sprite_slenderize",
         "columns": 5,
         "rows": 1,
         "spacing": 0,
@@ -79,7 +79,7 @@
     },
     {
         "id": "slush_original",
-        "imageName": "slush_original",
+        "imageName": "sprite_slush",
         "columns": 4,
         "rows": 1,
         "spacing": 0,
@@ -105,7 +105,7 @@
     },
     {
         "id": "dazzle_original",
-        "imageName": "dazzle_original",
+        "imageName": "sprite_dazzle",
         "columns": 5,
         "rows": 1,
         "spacing": 0,
@@ -116,7 +116,7 @@
     },
     {
         "id": "molc_original",
-        "imageName": "molc_original",
+        "imageName": "sprite_molc",
         "columns": 3,
         "rows": 1,
         "spacing": 0,
@@ -127,7 +127,7 @@
     },
     {
         "id": "thusax_original",
-        "imageName": "thusax_original",
+        "imageName": "sprite_thusax",
         "columns": 5,
         "rows": 1,
         "spacing": 0,

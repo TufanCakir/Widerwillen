@@ -157,7 +157,7 @@ struct EventView: View {
             .background(.black.opacity(0.24))
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(.white.opacity(0.48), lineWidth: 1)
+                    .stroke(.blue, lineWidth: 1)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .shadow(color: .black.opacity(0.7), radius: 3, x: 0, y: 2)
@@ -316,7 +316,7 @@ struct EventView: View {
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(.white.opacity(0.5), lineWidth: 1)
+                    .stroke(.blue, lineWidth: 1)
             }
             .contentShape(RoundedRectangle(cornerRadius: 8))
             .shadow(color: .black.opacity(0.65), radius: 3, x: 0, y: 2)
@@ -490,7 +490,7 @@ private struct EventShopView: View {
             .background(.black.opacity(0.24))
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(.white.opacity(0.52), lineWidth: 1)
+                    .stroke(.blue, lineWidth: 1)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
         }
@@ -544,7 +544,7 @@ private struct EventShopView: View {
             .background(.black.opacity(0.82))
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(.white.opacity(0.72), lineWidth: 1)
+                    .stroke(.blue, lineWidth: 1)
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .shadow(color: .black.opacity(0.9), radius: 10, x: 0, y: 6)
@@ -605,7 +605,7 @@ private struct EventShopView: View {
         .background(.white.opacity(canBuy ? 0.1 : 0.04))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(canBuy ? 0.55 : 0.22), lineWidth: 1)
+                .stroke(.blue.opacity(canBuy ? 0.55 : 0.22), lineWidth: 1)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
@@ -887,7 +887,7 @@ private struct EventBattleView: View {
             }
             .overlay {
                 RoundedRectangle(cornerRadius: 18)
-                    .stroke(.white.opacity(0.85), lineWidth: 2)
+                    .stroke(.blue, lineWidth: 2)
             }
             .clipShape(RoundedRectangle(cornerRadius: 18))
             .shadow(color: .black.opacity(0.9), radius: 4, x: 0, y: 3)

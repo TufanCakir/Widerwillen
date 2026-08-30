@@ -48,7 +48,7 @@ struct CategoryBar: View {
                                 .overlay {
                                     Capsule()
                                         .stroke(
-                                            .white.opacity(0.7),
+                                            .blue,
                                             lineWidth: 1
                                         )
                                 }

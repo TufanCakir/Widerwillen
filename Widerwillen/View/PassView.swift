@@ -65,7 +65,7 @@ struct PassView: View {
                     .background(.black.opacity(0.34))
                     .overlay {
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(.white.opacity(0.65), lineWidth: 1)
+                            .stroke(.blue, lineWidth: 1)
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
@@ -85,7 +85,7 @@ struct PassView: View {
         .background(.black.opacity(0.24))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.55), lineWidth: 1)
+                .stroke(.blue, lineWidth: 1)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }

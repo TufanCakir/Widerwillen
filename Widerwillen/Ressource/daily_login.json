@@ -392,7 +392,7 @@
             "titleKey": "daily_login.birthday.title",
             "category": "Birthday",
             "categoryKey": "daily_login.category.birthday",
-            "backgroundImageName": "bg_white",
+            "backgroundImageName": "bg_birthday",
             "rewards": [
                 {
                     "day": 1,
@@ -529,7 +529,7 @@
             "titleKey": "daily_login.halloween.title",
             "category": "Halloween",
             "categoryKey": "daily_login.category.halloween",
-            "backgroundImageName": "bg_viollet",
+            "backgroundImageName": "bg_halloween",
             "rewards": [
                 {
                     "day": 1,

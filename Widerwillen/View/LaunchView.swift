@@ -87,7 +87,7 @@ struct LaunchView: View {
             .frame(height: 8)
             .overlay {
                 RoundedRectangle(cornerRadius: 4)
-                    .stroke(.white.opacity(0.5), lineWidth: 1)
+                    .stroke(.blue, lineWidth: 1)
             }
 
             Text(remoteContentStore.progressDetailText)

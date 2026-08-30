@@ -110,7 +110,7 @@ struct TutorialCoachView: View {
                         .background(.white.opacity(0.18))
                         .overlay {
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(.white.opacity(0.62), lineWidth: 1)
+                                .stroke(.blue, lineWidth: 1)
                         }
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
@@ -122,7 +122,7 @@ struct TutorialCoachView: View {
                 .background(.black.opacity(0.78))
                 .overlay {
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(.white.opacity(0.62), lineWidth: 1)
+                        .stroke(.blue, lineWidth: 1)
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 5)

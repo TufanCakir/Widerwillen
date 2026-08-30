@@ -50,7 +50,7 @@ struct BattleHUD: View {
             .frame(height: 14)
             .overlay {
                 Rectangle()
-                    .stroke(.white.opacity(0.55), lineWidth: 1)
+                    .stroke(.blue, lineWidth: 1)
             }
 
             HStack {
