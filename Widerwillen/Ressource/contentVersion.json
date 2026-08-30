@@ -1,5 +1,5 @@
 {
-    "contentVersion": 159,
+    "contentVersion": 162,
     "json": [
         {
             "name": "arena",
@@ -369,8 +369,33 @@
             "version": 1
         },
         {
-            "name": "sprite_shadow_clone",
-            "path": "assets/sprite_shadow_clone.png",
+            "name": "shadow_clone_nimbi_body",
+            "path": "assets/shadow_clone_nimbi_body.png",
+            "version": 1
+        },
+        {
+            "name": "shadow_clone_nimbi_head",
+            "path": "assets/shadow_clone_nimbi_head.png",
+            "version": 1
+        },
+        {
+            "name": "shadow_clone_nimbi_left_hand",
+            "path": "assets/shadow_clone_nimbi_left_hand.png",
+            "version": 1
+        },
+        {
+            "name": "shadow_clone_nimbi_right_hand",
+            "path": "assets/shadow_clone_nimbi_right_hand.png",
+            "version": 1
+        },
+        {
+            "name": "shadow_clone_nimbi_left_foot",
+            "path": "assets/shadow_clone_nimbi_left_foot.png",
+            "version": 1
+        },
+        {
+            "name": "shadow_clone_nimbi_right_foot",
+            "path": "assets/shadow_clone_nimbi_right_foot.png",
             "version": 1
         },
         {

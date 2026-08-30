@@ -65,8 +65,8 @@ struct TradeView: View {
     private var categories: [String] {
         var values: [String] = []
 
-        for offer in configuration.globalOffers where !values.contains(offer.category)
-        {
+        for offer in configuration.globalOffers
+        where !values.contains(offer.category) {
             values.append(offer.category)
         }
 
@@ -84,8 +84,11 @@ struct TradeView: View {
     private func offerPage(for category: String) -> some View {
         ScrollView {
             LazyVStack(spacing: 14) {
-                ForEach(configuration.globalOffers.filter { $0.category == category })
-                { offer in
+                ForEach(
+                    configuration.globalOffers.filter {
+                        $0.category == category
+                    }
+                ) { offer in
                     offerCard(offer)
                 }
             }

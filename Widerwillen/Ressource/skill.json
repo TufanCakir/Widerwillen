@@ -64,7 +64,7 @@
                 "cooldownSeconds": 22,
                 "damageMultiplier": 0.55,
                 "intervalSeconds": 0.75,
-                "companionAnimationID": "sprite_shadow_clone"
+                "companionAnimationID": "shadow_clone_nimbi"
             }
         },
         {

@@ -17,8 +17,6 @@ struct StartView: View {
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
 
-              
-
                 Text("Widerwillen")
                     .widerwillenPixelFont(size: 50, weight: .bold)
                     .foregroundStyle(

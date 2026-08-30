@@ -12,12 +12,30 @@
             "rightFoot": "sprite_blam_original_right_foot"
         },
         "joints": {
-            "body": { "x": 0, "y": 0 },
-            "head": { "x": 0, "y": 5 },
-            "leftHand": { "x": -7, "y": -1 },
-            "rightHand": { "x": 7, "y": -1 },
-            "leftFoot": { "x": -3, "y": -8 },
-            "rightFoot": { "x": 3, "y": -8 }
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "head": {
+                "x": 0,
+                "y": 5
+            },
+            "leftHand": {
+                "x": -7,
+                "y": -1
+            },
+            "rightHand": {
+                "x": 7,
+                "y": -1
+            },
+            "leftFoot": {
+                "x": -3,
+                "y": -8
+            },
+            "rightFoot": {
+                "x": 3,
+                "y": -8
+            }
         }
     },
     {
@@ -34,13 +52,34 @@
             "weapon": "sprite_original_slenderize_sword"
         },
         "joints": {
-            "body": { "x": 0, "y": 0 },
-            "head": { "x": 0, "y": 5 },
-            "leftHand": { "x": -7, "y": -1 },
-            "rightHand": { "x": 7, "y": -1 },
-            "weapon": { "x": 1.5, "y": 10 },
-            "leftFoot": { "x": -3, "y": -8 },
-            "rightFoot": { "x": 3, "y": -8 }
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "head": {
+                "x": 0,
+                "y": 5
+            },
+            "leftHand": {
+                "x": -7,
+                "y": -1
+            },
+            "rightHand": {
+                "x": 7,
+                "y": -1
+            },
+            "weapon": {
+                "x": 1.5,
+                "y": 10
+            },
+            "leftFoot": {
+                "x": -3,
+                "y": -8
+            },
+            "rightFoot": {
+                "x": 3,
+                "y": -8
+            }
         }
     },
     {
@@ -57,13 +96,34 @@
             "weapon": "sprite_original_slenderize_sword"
         },
         "joints": {
-            "body": { "x": 0, "y": 0 },
-            "head": { "x": 0, "y": 5 },
-            "leftHand": { "x": -7, "y": -1 },
-            "rightHand": { "x": 7, "y": -1 },
-            "weapon": { "x": 1.5, "y": 10 },
-            "leftFoot": { "x": -3, "y": -8 },
-            "rightFoot": { "x": 3, "y": -8 }
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "head": {
+                "x": 0,
+                "y": 5
+            },
+            "leftHand": {
+                "x": -7,
+                "y": -1
+            },
+            "rightHand": {
+                "x": 7,
+                "y": -1
+            },
+            "weapon": {
+                "x": 1.5,
+                "y": 10
+            },
+            "leftFoot": {
+                "x": -3,
+                "y": -8
+            },
+            "rightFoot": {
+                "x": 3,
+                "y": -8
+            }
         }
     },
     {
@@ -80,13 +140,34 @@
             "weapon": "sprite_original_slenderize_sword"
         },
         "joints": {
-            "body": { "x": 0, "y": 0 },
-            "head": { "x": 0, "y": 5 },
-            "leftHand": { "x": -7, "y": -1 },
-            "rightHand": { "x": 7, "y": -1 },
-            "weapon": { "x": 1.5, "y": 10 },
-            "leftFoot": { "x": -3, "y": -8 },
-            "rightFoot": { "x": 3, "y": -8 }
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "head": {
+                "x": 0,
+                "y": 5
+            },
+            "leftHand": {
+                "x": -7,
+                "y": -1
+            },
+            "rightHand": {
+                "x": 7,
+                "y": -1
+            },
+            "weapon": {
+                "x": 1.5,
+                "y": 10
+            },
+            "leftFoot": {
+                "x": -3,
+                "y": -8
+            },
+            "rightFoot": {
+                "x": 3,
+                "y": -8
+            }
         }
     },
     {
@@ -103,13 +184,34 @@
             "weapon": "sprite_original_slenderize_sword"
         },
         "joints": {
-            "body": { "x": 0, "y": 0 },
-            "head": { "x": 0, "y": 5 },
-            "leftHand": { "x": -7, "y": -1 },
-            "rightHand": { "x": 7, "y": -1 },
-            "weapon": { "x": 1.5, "y": 10 },
-            "leftFoot": { "x": -3, "y": -8 },
-            "rightFoot": { "x": 3, "y": -8 }
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "head": {
+                "x": 0,
+                "y": 5
+            },
+            "leftHand": {
+                "x": -7,
+                "y": -1
+            },
+            "rightHand": {
+                "x": 7,
+                "y": -1
+            },
+            "weapon": {
+                "x": 1.5,
+                "y": 10
+            },
+            "leftFoot": {
+                "x": -3,
+                "y": -8
+            },
+            "rightFoot": {
+                "x": 3,
+                "y": -8
+            }
         }
     },
     {
@@ -123,10 +225,22 @@
             "rightHand": "sprite_original_slush_right_hand"
         },
         "joints": {
-            "body": { "x": 0, "y": 0 },
-            "head": { "x": 0, "y": 5 },
-            "leftHand": { "x": -7, "y": -1 },
-            "rightHand": { "x": 7, "y": -1 }
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "head": {
+                "x": 0,
+                "y": 5
+            },
+            "leftHand": {
+                "x": -7,
+                "y": -1
+            },
+            "rightHand": {
+                "x": 7,
+                "y": -1
+            }
         }
     },
     {
@@ -139,9 +253,18 @@
             "tail": "sprite_original_dazzle_tail"
         },
         "joints": {
-            "body": { "x": 0, "y": 0 },
-            "head": { "x": 0, "y": 5 },
-            "tail": { "x": 0, "y": -6 }
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "head": {
+                "x": 0,
+                "y": 5
+            },
+            "tail": {
+                "x": 0,
+                "y": -6
+            }
         }
     },
     {
@@ -156,11 +279,26 @@
             "tail": "sprite_original_dompi_tail"
         },
         "joints": {
-            "body": { "x": 0, "y": 0 },
-            "head": { "x": 0, "y": 5 },
-            "rightHand": { "x": 7, "y": -1 },
-            "rightFoot": { "x": 3, "y": -8 },
-            "tail": { "x": 0, "y": -6 }
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "head": {
+                "x": 0,
+                "y": 5
+            },
+            "rightHand": {
+                "x": 7,
+                "y": -1
+            },
+            "rightFoot": {
+                "x": 3,
+                "y": -8
+            },
+            "tail": {
+                "x": 0,
+                "y": -6
+            }
         }
     },
     {
@@ -175,11 +313,26 @@
             "tail": "sprite_original_klempi_tail"
         },
         "joints": {
-            "body": { "x": 0, "y": 0 },
-            "head": { "x": 0, "y": 5 },
-            "leftFoot": { "x": -3, "y": -8 },
-            "rightFoot": { "x": 3, "y": -8 },
-            "tail": { "x": 0, "y": -6 }
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "head": {
+                "x": 0,
+                "y": 5
+            },
+            "leftFoot": {
+                "x": -3,
+                "y": -8
+            },
+            "rightFoot": {
+                "x": 3,
+                "y": -8
+            },
+            "tail": {
+                "x": 0,
+                "y": -6
+            }
         }
     },
     {
@@ -192,9 +345,18 @@
             "rightHand": "sprite_original_cookieman_right_hand"
         },
         "joints": {
-            "body": { "x": 0, "y": 0 },
-            "leftHand": { "x": -7, "y": -1 },
-            "rightHand": { "x": 7, "y": -1 }
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "leftHand": {
+                "x": -7,
+                "y": -1
+            },
+            "rightHand": {
+                "x": 7,
+                "y": -1
+            }
         }
     },
     {
@@ -208,10 +370,22 @@
             "tail": "sprite_original_slenderize_tail"
         },
         "joints": {
-            "head": { "x": 0, "y": 5 },
-            "leftFoot": { "x": -3, "y": -8 },
-            "rightFoot": { "x": 3, "y": -8 },
-            "tail": { "x": 0, "y": -6 }
+            "head": {
+                "x": 0,
+                "y": 5
+            },
+            "leftFoot": {
+                "x": -3,
+                "y": -8
+            },
+            "rightFoot": {
+                "x": 3,
+                "y": -8
+            },
+            "tail": {
+                "x": 0,
+                "y": -6
+            }
         }
     },
     {
@@ -227,12 +401,30 @@
             "rightEar": "sprite_thusax_original_right_ear"
         },
         "joints": {
-            "body": { "x": 0, "y": 0 },
-            "leftFoot": { "x": -3, "y": -8 },
-            "rightFoot": { "x": 3, "y": -8 },
-            "tail": { "x": 0, "y": -6 },
-            "leftEar": { "x": -4, "y": 7 },
-            "rightEar": { "x": 4, "y": 7 }
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "leftFoot": {
+                "x": -3,
+                "y": -8
+            },
+            "rightFoot": {
+                "x": 3,
+                "y": -8
+            },
+            "tail": {
+                "x": 0,
+                "y": -6
+            },
+            "leftEar": {
+                "x": -4,
+                "y": 7
+            },
+            "rightEar": {
+                "x": 4,
+                "y": 7
+            }
         }
     },
     {
@@ -248,12 +440,30 @@
             "rightFoot": "sprite_original_blunt_right_foot"
         },
         "joints": {
-            "body": { "x": 0, "y": 0 },
-            "head": { "x": 0, "y": 5 },
-            "leftHand": { "x": -7, "y": -1 },
-            "rightHand": { "x": 7, "y": -1 },
-            "leftFoot": { "x": -3, "y": -8 },
-            "rightFoot": { "x": 3, "y": -8 }
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "head": {
+                "x": 0,
+                "y": 5
+            },
+            "leftHand": {
+                "x": -7,
+                "y": -1
+            },
+            "rightHand": {
+                "x": 7,
+                "y": -1
+            },
+            "leftFoot": {
+                "x": -3,
+                "y": -8
+            },
+            "rightFoot": {
+                "x": 3,
+                "y": -8
+            }
         }
     },
     {
@@ -269,12 +479,74 @@
             "rightFoot": "sprite_original_molc_right_foot"
         },
         "joints": {
-            "body": { "x": 0, "y": 0 },
-            "head": { "x": 0, "y": 5 },
-            "leftHand": { "x": -7, "y": -1 },
-            "rightHand": { "x": 7, "y": -1 },
-            "leftFoot": { "x": -3, "y": -8 },
-            "rightFoot": { "x": 3, "y": -8 }
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "head": {
+                "x": 0,
+                "y": 5
+            },
+            "leftHand": {
+                "x": -7,
+                "y": -1
+            },
+            "rightHand": {
+                "x": 7,
+                "y": -1
+            },
+            "leftFoot": {
+                "x": -3,
+                "y": -8
+            },
+            "rightFoot": {
+                "x": 3,
+                "y": -8
+            }
+        }
+    },
+    {
+        "id": "shadow_clone_nimbi",
+        "title": "Shadow Clone Nimbi",
+        "canvasSize": 32,
+        "parts": {
+            "body": "shadow_clone_nimbi_body",
+            "head": "shadow_clone_nimbi_head",
+            "leftHand": "shadow_clone_nimbi_left_hand",
+            "rightHand": "shadow_clone_nimbi_right_hand",
+            "leftFoot": "shadow_clone_nimbi_left_foot",
+            "rightFoot": "shadow_clone_nimbi_right_foot",
+            "weapon": "sprite_original_slenderize_sword"
+        },
+        "joints": {
+            "body": {
+                "x": 0,
+                "y": 0
+            },
+            "head": {
+                "x": 0,
+                "y": 5
+            },
+            "leftHand": {
+                "x": -7,
+                "y": -1
+            },
+            "rightHand": {
+                "x": 7,
+                "y": -1
+            },
+            "weapon": {
+                "x": 1.5,
+                "y": 10
+            },
+            "leftFoot": {
+                "x": -3,
+                "y": -8
+            },
+            "rightFoot": {
+                "x": 3,
+                "y": -8
+            }
         }
     },
     {
@@ -285,7 +557,10 @@
             "weapon": "icon_pixel_sword"
         },
         "joints": {
-            "weapon": { "x": 1.5, "y": 10 }
+            "weapon": {
+                "x": 1.5,
+                "y": 10
+            }
         }
     }
 ]

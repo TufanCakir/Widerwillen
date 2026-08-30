@@ -65,7 +65,8 @@ struct BattleSceneView: View {
         backgroundImageName: String? = nil,
         groundImageName: String? = nil,
         onTapAttack: @escaping () -> BattleAttackResult,
-        onBattleCardAttack: ((BattleCardDefinition) -> BattleAttackResult)? = nil,
+        onBattleCardAttack: ((BattleCardDefinition) -> BattleAttackResult)? =
+            nil,
         onSpriteAttack: @escaping () -> BattleAttackResult,
         onActiveSkillAttack:
             @escaping (BattleActiveSkill)
@@ -141,13 +142,13 @@ struct BattleSceneView: View {
                     currentHP: currentHP,
                     maxHP: maxHP
                 )
-                    .padding(.horizontal)
-                    .padding(.top, 54)
-                    .frame(
-                        maxWidth: .infinity,
-                        maxHeight: .infinity,
-                        alignment: .top
-                    )
+                .padding(.horizontal)
+                .padding(.top, 54)
+                .frame(
+                    maxWidth: .infinity,
+                    maxHeight: .infinity,
+                    alignment: .top
+                )
 
                 VStack(spacing: 10) {
                     if let onExit {
@@ -184,14 +185,14 @@ struct BattleSceneView: View {
                     },
                     onSkillActivation: activateSkill
                 )
-                    .padding(.bottom, 24)
-                    .padding(.horizontal, 14)
-                    .frame(
-                        maxWidth: .infinity,
-                        maxHeight: .infinity,
-                        alignment: .bottom
-                    )
-                    .zIndex(12)
+                .padding(.bottom, 24)
+                .padding(.horizontal, 14)
+                .frame(
+                    maxWidth: .infinity,
+                    maxHeight: .infinity,
+                    alignment: .bottom
+                )
+                .zIndex(12)
 
                 if let transitionArea {
                     BattleTransitionView(
@@ -305,7 +306,10 @@ struct BattleSceneView: View {
         let card = cardDefinition(for: cardID)
         scene.playHeroAttackAnimation(move: card?.move ?? .punch)
         if let card {
-            performAttack(onBattleCardAttack?(card) ?? onTapAttack(), in: viewSize)
+            performAttack(
+                onBattleCardAttack?(card) ?? onTapAttack(),
+                in: viewSize
+            )
         } else {
             performAttack(onTapAttack(), in: viewSize)
         }
@@ -528,9 +532,11 @@ struct BattleSceneView: View {
     }
 
     private var activeShadowCloneAnimationID: String? {
-        guard let skill = activeSkills.first(where: {
-            activeSkillIDs.contains($0.id) && $0.kind == .shadowClone
-        }) else {
+        guard
+            let skill = activeSkills.first(where: {
+                activeSkillIDs.contains($0.id) && $0.kind == .shadowClone
+            })
+        else {
             return nil
         }
 
@@ -661,7 +667,8 @@ struct BattleSceneView: View {
 
     private func skillCooldownRemaining(for id: String) -> TimeInterval {
         max(
-            skillCooldownEndDates[id]?.timeIntervalSince(cooldownClockDate) ?? 0,
+            skillCooldownEndDates[id]?.timeIntervalSince(cooldownClockDate)
+                ?? 0,
             0
         )
     }

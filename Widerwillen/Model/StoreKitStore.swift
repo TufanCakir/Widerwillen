@@ -114,7 +114,8 @@ final class StoreKitStore {
             return true
         }
 
-        message = syncError == nil ? "No purchases to restore" : "Restore failed"
+        message =
+            syncError == nil ? "No purchases to restore" : "Restore failed"
         return false
     }
 

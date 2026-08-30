@@ -118,5 +118,4 @@ struct RemoteImage: View {
             fallbackSystemImage
         }
     }
-
 }

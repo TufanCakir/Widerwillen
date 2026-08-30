@@ -153,8 +153,6 @@ struct SpriteListView: View {
         switch category {
         case .characters:
             characterItems
-        case .skins:
-            skinItems
         case .companions:
             companionItems
         case .relics:
@@ -182,36 +180,8 @@ struct SpriteListView: View {
                 stars: owned?.stars,
                 isSelected: progress.isSelectedCharacter(character.id),
                 canSelect: owned != nil,
-                character: character,
-                skin: nil,
-                ownedItem: nil
+                character: character
             )
-        }
-    }
-
-    private var skinItems: [CollectionItem] {
-        progress.characterDefinitions.flatMap { character in
-            character.skins.map { skin in
-                let isUnlocked =
-                    progress.isSkinUnlocked(skin)
-                    && progress.ownedCharacterList.contains {
-                        $0.characterID == character.id
-                    }
-
-                return CollectionItem(
-                    id: "skin-\(skin.id)",
-                    name: skin.name,
-                    imageName: skin.imageName,
-                    rarity: character.rarity,
-                    levelTitle: isUnlocked ? character.name : "Locked",
-                    stars: nil,
-                    isSelected: progress.isSelectedSkin(skin),
-                    canSelect: isUnlocked,
-                    character: character,
-                    skin: skin,
-                    ownedItem: nil
-                )
-            }
         }
     }
 
@@ -226,9 +196,7 @@ struct SpriteListView: View {
                 stars: $0.stars,
                 isSelected: false,
                 canSelect: false,
-                character: nil,
-                skin: nil,
-                ownedItem: nil
+                character: nil
             )
         }
         .sorted { sortedCollectionItem($0, before: $1) }
@@ -245,9 +213,7 @@ struct SpriteListView: View {
                 stars: nil,
                 isSelected: false,
                 canSelect: false,
-                character: nil,
-                skin: nil,
-                ownedItem: nil
+                character: nil
             )
         }
         .sorted { sortedCollectionItem($0, before: $1) }
@@ -260,29 +226,19 @@ struct SpriteListView: View {
                 name: $0.name,
                 imageName: $0.imageName,
                 rarity: $0.rarity,
-                levelTitle: progress.isEquippedWeapon($0)
-                    ? "Equipped"
-                    : "Lv \($0.level)",
+                levelTitle: "Lv \($0.level)",
                 stars: nil,
-                isSelected: progress.isEquippedWeapon($0),
-                canSelect: true,
-                character: nil,
-                skin: nil,
-                ownedItem: $0
+                isSelected: false,
+                canSelect: false,
+                character: nil
             )
         }
         .sorted { sortedCollectionItem($0, before: $1) }
     }
 
     private func select(_ item: CollectionItem) {
-        if let character = item.character,
-            let skin = item.skin
-        {
-            progress.selectSkin(skin, for: character)
-        } else if let character = item.character {
+        if let character = item.character {
             progress.selectCharacter(character)
-        } else if let ownedItem = item.ownedItem {
-            progress.equipWeapon(ownedItem)
         }
     }
 
@@ -365,13 +321,10 @@ private struct CollectionItem: Identifiable {
     let isSelected: Bool
     let canSelect: Bool
     let character: CharacterDefinition?
-    let skin: CharacterSkin?
-    let ownedItem: OwnedItem?
 }
 
 private enum SpriteCollectionCategory: CaseIterable {
     case characters
-    case skins
     case companions
     case relics
     case items
@@ -380,8 +333,6 @@ private enum SpriteCollectionCategory: CaseIterable {
         switch self {
         case .characters:
             "Characters"
-        case .skins:
-            "Skins"
         case .companions:
             "Companions"
         case .relics:
@@ -395,8 +346,6 @@ private enum SpriteCollectionCategory: CaseIterable {
         switch self {
         case .characters:
             "icon_nimpi"
-        case .skins:
-            "icon_pixel_sprite"
         case .companions:
             "icon_pixel_box"
         case .relics:

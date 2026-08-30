@@ -32,8 +32,9 @@ struct MenuView: View {
     }
 
     private let shortcutColumns = [
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16),
+        GridItem(.flexible(), spacing: 10),
+        GridItem(.flexible(), spacing: 10),
+        GridItem(.flexible(), spacing: 10),
     ]
 
     var body: some View {
@@ -45,13 +46,13 @@ struct MenuView: View {
 
                 Spacer()
 
-                VStack(spacing: 28) {
+                VStack(spacing: 16) {
                     Button {
                         playSoundEffect("ui_select")
                         isModePickerPresented = true
                     } label: {
                         Text("Start")
-                            .widerwillenFont(size: 30, weight: .bold)
+                            .widerwillenFont(size: 26, weight: .bold)
                             .foregroundStyle(.white)
                             .shadow(
                                 color: .black.opacity(0.9),
@@ -60,7 +61,7 @@ struct MenuView: View {
                                 y: 0
                             )
                             .frame(maxWidth: .infinity)
-                            .frame(height: 72)
+                            .frame(height: 60)
                             .background {
                                 RemoteImage(
                                     name: "icon_pixel_menü",
@@ -74,7 +75,6 @@ struct MenuView: View {
                     shortcutGrid
                 }
                 .frame(maxWidth: 420)
-                .padding(.horizontal, 24)
 
                 Spacer()
             }
@@ -98,6 +98,10 @@ struct MenuView: View {
 
     private var shortcutGrid: some View {
         LazyVGrid(columns: shortcutColumns, spacing: 10) {
+            shortcutButton(title: "Showcase", assetImage: "icon_nimpi") {
+                playSoundEffect("ui_navigation")
+                openMode(.showcase)
+            }
             shortcutButton(title: "Settings", assetImage: "icon_pixel_settings")
             {
                 playSoundEffect("ui_navigation")
@@ -136,7 +140,7 @@ struct MenuView: View {
                 openMode(.dailyLogin)
             }
         }
-        .padding(.top, 50)
+        .padding(.top, 108)
     }
 
     private var claimableDailyLogins: [DailyLoginCampaign] {
@@ -154,19 +158,22 @@ struct MenuView: View {
         Button {
             action()
         } label: {
-            VStack(spacing: 10) {
+            VStack(spacing: 7) {
                 if let assetImage {
                     RemoteImage(name: assetImage)
-                        .frame(width: 32, height: 32)
+                        .frame(width: 28, height: 28)
                 } else if let systemImage {
                     Image(systemName: systemImage)
-                        .font(.system(size: 28, weight: .heavy))
+                        .font(.system(size: 24, weight: .heavy))
                 }
 
                 Text(title)
-                    .widerwillenFont(size: 13, weight: .bold)
+                    .widerwillenFont(size: 10, weight: .bold)
                     .lineLimit(1)
+                    .minimumScaleFactor(0.72)
             }
+            .frame(maxWidth: .infinity)
+            .frame(height: 58)
             .foregroundStyle(.white)
         }
         .buttonStyle(.plain)
@@ -306,6 +313,7 @@ struct MenuView: View {
 
 enum MenuMode {
     case battle
+    case showcase
     case event
     case skills
     case settings

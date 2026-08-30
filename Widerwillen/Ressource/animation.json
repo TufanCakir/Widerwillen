@@ -104,17 +104,6 @@
         "scale": 0.14
     },
     {
-        "id": "sprite_shadow_clone",
-        "imageName": "sprite_shadow_clone",
-        "columns": 3,
-        "rows": 1,
-        "spacing": 0,
-        "margin": 0,
-        "frameCount": 3,
-        "fps": 8,
-        "scale": 0.14
-    },
-    {
         "id": "dazzle_original",
         "imageName": "dazzle_original",
         "columns": 5,

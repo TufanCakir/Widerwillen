@@ -81,14 +81,15 @@ extension SpriteAnimationScene {
         NSCache<NSString, SpriteSheetTextureCacheEntry>()
 
     private static func textures(for config: SpriteSheet) -> [SKTexture] {
-        let cacheKey = [
-            config.imageName,
-            "\(config.columns)",
-            "\(config.rows)",
-            "\(config.spacing)",
-            "\(config.margin)",
-            "\(config.frameCount)"
-        ].joined(separator: "|") as NSString
+        let cacheKey =
+            [
+                config.imageName,
+                "\(config.columns)",
+                "\(config.rows)",
+                "\(config.spacing)",
+                "\(config.margin)",
+                "\(config.frameCount)",
+            ].joined(separator: "|") as NSString
 
         if let cachedEntry = spriteSheetTextureCache.object(forKey: cacheKey) {
             return cachedEntry.textures

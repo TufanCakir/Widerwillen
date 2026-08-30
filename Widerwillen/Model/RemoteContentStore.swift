@@ -43,9 +43,9 @@ final class RemoteContentStore {
         let configuration = URLSessionConfiguration.default
         configuration.urlCache = cache
         configuration.requestCachePolicy = .useProtocolCachePolicy
-        configuration.waitsForConnectivity = false
-        configuration.timeoutIntervalForRequest = 8
-        configuration.timeoutIntervalForResource = 20
+        configuration.waitsForConnectivity = true
+        configuration.timeoutIntervalForRequest = 30
+        configuration.timeoutIntervalForResource = 180
         session = URLSession(configuration: configuration)
     }
 
@@ -77,7 +77,7 @@ final class RemoteContentStore {
     }
 
     func loadLaunchContent() async {
-        await refreshIfNeeded(allowVersionUpdate: contentVersion == 0)
+        await refreshIfNeeded(allowVersionUpdate: true)
     }
 
     func checkForAvailableUpdate() async {
@@ -112,10 +112,12 @@ final class RemoteContentStore {
                 for: manifest,
                 onlyMissing: false
             )
-            statusText = "Update available"
+            statusText = "Updating content"
             remoteLog(
                 "Update available. Version: \(manifest.contentVersion), size: \(pendingUpdateSizeText)"
             )
+
+            await applyPendingUpdate()
         } catch {
             remoteLog("Update check failed: \(error)")
         }
@@ -127,13 +129,6 @@ final class RemoteContentStore {
         pendingUpdateManifest = nil
         pendingUpdateVersion = nil
         pendingUpdateSizeBytes = nil
-    }
-
-    func skipPendingUpdate() {
-        pendingUpdateManifest = nil
-        pendingUpdateVersion = nil
-        pendingUpdateSizeBytes = nil
-        statusText = "Update skipped"
     }
 
     func refreshIfNeeded(allowVersionUpdate: Bool = true) async {
@@ -297,7 +292,7 @@ final class RemoteContentStore {
             var request = URLRequest(
                 url: url,
                 cachePolicy: .reloadRevalidatingCacheData,
-                timeoutInterval: 8
+                timeoutInterval: 30
             )
             request.setValue("application/json", forHTTPHeaderField: "Accept")
 
@@ -423,7 +418,7 @@ final class RemoteContentStore {
         let request = URLRequest(
             url: url,
             cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
-            timeoutInterval: 12
+            timeoutInterval: 30
         )
         let (data, response) = try await session.data(for: request)
         try validate(response: response)

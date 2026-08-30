@@ -33,18 +33,13 @@ struct RootView: View {
                 OfflineView(
                     connectionName: internetConnectionStore.connectionName
                 )
-            } else if hasFinishedLaunchLoading {
+            } else if hasFinishedLaunchLoading
+                && !remoteContentStore.isRefreshing
+                && !remoteContentStore.hasPendingUpdate
+            {
                 currentView
             } else {
                 LaunchView(remoteContentStore: remoteContentStore)
-            }
-
-            if internetConnectionStore.isConnected
-                && hasFinishedLaunchLoading && remoteContentStore.isRefreshing
-                && !remoteContentStore.hasPendingUpdate
-            {
-                remoteContentProgressView
-                    .padding(.horizontal, 28)
             }
 
             if internetConnectionStore.isConnected
@@ -58,6 +53,7 @@ struct RootView: View {
             if internetConnectionStore.isConnected
                 && hasFinishedLaunchLoading && isTutorialEnabled
                 && !remoteContentStore.hasPendingUpdate
+                && !remoteContentStore.isRefreshing
             {
                 TutorialCoachView(
                     progress: progress,
@@ -67,8 +63,14 @@ struct RootView: View {
         }
         .statusBarHidden(true)
         .animation(.easeInOut(duration: 0.25), value: hasFinishedLaunchLoading)
-        .animation(.easeInOut(duration: 0.2), value: remoteContentStore.isRefreshing)
-        .animation(.easeInOut(duration: 0.2), value: remoteContentStore.hasPendingUpdate)
+        .animation(
+            .easeInOut(duration: 0.2),
+            value: remoteContentStore.isRefreshing
+        )
+        .animation(
+            .easeInOut(duration: 0.2),
+            value: remoteContentStore.hasPendingUpdate
+        )
         .onAppear {
             progress.refreshIdleRewards()
             musicPlayer.setMusicVolume(musicVolume)
@@ -80,14 +82,17 @@ struct RootView: View {
             guard internetConnectionStore.isConnected else { return }
 
             await remoteContentStore.loadLaunchContent()
+            musicPlayer.resumeIfNeeded()
             await MainActor.run {
                 hasFinishedLaunchLoading = true
             }
             await remoteContentStore.checkForAvailableUpdate()
+            musicPlayer.resumeIfNeeded()
         }
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active && internetConnectionStore.isConnected {
                 progress.refreshIdleRewards()
+                musicPlayer.resumeIfNeeded()
                 Task {
                     await remoteContentStore.checkForAvailableUpdate()
                 }
@@ -129,26 +134,16 @@ struct RootView: View {
             Task {
                 if !hasFinishedLaunchLoading {
                     await remoteContentStore.loadLaunchContent()
+                    musicPlayer.resumeIfNeeded()
                     await MainActor.run {
                         hasFinishedLaunchLoading = true
                     }
                 }
 
                 await remoteContentStore.checkForAvailableUpdate()
+                musicPlayer.resumeIfNeeded()
             }
         }
-    }
-
-    private var remoteContentProgressView: some View {
-        VStack {
-            progressBar
-                .frame(maxWidth: 240)
-                .padding(.top, 12)
-
-            Spacer()
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .transition(.opacity)
     }
 
     private var remoteUpdatePrompt: some View {
@@ -164,34 +159,11 @@ struct RootView: View {
                 .opacity(0.78)
             }
 
-            if remoteContentStore.isRefreshing {
-                progressBar
+            progressBar
 
-                Text(remoteContentStore.progressDetailText)
-                    .widerwillenFont(size: 11, weight: .bold)
-                    .opacity(0.78)
-            } else {
-                HStack(spacing: 12) {
-                    Button {
-                        remoteContentStore.skipPendingUpdate()
-                    } label: {
-                        Text("Not now")
-                            .frame(maxWidth: .infinity)
-                    }
-
-                    Button {
-                        Task {
-                            await remoteContentStore.applyPendingUpdate()
-                        }
-                    } label: {
-                        Text("Download")
-                            .frame(maxWidth: .infinity)
-                    }
-                }
-                .widerwillenFont(size: 14, weight: .heavy)
-                .buttonStyle(.bordered)
-                .tint(.white)
-            }
+            Text(remoteContentStore.progressDetailText)
+                .widerwillenFont(size: 11, weight: .bold)
+                .opacity(0.78)
         }
         .foregroundStyle(.white)
         .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
@@ -242,6 +214,13 @@ struct RootView: View {
                 progress: progress,
                 playSoundEffect: musicPlayer.playSoundEffect,
                 stopSoundEffects: musicPlayer.stopAllSoundEffects
+            ) {
+                activeMode = nil
+            }
+        case .showcase:
+            ShowcaseView(
+                progress: progress,
+                playSoundEffect: musicPlayer.playSoundEffect
             ) {
                 activeMode = nil
             }
@@ -310,6 +289,8 @@ struct RootView: View {
             switch activeMode {
             case .battle:
                 return .battle
+            case .showcase:
+                return .launch
             case .event:
                 return .event
             case .skills:
@@ -371,7 +352,7 @@ struct RootView: View {
         case .event, .skills, .settings, .news, .gift, .equipment, .warehouse,
             .pass, .dailyLogin:
             true
-        case .battle:
+        case .battle, .showcase:
             false
         }
     }

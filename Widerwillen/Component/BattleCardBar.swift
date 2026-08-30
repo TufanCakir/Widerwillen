@@ -43,7 +43,9 @@ struct BattleCardBar: View {
                         card: card,
                         fallbackTitle: skill.title,
                         fallbackImageName: skill.imageName,
-                        cooldownRemaining: skillCooldownRemaining(for: skill.id),
+                        cooldownRemaining: skillCooldownRemaining(
+                            for: skill.id
+                        ),
                         isActive: isActive
                     ) {
                         onSkillActivation(skill)
@@ -90,11 +92,18 @@ struct BattleCardBar: View {
     }
 
     private func cardCooldownRemaining(for id: String) -> TimeInterval {
-        max(cardCooldownEndDates[id]?.timeIntervalSince(cooldownClockDate) ?? 0, 0)
+        max(
+            cardCooldownEndDates[id]?.timeIntervalSince(cooldownClockDate) ?? 0,
+            0
+        )
     }
 
     private func skillCooldownRemaining(for id: String) -> TimeInterval {
-        max(skillCooldownEndDates[id]?.timeIntervalSince(cooldownClockDate) ?? 0, 0)
+        max(
+            skillCooldownEndDates[id]?.timeIntervalSince(cooldownClockDate)
+                ?? 0,
+            0
+        )
     }
 }
 
@@ -132,9 +141,12 @@ private struct BattleCardButton: View {
                             .clipShape(RoundedRectangle(cornerRadius: 5))
                     }
 
-                    BattleCardMovePreview(move: move, fallbackImageName: imageName)
-                        .frame(width: 80, height: 64)
-                        .clipped()
+                    BattleCardMovePreview(
+                        move: move,
+                        fallbackImageName: imageName
+                    )
+                    .frame(width: 80, height: 64)
+                    .clipped()
 
                     HStack(spacing: 8) {
                         Text("DMG x\(damageText(damageMultiplier))")
@@ -357,13 +369,48 @@ private struct BattleCardPreviewPose {
             leftHandRotation = .degrees(28)
             rightFootRotation = .degrees(-24)
             leftFootRotation = .degrees(24)
+        case .uppercut:
+            characterOffset = CGSize(width: 2, height: -5)
+            bodyRotation = .degrees(-12)
+            rightHandOffset = CGSize(width: 7, height: -11)
+            rightHandRotation = .degrees(-74)
+            weaponOffset = CGSize(width: 9, height: -10)
+            weaponRotation = .degrees(-82)
+            leftFootOffset = CGSize(width: -2, height: 2)
+        case .phantomSlash:
+            characterOffset = CGSize(width: 12, height: -2)
+            scale = 1.55
+            bodyRotation = .degrees(-18)
+            rightHandOffset = CGSize(width: 10, height: -1)
+            weaponOffset = CGSize(width: 16, height: -2)
+            weaponRotation = .degrees(-72)
+            headRotation = .degrees(-8)
+        case .meteorKick:
+            characterOffset = CGSize(width: 1, height: -10)
+            characterRotation = .degrees(-32)
+            rightFootOffset = CGSize(width: 13, height: -9)
+            rightFootRotation = .degrees(-76)
+            leftFootRotation = .degrees(22)
+            leftHandRotation = .degrees(32)
+            weaponRotation = .degrees(18)
+        case .bladeStorm:
+            characterOffset = CGSize(width: 0, height: -4)
+            characterRotation = .degrees(54)
+            rightHandRotation = .degrees(-56)
+            leftHandRotation = .degrees(38)
+            weaponOffset = CGSize(width: 10, height: -2)
+            weaponRotation = .degrees(-110)
+            rightFootRotation = .degrees(-18)
+            leftFootRotation = .degrees(18)
         }
     }
 }
 
-private extension Color {
-    init(hex: String) {
-        let cleaned = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
+extension Color {
+    fileprivate init(hex: String) {
+        let cleaned = hex.trimmingCharacters(
+            in: CharacterSet(charactersIn: "#")
+        )
         let scanner = Scanner(string: cleaned)
         var value: UInt64 = 0
         scanner.scanHexInt64(&value)

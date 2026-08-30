@@ -155,7 +155,7 @@ final class GameProgressStore {
     var equippedWeaponImageName: String? {
         equippedWeapon?.imageName
     }
-    
+
     var equippedWeaponBattleAppearance: WeaponBattleAppearance? {
         guard let selectedWeaponItemID else {
             return nil
@@ -1430,19 +1430,20 @@ final class GameProgressStore {
             return
         }
 
-        selectedWeaponItemID = ownedItems.values.max {
-            lhs,
-            rhs in
-            let lhsPower = Self.scaledPower(
-                base: lhs.damageBonus,
-                level: lhs.level
-            )
-            let rhsPower = Self.scaledPower(
-                base: rhs.damageBonus,
-                level: rhs.level
-            )
-            return lhsPower < rhsPower
-        }?.itemID
+        selectedWeaponItemID =
+            ownedItems.values.max {
+                lhs,
+                rhs in
+                let lhsPower = Self.scaledPower(
+                    base: lhs.damageBonus,
+                    level: lhs.level
+                )
+                let rhsPower = Self.scaledPower(
+                    base: rhs.damageBonus,
+                    level: rhs.level
+                )
+                return lhsPower < rhsPower
+            }?.itemID
     }
 
     private func recalculateStageHPIfNeeded() {

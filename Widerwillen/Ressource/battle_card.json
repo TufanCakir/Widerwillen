@@ -9,7 +9,10 @@
             "cooldownSeconds": 0,
             "staminaCost": 0,
             "damageMultiplier": 1,
-            "gradientColors": ["#101a3a", "#207cff"]
+            "gradientColors": [
+                "#101a3a",
+                "#207cff"
+            ]
         },
         {
             "id": "snap_kick",
@@ -20,7 +23,10 @@
             "cooldownSeconds": 1.4,
             "staminaCost": 6,
             "damageMultiplier": 1.35,
-            "gradientColors": ["#123370", "#1d9bff"],
+            "gradientColors": [
+                "#123370",
+                "#1d9bff"
+            ],
             "requiredSkillID": "tap_focus_damage",
             "requiredSkillLevel": 1,
             "requiredAccountLevel": 1
@@ -34,7 +40,10 @@
             "cooldownSeconds": 2.2,
             "staminaCost": 5,
             "damageMultiplier": 1.6,
-            "gradientColors": ["#2b2f3a", "#6fb8ff"],
+            "gradientColors": [
+                "#2b2f3a",
+                "#6fb8ff"
+            ],
             "requiredSkillID": "tap_lucky_drop",
             "requiredSkillLevel": 1,
             "requiredAccountLevel": 1
@@ -48,7 +57,10 @@
             "cooldownSeconds": 3.4,
             "staminaCost": 12,
             "damageMultiplier": 2.2,
-            "gradientColors": ["#ffffff", "#ffcf70"],
+            "gradientColors": [
+                "#ffffff",
+                "#ffcf70"
+            ],
             "requiredSkillID": "shadow_clone_duration",
             "requiredSkillLevel": 1,
             "requiredAccountLevel": 1
@@ -62,7 +74,10 @@
             "cooldownSeconds": 5,
             "staminaCost": 16,
             "damageMultiplier": 2.8,
-            "gradientColors": ["#3d1cff", "#ff5bd8"],
+            "gradientColors": [
+                "#3d1cff",
+                "#ff5bd8"
+            ],
             "requiredSkillID": "dimension_stage_skip",
             "requiredSkillLevel": 1,
             "requiredAccountLevel": 1
@@ -76,7 +91,78 @@
             "cooldownSeconds": 6.5,
             "staminaCost": 18,
             "damageMultiplier": 3.1,
-            "gradientColors": ["#10172a", "#33d4ff"],
+            "gradientColors": [
+                "#10172a",
+                "#33d4ff"
+            ],
+            "requiredSkillID": "dimension_total_damage",
+            "requiredSkillLevel": 1,
+            "requiredAccountLevel": 1
+        },
+        {
+            "id": "uppercut",
+            "title": "Uppercut",
+            "move": "uppercut",
+            "style": "Launcher",
+            "imageName": "icon_pixel_big_sword",
+            "cooldownSeconds": 3.8,
+            "staminaCost": 12,
+            "damageMultiplier": 2.35,
+            "gradientColors": [
+                "#0f2448",
+                "#8fd8ff"
+            ],
+            "requiredSkillID": "tap_focus_damage",
+            "requiredSkillLevel": 1,
+            "requiredAccountLevel": 1
+        },
+        {
+            "id": "phantom_slash",
+            "title": "Phantom Slash",
+            "move": "phantomSlash",
+            "style": "Shadow",
+            "imageName": "icon_pixel_shadow_clone",
+            "cooldownSeconds": 5.2,
+            "staminaCost": 15,
+            "damageMultiplier": 2.85,
+            "gradientColors": [
+                "#10001f",
+                "#4c2bff"
+            ],
+            "requiredSkillID": "shadow_clone_active",
+            "requiredSkillLevel": 1,
+            "requiredAccountLevel": 1
+        },
+        {
+            "id": "meteor_kick",
+            "title": "Meteor Kick",
+            "move": "meteorKick",
+            "style": "Dive Kick",
+            "imageName": "icon_pixel_dimension_break",
+            "cooldownSeconds": 6.8,
+            "staminaCost": 20,
+            "damageMultiplier": 3.35,
+            "gradientColors": [
+                "#2a0505",
+                "#ffb12f"
+            ],
+            "requiredSkillID": "dimension_stage_skip",
+            "requiredSkillLevel": 1,
+            "requiredAccountLevel": 1
+        },
+        {
+            "id": "blade_storm",
+            "title": "Blade Storm",
+            "move": "bladeStorm",
+            "style": "Spin Slash",
+            "imageName": "icon_pixel_big_sword",
+            "cooldownSeconds": 8.5,
+            "staminaCost": 24,
+            "damageMultiplier": 3.8,
+            "gradientColors": [
+                "#10172a",
+                "#d9f7ff"
+            ],
             "requiredSkillID": "dimension_total_damage",
             "requiredSkillLevel": 1,
             "requiredAccountLevel": 1
@@ -90,7 +176,10 @@
             "cooldownSeconds": 12,
             "staminaCost": 10,
             "damageMultiplier": 0,
-            "gradientColors": ["#130052", "#3d1cff"],
+            "gradientColors": [
+                "#130052",
+                "#3d1cff"
+            ],
             "requiredSkillID": "shadow_clone_active",
             "requiredSkillLevel": 1,
             "requiredAccountLevel": 1

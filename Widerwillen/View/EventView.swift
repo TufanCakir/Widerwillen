@@ -8,14 +8,17 @@
 import SwiftUI
 
 struct EventView: View {
+
     let progress: GameProgressStore
     let playSoundEffect: (String) -> Void
     let onBattleStateChange: (Bool) -> Void
 
     private let configuration: EventConfiguration
-    private let tradeConfiguration: TradeConfiguration
-    @AppStorage("appLanguage") private var appLanguageCode =
-        AppLanguage.de.rawValue
+    private let eventShopConfiguration: EventShopConfiguration
+
+    @AppStorage("appLanguage")
+    private var appLanguageCode = AppLanguage.de.rawValue
+
     @State private var message = ""
     @State private var selectedEvent: GameEvent?
     @State private var selectedCategory = ""
@@ -24,7 +27,8 @@ struct EventView: View {
     init(
         progress: GameProgressStore,
         configuration: EventConfiguration = try! EventConfiguration.load(),
-        tradeConfiguration: TradeConfiguration = try! TradeConfiguration.load(),
+        eventShopConfiguration: EventShopConfiguration =
+            try! EventShopConfiguration.load(),
         playSoundEffect: @escaping (String) -> Void = { _ in },
         onBattleStateChange: @escaping (Bool) -> Void = { _ in }
     ) {
@@ -32,7 +36,8 @@ struct EventView: View {
         self.playSoundEffect = playSoundEffect
         self.onBattleStateChange = onBattleStateChange
         self.configuration = configuration
-        self.tradeConfiguration = tradeConfiguration
+        self.eventShopConfiguration = eventShopConfiguration
+
         _selectedCategory = State(
             initialValue: configuration.events.first?.category ?? ""
         )
@@ -53,7 +58,7 @@ struct EventView: View {
                 EventShopView(
                     progress: progress,
                     events: configuration.events,
-                    tradeConfiguration: tradeConfiguration,
+                    eventShopConfiguration: eventShopConfiguration,
                     playSoundEffect: playSoundEffect
                 ) {
                     isEventShopPresented = false
@@ -356,9 +361,10 @@ struct EventView: View {
 }
 
 private struct EventShopView: View {
+
     let progress: GameProgressStore
     let events: [GameEvent]
-    let tradeConfiguration: TradeConfiguration
+    let eventShopConfiguration: EventShopConfiguration
     let playSoundEffect: (String) -> Void
     let onExit: () -> Void
 
@@ -434,14 +440,12 @@ private struct EventShopView: View {
     }
 
     private var shopEvents: [GameEvent] {
-        var seenChipIDs: Set<String> = []
-
-        return events.filter { event in
-            let chipID = event.currencyStorageID
-            guard !tradeConfiguration.eventOffers(chipID: chipID).isEmpty else {
+        events.filter { event in
+            guard let shop = eventShopConfiguration.shop(for: event.id) else {
                 return false
             }
-            return seenChipIDs.insert(chipID).inserted
+
+            return !shop.offers.isEmpty
         }
     }
 
@@ -450,9 +454,12 @@ private struct EventShopView: View {
             event.currencyStorageID,
             default: 0
         ]
-        let offerCount = tradeConfiguration.eventOffers(
-            chipID: event.currencyStorageID
-        ).count
+
+        let offerCount =
+            eventShopConfiguration
+            .shop(for: event.id)?
+            .offers
+            .count ?? 0
 
         return Button {
             playSoundEffect("ui_select")
@@ -498,9 +505,10 @@ private struct EventShopView: View {
     }
 
     private func shopWindow(for event: GameEvent) -> some View {
-        let offers = tradeConfiguration.eventOffers(
-            chipID: event.currencyStorageID
-        )
+        let offers =
+            eventShopConfiguration
+            .shop(for: event.id)?
+            .offers ?? []
 
         return ZStack {
             Color.black.opacity(0.58)
@@ -935,7 +943,10 @@ private struct EventBattleView: View {
                         .frame(width: iconSize, height: iconSize)
 
                     Text(unlock.name)
-                        .widerwillenFont(size: iconSize > 20 ? 13 : 10, weight: .heavy)
+                        .widerwillenFont(
+                            size: iconSize > 20 ? 13 : 10,
+                            weight: .heavy
+                        )
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }

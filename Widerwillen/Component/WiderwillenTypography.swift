@@ -34,7 +34,9 @@ extension Font {
 }
 
 extension View {
-    func widerwillenFont(size: CGFloat, weight: Font.Weight = .regular) -> some View {
+    func widerwillenFont(size: CGFloat, weight: Font.Weight = .regular)
+        -> some View
+    {
         self
             .font(.system(size: size, weight: weight))
     }

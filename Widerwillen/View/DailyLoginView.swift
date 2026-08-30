@@ -192,7 +192,8 @@ struct DailyLoginView: View {
                 }
             }
 
-            LazyVGrid(columns: columns, spacing: isCompactPresentation ? 6 : 8) {
+            LazyVGrid(columns: columns, spacing: isCompactPresentation ? 6 : 8)
+            {
                 ForEach(login.rewards.sorted { $0.day < $1.day }) { reward in
                     rewardCard(reward, in: login)
                 }
@@ -269,7 +270,11 @@ struct DailyLoginView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: reward.unlocks.isEmpty ? (isCompactPresentation ? 76 : 92) : (isCompactPresentation ? 94 : 108))
+        .frame(
+            height: reward.unlocks.isEmpty
+                ? (isCompactPresentation ? 76 : 92)
+                : (isCompactPresentation ? 94 : 108)
+        )
         .padding(isCompactPresentation ? 5 : 6)
         .background(
             isClaimed
@@ -305,7 +310,10 @@ struct DailyLoginView: View {
             ForEach(unlocks) { unlock in
                 HStack(spacing: 4) {
                     RemoteImage(name: unlock.imageName)
-                        .frame(width: isCompactPresentation ? 12 : 14, height: isCompactPresentation ? 12 : 14)
+                        .frame(
+                            width: isCompactPresentation ? 12 : 14,
+                            height: isCompactPresentation ? 12 : 14
+                        )
 
                     Text(unlock.name)
                         .font(

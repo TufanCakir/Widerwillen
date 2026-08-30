@@ -61,6 +61,13 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
         }
     }
 
+    func resumeIfNeeded() {
+        guard shouldPlay else { return }
+        guard player?.isPlaying != true else { return }
+
+        playCurrentTrack()
+    }
+
     func setMusicVolume(_ volume: Double) {
         musicVolume = Float(min(max(volume, 0), 1))
         player?.setVolume(musicVolume, fadeDuration: 0.12)
@@ -107,11 +114,7 @@ final class MusicPlayer: NSObject, AVAudioPlayerDelegate {
     }
 
     private func playCurrentTrack(attempts: Int = 0) {
-        let isMusicEnabled = UserDefaults.standard.bool(
-            forKey: "isMusicEnabled"
-        )
-
-        guard shouldPlay, isMusicEnabled, !configuration.tracks.isEmpty else {
+        guard shouldPlay, !configuration.tracks.isEmpty else {
             player?.stop()
             player = nil
             return

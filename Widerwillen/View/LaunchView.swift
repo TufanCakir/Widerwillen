@@ -54,52 +54,16 @@ struct LaunchView: View {
     }
 
     private var launchBackground: some View {
-        ZStack {
-            LinearGradient(
-                colors: [
-                    Color(red: 0.02, green: 0.31, blue: 0.70),
-                    Color(red: 0.03, green: 0.50, blue: 0.92),
-                    Color(red: 0.86, green: 0.02, blue: 0.04),
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-
-            GeometryReader { proxy in
-                let tileSize = max(proxy.size.width / 5.6, 54)
-                let columns = Int(proxy.size.width / tileSize) + 2
-                let rows = Int(proxy.size.height / tileSize) + 2
-
-                Canvas { context, size in
-                    for row in 0..<rows {
-                        for column in 0..<columns {
-                            let x = CGFloat(column) * tileSize - tileSize * 0.5
-                            let y = CGFloat(row) * tileSize - tileSize * 0.35
-                            let rect = CGRect(
-                                x: x,
-                                y: y,
-                                width: tileSize * 0.62,
-                                height: tileSize * 0.62
-                            )
-                            let path = Path(
-                                roundedRect: rect,
-                                cornerRadius: min(tileSize * 0.08, 8)
-                            )
-                            context.fill(
-                                path,
-                                with: .color(.white.opacity(0.13))
-                            )
-                        }
-                    }
-
-                    let overlay = Path(CGRect(origin: .zero, size: size))
-                    context.fill(
-                        overlay,
-                        with: .color(.black.opacity(0.18))
-                    )
-                }
-            }
-        }
+        LinearGradient(
+            colors: [
+                Color(red: 0.02, green: 0.31, blue: 0.70),
+                Color(red: 0.03, green: 0.50, blue: 0.92),
+                Color(red: 0.86, green: 0.02, blue: 0.04),
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .overlay(.black.opacity(0.18))
     }
 
     private var launchProgress: some View {

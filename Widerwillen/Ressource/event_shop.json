@@ -1,0 +1,122 @@
+{
+    "shops": [
+        {
+            "eventID": "blue_chip_run",
+            "title": "Blue Chip Shop",
+            "currencyID": "blue_chips",
+            "currencyImageName": "icon_pixel_chip_blue",
+
+            "offers": [
+                {
+                    "id": "blue_chip_coins_01",
+                    "title": "Coin Pack",
+                    "imageName": "icon_pixel_coin",
+
+                    "costs": [
+                        {
+                            "resource": "blue_chips",
+                            "amount": 100
+                        }
+                    ],
+
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 500
+                        }
+                    ],
+
+                    "unlocks": [],
+                    "limit": 5
+                },
+
+                {
+                    "id": "blue_chip_crystals_01",
+                    "title": "Crystal Pack",
+                    "imageName": "icon_pixel_crystal",
+
+                    "costs": [
+                        {
+                            "resource": "blue_chips",
+                            "amount": 250
+                        }
+                    ],
+
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 10
+                        }
+                    ],
+
+                    "unlocks": [],
+                    "limit": 2
+                }
+            ]
+        },
+
+        {
+            "eventID": "yellow_chip_run",
+            "title": "Yellow Chip Shop",
+            "currencyID": "yellow_chips",
+            "currencyImageName": "icon_pixel_chip_yellow",
+
+            "offers": [
+                {
+                    "id": "yellow_chip_coin_pack",
+                    "title": "Large Coin Pack",
+                    "imageName": "icon_pixel_coin",
+
+                    "costs": [
+                        {
+                            "resource": "yellow_chips",
+                            "amount": 150
+                        }
+                    ],
+
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 1000
+                        }
+                    ],
+
+                    "unlocks": [],
+                    "limit": 3
+                }
+            ]
+        },
+
+        {
+            "eventID": "birthday_skin_event",
+            "title": "Birthday Shop",
+            "currencyID": "yellow_chips",
+            "currencyImageName": "icon_pixel_chip_yellow",
+
+            "offers": [
+                {
+                    "id": "birthday_skill_books",
+                    "title": "Birthday Skill Books",
+                    "imageName": "icon_pixel_skill_book",
+
+                    "costs": [
+                        {
+                            "resource": "yellow_chips",
+                            "amount": 300
+                        }
+                    ],
+
+                    "rewards": [
+                        {
+                            "resource": "skillBooks",
+                            "amount": 10
+                        }
+                    ],
+
+                    "unlocks": [],
+                    "limit": 1
+                }
+            ]
+        }
+    ]
+}
