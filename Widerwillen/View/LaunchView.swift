@@ -13,15 +13,21 @@ struct LaunchView: View {
     var body: some View {
         GeometryReader { proxy in
             ZStack {
-                launchBackground
+                AppBackground()
 
                 VStack(spacing: 18) {
                     Spacer()
 
-                    VStack(spacing: 10) {
+                    VStack(spacing: 14) {
                         Text("Widerwillen")
-                            .widerwillenFont(size: 36, weight: .heavy)
-                            .foregroundStyle(.white)
+                            .widerwillenPixelFont(size: 40, weight: .heavy)
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.blue, .white],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
                             .shadow(
                                 color: .black.opacity(0.82),
                                 radius: 5,
@@ -29,19 +35,32 @@ struct LaunchView: View {
                                 y: 3
                             )
 
-                        Text(remoteContentStore.statusText)
-                            .widerwillenFont(size: 13, weight: .bold)
-                            .foregroundStyle(.white.opacity(0.82))
-                            .shadow(
-                                color: .black.opacity(0.7),
-                                radius: 3,
-                                x: 0,
-                                y: 2
-                            )
+                        VStack(spacing: 10) {
+                            Image(systemName: statusIconName)
+                                .font(.system(size: 22, weight: .heavy))
+                                .foregroundStyle(.white)
+                                .frame(width: 42, height: 42)
+                                .background(.white.opacity(0.1))
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                            Text(remoteContentStore.statusText)
+                                .widerwillenFont(size: 13, weight: .bold)
+                                .foregroundStyle(.white.opacity(0.84))
+                                .multilineTextAlignment(.center)
+                                .lineLimit(2)
+                                .minimumScaleFactor(0.78)
+                                .shadow(
+                                    color: .black.opacity(0.7),
+                                    radius: 3,
+                                    x: 0,
+                                    y: 2
+                                )
+                        }
                     }
 
                     launchProgress
                         .frame(width: min(proxy.size.width - 72, 320))
+                        .padding(.top, 4)
 
                     Spacer()
                 }
@@ -53,29 +72,34 @@ struct LaunchView: View {
         .transition(.opacity)
     }
 
-    private var launchBackground: some View {
-        LinearGradient(
-            colors: [
-                Color(red: 0.02, green: 0.31, blue: 0.70),
-                Color(red: 0.03, green: 0.50, blue: 0.92),
-                Color(red: 0.86, green: 0.02, blue: 0.04),
-            ],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-        .overlay(.black.opacity(0.18))
+    private var statusIconName: String {
+        if remoteContentStore.hasPendingUpdate {
+            return "arrow.down.circle.fill"
+        }
+
+        if remoteContentStore.isRefreshing {
+            return "arrow.triangle.2.circlepath"
+        }
+
+        return "sparkles"
     }
 
     private var launchProgress: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 10) {
             GeometryReader { proxy in
                 let progress = remoteContentStore.progress ?? 0.12
                 ZStack(alignment: .leading) {
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(.black.opacity(0.38))
+                        .fill(.black.opacity(0.48))
 
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(.white.opacity(0.88))
+                        .fill(
+                            LinearGradient(
+                                colors: [.white, .blue.opacity(0.78)],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
                         .frame(
                             width: max(
                                 18,
@@ -93,7 +117,18 @@ struct LaunchView: View {
             Text(remoteContentStore.progressDetailText)
                 .widerwillenFont(size: 11, weight: .bold)
                 .foregroundStyle(.white.opacity(0.78))
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.75)
                 .shadow(color: .black.opacity(0.7), radius: 2, x: 0, y: 1)
         }
+        .padding(14)
+        .background(.black.opacity(0.34))
+        .overlay {
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(.white.opacity(0.14), lineWidth: 1)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 5)
     }
 }

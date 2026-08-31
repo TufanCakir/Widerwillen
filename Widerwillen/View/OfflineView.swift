@@ -12,52 +12,75 @@ struct OfflineView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(
-                stops: [
-                    .init(color: .blue, location: 0),
-                    .init(color: .blue, location: 0.5),
-                    .init(color: .white, location: 0.5),
-                    .init(color: .white, location: 1),
-                ],
-                startPoint: .leading,
-                endPoint: .trailing
-            )
-            .ignoresSafeArea()
+            AppBackground()
 
-            VStack(spacing: 18) {
-                ZStack {
+            VStack(spacing: 24) {
+                VStack(spacing: 18) {
                     Image(systemName: "wifi.slash")
-                        .font(.system(size: 58, weight: .heavy))
+                        .font(.system(size: 50, weight: .heavy))
                         .foregroundStyle(.white)
+                        .frame(width: 92, height: 92)
+                        .background(.black.opacity(0.34))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(.blue, lineWidth: 1)
+                        }
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         .shadow(
                             color: .black.opacity(0.9),
                             radius: 3,
                             x: 0,
                             y: 0
                         )
-                }
 
-                VStack(spacing: 8) {
-                    Text("No Internet")
-                        .widerwillenFont(size: 28, weight: .heavy)
+                    VStack(spacing: 9) {
+                        Text("No Internet")
+                            .widerwillenFont(size: 28, weight: .heavy)
 
-                    Text(
-                        "Widerwillen needs an internet connection to load game content."
-                    )
-                    .widerwillenFont(size: 13, weight: .bold)
-                    .multilineTextAlignment(.center)
-                    .opacity(0.82)
+                        Text(
+                            "Widerwillen needs an internet connection to load game content."
+                        )
+                        .widerwillenFont(size: 13, weight: .bold)
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(3)
+                        .opacity(0.82)
+                    }
 
-                    Text(connectionName)
-                        .widerwillenFont(size: 11, weight: .heavy)
-                        .opacity(0.7)
+                    HStack(spacing: 8) {
+                        Image(systemName: "network.slash")
+                            .font(.system(size: 12, weight: .heavy))
+
+                        Text(connectionName)
+                            .widerwillenFont(size: 11, weight: .heavy)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.75)
+                    }
+                    .foregroundStyle(.white.opacity(0.74))
+                    .padding(.horizontal, 12)
+                    .frame(height: 30)
+                    .background(.white.opacity(0.08))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
                 .foregroundStyle(.white)
                 .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
-                .padding(.horizontal, 28)
+                .padding(22)
+                .frame(maxWidth: 340)
+                .background(.black.opacity(0.42))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(.white.opacity(0.14), lineWidth: 1)
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 5)
+
+                Text("Reconnect to continue")
+                    .widerwillenFont(size: 12, weight: .heavy)
+                    .foregroundStyle(.white.opacity(0.72))
+                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
             }
             .padding(.horizontal, 28)
         }
+        .ignoresSafeArea()
     }
 }
 

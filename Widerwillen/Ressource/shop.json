@@ -82,7 +82,7 @@
         },
         {
             "id": "crystals_550",
-            "category": "crystals",
+            "category": "special",
             "purchaseType": "consumable",
             "productID": "com.tufancakir.widerwillen.crystals.550",
             "title": "500 + Bonus",

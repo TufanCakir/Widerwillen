@@ -1,5 +1,5 @@
 {
-    "contentVersion": 175,
+    "contentVersion": 184,
     "json": [
         {
             "name": "arena",
@@ -20,6 +20,7 @@
         {
             "name": "background",
             "path": "background.json"
+            
         },
         {
             "name": "character",
@@ -465,6 +466,16 @@
         {
             "name": "icon_nimbi_night",
             "path": "assets/icon_nimbi_night.png",
+            "version": 1
+        },
+        {
+            "name": "icon_nimbi_halloween",
+            "path": "assets/icon_nimbi_halloween.png",
+            "version": 1
+        },
+        {
+            "name": "icon_nimbi_birthday",
+            "path": "assets/icon_nimbi_birthday.png",
             "version": 1
         },
         {
