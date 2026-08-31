@@ -327,6 +327,11 @@ final class GameProgressStore {
         )
     }
 
+    var tapCooldownSeconds: Double {
+        let speedBonus = min(skillBonus(for: .tapSpeed), 0.8)
+        return max(0.08, 0.22 * (1.0 - speedBonus))
+    }
+
     func passivePower(for sprite: OwnedSprite) -> Int {
         let basePower =
             Self.companionConfiguration.companion(
@@ -351,6 +356,8 @@ final class GameProgressStore {
             let damageMultiplier =
                 activation.damageMultiplier
                 * (1.0 + skillBonus(for: .shadowCloneDamage))
+            let intervalMultiplier =
+                1.0 - min(skillBonus(for: .attackSpeed), 0.75)
             let damage = max(
                 1,
                 Int(
@@ -368,7 +375,10 @@ final class GameProgressStore {
                     * (1.0 + skillBonus(for: .activeSkillDuration)),
                 cooldownSeconds: activation.cooldownSeconds
                     * (1.0 - min(skillBonus(for: .activeSkillCooldown), 0.7)),
-                tickIntervalSeconds: activation.intervalSeconds,
+                tickIntervalSeconds: max(
+                    0.12,
+                    activation.intervalSeconds * intervalMultiplier
+                ),
                 damage: damage,
                 companionAnimationID: activation.companionAnimationID
             )
@@ -401,34 +411,54 @@ final class GameProgressStore {
 
     @discardableResult
     func attackStage(damage: Int? = nil) -> BattleAttackResult {
-        let damageValue = max(damage ?? tapDamage, 1)
+        let baseDamageValue = max(damage ?? tapDamage, 1)
+        let isCriticalHit = rollCriticalHit()
+        let damageValue =
+            isCriticalHit
+            ? max(
+                baseDamageValue,
+                Int(
+                    (Double(baseDamageValue)
+                        * criticalDamageMultiplier).rounded()
+                )
+            )
+            : baseDamageValue
         let damageDealt = min(stageHP, damageValue)
         stageHP = max(stageHP - damageValue, 0)
 
         if stageHP == 0 {
-            let rewards = advanceStage()
+            let extraClears = rollMultiHitClearCount()
+            let rewards = advanceStage(extraClears: extraClears)
             return BattleAttackResult(
                 damageDealt: damageDealt,
                 coinsAwarded: rewards.coins,
                 crystalsAwarded: rewards.crystals,
-                skillBooksAwarded: rewards.skillBooks
+                skillBooksAwarded: rewards.skillBooks,
+                stagesCleared: rewards.stagesCleared,
+                isCriticalHit: isCriticalHit,
+                extraStagesCleared: extraClears
             )
         } else {
             saveProgress()
-            return BattleAttackResult(damageDealt: damageDealt)
+            return BattleAttackResult(
+                damageDealt: damageDealt,
+                isCriticalHit: isCriticalHit
+            )
         }
     }
 
-    private func advanceStage() -> StageRewards {
+    private func advanceStage(extraClears: Int = 0) -> StageRewards {
+        let previousStage = stage
         let nextStage = stage + 1
         let skippedStages = rollStageSkipCount(from: nextStage)
-        let reachedStage = nextStage + skippedStages
+        let extraStages = max(extraClears, 0)
+        let reachedStage = nextStage + skippedStages + extraStages
         let stageDropMultiplier = 1.0 + Double(reachedStage) * 0.015
         let earnedCoins = Int(
             (Double(28 + reachedStage * 4)
                 * stageDropMultiplier
                 * (1.0 + skillBonus(for: .coinDrop))
-                * (1.0 + Double(skippedStages) * 0.65)).rounded()
+                * (1.0 + Double(skippedStages + extraStages) * 0.65)).rounded()
         )
         let bossStagesCleared = (nextStage...reachedStage)
             .filter { $0.isMultiple(of: 10) }
@@ -451,19 +481,45 @@ final class GameProgressStore {
         stage = reachedStage
         coins += earnedCoins
         skillBooks += earnedSkillBooks
-        addAccountXP(12 + reachedStage * 2 + skippedStages * 5)
+        addAccountXP(12 + reachedStage * 2 + (skippedStages + extraStages) * 5)
         maxStageHP = Self.maxHP(for: reachedStage, accountLevel: accountLevel)
         stageHP = maxStageHP
 
         crystals += earnedCrystals
-        addPassPoints((bossStagesCleared > 0 ? 30 : 10) + skippedStages * 10)
+        addPassPoints(
+            (bossStagesCleared > 0 ? 30 : 10)
+                + (skippedStages + extraStages) * 10
+        )
 
         saveProgress()
         return StageRewards(
             coins: earnedCoins,
             crystals: earnedCrystals,
-            skillBooks: earnedSkillBooks
+            skillBooks: earnedSkillBooks,
+            stagesCleared: reachedStage - previousStage
         )
+    }
+
+    private var criticalDamageMultiplier: Double {
+        max(1.5, 1.5 + skillBonus(for: .critDamage))
+    }
+
+    private func rollCriticalHit() -> Bool {
+        let chance = min(skillBonus(for: .critChance), 0.65)
+        return chance > 0 && Double.random(in: 0..<1) < chance
+    }
+
+    private func rollMultiHitClearCount() -> Int {
+        let chance = min(skillBonus(for: .multiHitChance), 0.5)
+        guard chance > 0, Double.random(in: 0..<1) < chance else {
+            return 0
+        }
+
+        let maxExtraClears = max(
+            1,
+            Int(skillBonus(for: .multiHitCount).rounded(.down))
+        )
+        return Int.random(in: 1...min(maxExtraClears, 4))
     }
 
     private func rollStageSkipCount(from nextStage: Int) -> Int {
@@ -743,6 +799,14 @@ final class GameProgressStore {
 
     func addPurchasedCrystals(_ amount: Int) {
         crystals += max(amount, 0)
+        saveProgress()
+    }
+
+    func addPurchasedResources(_ rewards: [TradeResourceAmount]) {
+        for reward in rewards where reward.resource != .eventChip {
+            change(reward.resource, by: reward.amount)
+        }
+
         saveProgress()
     }
 
@@ -1868,6 +1932,9 @@ struct BattleAttackResult {
     var skillBooksAwarded = 0
     var eventChipsAwarded = 0
     var eventChipImageName: String?
+    var stagesCleared = 0
+    var isCriticalHit = false
+    var extraStagesCleared = 0
 }
 
 struct BattleActiveSkill: Identifiable, Equatable {
@@ -1886,6 +1953,7 @@ private struct StageRewards {
     let coins: Int
     let crystals: Int
     let skillBooks: Int
+    let stagesCleared: Int
 }
 
 struct SummonResult: Identifiable {

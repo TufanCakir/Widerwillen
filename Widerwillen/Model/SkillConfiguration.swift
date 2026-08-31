@@ -64,6 +64,11 @@ enum SkillEffect: String, Codable {
     case damage
     case tapDamage
     case attackSpeed
+    case tapSpeed
+    case critChance
+    case critDamage
+    case multiHitChance
+    case multiHitCount
     case shadowCloneDamage
     case coinDrop
     case dropChance

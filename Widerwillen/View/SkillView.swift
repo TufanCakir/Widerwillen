@@ -245,6 +245,21 @@ struct SkillView: View {
         case .tapDamage:
             return "+\(percent)% tap damage per level"
 
+        case .tapSpeed:
+            return "+\(percent)% tap speed per level"
+
+        case .critChance:
+            return "+\(percent)% critical chance per level"
+
+        case .critDamage:
+            return "+\(percent)% critical damage per level"
+
+        case .multiHitChance:
+            return "+\(percent)% multi-stage chance per level"
+
+        case .multiHitCount:
+            return "+\(skill.valuePerLevel) max multi-stage clears per level"
+
         case .shadowCloneDamage:
             return "+\(percent)% Shadow Clone damage per level"
 

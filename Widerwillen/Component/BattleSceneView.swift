@@ -43,6 +43,7 @@ struct BattleSceneView: View {
     @State private var cardCooldownEndDates: [String: Date] = [:]
     @State private var skillCooldownEndDates: [String: Date] = [:]
     @State private var cooldownClockDate = Date()
+    @State private var lastTapAttackDate = Date.distantPast
     @AppStorage("isLayerAnimationEnabled") private var isLayerAnimationEnabled =
         true
 
@@ -131,6 +132,12 @@ struct BattleSceneView: View {
                 )
 
                 SpriteView(scene: scene, options: [.allowsTransparency])
+
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        performTapAttack(in: viewSize)
+                    }
 
                 BattleHUD(
                     progress: progress,
@@ -305,6 +312,20 @@ struct BattleSceneView: View {
         }
     }
 
+    private func performTapAttack(in viewSize: CGSize) {
+        let now = Date()
+        guard
+            now.timeIntervalSince(lastTapAttackDate)
+                >= progress.tapCooldownSeconds
+        else {
+            return
+        }
+
+        lastTapAttackDate = now
+        scene.playHeroAttackAnimation(move: .punch)
+        performAttack(onTapAttack(), in: viewSize)
+    }
+
     private func runActiveSkill(_ skill: BattleActiveSkill) async {
         let duration = max(skill.durationSeconds, 0.1)
         let interval = max(skill.tickIntervalSeconds, 0.15)
@@ -372,11 +393,23 @@ struct BattleSceneView: View {
         guard result.damageDealt > 0 else { return }
 
         addPopup(
-            text: "-\(result.damageDealt)",
-            color: .white,
+            text: result.isCriticalHit
+                ? "CRIT -\(result.damageDealt)"
+                : "-\(result.damageDealt)",
+            color: result.isCriticalHit ? .yellow : .white,
             xRatio: Double.random(in: 0.34...0.66),
             yRatio: Double.random(in: 0.36...0.52)
         )
+
+        if result.extraStagesCleared > 0 {
+            addPopup(
+                text: "+\(result.extraStagesCleared) Stages",
+                color: .systemTeal,
+                xRatio: 0.5,
+                yRatio: 0.62,
+                imageName: "icon_pixel_dimension_rift"
+            )
+        }
 
         if result.coinsAwarded > 0 {
             addRewardPopups(

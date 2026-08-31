@@ -169,6 +169,10 @@ struct ShopView: View {
         }
     }
 
+    private func resourcePacks(in categoryID: String) -> [ResourcePack] {
+        shopConfiguration.resourcePacks.filter { $0.category == categoryID }
+    }
+
     private func passes(in categoryID: String) -> [BattlePassDefinition] {
         passConfiguration.passes.filter {
             ($0.category ?? "passes") == categoryID
@@ -186,6 +190,7 @@ struct ShopView: View {
     private func shopPage(for categoryID: String) -> some View {
         let passes = passes(in: categoryID)
         let crystalPacks = crystalPacks(in: categoryID)
+        let resourcePacks = resourcePacks(in: categoryID)
         let characterPacks = characterPacks(in: categoryID)
 
         return ScrollView {
@@ -198,12 +203,17 @@ struct ShopView: View {
                     crystalPackCard(pack)
                 }
 
+                ForEach(resourcePacks) { pack in
+                    resourcePackCard(pack)
+                }
+
                 ForEach(characterPacks) { pack in
                     characterPackCard(pack)
                 }
 
                 if passes.isEmpty
                     && crystalPacks.isEmpty
+                    && resourcePacks.isEmpty
                     && characterPacks.isEmpty
                 {
                     Text("No offers")
@@ -346,6 +356,44 @@ struct ShopView: View {
             buyButton(title: store.displayPrice(for: pack.productID)) {
                 Task {
                     await buyCrystalPack(pack)
+                }
+            }
+        }
+        .shopCardStyle()
+    }
+
+    private func resourcePackCard(_ pack: ResourcePack) -> some View {
+        HStack(spacing: 14) {
+            RemoteImage(name: pack.imageName)
+                .frame(width: 54, height: 54)
+                .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+
+            VStack(alignment: .leading, spacing: 5) {
+                Text(pack.title)
+                    .widerwillenFont(size: 18, weight: .heavy)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
+
+                if let subtitle = pack.subtitle {
+                    Text(subtitle)
+                        .widerwillenFont(size: 12, weight: .bold)
+                        .opacity(0.74)
+                }
+
+                ResourceAmountRow(
+                    amounts: pack.rewards,
+                    prefix: "+",
+                    color: .white
+                )
+
+                limitedText(pack.limitedUntil)
+            }
+
+            Spacer()
+
+            buyButton(title: store.displayPrice(for: pack.productID)) {
+                Task {
+                    await buyResourcePack(pack)
                 }
             }
         }
@@ -563,6 +611,13 @@ struct ShopView: View {
         if await store.purchase(productID: pack.productID) {
             progress.addPurchasedCrystals(pack.totalCrystals)
             showMessage("+\(pack.totalCrystals) crystals")
+        }
+    }
+
+    private func buyResourcePack(_ pack: ResourcePack) async {
+        if await store.purchase(productID: pack.productID) {
+            progress.addPurchasedResources(pack.rewards)
+            showMessage("Pack claimed")
         }
     }
 

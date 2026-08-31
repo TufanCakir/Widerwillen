@@ -10,15 +10,18 @@ import Foundation
 struct ShopConfiguration: Decodable {
     let categories: [ShopCategory]
     let crystalPacks: [CrystalPack]
+    let resourcePacks: [ResourcePack]
     let characterPacks: [CharacterPack]
 
     init(
         categories: [ShopCategory] = [],
         crystalPacks: [CrystalPack],
+        resourcePacks: [ResourcePack] = [],
         characterPacks: [CharacterPack] = []
     ) {
         self.categories = categories
         self.crystalPacks = crystalPacks
+        self.resourcePacks = resourcePacks
         self.characterPacks = characterPacks
     }
 
@@ -29,7 +32,9 @@ struct ShopConfiguration: Decodable {
     }
 
     var allProductIDs: [String] {
-        crystalPacks.map(\.productID) + characterPacks.map(\.productID)
+        crystalPacks.map(\.productID)
+            + resourcePacks.map(\.productID)
+            + characterPacks.map(\.productID)
     }
 }
 
@@ -54,6 +59,18 @@ struct CrystalPack: Decodable, Identifiable {
     var totalCrystals: Int {
         crystalAmount + bonusCrystals
     }
+}
+
+struct ResourcePack: Decodable, Identifiable {
+    let id: String
+    let category: String
+    let purchaseType: ShopPurchaseType
+    let productID: String
+    let title: String
+    let subtitle: String?
+    let imageName: String
+    let rewards: [TradeResourceAmount]
+    let limitedUntil: String?
 }
 
 struct CharacterPack: Decodable, Identifiable {

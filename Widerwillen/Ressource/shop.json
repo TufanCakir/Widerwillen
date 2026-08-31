@@ -11,6 +11,16 @@
             "imageName": "icon_pixel_crystal"
         },
         {
+            "id": "relics",
+            "title": "Relics",
+            "imageName": "icon_pixel_relic"
+        },
+        {
+            "id": "skill_books",
+            "title": "Skill Books",
+            "imageName": "icon_pixel_skill_book"
+        },
+        {
             "id": "special",
             "title": "Special",
             "imageName": "icon_pixel_box"
@@ -23,6 +33,18 @@
     ],
     "crystalPacks": [
         {
+            "id": "crystals_50",
+            "category": "crystals",
+            "purchaseType": "consumable",
+            "productID": "com.tufancakir.widerwillen.crystals.50",
+            "title": "50 Crystals",
+            "subtitle": "Tiny pack",
+            "crystalAmount": 50,
+            "bonusCrystals": 0,
+            "imageName": "icon_pixel_crystal",
+            "limitedUntil": null
+        },
+        {
             "id": "crystals_100",
             "category": "crystals",
             "purchaseType": "consumable",
@@ -30,6 +52,30 @@
             "title": "100 Crystals",
             "subtitle": "Small pack",
             "crystalAmount": 100,
+            "bonusCrystals": 0,
+            "imageName": "icon_pixel_crystal",
+            "limitedUntil": null
+        },
+        {
+            "id": "crystals_200",
+            "category": "crystals",
+            "purchaseType": "consumable",
+            "productID": "com.tufancakir.widerwillen.crystals.200",
+            "title": "200 Crystals",
+            "subtitle": "Starter pack",
+            "crystalAmount": 200,
+            "bonusCrystals": 0,
+            "imageName": "icon_pixel_crystal",
+            "limitedUntil": null
+        },
+        {
+            "id": "crystals_400",
+            "category": "crystals",
+            "purchaseType": "consumable",
+            "productID": "com.tufancakir.widerwillen.crystals.400",
+            "title": "400 Crystals",
+            "subtitle": "Extra pack",
+            "crystalAmount": 400,
             "bonusCrystals": 0,
             "imageName": "icon_pixel_crystal",
             "limitedUntil": null
@@ -69,6 +115,104 @@
             "bonusCrystals": 600,
             "imageName": "icon_pixel_crystal",
             "limitedUntil": "31.08.2026"
+        }
+    ],
+    "resourcePacks": [
+        {
+            "id": "relics_50",
+            "category": "relics",
+            "purchaseType": "consumable",
+            "productID": "com.tufancakir.widerwillen.relics.50",
+            "title": "Small Relic Pack",
+            "subtitle": "50 relics",
+            "imageName": "icon_pixel_relic",
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 50
+                }
+            ],
+            "limitedUntil": null
+        },
+        {
+            "id": "relics_100",
+            "category": "relics",
+            "purchaseType": "consumable",
+            "productID": "com.tufancakir.widerwillen.relics.100",
+            "title": "Medium Relic Pack",
+            "subtitle": "100 relics",
+            "imageName": "icon_pixel_relic",
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 100
+                }
+            ],
+            "limitedUntil": null
+        },
+        {
+            "id": "relics_300",
+            "category": "relics",
+            "purchaseType": "consumable",
+            "productID": "com.tufancakir.widerwillen.relics.300",
+            "title": "Big Relic Pack",
+            "subtitle": "300 relics",
+            "imageName": "icon_pixel_relic",
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 300
+                }
+            ],
+            "limitedUntil": null
+        },
+        {
+            "id": "skill_books_25",
+            "category": "skill_books",
+            "purchaseType": "consumable",
+            "productID": "com.tufancakir.widerwillen.skillbooks.25",
+            "title": "Small Skill Book Pack",
+            "subtitle": "25 skill books",
+            "imageName": "icon_pixel_skill_book",
+            "rewards": [
+                {
+                    "resource": "skill_books",
+                    "amount": 25
+                }
+            ],
+            "limitedUntil": null
+        },
+        {
+            "id": "skill_books_70",
+            "category": "skill_books",
+            "purchaseType": "consumable",
+            "productID": "com.tufancakir.widerwillen.skillbooks.70",
+            "title": "Medium Skill Book Pack",
+            "subtitle": "70 skill books",
+            "imageName": "icon_pixel_skill_book",
+            "rewards": [
+                {
+                    "resource": "skill_books",
+                    "amount": 75
+                }
+            ],
+            "limitedUntil": null
+        },
+        {
+            "id": "skill_books_200",
+            "category": "skill_books",
+            "purchaseType": "consumable",
+            "productID": "com.tufancakir.widerwillen.skillbooks.200",
+            "title": "Big Skill Book Pack",
+            "subtitle": "200 skill books",
+            "imageName": "icon_pixel_skill_book",
+            "rewards": [
+                {
+                    "resource": "skill_books",
+                    "amount": 200
+                }
+            ],
+            "limitedUntil": null
         }
     ],
     "characterPacks": [

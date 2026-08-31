@@ -49,6 +49,39 @@
             "requiredAccountLevel": 12
         },
         {
+            "id": "tap_rapid_strike",
+            "title": "Rapid Strike",
+            "category": "Tap",
+            "imageName": "icon_pixel_sword",
+            "effect": "tapSpeed",
+            "valuePerLevel": 0.025,
+            "cost": 2,
+            "maxLevel": 20,
+            "requiredAccountLevel": 14
+        },
+        {
+            "id": "tap_crit_chance",
+            "title": "Sharp Focus",
+            "category": "Tap",
+            "imageName": "icon_pixel_dimension_break",
+            "effect": "critChance",
+            "valuePerLevel": 0.012,
+            "cost": 3,
+            "maxLevel": 25,
+            "requiredAccountLevel": 16
+        },
+        {
+            "id": "tap_crit_damage",
+            "title": "Critical Break",
+            "category": "Tap",
+            "imageName": "icon_pixel_big_sword",
+            "effect": "critDamage",
+            "valuePerLevel": 0.06,
+            "cost": 4,
+            "maxLevel": 25,
+            "requiredAccountLevel": 18
+        },
+        {
             "id": "shadow_clone_active",
             "title": "Shadow Clone",
             "category": "Shadow",
@@ -90,6 +123,28 @@
             "requiredAccountLevel": 24
         },
         {
+            "id": "shadow_clone_crit",
+            "title": "Shadow Edge",
+            "category": "Shadow",
+            "imageName": "icon_pixel_shadow_clone",
+            "effect": "critChance",
+            "valuePerLevel": 0.008,
+            "cost": 4,
+            "maxLevel": 20,
+            "requiredAccountLevel": 26
+        },
+        {
+            "id": "shadow_clone_impact",
+            "title": "Twin Impact",
+            "category": "Shadow",
+            "imageName": "icon_pixel_skill_shadow_clone_speed",
+            "effect": "critDamage",
+            "valuePerLevel": 0.04,
+            "cost": 4,
+            "maxLevel": 20,
+            "requiredAccountLevel": 28
+        },
+        {
             "id": "alchemist_coin_drop",
             "title": "Coin Rain",
             "category": "Alchemist",
@@ -123,6 +178,17 @@
             "requiredAccountLevel": 35
         },
         {
+            "id": "alchemist_skill_books",
+            "title": "Skill Formula",
+            "category": "Alchemist",
+            "imageName": "icon_pixel_skill_book",
+            "effect": "dropChance",
+            "valuePerLevel": 0.008,
+            "cost": 4,
+            "maxLevel": 20,
+            "requiredAccountLevel": 36
+        },
+        {
             "id": "dimension_stage_skip",
             "title": "Stage Rift",
             "category": "Dimension",
@@ -132,6 +198,28 @@
             "cost": 5,
             "maxLevel": 20,
             "requiredAccountLevel": 40
+        },
+        {
+            "id": "dimension_multi_hit_chance",
+            "title": "Chain Rift",
+            "category": "Dimension",
+            "imageName": "icon_pixel_dimension_rift",
+            "effect": "multiHitChance",
+            "valuePerLevel": 0.01,
+            "cost": 6,
+            "maxLevel": 25,
+            "requiredAccountLevel": 41
+        },
+        {
+            "id": "dimension_multi_hit_count",
+            "title": "Rift Cascade",
+            "category": "Dimension",
+            "imageName": "icon_pixel_dimension_fold",
+            "effect": "multiHitCount",
+            "valuePerLevel": 0.12,
+            "cost": 7,
+            "maxLevel": 25,
+            "requiredAccountLevel": 43
         },
         {
             "id": "dimension_cooldown_rift",

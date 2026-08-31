@@ -76,7 +76,16 @@ struct BattleCardBar: View {
     }
 
     private func isBattleCardUnlocked(_ card: BattleCardDefinition) -> Bool {
-        progress.accountLevel >= card.requiredAccountLevel
+        guard progress.accountLevel >= card.requiredAccountLevel else {
+            return false
+        }
+
+        guard let requiredSkillID = card.requiredSkillID else {
+            return true
+        }
+
+        return progress.skillLevel(forSkillID: requiredSkillID)
+            >= card.requiredSkillLevel
     }
 
     private func lockText(for card: BattleCardDefinition) -> String? {
@@ -84,7 +93,15 @@ struct BattleCardBar: View {
             return nil
         }
 
-        return "LV \(card.requiredAccountLevel)"
+        if progress.accountLevel < card.requiredAccountLevel {
+            return "LV \(card.requiredAccountLevel)"
+        }
+
+        if card.requiredSkillID != nil {
+            return "SKILL \(max(card.requiredSkillLevel, 1))"
+        }
+
+        return "LOCKED"
     }
 
     private func cardDefinition(for id: String) -> BattleCardDefinition? {

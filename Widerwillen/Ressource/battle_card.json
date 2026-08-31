@@ -134,6 +134,57 @@
             "requiredAccountLevel": 1
         },
         {
+            "id": "critical_uppercut",
+            "title": "Critical Upper",
+            "move": "uppercut",
+            "style": "Critical",
+            "imageName": "icon_pixel_dimension_break",
+            "cooldownSeconds": 4.6,
+            "staminaCost": 14,
+            "damageMultiplier": 2.75,
+            "gradientColors": [
+                "#1b1830",
+                "#ffd84a"
+            ],
+            "requiredSkillID": "tap_crit_chance",
+            "requiredSkillLevel": 1,
+            "requiredAccountLevel": 1
+        },
+        {
+            "id": "shadow_barrage",
+            "title": "Shadow Barrage",
+            "move": "phantomSlash",
+            "style": "Shadow",
+            "imageName": "icon_pixel_shadow_clone",
+            "cooldownSeconds": 7.2,
+            "staminaCost": 20,
+            "damageMultiplier": 3.45,
+            "gradientColors": [
+                "#0b061f",
+                "#635bff"
+            ],
+            "requiredSkillID": "shadow_clone_impact",
+            "requiredSkillLevel": 1,
+            "requiredAccountLevel": 1
+        },
+        {
+            "id": "rift_chain",
+            "title": "Rift Chain",
+            "move": "tornado",
+            "style": "Multi",
+            "imageName": "icon_pixel_dimension_rift",
+            "cooldownSeconds": 7.8,
+            "staminaCost": 22,
+            "damageMultiplier": 3.55,
+            "gradientColors": [
+                "#07142a",
+                "#38f2ff"
+            ],
+            "requiredSkillID": "dimension_multi_hit_chance",
+            "requiredSkillLevel": 1,
+            "requiredAccountLevel": 1
+        },
+        {
             "id": "meteor_kick",
             "title": "Meteor Kick",
             "move": "meteorKick",
