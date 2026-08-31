@@ -28,7 +28,7 @@
                 "#1d9bff"
             ],
             "requiredSkillID": "tap_focus_damage",
-            "requiredSkillLevel": 1,
+            "requiredSkillLevel": 0,
             "requiredAccountLevel": 1
         },
         {
@@ -45,7 +45,7 @@
                 "#6fb8ff"
             ],
             "requiredSkillID": "tap_lucky_drop",
-            "requiredSkillLevel": 1,
+            "requiredSkillLevel": 0,
             "requiredAccountLevel": 1
         },
         {
@@ -62,7 +62,7 @@
                 "#ffcf70"
             ],
             "requiredSkillID": "shadow_clone_duration",
-            "requiredSkillLevel": 1,
+            "requiredSkillLevel": 0,
             "requiredAccountLevel": 1
         },
         {
@@ -79,7 +79,7 @@
                 "#ff5bd8"
             ],
             "requiredSkillID": "dimension_stage_skip",
-            "requiredSkillLevel": 1,
+            "requiredSkillLevel": 0,
             "requiredAccountLevel": 1
         },
         {
@@ -96,7 +96,7 @@
                 "#33d4ff"
             ],
             "requiredSkillID": "dimension_total_damage",
-            "requiredSkillLevel": 1,
+            "requiredSkillLevel": 0,
             "requiredAccountLevel": 1
         },
         {
@@ -113,7 +113,7 @@
                 "#8fd8ff"
             ],
             "requiredSkillID": "tap_focus_damage",
-            "requiredSkillLevel": 1,
+            "requiredSkillLevel": 0,
             "requiredAccountLevel": 1
         },
         {
@@ -130,7 +130,7 @@
                 "#4c2bff"
             ],
             "requiredSkillID": "shadow_clone_active",
-            "requiredSkillLevel": 1,
+            "requiredSkillLevel": 0,
             "requiredAccountLevel": 1
         },
         {
@@ -147,7 +147,7 @@
                 "#ffd84a"
             ],
             "requiredSkillID": "tap_crit_chance",
-            "requiredSkillLevel": 1,
+            "requiredSkillLevel": 0,
             "requiredAccountLevel": 1
         },
         {
@@ -164,7 +164,7 @@
                 "#635bff"
             ],
             "requiredSkillID": "shadow_clone_impact",
-            "requiredSkillLevel": 1,
+            "requiredSkillLevel": 0,
             "requiredAccountLevel": 1
         },
         {
@@ -181,7 +181,7 @@
                 "#38f2ff"
             ],
             "requiredSkillID": "dimension_multi_hit_chance",
-            "requiredSkillLevel": 1,
+            "requiredSkillLevel": 0,
             "requiredAccountLevel": 1
         },
         {
@@ -198,7 +198,7 @@
                 "#ffb12f"
             ],
             "requiredSkillID": "dimension_stage_skip",
-            "requiredSkillLevel": 1,
+            "requiredSkillLevel": 0,
             "requiredAccountLevel": 1
         },
         {
@@ -215,7 +215,7 @@
                 "#d9f7ff"
             ],
             "requiredSkillID": "dimension_total_damage",
-            "requiredSkillLevel": 1,
+            "requiredSkillLevel": 0,
             "requiredAccountLevel": 1
         },
         {
@@ -232,7 +232,7 @@
                 "#3d1cff"
             ],
             "requiredSkillID": "shadow_clone_active",
-            "requiredSkillLevel": 1,
+            "requiredSkillLevel": 0,
             "requiredAccountLevel": 1
         }
     ]
