@@ -2157,7 +2157,7 @@ final class SpriteAnimationScene: SKScene {
             .run { [weak self, weak node] in
                 guard let self, let node else { return }
                 self.resetRigPose(in: node)
-                self.configureEquippedWeapon(on: node, isVisible: true)
+                self.configureWeaponAfterAttack(on: node)
             },
         ])
 
@@ -2172,6 +2172,14 @@ final class SpriteAnimationScene: SKScene {
             ]),
             withKey: resumeKey
         )
+    }
+
+    private func configureWeaponAfterAttack(on node: SKNode) {
+        if node === shadowCloneNode || node.name == "shadowClone" {
+            configureShadowCloneWeapon(on: node, isVisible: true)
+        } else {
+            configureEquippedWeapon(on: node, isVisible: true)
+        }
     }
 
     private func emitMoveParticles(

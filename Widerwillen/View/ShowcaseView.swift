@@ -229,13 +229,7 @@ struct ShowcaseView: View {
             .padding(.horizontal, 10)
             .padding(.bottom, 10)
         }
-        .background(.black.opacity(0.44))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.14), lineWidth: 1)
-        )
-    }
+          }
 
     private func showcaseMoveButton(_ move: BattleCardMove) -> some View {
         let isSelected = selectedMove == move
@@ -243,48 +237,15 @@ struct ShowcaseView: View {
         return Button {
             playMove(move)
         } label: {
-            VStack(spacing: 5) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 7)
-                        .fill(
-                            isSelected
-                                ? Color.white.opacity(0.22)
-                                : Color.white.opacity(0.08)
-                        )
-
-                    RemoteImage(
-                        name: imageName(for: move),
-                        placeholderColor: .white.opacity(0.08),
-                        fallbackSystemImage: "sparkles"
-                    )
-                    .frame(width: 32, height: 32)
-                }
-                .frame(width: 52, height: 42)
-
-                Text(move.showcaseTitle)
-                    .font(.system(size: 10, weight: .heavy))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.72)
-                    .frame(width: 68)
-            }
-            .foregroundStyle(.white)
-            .padding(.vertical, 7)
-            .padding(.horizontal, 5)
-            .background(
-                isSelected
-                    ? Color.white.opacity(0.14)
-                    : Color.clear
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(
-                        isSelected
-                            ? Color.white.opacity(0.44)
-                            : Color.white.opacity(0.08),
-                        lineWidth: 1
-                    )
-            )
+            Text(move.showcaseTitle)
+                .font(.system(size: 13, weight: .heavy))
+                .foregroundStyle(
+                    .white.opacity(isSelected ? 1.0 : 0.45)
+                )
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
         }
         .buttonStyle(.plain)
     }

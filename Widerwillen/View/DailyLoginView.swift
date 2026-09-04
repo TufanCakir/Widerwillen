@@ -39,35 +39,21 @@ struct DailyLoginView: View {
     }
 
     var body: some View {
+        if isCompactPresentation {
+            compactBody
+        } else {
+            fullBody
+        }
+    }
+
+    private var fullBody: some View {
         ZStack {
-            if !isCompactPresentation {
-                AppBackground()
-            }
+            AppBackground()
 
             VStack(spacing: 12) {
                 ZStack(alignment: .topTrailing) {
-                    if isCompactPresentation {
-                        Text(
-                            localizer.text(
-                                "daily_login.title",
-                                fallback: "Daily Login"
-                            )
-                        )
-                        .widerwillenFont(size: 22, weight: .heavy)
-                        .foregroundStyle(.white)
-                        .shadow(
-                            color: .black.opacity(0.9),
-                            radius: 3,
-                            x: 0,
-                            y: 0
-                        )
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 14)
-                        .padding(.top, 14)
-                    } else {
-                        GameHeader(progress: progress)
-                            .padding(.top, 18)
-                    }
+                    GameHeader(progress: progress)
+                        .padding(.top, 18)
 
                     if let onClose {
                         Button {
@@ -88,8 +74,8 @@ struct DailyLoginView: View {
                                 )
                         }
                         .buttonStyle(.plain)
-                        .padding(.top, isCompactPresentation ? 12 : 50)
-                        .padding(.trailing, isCompactPresentation ? 12 : 18)
+                        .padding(.top, 50)
+                        .padding(.trailing, 18)
                     }
                 }
 
@@ -111,9 +97,54 @@ struct DailyLoginView: View {
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .frame(maxHeight: isCompactPresentation ? 360 : .infinity)
             }
         }
+    }
+
+    private var compactBody: some View {
+        VStack(spacing: 10) {
+            HStack(spacing: 10) {
+                Text(localizer.text("daily_login.title", fallback: "Daily Login"))
+                    .widerwillenFont(size: 20, weight: .heavy)
+                    .foregroundStyle(.white)
+                    .shadow(color: .black.opacity(0.9), radius: 3)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                if let onClose {
+                    Button {
+                        playSoundEffect("ui_back")
+                        onClose()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 13, weight: .heavy))
+                            .foregroundStyle(.white)
+                            .frame(width: 34, height: 34)
+                            .background(.black.opacity(0.58))
+                            .clipShape(Circle())
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal, 14)
+            .padding(.top, 14)
+
+            if !message.isEmpty {
+                statusText(message)
+                    .frame(height: 20)
+            }
+
+            HStack(alignment: .top, spacing: 8) {
+                compactLoginTabs
+
+                compactLoginPage
+            }
+            .padding(.horizontal, 10)
+            .padding(.bottom, 12)
+        }
+        .background {
+            compactPopupBackground
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 
     private var loginIDs: [String] {
@@ -127,6 +158,13 @@ struct DailyLoginView: View {
                 spacing: isCompactPresentation ? 6 : 8
             )
         ]
+    }
+
+    private var compactColumns: [GridItem] {
+        Array(
+            repeating: GridItem(.flexible(), spacing: 8),
+            count: 3
+        )
     }
 
     private var localizer: AppLocalizer {
@@ -158,6 +196,104 @@ struct DailyLoginView: View {
             .padding(.horizontal, isCompactPresentation ? 8 : 12)
             .padding(.bottom, isCompactPresentation ? 14 : 110)
         }
+    }
+
+    private var selectedLogin: DailyLoginCampaign? {
+        configuration.logins.first { $0.id == selectedLoginID }
+            ?? configuration.logins.first
+    }
+
+    private var compactPopupBackground: some View {
+        ZStack {
+            if let selectedLogin {
+                RemoteImage(name: selectedLogin.backgroundImageName, contentMode: .fill)
+                    .opacity(0.52)
+            }
+
+            LinearGradient(
+                colors: [
+                    .black.opacity(0.58),
+                    .black.opacity(0.22),
+                    .black.opacity(0.64)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        }
+    }
+
+    private var compactLoginTabs: some View {
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(spacing: 8) {
+                ForEach(configuration.logins) { login in
+                    compactLoginTab(login)
+                }
+            }
+            .padding(.vertical, 2)
+        }
+        .frame(width: 92)
+    }
+
+    private func compactLoginTab(_ login: DailyLoginCampaign) -> some View {
+        let isSelected = selectedLoginID == login.id
+        let canClaim = progress.canClaimDailyLogin(for: login)
+
+        return Button {
+            playSoundEffect("ui_select")
+            withAnimation(.snappy(duration: 0.18)) {
+                selectedLoginID = login.id
+            }
+        } label: {
+            VStack(spacing: 5) {
+                Text(localizedTitle(login))
+                    .widerwillenFont(size: 9, weight: .heavy)
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
+                    .minimumScaleFactor(0.62)
+                    .frame(width: 74, height: 28)
+
+                if canClaim {
+                    Text(localizer.text("daily_login.ready", fallback: "Ready"))
+                        .widerwillenFont(size: 8, weight: .heavy)
+                        .foregroundStyle(.black)
+                        .padding(.horizontal, 7)
+                        .frame(height: 18)
+                        .background(.white)
+                        .clipShape(Capsule())
+                }
+            }
+            .frame(width: 86, height: 68)
+            .background(isSelected ? .blue.opacity(0.48) : .black.opacity(0.42))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(
+                        isSelected ? .white.opacity(0.92) : .blue.opacity(0.72),
+                        lineWidth: isSelected ? 2 : 1
+                    )
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .shadow(color: .black.opacity(0.65), radius: 3, y: 2)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var compactLoginPage: some View {
+        ScrollView {
+            if let selectedLogin {
+                LazyVGrid(columns: compactColumns, spacing: 8) {
+                    ForEach(selectedLogin.rewards.sorted { $0.day < $1.day }) {
+                        reward in
+                        compactRewardCard(reward, in: selectedLogin)
+                    }
+                }
+                .padding(.horizontal, 12)
+                .padding(.bottom, 16)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .background(.black.opacity(0.22))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 
     private func loginSection(_ login: DailyLoginCampaign) -> some View {
@@ -224,9 +360,7 @@ struct DailyLoginView: View {
         _ reward: DailyLoginReward,
         in login: DailyLoginCampaign
     ) -> some View {
-        let currentReward = progress.currentDailyLoginReward(
-            from: login.rewards
-        )
+        let currentReward = progress.currentDailyLoginReward(in: login)
         let isToday = currentReward?.day == reward.day
         let canClaim = isToday && progress.canClaimDailyLogin(for: login)
         let isClaimed = isToday && !progress.canClaimDailyLogin(for: login)
@@ -290,6 +424,69 @@ struct DailyLoginView: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(color: .black.opacity(0.78), radius: 5, x: 0, y: 3)
+        .opacity(isToday || progress.canClaimDailyLogin(for: login) ? 1 : 0.62)
+        .contentShape(RoundedRectangle(cornerRadius: 8))
+        .onTapGesture {
+            if canClaim {
+                playSoundEffect("ui_confirm")
+                claim(reward, in: login)
+            } else {
+                playSoundEffect("ui_tap")
+            }
+        }
+    }
+
+    private func compactRewardCard(
+        _ reward: DailyLoginReward,
+        in login: DailyLoginCampaign
+    ) -> some View {
+        let currentReward = progress.currentDailyLoginReward(in: login)
+        let isToday = currentReward?.day == reward.day
+        let canClaim = isToday && progress.canClaimDailyLogin(for: login)
+        let isClaimed = isToday && !progress.canClaimDailyLogin(for: login)
+        let firstReward = reward.rewards.first
+
+        return VStack(spacing: 5) {
+            Text("D\(reward.day)")
+                .widerwillenFont(size: 10, weight: .heavy)
+                .foregroundStyle(isClaimed ? .white.opacity(0.42) : .white)
+                .lineLimit(1)
+
+            RemoteImage(name: reward.imageName)
+                .frame(width: 24, height: 24)
+                .saturation(isClaimed ? 0 : 1)
+                .opacity(isClaimed ? 0.42 : 1)
+
+            if let firstReward {
+                AppResourceLabel(
+                    imageName: firstReward.imageName
+                        ?? firstReward.resource.imageName,
+                    value: firstReward.amount,
+                    prefix: "+",
+                    iconSize: 11,
+                    fontSize: 8,
+                    color: isClaimed ? .white.opacity(0.42) : .white
+                )
+            } else if let unlock = reward.unlocks.first {
+                Text(unlock.name)
+                    .widerwillenFont(size: 8, weight: .heavy)
+                    .foregroundStyle(isClaimed ? .white.opacity(0.42) : .white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 82)
+        .padding(.horizontal, 5)
+        .background(canClaim ? .blue.opacity(0.38) : .black.opacity(0.32))
+        .overlay {
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(
+                    canClaim ? .white.opacity(0.95) : .blue.opacity(0.72),
+                    lineWidth: canClaim ? 2 : 1
+                )
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 8))
         .opacity(isToday || progress.canClaimDailyLogin(for: login) ? 1 : 0.62)
         .contentShape(RoundedRectangle(cornerRadius: 8))
         .onTapGesture {

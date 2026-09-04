@@ -19,7 +19,7 @@ struct MenuView: View {
     @State private var isModePickerPresented = false
     @State private var isDailyLoginPopupPresented = false
     @State private var didEvaluateDailyLoginPopup = false
-    @State private var presentedPanel: MenuPanel?
+    @State private var selectedMenuPage: MenuPage = .home
     @State private var selectedShortcutIndex = 0
 
     init(
@@ -41,60 +41,11 @@ struct MenuView: View {
 
     var body: some View {
         ZStack {
-            VStack(spacing: 0) {
-                GameHeader(
-                    progress: progress
-                )
-
-                Spacer(minLength: 18)
-
-                VStack(spacing: 18) {
-                    nimbiCarouselStage
-
-                    Button {
-                        playSoundEffect("ui_select")
-                        isModePickerPresented = true
-                    } label: {
-                        Text("Start")
-                            .widerwillenFont(size: 26, weight: .bold)
-                            .foregroundStyle(.white)
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3
-                            )
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 60)
-                            .background {
-                                AppBackground()
-                            }
-                            .overlay {
-                                Capsule()
-                                    .stroke(.blue, lineWidth: 1)
-                            }
-                            .clipShape(Capsule())
-                    }
-                    .buttonStyle(.plain)
-                    .padding(.horizontal)
-
-                    shortcutPager
-                }
-                .frame(maxWidth: 420)
-
-                Spacer(minLength: 14)
-            }
-
-            if isModePickerPresented {
-                modePickerOverlay
-            }
-
+            menuPageContent
+            
             if isDailyLoginPopupPresented {
                 dailyLoginPopup
             }
-
-            if let presentedPanel {
-                embeddedMenuPanelOverlay(presentedPanel)
-            }
-
         }
         .background {
             AppBackground()
@@ -103,11 +54,11 @@ struct MenuView: View {
             showDailyLoginPopupIfNeeded()
         }
         .onChange(of: homeResetSignal) { _, _ in
-            presentedPanel = nil
+            selectedMenuPage = .home
             isModePickerPresented = false
         }
         .onChange(of: openBackgroundSignal) { _, _ in
-            presentedPanel = .backgrounds
+            selectedMenuPage = .backgrounds
             isModePickerPresented = false
         }
     }
@@ -138,21 +89,6 @@ struct MenuView: View {
                 .foregroundStyle(.white)
                 .shadow(color: .black.opacity(0.9), radius: 3)
         }
-    }
-
-    private var shortcuts: [MenuShortcut] {
-        [
-            MenuShortcut(title: "Showcase", assetImage: "icon_nimpi", mode: .showcase),
-            MenuShortcut(title: "Settings", assetImage: "icon_pixel_settings", panel: .settings),
-            MenuShortcut(title: "BG", assetImage: "widerwillen_logo", panel: .backgrounds),
-            MenuShortcut(title: "Skills", assetImage: "icon_pixel_skill_book", panel: .skills),
-            MenuShortcut(title: "News", assetImage: "icon_pixel_news", panel: .news),
-            MenuShortcut(title: "Giftbox", assetImage: "icon_pixel_giftbox", panel: .gift),
-            MenuShortcut(title: "Equipment", assetImage: "icon_pixel_sword", panel: .equipment),
-            MenuShortcut(title: "Warehouse", assetImage: "icon_pixel_box", panel: .warehouse),
-            MenuShortcut(title: "Pass", assetImage: "icon_pixel_pass", panel: .pass),
-            MenuShortcut(title: "Daily", assetImage: "icon_pixel_calendar", panel: .dailyLogin)
-        ]
     }
 
     private var shortcutPager: some View {
@@ -242,8 +178,8 @@ struct MenuView: View {
             return
         }
 
-        if let panel = shortcut.panel {
-            presentedPanel = panel
+        if let page = shortcut.page {
+            selectedMenuPage = page
         }
     }
 
@@ -302,69 +238,68 @@ struct MenuView: View {
         }
     }
 
-    private func embeddedMenuPanelOverlay(_ panel: MenuPanel) -> some View {
-        ZStack(alignment: .topTrailing) {
-            embeddedMenuPanelView(panel)
-                .frame(maxWidth: 390)
-                .frame(maxHeight: panel.windowHeight)
-                .background(.black.opacity(0.90))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(.blue.opacity(0.9), lineWidth: 1)
-                }
-                .shadow(color: .black.opacity(0.92), radius: 12, y: 7)
+    private var shortcuts: [MenuShortcut] {
+        [
+            MenuShortcut(
+                title: "Showcase",
+                assetImage: "icon_nimpi",
+                mode: .showcase
+            ),
 
-            Button {
-                playSoundEffect("ui_back")
-                withAnimation(.snappy(duration: 0.18)) {
-                    presentedPanel = nil
-                }
-            } label: {
-                Image(systemName: "xmark")
-                    .font(.system(size: 15, weight: .heavy))
-                    .foregroundStyle(.white)
-                    .frame(width: 38, height: 38)
-                    .background(.black.opacity(0.52))
-                    .clipShape(Circle())
-                    .overlay {
-                        Circle()
-                            .stroke(.white.opacity(0.16), lineWidth: 1)
-                    }
-            }
-            .buttonStyle(.plain)
-            .padding(.top, -12)
-            .padding(.trailing, -12)
-        }
-        .padding(.horizontal, 18)
-        .padding(.bottom, 122)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-        .transition(.opacity)
-        .zIndex(12)
-    }
+            MenuShortcut(
+                title: "Settings",
+                assetImage: "icon_pixel_settings",
+                page: .settings
+            ),
 
-    @ViewBuilder
-    private func embeddedMenuPanelView(_ panel: MenuPanel) -> some View {
-        switch panel {
-        case .backgrounds:
-            BackgroundView(progress: progress, playSoundEffect: playSoundEffect)
-        case .skills:
-            SkillView(progress: progress, playSoundEffect: playSoundEffect)
-        case .settings:
-            SettingsView(progress: progress, playSoundEffect: playSoundEffect)
-        case .news:
-            NewsView(playSoundEffect: playSoundEffect)
-        case .gift:
-            GiftView(progress: progress, playSoundEffect: playSoundEffect)
-        case .equipment:
-            EquipmentView(progress: progress, playSoundEffect: playSoundEffect)
-        case .warehouse:
-            warehouseView(progress: progress, playSoundEffect: playSoundEffect)
-        case .pass:
-            PassListView(progress: progress, playSoundEffect: playSoundEffect)
-        case .dailyLogin:
-            DailyLoginView(progress: progress, playSoundEffect: playSoundEffect)
-        }
+            MenuShortcut(
+                title: "BG",
+                assetImage: "widerwillen_logo",
+                page: .backgrounds
+            ),
+
+            MenuShortcut(
+                title: "Skills",
+                assetImage: "icon_pixel_skill_book",
+                page: .skills
+            ),
+
+            MenuShortcut(
+                title: "News",
+                assetImage: "icon_pixel_news",
+                page: .news
+            ),
+
+            MenuShortcut(
+                title: "Giftbox",
+                assetImage: "icon_pixel_giftbox",
+                page: .gift
+            ),
+
+            MenuShortcut(
+                title: "Equipment",
+                assetImage: "icon_pixel_sword",
+                page: .equipment
+            ),
+
+            MenuShortcut(
+                title: "Warehouse",
+                assetImage: "icon_pixel_box",
+                page: .warehouse
+            ),
+
+            MenuShortcut(
+                title: "Pass",
+                assetImage: "icon_pixel_pass",
+                page: .pass
+            ),
+
+            MenuShortcut(
+                title: "Daily",
+                assetImage: "icon_pixel_calendar",
+                page: .dailyLogin
+            )
+        ]
     }
 
     private var claimableDailyLogins: [DailyLoginCampaign] {
@@ -489,6 +424,115 @@ struct MenuView: View {
             isDailyLoginPopupPresented = true
         }
     }
+    
+    private var homeView: some View {
+        VStack(spacing: 0) {
+            GameHeader(
+                progress: progress
+            )
+
+            Spacer(minLength: 18)
+
+            VStack(spacing: 18) {
+                nimbiCarouselStage
+
+                Button {
+                    playSoundEffect("ui_select")
+                    isModePickerPresented = true
+                } label: {
+                    Text("Start")
+                        .widerwillenFont(size: 26, weight: .bold)
+                        .foregroundStyle(.white)
+                        .shadow(
+                            color: .black.opacity(0.9),
+                            radius: 3
+                        )
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 60)
+                        .background(.black.opacity(0.38))
+                        .overlay {
+                            Capsule()
+                                .stroke(.blue, lineWidth: 1)
+                        }
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal)
+
+                shortcutPager
+            }
+            .frame(maxWidth: 420)
+
+            Spacer(minLength: 14)
+        }
+        .overlay {
+            if isModePickerPresented {
+                modePickerOverlay
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var menuPageContent: some View {
+        switch selectedMenuPage {
+
+        case .home:
+            homeView
+
+        case .backgrounds:
+            BackgroundView(
+                progress: progress,
+                playSoundEffect: playSoundEffect
+            )
+
+        case .skills:
+            SkillView(
+                progress: progress,
+                playSoundEffect: playSoundEffect
+            )
+
+        case .settings:
+            SettingsView(
+                progress: progress,
+                playSoundEffect: playSoundEffect
+            )
+
+        case .news:
+            NewsView(
+                playSoundEffect: playSoundEffect
+            )
+
+        case .gift:
+            GiftView(
+                progress: progress,
+                playSoundEffect: playSoundEffect
+            )
+
+        case .equipment:
+            EquipmentView(
+                progress: progress,
+                playSoundEffect: playSoundEffect
+            )
+
+        case .warehouse:
+            warehouseView(
+                progress: progress,
+                playSoundEffect: playSoundEffect
+            )
+
+        case .pass:
+            PassListView(
+                progress: progress,
+                playSoundEffect: playSoundEffect
+            )
+
+        case .dailyLogin:
+            DailyLoginView(
+                progress: progress,
+                playSoundEffect: playSoundEffect
+            )
+        }
+    }
 }
 
 enum MenuMode {
@@ -505,7 +549,8 @@ enum MenuMode {
     case dailyLogin
 }
 
-private enum MenuPanel {
+private enum MenuPage {
+    case home
     case backgrounds
     case skills
     case settings
@@ -515,39 +560,28 @@ private enum MenuPanel {
     case warehouse
     case pass
     case dailyLogin
-
-    var windowHeight: CGFloat {
-        switch self {
-        case .settings:
-            600
-        case .backgrounds:
-            540
-        case .skills, .warehouse, .gift, .equipment, .pass, .dailyLogin:
-            650
-        case .news:
-            560
-        }
-    }
 }
 
 private struct MenuShortcut: Identifiable {
     let title: String
     let assetImage: String
     let mode: MenuMode?
-    let panel: MenuPanel?
+    let page: MenuPage?
 
-    var id: String { "\(title)-\(assetImage)" }
+    var id: String {
+        "\(title)-\(assetImage)"
+    }
 
     init(
         title: String,
         assetImage: String,
         mode: MenuMode? = nil,
-        panel: MenuPanel? = nil
+        page: MenuPage? = nil
     ) {
         self.title = title
         self.assetImage = assetImage
         self.mode = mode
-        self.panel = panel
+        self.page = page
     }
 }
 
@@ -559,7 +593,8 @@ private enum MenuShortcutPlacement {
     var scale: CGFloat {
         switch self {
         case .active:
-            1
+            1.0
+
         case .previous, .next:
             0.74
         }
@@ -569,8 +604,10 @@ private enum MenuShortcutPlacement {
         switch self {
         case .previous:
             -96
+
         case .active:
             0
+
         case .next:
             96
         }
@@ -580,6 +617,7 @@ private enum MenuShortcutPlacement {
         switch self {
         case .active:
             0
+
         case .previous, .next:
             20
         }
@@ -588,7 +626,8 @@ private enum MenuShortcutPlacement {
     var opacity: Double {
         switch self {
         case .active:
-            1
+            1.0
+
         case .previous, .next:
             0.66
         }
@@ -597,9 +636,10 @@ private enum MenuShortcutPlacement {
     var titleOpacity: Double {
         switch self {
         case .active:
-            1
+            1.0
+
         case .previous, .next:
-            0
+            0.0
         }
     }
 
@@ -607,6 +647,7 @@ private enum MenuShortcutPlacement {
         switch self {
         case .active:
             62
+
         case .previous, .next:
             54
         }
@@ -616,6 +657,7 @@ private enum MenuShortcutPlacement {
         switch self {
         case .active:
             34
+
         case .previous, .next:
             30
         }
@@ -625,12 +667,15 @@ private enum MenuShortcutPlacement {
         switch self {
         case .active:
             3
+
         case .previous, .next:
             1
         }
     }
 
-    var isInteractive: Bool { true }
+    var isInteractive: Bool {
+        true
+    }
 }
 
 #Preview {

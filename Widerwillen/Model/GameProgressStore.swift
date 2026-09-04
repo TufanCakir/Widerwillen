@@ -22,6 +22,10 @@ final class GameProgressStore {
         "selectedMenuBackgroundID"
     private static let selectedMenuButtonLookDefaultsKey =
         "selectedMenuButtonLookID"
+    private static let didManuallySelectMenuBackgroundDefaultsKey =
+        "didManuallySelectMenuBackground"
+    private static let didManuallySelectMenuButtonLookDefaultsKey =
+        "didManuallySelectMenuButtonLook"
     private static let defaultHeroBasePower = 6
     private static let characterConfiguration =
         (try? CharacterConfiguration.load())
@@ -78,6 +82,7 @@ final class GameProgressStore {
     ]
     private(set) var lastDailyLoginClaimDay = ""
     private(set) var lastDailyLoginClaimDaysByID: [String: String] = [:]
+    private(set) var dailyLoginClaimCountsByID: [String: Int] = [:]
     private(set) var selectedProfileIconImageName =
         GameProgressStore.defaultProfileIconImageName
     private(set) var selectedCharacterID = GameProgressStore.defaultCharacterID
@@ -147,6 +152,7 @@ final class GameProgressStore {
         ]
         lastDailyLoginClaimDay = ""
         lastDailyLoginClaimDaysByID = [:]
+        dailyLoginClaimCountsByID = [:]
         selectedProfileIconImageName = Self.defaultProfileIconImageName
         selectedCharacterID = Self.defaultCharacterID
         selectedCharacterSkinID = Self.defaultCharacterSkinID
@@ -199,6 +205,10 @@ final class GameProgressStore {
         guard unlockedMenuBackgroundIDs.contains(background.id) else { return }
 
         selectedMenuBackgroundID = background.id
+        UserDefaults.standard.set(
+            true,
+            forKey: Self.didManuallySelectMenuBackgroundDefaultsKey
+        )
         syncSelectedMenuBackgroundToDefaults()
         saveProgress()
     }
@@ -207,6 +217,10 @@ final class GameProgressStore {
         guard unlockedMenuButtonLookIDs.contains(look.id) else { return }
 
         selectedMenuButtonLookID = look.id
+        UserDefaults.standard.set(
+            true,
+            forKey: Self.didManuallySelectMenuButtonLookDefaultsKey
+        )
         syncSelectedMenuButtonLookToDefaults()
         saveProgress()
     }
@@ -737,10 +751,23 @@ final class GameProgressStore {
     {
         guard !rewards.isEmpty else { return nil }
 
-        let dayOfYear =
-            Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 1
-        let index = (dayOfYear - 1) % rewards.count
-        return rewards.sorted { $0.day < $1.day }[index]
+        return rewards.sorted { $0.day < $1.day }.first
+    }
+
+    func currentDailyLoginReward(in login: DailyLoginCampaign)
+        -> DailyLoginReward?
+    {
+        let rewards = login.rewards.sorted { $0.day < $1.day }
+        guard !rewards.isEmpty else { return nil }
+
+        let claimCount = max(dailyLoginClaimCountsByID[login.id] ?? 0, 0)
+        let alreadyClaimedToday = !canClaimDailyLogin(for: login)
+        let displayIndex =
+            alreadyClaimedToday
+            ? max(claimCount - 1, 0)
+            : claimCount
+
+        return rewards[displayIndex % rewards.count]
     }
 
     var canClaimDailyLogin: Bool {
@@ -770,6 +797,7 @@ final class GameProgressStore {
         }
 
         lastDailyLoginClaimDay = Self.todayKey()
+        dailyLoginClaimCountsByID["standard", default: 0] += 1
         saveProgress()
         return true
     }
@@ -791,6 +819,7 @@ final class GameProgressStore {
 
         let today = Self.todayKey()
         lastDailyLoginClaimDaysByID[login.id] = today
+        dailyLoginClaimCountsByID[login.id, default: 0] += 1
         if login.id == "standard" {
             lastDailyLoginClaimDay = today
         }
@@ -1170,7 +1199,7 @@ final class GameProgressStore {
                 damageBonus: entry.damageBonus,
                 level: newLevel
             )
-            if selectedWeaponItemID == nil {
+            if selectedWeaponItemID == nil || oldLevel == 0 {
                 selectedWeaponItemID = entry.id
             }
             return SummonResult(
@@ -1282,18 +1311,7 @@ final class GameProgressStore {
         let knownIDs = Set(Self.menuBackgroundConfiguration.backgrounds.map(\.id))
         guard knownIDs.contains(backgroundID) else { return }
 
-        let wasEmpty = unlockedMenuBackgroundIDs.count <= 1
-            && unlockedMenuBackgroundIDs.contains(
-                MenuBackgroundConfiguration.defaultBackgroundID
-            )
         unlockedMenuBackgroundIDs.insert(backgroundID)
-
-        if wasEmpty && backgroundID
-            != MenuBackgroundConfiguration.defaultBackgroundID
-        {
-            selectedMenuBackgroundID = backgroundID
-            syncSelectedMenuBackgroundToDefaults()
-        }
     }
 
     private func unlockMenuButtonLook(_ buttonLookID: String) {
@@ -1301,14 +1319,6 @@ final class GameProgressStore {
         guard knownIDs.contains(buttonLookID) else { return }
 
         unlockedMenuButtonLookIDs.insert(buttonLookID)
-
-        if selectedMenuButtonLookID
-            == MenuBackgroundConfiguration.defaultButtonLookID
-            && buttonLookID != MenuBackgroundConfiguration.defaultButtonLookID
-        {
-            selectedMenuButtonLookID = buttonLookID
-            syncSelectedMenuButtonLookToDefaults()
-        }
     }
 
     private func unlockSprite(
@@ -1461,6 +1471,7 @@ final class GameProgressStore {
             unlockedMenuButtonLookIDs = Set(snapshot.unlockedMenuButtonLookIDs)
             lastDailyLoginClaimDay = snapshot.lastDailyLoginClaimDay
             lastDailyLoginClaimDaysByID = snapshot.lastDailyLoginClaimDaysByID
+            dailyLoginClaimCountsByID = snapshot.dailyLoginClaimCountsByID
             selectedProfileIconImageName = snapshot.selectedProfileIconImageName
         ownedSkillLevels = snapshot.ownedSkillLevels
         passPointsByID = snapshot.passPointsByID
@@ -1527,6 +1538,7 @@ final class GameProgressStore {
             unlockedMenuButtonLookIDs: Array(unlockedMenuButtonLookIDs),
             lastDailyLoginClaimDay: lastDailyLoginClaimDay,
             lastDailyLoginClaimDaysByID: lastDailyLoginClaimDaysByID,
+            dailyLoginClaimCountsByID: dailyLoginClaimCountsByID,
             selectedProfileIconImageName: selectedProfileIconImageName,
             selectedCharacterID: selectedCharacterID,
             selectedCharacterSkinID: selectedCharacterSkinID,
@@ -1669,12 +1681,25 @@ final class GameProgressStore {
             knownButtonLookIDs.contains($0)
         }
 
-        if !unlockedMenuBackgroundIDs.contains(selectedMenuBackgroundID) {
+        let didManuallySelectMenuBackground = UserDefaults.standard.bool(
+            forKey: Self.didManuallySelectMenuBackgroundDefaultsKey
+        )
+        let didManuallySelectMenuButtonLook = UserDefaults.standard.bool(
+            forKey: Self.didManuallySelectMenuButtonLookDefaultsKey
+        )
+
+        if !didManuallySelectMenuBackground {
+            selectedMenuBackgroundID =
+                MenuBackgroundConfiguration.defaultBackgroundID
+        } else if !unlockedMenuBackgroundIDs.contains(selectedMenuBackgroundID) {
             selectedMenuBackgroundID =
                 MenuBackgroundConfiguration.defaultBackgroundID
         }
 
-        if !unlockedMenuButtonLookIDs.contains(selectedMenuButtonLookID) {
+        if !didManuallySelectMenuButtonLook {
+            selectedMenuButtonLookID =
+                MenuBackgroundConfiguration.defaultButtonLookID
+        } else if !unlockedMenuButtonLookIDs.contains(selectedMenuButtonLookID) {
             selectedMenuButtonLookID =
                 MenuBackgroundConfiguration.defaultButtonLookID
         }
@@ -1840,6 +1865,7 @@ final class GameProgressStore {
         let unlockedMenuButtonLookIDs: [String]
         let lastDailyLoginClaimDay: String
         let lastDailyLoginClaimDaysByID: [String: String]
+        let dailyLoginClaimCountsByID: [String: Int]
         let selectedProfileIconImageName: String
         let selectedCharacterID: String
         let selectedCharacterSkinID: String
@@ -1879,6 +1905,7 @@ final class GameProgressStore {
             unlockedMenuButtonLookIDs: [String],
             lastDailyLoginClaimDay: String,
             lastDailyLoginClaimDaysByID: [String: String],
+            dailyLoginClaimCountsByID: [String: Int],
             selectedProfileIconImageName: String,
             selectedCharacterID: String,
             selectedCharacterSkinID: String,
@@ -1917,6 +1944,7 @@ final class GameProgressStore {
             self.unlockedMenuButtonLookIDs = unlockedMenuButtonLookIDs
             self.lastDailyLoginClaimDay = lastDailyLoginClaimDay
             self.lastDailyLoginClaimDaysByID = lastDailyLoginClaimDaysByID
+            self.dailyLoginClaimCountsByID = dailyLoginClaimCountsByID
             self.selectedProfileIconImageName = selectedProfileIconImageName
             self.selectedCharacterID = selectedCharacterID
             self.selectedCharacterSkinID = selectedCharacterSkinID
@@ -2031,6 +2059,11 @@ final class GameProgressStore {
                 try container.decodeIfPresent(
                     [String: String].self,
                     forKey: .lastDailyLoginClaimDaysByID
+                ) ?? [:]
+            dailyLoginClaimCountsByID =
+                try container.decodeIfPresent(
+                    [String: Int].self,
+                    forKey: .dailyLoginClaimCountsByID
                 ) ?? [:]
             selectedProfileIconImageName =
                 try container.decodeIfPresent(

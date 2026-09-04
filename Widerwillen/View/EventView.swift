@@ -191,15 +191,25 @@ struct EventView: View {
     }
 
     private func eventPage(for category: String) -> some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 0) {
             if let event = selectedPreviewEvent(for: category) {
+
+                // FESTER HERO-BEREICH OBEN
                 eventHero(event)
+                    .frame(height: 230)
                     .padding(.horizontal, 16)
+                    .zIndex(2)
 
+                // Klarer Abstand zwischen Hero und Wheel
+                Spacer()
+                    .frame(height: 20)
+
+                // WHEEL NUR UNTEN
                 eventWheel(for: category)
+                    .frame(maxHeight: .infinity)
+                    .clipped()
+                    .zIndex(1)
 
-                eventTextPanel(event)
-                    .padding(.horizontal, 16)
             } else {
                 Spacer()
 
@@ -257,57 +267,57 @@ struct EventView: View {
     }
 
     private func eventHero(_ event: GameEvent) -> some View {
-        let remainingRuns = progress.remainingRuns(for: event)
+        ZStack(alignment: .topTrailing) {
 
-        return ZStack(alignment: .topTrailing) {
-            Button {
-                playSoundEffect("event_start")
-                selectedEvent = event
-                message = ""
-            } label: {
-                ZStack {
-                    RemoteImage(
-                        name: event.cardBackgroundImageName ?? "bg_white",
-                        contentMode: .fill
-                    )
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 230)
-                    .clipped()
-                    .opacity(0.92)
-
-                    LinearGradient(
-                        colors: [
-                            .black.opacity(0.10),
-                            .black.opacity(0.54),
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-
-                    RemoteImage(name: event.bannerImageName)
-                        .frame(width: 126, height: 126)
-                        .padding(18)
-                        .background(.black.opacity(0.28))
-                        .clipShape(Circle())
-                        .overlay {
-                            Circle()
-                                .stroke(.white.opacity(0.20), lineWidth: 1)
-                        }
-                        .shadow(color: .black.opacity(0.9), radius: 8, y: 5)
-                }
+            // Nur Anzeige – KEIN Button
+            ZStack {
+                RemoteImage(
+                    name: event.cardBackgroundImageName ?? "bg_white",
+                    contentMode: .fill
+                )
                 .frame(maxWidth: .infinity)
                 .frame(height: 230)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(.blue.opacity(0.9), lineWidth: 1)
-                }
-                .shadow(color: .black.opacity(0.68), radius: 5, y: 3)
-                .opacity(remainingRuns > 0 ? 1 : 0.48)
-            }
-            .buttonStyle(.plain)
-            .disabled(remainingRuns == 0)
+                .clipped()
+                .opacity(0.92)
 
+                LinearGradient(
+                    colors: [
+                        .black.opacity(0.10),
+                        .black.opacity(0.54)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+
+                RemoteImage(name: event.bannerImageName)
+                    .frame(width: 126, height: 126)
+                    .padding(18)
+                    .background(.black.opacity(0.28))
+                    .clipShape(Circle())
+                    .overlay {
+                        Circle()
+                            .stroke(.white.opacity(0.20), lineWidth: 1)
+                    }
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 8,
+                        y: 5
+                    )
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 230)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.blue.opacity(0.9), lineWidth: 1)
+            }
+            .shadow(
+                color: .black.opacity(0.68),
+                radius: 5,
+                y: 3
+            )
+
+            // Nur ? bleibt anklickbar
             Button {
                 playSoundEffect("ui_select")
                 rewardDetailEvent = event
@@ -329,16 +339,35 @@ struct EventView: View {
     }
 
     private func eventWheel(for category: String) -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 14) {
-                ForEach(events(in: category)) { event in
-                    eventWheelButton(event)
+        ScrollView(.vertical, showsIndicators: false) {
+            LazyVStack(spacing: 0) {
+
+                Color.clear
+                    .frame(height: 66)
+
+                LazyVStack(spacing: 8) {
+                    ForEach(events(in: category)) { event in
+                        eventWheelButton(event)
+                            .id(event.id)
+                            .containerRelativeFrame(
+                                .vertical,
+                                count: 3,
+                                spacing: 8
+                            )
+                    }
                 }
+                .scrollTargetLayout()
+
+                Color.clear
+                    .frame(height: 66)
             }
-            .padding(.horizontal, 18)
-            .padding(.vertical, 8)
         }
-        .scrollClipDisabled()
+        .scrollPosition(
+            id: $selectedPreviewEventID,
+            anchor: .center
+        )
+        .scrollTargetBehavior(.viewAligned)
+        .clipped()
     }
 
     private func eventWheelButton(_ event: GameEvent) -> some View {
@@ -346,104 +375,66 @@ struct EventView: View {
         let remainingRuns = progress.remainingRuns(for: event)
 
         return Button {
-            playSoundEffect("ui_navigation")
-            selectedPreviewEventID = event.id
+            guard isSelected, remainingRuns > 0 else { return }
+
+            playSoundEffect("event_start")
+            selectedEvent = event
+            message = ""
         } label: {
-            VStack(spacing: 7) {
-                ZStack {
-                    Circle()
-                        .fill(.black.opacity(isSelected ? 0.48 : 0.30))
-                        .frame(
-                            width: isSelected ? 82 : 68,
-                            height: isSelected ? 82 : 68
-                        )
-                        .overlay {
-                            Circle()
-                                .stroke(
-                                    isSelected
-                                        ? Color.cyan.opacity(0.82)
-                                        : Color.white.opacity(0.16),
-                                    lineWidth: isSelected ? 2 : 1
-                                )
-                        }
+            HStack(spacing: 12) {
 
-                    RemoteImage(name: event.bannerImageName)
-                        .frame(
-                            width: isSelected ? 46 : 38,
-                            height: isSelected ? 46 : 38
-                        )
-                        .opacity(remainingRuns > 0 ? 1 : 0.45)
-                }
-
+                // Event Name
                 Text(localizedTitle(event))
-                    .widerwillenFont(size: 9, weight: .bold)
+                    .widerwillenFont(
+                        size: isSelected ? 16 : 13,
+                        weight: .heavy
+                    )
+                    .foregroundStyle(
+                        .white.opacity(isSelected ? 1.0 : 0.45)
+                    )
                     .lineLimit(1)
-                    .minimumScaleFactor(0.65)
-                    .frame(width: 88)
-            }
-            .foregroundStyle(.white)
-            .shadow(color: .black.opacity(0.8), radius: 3, y: 2)
-        }
-        .buttonStyle(.plain)
-    }
-
-    private func eventTextPanel(_ event: GameEvent) -> some View {
-        let remainingRuns = progress.remainingRuns(for: event)
-        let chipBalance = progress.eventCurrencies[
-            event.currencyStorageID,
-            default: 0
-        ]
-
-        return VStack(spacing: 10) {
-            HStack(spacing: 10) {
-                VStack(alignment: .leading, spacing: 7) {
-                    Text(localizedTitle(event))
-                        .widerwillenFont(size: 20, weight: .heavy)
-                        .foregroundStyle(.white)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.72)
-
-                    Text("\(localizedCurrencyName(event)): \(chipBalance)")
-                        .widerwillenFont(size: 12, weight: .bold)
-                        .foregroundStyle(.white.opacity(0.78))
-                        .lineLimit(1)
-                }
+                    .minimumScaleFactor(0.7)
 
                 Spacer()
 
+                // Verbleibende Versuche
                 Text("\(remainingRuns)/\(event.dailyLimit)")
-                    .widerwillenFont(size: 13, weight: .heavy)
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 10)
-                    .frame(height: 28)
-                    .background(.black.opacity(0.38))
+                    .widerwillenFont(
+                        size: isSelected ? 13 : 11,
+                        weight: .heavy
+                    )
+                    .foregroundStyle(
+                        remainingRuns > 0
+                            ? .white.opacity(isSelected ? 0.9 : 0.45)
+                            : .red.opacity(0.75)
+                    )
+                    .padding(.horizontal, 9)
+                    .frame(height: 26)
+                    .background(.black.opacity(0.32))
                     .clipShape(Capsule())
             }
-
-            Button {
-                playSoundEffect("event_start")
-                selectedEvent = event
-                message = ""
-            } label: {
-                Label("Start Event", systemImage: "bolt.fill")
-                    .widerwillenFont(size: 16, weight: .heavy)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 48)
-                    .foregroundStyle(remainingRuns > 0 ? .black : .white)
-                    .background(remainingRuns > 0 ? .white : .gray.opacity(0.35))
-                    .clipShape(Capsule())
+            .padding(.horizontal, 14)
+            .frame(maxWidth: .infinity)
+            .frame(height: isSelected ? 58 : 48)
+            .background {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(
+                        isSelected
+                            ? .white.opacity(0.16)
+                            : .black.opacity(0.20)
+                    )
             }
-            .buttonStyle(.plain)
-            .disabled(remainingRuns == 0)
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(
+                        .blue.opacity(isSelected ? 1.0 : 0.35),
+                        lineWidth: isSelected ? 2 : 1
+                    )
+            }
+            .scaleEffect(isSelected ? 1 : 0.92)
         }
-        .padding(14)
-        .background(.black.opacity(0.34))
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .overlay {
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(.white.opacity(0.14), lineWidth: 1)
-        }
-        .shadow(color: .black.opacity(0.68), radius: 4, y: 3)
+        .buttonStyle(.plain)
+        .disabled(remainingRuns == 0)
     }
 
     private func eventDetailPopup(for event: GameEvent) -> some View {
@@ -482,34 +473,38 @@ struct EventView: View {
                 ScrollView {
                     VStack(spacing: 10) {
                         rewardDetailRow(
-                            systemImage: "circle.hexagongrid.fill",
+                            imageName: event.currencyImageName,
                             title: localizedCurrencyName(event),
                             value: event.rewards.chipAmount
                         )
+
                         rewardDetailRow(
-                            systemImage: "circle.fill",
+                            imageName: "icon_pixel_coin",
                             title: "Coins",
                             value: event.rewards.coins
                         )
+
                         rewardDetailRow(
-                            systemImage: "diamond.fill",
+                            imageName: "icon_pixel_crystal",
                             title: "Crystals",
                             value: event.rewards.crystals
                         )
+
                         rewardDetailRow(
-                            systemImage: "hexagon.fill",
+                            imageName: "icon_pixel_relic",
                             title: "Relics",
                             value: event.rewards.relics
                         )
+
                         rewardDetailRow(
-                            systemImage: "book.fill",
+                            imageName: "icon_pixel_skill_book",
                             title: "Skill Books",
                             value: event.rewards.skillBooks
                         )
 
                         ForEach(event.unlocks) { unlock in
                             rewardDetailRow(
-                                systemImage: "sparkles",
+                                imageName: unlock.imageName,
                                 title: unlock.name,
                                 value: 1
                             )
@@ -532,6 +527,32 @@ struct EventView: View {
             .padding(.horizontal, 20)
         }
         .zIndex(30)
+    }
+    
+    private func rewardDetailRow(
+        imageName: String,
+        title: String,
+        value: Int
+    ) -> some View {
+        HStack(spacing: 12) {
+            RemoteImage(name: imageName)
+                .frame(width: 34, height: 34)
+
+            Text(title)
+                .widerwillenFont(size: 13, weight: .heavy)
+                .lineLimit(1)
+                .minimumScaleFactor(0.72)
+
+            Spacer()
+
+            Text("+\(value)")
+                .widerwillenFont(size: 13, weight: .heavy)
+        }
+        .foregroundStyle(.white)
+        .padding(.horizontal, 12)
+        .frame(height: 48)
+        .background(.black.opacity(0.28))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 
     private func rewardDetailRow(

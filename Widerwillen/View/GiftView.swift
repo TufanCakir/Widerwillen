@@ -50,6 +50,7 @@ struct GiftView: View {
                 if categories.isEmpty {
                     emptyState
                         .padding(.horizontal, 16)
+
                     Spacer()
                 } else {
                     TabView(selection: $selectedCategory) {
@@ -61,15 +62,11 @@ struct GiftView: View {
                     .tabViewStyle(.page(indexDisplayMode: .never))
                 }
             }
-
+        }
+        .safeAreaInset(edge: .bottom) {
             claimAllButton
                 .padding(.horizontal, 24)
-                .padding(.bottom, 96)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .bottom
-                )
+                .padding(.bottom, 8)
         }
     }
 
