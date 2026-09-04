@@ -11,31 +11,33 @@ struct MenuView: View {
     let progress: GameProgressStore
     let playSoundEffect: (String) -> Void
     let openMode: (MenuMode) -> Void
+    let homeResetSignal: Int
+    let openBackgroundSignal: Int
 
     private let dailyLoginConfiguration: DailyLoginConfiguration
 
     @State private var isModePickerPresented = false
     @State private var isDailyLoginPopupPresented = false
     @State private var didEvaluateDailyLoginPopup = false
+    @State private var presentedPanel: MenuPanel?
+    @State private var selectedShortcutIndex = 0
 
     init(
         progress: GameProgressStore,
         playSoundEffect: @escaping (String) -> Void = { _ in },
+        homeResetSignal: Int = 0,
+        openBackgroundSignal: Int = 0,
         dailyLoginConfiguration: DailyLoginConfiguration =
             try! DailyLoginConfiguration.load(),
         openMode: @escaping (MenuMode) -> Void
     ) {
         self.progress = progress
         self.playSoundEffect = playSoundEffect
+        self.homeResetSignal = homeResetSignal
+        self.openBackgroundSignal = openBackgroundSignal
         self.dailyLoginConfiguration = dailyLoginConfiguration
         self.openMode = openMode
     }
-
-    private let shortcutColumns = [
-        GridItem(.flexible(), spacing: 10),
-        GridItem(.flexible(), spacing: 10),
-        GridItem(.flexible(), spacing: 10),
-    ]
 
     var body: some View {
         ZStack {
@@ -44,9 +46,11 @@ struct MenuView: View {
                     progress: progress
                 )
 
-                Spacer()
+                Spacer(minLength: 18)
 
-                VStack(spacing: 10) {
+                VStack(spacing: 18) {
+                    nimbiCarouselStage
+
                     Button {
                         playSoundEffect("ui_select")
                         isModePickerPresented = true
@@ -72,11 +76,11 @@ struct MenuView: View {
                     .buttonStyle(.plain)
                     .padding(.horizontal)
 
-                    shortcutGrid
+                    shortcutPager
                 }
                 .frame(maxWidth: 420)
 
-                Spacer()
+                Spacer(minLength: 14)
             }
 
             if isModePickerPresented {
@@ -87,6 +91,10 @@ struct MenuView: View {
                 dailyLoginPopup
             }
 
+            if let presentedPanel {
+                embeddedMenuPanelOverlay(presentedPanel)
+            }
+
         }
         .background {
             AppBackground()
@@ -94,51 +102,268 @@ struct MenuView: View {
         .onAppear {
             showDailyLoginPopupIfNeeded()
         }
+        .onChange(of: homeResetSignal) { _, _ in
+            presentedPanel = nil
+            isModePickerPresented = false
+        }
+        .onChange(of: openBackgroundSignal) { _, _ in
+            presentedPanel = .backgrounds
+            isModePickerPresented = false
+        }
     }
 
-    private var shortcutGrid: some View {
-        LazyVGrid(columns: shortcutColumns, spacing: 10) {
-            shortcutButton(title: "Showcase", assetImage: "icon_nimpi") {
-                playSoundEffect("ui_navigation")
-                openMode(.showcase)
+    private var nimbiCarouselStage: some View {
+        VStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(.black.opacity(0.24))
+                    .frame(width: 168, height: 168)
+                    .overlay {
+                        Circle()
+                            .stroke(.white.opacity(0.20), lineWidth: 1)
+                    }
+
+                Circle()
+                    .stroke(.cyan.opacity(0.45), lineWidth: 2)
+                    .frame(width: 124, height: 124)
+                    .shadow(color: .cyan.opacity(0.35), radius: 10)
+
+                RemoteImage(name: "icon_nimpi")
+                    .frame(width: 104, height: 104)
+                    .shadow(color: .black.opacity(0.9), radius: 8, y: 5)
             }
-            shortcutButton(title: "Settings", assetImage: "icon_pixel_settings")
-            {
-                playSoundEffect("ui_navigation")
-                openMode(.settings)
+
+            Text("Nimbi")
+                .widerwillenFont(size: 22, weight: .heavy)
+                .foregroundStyle(.white)
+                .shadow(color: .black.opacity(0.9), radius: 3)
+        }
+    }
+
+    private var shortcuts: [MenuShortcut] {
+        [
+            MenuShortcut(title: "Showcase", assetImage: "icon_nimpi", mode: .showcase),
+            MenuShortcut(title: "Settings", assetImage: "icon_pixel_settings", panel: .settings),
+            MenuShortcut(title: "BG", assetImage: "widerwillen_logo", panel: .backgrounds),
+            MenuShortcut(title: "Skills", assetImage: "icon_pixel_skill_book", panel: .skills),
+            MenuShortcut(title: "News", assetImage: "icon_pixel_news", panel: .news),
+            MenuShortcut(title: "Giftbox", assetImage: "icon_pixel_giftbox", panel: .gift),
+            MenuShortcut(title: "Equipment", assetImage: "icon_pixel_sword", panel: .equipment),
+            MenuShortcut(title: "Warehouse", assetImage: "icon_pixel_box", panel: .warehouse),
+            MenuShortcut(title: "Pass", assetImage: "icon_pixel_pass", panel: .pass),
+            MenuShortcut(title: "Daily", assetImage: "icon_pixel_calendar", panel: .dailyLogin)
+        ]
+    }
+
+    private var shortcutPager: some View {
+        VStack(spacing: 8) {
+            ZStack {
+                ForEach(Array(shortcuts.enumerated()), id: \.element.id) {
+                    index,
+                    shortcut in
+                    if let placement = shortcutPlacement(for: index) {
+                        shortcutPagerButton(shortcut, placement: placement) {
+                            handleShortcutTap(at: index)
+                        }
+                        .zIndex(placement.zIndex)
+                    }
+                }
             }
-            shortcutButton(title: "Skills", assetImage: "icon_pixel_skill_book")
-            {
-                playSoundEffect("ui_navigation")
-                openMode(.skills)
+            .frame(height: 132)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 18)
+                    .onEnded { value in
+                        if value.translation.width < -24 {
+                            selectShortcut(selectedShortcutIndex + 1)
+                        } else if value.translation.width > 24 {
+                            selectShortcut(selectedShortcutIndex - 1)
+                        }
+                    }
+            )
+
+        }
+        .padding(.horizontal, 18)
+    }
+
+    private var safeShortcutIndex: Int {
+        guard !shortcuts.isEmpty else { return 0 }
+        return min(max(selectedShortcutIndex, 0), shortcuts.count - 1)
+    }
+
+    private func shortcutPlacement(for index: Int) -> MenuShortcutPlacement? {
+        let count = shortcuts.count
+        guard count > 0 else { return nil }
+
+        let selected = safeShortcutIndex
+        let previous = (selected - 1 + count) % count
+        let next = (selected + 1) % count
+
+        if index == selected {
+            return .active
+        }
+
+        if index == previous {
+            return .previous
+        }
+
+        if index == next {
+            return .next
+        }
+
+        return nil
+    }
+
+    private func selectShortcut(_ index: Int) {
+        let count = shortcuts.count
+        guard count > 0 else { return }
+        let wrappedIndex = (index + count) % count
+
+        withAnimation(.spring(response: 0.28, dampingFraction: 0.82)) {
+            selectedShortcutIndex = wrappedIndex
+        }
+        playSoundEffect("ui_select")
+    }
+
+    private func handleShortcutTap(at index: Int) {
+        if index == safeShortcutIndex {
+            openShortcut(shortcuts[index])
+        } else {
+            selectShortcut(index)
+        }
+    }
+
+    private func openShortcut(_ shortcut: MenuShortcut) {
+        playSoundEffect("ui_navigation")
+
+        if let mode = shortcut.mode {
+            openMode(mode)
+            return
+        }
+
+        if let panel = shortcut.panel {
+            presentedPanel = panel
+        }
+    }
+
+    private func shortcutPagerButton(
+        _ shortcut: MenuShortcut,
+        placement: MenuShortcutPlacement,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button {
+            action()
+        } label: {
+            VStack(spacing: 8) {
+                ZStack {
+                    menuButtonBackground
+
+                    Circle()
+                        .stroke(.blue.opacity(0.72), lineWidth: 1)
+                        .frame(width: placement.ringSize, height: placement.ringSize)
+
+                    RemoteImage(name: shortcut.assetImage)
+                        .frame(width: placement.iconSize, height: placement.iconSize)
+                }
+                .shadow(color: .black.opacity(0.75), radius: 5, y: 3)
+
+                Text(shortcut.title)
+                    .widerwillenFont(size: 10, weight: .bold)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.72)
+                    .frame(width: 82)
+                    .opacity(placement.titleOpacity)
             }
-            shortcutButton(title: "News", assetImage: "icon_pixel_news") {
-                playSoundEffect("ui_navigation")
-                openMode(.news)
+            .foregroundStyle(.white)
+        }
+        .buttonStyle(.plain)
+        .scaleEffect(placement.scale)
+        .offset(x: placement.xOffset, y: placement.yOffset)
+        .opacity(placement.opacity)
+        .allowsHitTesting(placement.isInteractive)
+    }
+
+    private var menuButtonBackground: some View {
+        ZStack {
+            Circle()
+                .fill(.black.opacity(0.38))
+
+            if let imageName = progress.selectedMenuButtonLook.imageName {
+                RemoteImage(name: imageName, contentMode: .fill)
+                    .clipShape(Circle())
+                    .opacity(0.88)
             }
-            shortcutButton(title: "Giftbox", assetImage: "icon_pixel_giftbox") {
-                playSoundEffect("ui_navigation")
-                openMode(.gift)
+        }
+        .frame(width: 76, height: 76)
+        .overlay {
+            Circle()
+                .stroke(.white.opacity(0.18), lineWidth: 1)
+        }
+    }
+
+    private func embeddedMenuPanelOverlay(_ panel: MenuPanel) -> some View {
+        ZStack(alignment: .topTrailing) {
+            embeddedMenuPanelView(panel)
+                .frame(maxWidth: 390)
+                .frame(maxHeight: panel.windowHeight)
+                .background(.black.opacity(0.90))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(.blue.opacity(0.9), lineWidth: 1)
+                }
+                .shadow(color: .black.opacity(0.92), radius: 12, y: 7)
+
+            Button {
+                playSoundEffect("ui_back")
+                withAnimation(.snappy(duration: 0.18)) {
+                    presentedPanel = nil
+                }
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.system(size: 15, weight: .heavy))
+                    .foregroundStyle(.white)
+                    .frame(width: 38, height: 38)
+                    .background(.black.opacity(0.52))
+                    .clipShape(Circle())
+                    .overlay {
+                        Circle()
+                            .stroke(.white.opacity(0.16), lineWidth: 1)
+                    }
             }
-            shortcutButton(title: "Equipment", assetImage: "icon_pixel_sword") {
-                playSoundEffect("ui_navigation")
-                openMode(.equipment)
-            }
-            shortcutButton(title: "Warehouse", assetImage: "icon_pixel_box") {
-                playSoundEffect("ui_navigation")
-                openMode(.warehouse)
-            }
-            shortcutButton(title: "Pass", assetImage: "icon_pixel_pass") {
-                playSoundEffect("ui_navigation")
-                openMode(.pass)
-            }
-            shortcutButton(
-                title: "Daily Login",
-                assetImage: "icon_pixel_calendar"
-            ) {
-                playSoundEffect("ui_navigation")
-                openMode(.dailyLogin)
-            }
+            .buttonStyle(.plain)
+            .padding(.top, -12)
+            .padding(.trailing, -12)
+        }
+        .padding(.horizontal, 18)
+        .padding(.bottom, 122)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        .transition(.opacity)
+        .zIndex(12)
+    }
+
+    @ViewBuilder
+    private func embeddedMenuPanelView(_ panel: MenuPanel) -> some View {
+        switch panel {
+        case .backgrounds:
+            BackgroundView(progress: progress, playSoundEffect: playSoundEffect)
+        case .skills:
+            SkillView(progress: progress, playSoundEffect: playSoundEffect)
+        case .settings:
+            SettingsView(progress: progress, playSoundEffect: playSoundEffect)
+        case .news:
+            NewsView(playSoundEffect: playSoundEffect)
+        case .gift:
+            GiftView(progress: progress, playSoundEffect: playSoundEffect)
+        case .equipment:
+            EquipmentView(progress: progress, playSoundEffect: playSoundEffect)
+        case .warehouse:
+            warehouseView(progress: progress, playSoundEffect: playSoundEffect)
+        case .pass:
+            PassListView(progress: progress, playSoundEffect: playSoundEffect)
+        case .dailyLogin:
+            DailyLoginView(progress: progress, playSoundEffect: playSoundEffect)
         }
     }
 
@@ -146,42 +371,6 @@ struct MenuView: View {
         dailyLoginConfiguration.logins.filter {
             progress.canClaimDailyLogin(for: $0)
         }
-    }
-
-    private func shortcutButton(
-        title: String,
-        assetImage: String? = nil,
-        systemImage: String? = nil,
-        action: @escaping () -> Void = {}
-    ) -> some View {
-        Button {
-            action()
-        } label: {
-            VStack(spacing: 7) {
-                if let assetImage {
-                    RemoteImage(name: assetImage)
-                        .frame(width: 28, height: 28)
-                } else if let systemImage {
-                    Image(systemName: systemImage)
-                        .font(.system(size: 24, weight: .heavy))
-                }
-
-                Text(title)
-                    .widerwillenFont(size: 10, weight: .bold)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.72)
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 58)
-            .foregroundStyle(.white)
-        }
-        .buttonStyle(.plain)
-        .shadow(
-            color: .black.opacity(0.9),
-            radius: 3,
-            x: 0,
-            y: 0
-        )
     }
 
     private var modePickerOverlay: some View {
@@ -314,6 +503,134 @@ enum MenuMode {
     case warehouse
     case pass
     case dailyLogin
+}
+
+private enum MenuPanel {
+    case backgrounds
+    case skills
+    case settings
+    case news
+    case gift
+    case equipment
+    case warehouse
+    case pass
+    case dailyLogin
+
+    var windowHeight: CGFloat {
+        switch self {
+        case .settings:
+            600
+        case .backgrounds:
+            540
+        case .skills, .warehouse, .gift, .equipment, .pass, .dailyLogin:
+            650
+        case .news:
+            560
+        }
+    }
+}
+
+private struct MenuShortcut: Identifiable {
+    let title: String
+    let assetImage: String
+    let mode: MenuMode?
+    let panel: MenuPanel?
+
+    var id: String { "\(title)-\(assetImage)" }
+
+    init(
+        title: String,
+        assetImage: String,
+        mode: MenuMode? = nil,
+        panel: MenuPanel? = nil
+    ) {
+        self.title = title
+        self.assetImage = assetImage
+        self.mode = mode
+        self.panel = panel
+    }
+}
+
+private enum MenuShortcutPlacement {
+    case previous
+    case active
+    case next
+
+    var scale: CGFloat {
+        switch self {
+        case .active:
+            1
+        case .previous, .next:
+            0.74
+        }
+    }
+
+    var xOffset: CGFloat {
+        switch self {
+        case .previous:
+            -96
+        case .active:
+            0
+        case .next:
+            96
+        }
+    }
+
+    var yOffset: CGFloat {
+        switch self {
+        case .active:
+            0
+        case .previous, .next:
+            20
+        }
+    }
+
+    var opacity: Double {
+        switch self {
+        case .active:
+            1
+        case .previous, .next:
+            0.66
+        }
+    }
+
+    var titleOpacity: Double {
+        switch self {
+        case .active:
+            1
+        case .previous, .next:
+            0
+        }
+    }
+
+    var ringSize: CGFloat {
+        switch self {
+        case .active:
+            62
+        case .previous, .next:
+            54
+        }
+    }
+
+    var iconSize: CGFloat {
+        switch self {
+        case .active:
+            34
+        case .previous, .next:
+            30
+        }
+    }
+
+    var zIndex: Double {
+        switch self {
+        case .active:
+            3
+        case .previous, .next:
+            1
+        }
+    }
+
+    var isInteractive: Bool { true }
 }
 
 #Preview {

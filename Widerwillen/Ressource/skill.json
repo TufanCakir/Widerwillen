@@ -87,16 +87,16 @@
             "category": "Shadow",
             "imageName": "icon_pixel_shadow_clone",
             "effect": "shadowCloneDamage",
-            "valuePerLevel": 0.03,
-            "cost": 2,
-            "maxLevel": 25,
-            "requiredAccountLevel": 20,
+            "valuePerLevel": 0.05,
+            "cost": 10,
+            "maxLevel": 10,
+            "requiredAccountLevel": 30,
             "activation": {
                 "kind": "shadowClone",
                 "durationSeconds": 8,
-                "cooldownSeconds": 22,
-                "damageMultiplier": 0.45,
-                "intervalSeconds": 0.75,
+                "cooldownSeconds": 6,
+                "damageMultiplier": 0.75,
+                "intervalSeconds": 0.42,
                 "companionAnimationID": "shadow_clone_nimbi"
             }
         },
@@ -106,10 +106,10 @@
             "category": "Shadow",
             "imageName": "icon_pixel_skill_shadow_clone_long",
             "effect": "activeSkillDuration",
-            "valuePerLevel": 0.04,
-            "cost": 3,
-            "maxLevel": 20,
-            "requiredAccountLevel": 22
+            "valuePerLevel": 0.05,
+            "cost": 8,
+            "maxLevel": 10,
+            "requiredAccountLevel": 32
         },
         {
             "id": "shadow_clone_speed",
@@ -117,10 +117,10 @@
             "category": "Shadow",
             "imageName": "icon_pixel_skill_shadow_clone_speed",
             "effect": "attackSpeed",
-            "valuePerLevel": 0.025,
-            "cost": 3,
-            "maxLevel": 20,
-            "requiredAccountLevel": 24
+            "valuePerLevel": 0.035,
+            "cost": 9,
+            "maxLevel": 10,
+            "requiredAccountLevel": 34
         },
         {
             "id": "shadow_clone_crit",
@@ -128,10 +128,10 @@
             "category": "Shadow",
             "imageName": "icon_pixel_shadow_clone",
             "effect": "critChance",
-            "valuePerLevel": 0.008,
-            "cost": 4,
-            "maxLevel": 20,
-            "requiredAccountLevel": 26
+            "valuePerLevel": 0.01,
+            "cost": 10,
+            "maxLevel": 10,
+            "requiredAccountLevel": 36
         },
         {
             "id": "shadow_clone_impact",
@@ -139,10 +139,10 @@
             "category": "Shadow",
             "imageName": "icon_pixel_skill_shadow_clone_speed",
             "effect": "critDamage",
-            "valuePerLevel": 0.04,
-            "cost": 4,
-            "maxLevel": 20,
-            "requiredAccountLevel": 28
+            "valuePerLevel": 0.06,
+            "cost": 12,
+            "maxLevel": 10,
+            "requiredAccountLevel": 40
         },
         {
             "id": "alchemist_coin_drop",

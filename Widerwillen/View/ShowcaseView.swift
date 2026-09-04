@@ -19,7 +19,7 @@ struct ShowcaseView: View {
     @State private var selectedMove: BattleCardMove = .bladeStorm
     @State private var exportStatus = ""
     @State private var isExporting = false
-    @State private var activeSkillIDs: Set<String> = []
+    @State private var isShadowClonePreviewActive = false
     @State private var isCleanMode = false
     @AppStorage("isShowcaseAnimationLoopEnabled") private var isLooping = true
 
@@ -58,7 +58,7 @@ struct ShowcaseView: View {
     var body: some View {
         GeometryReader { proxy in
             ZStack {
-                CinematicShowcaseBackground()
+                AppBackground()
                     .ignoresSafeArea()
 
                 SpriteView(
@@ -66,7 +66,6 @@ struct ShowcaseView: View {
                     options: [.allowsTransparency]
                 )
                 .allowsHitTesting(false)
-                .offset(y: 200)
 
                 if !isCleanMode {
                     topBar
@@ -82,21 +81,10 @@ struct ShowcaseView: View {
 
                 if !isCleanMode {
                     VStack(spacing: 10) {
-                        BattleCardBar(
-                            progress: progress,
-                            battleCards: battleCards,
-                            activeSkills: progress.activeBattleSkills,
-                            activeSkillIDs: activeSkillIDs,
-                            cooldownClockDate: Date(),
-                            cardCooldownEndDates: [:],
-                            skillCooldownEndDates: [:],
-                            onCardAttack: playCard,
-                            onSkillActivation: playSkill
-                        )
-                        .scaleEffect(0.82, anchor: .bottom)
-
+                        showcaseControls
                         exportControls
                     }
+                    .padding(.horizontal, 14)
                     .padding(.bottom, max(proxy.safeAreaInsets.bottom, 12))
                     .frame(
                         maxWidth: .infinity,
@@ -124,6 +112,9 @@ struct ShowcaseView: View {
                 configureScene(size: proxy.size)
             }
             .onChange(of: progress.equippedWeaponImageName) { _, _ in
+                configureScene(size: proxy.size)
+            }
+            .onChange(of: progress.equippedWeaponShadowCloneImageName) { _, _ in
                 configureScene(size: proxy.size)
             }
             .task(id: "\(isLooping)-\(selectedMove.rawValue)") {
@@ -182,6 +173,122 @@ struct ShowcaseView: View {
         .foregroundStyle(.white)
     }
 
+    private var showcaseControls: some View {
+        VStack(spacing: 10) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(BattleCardMove.allCases) { move in
+                        showcaseMoveButton(move)
+                    }
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 10)
+            }
+            .scrollClipDisabled()
+
+            HStack(spacing: 10) {
+                Button {
+                    playSoundEffect("ui_confirm")
+                    isShadowClonePreviewActive.toggle()
+                    scene.updateShadowClone(
+                        animationID: activeShadowCloneAnimationID
+                    )
+                } label: {
+                    Label(
+                        "Shadow",
+                        systemImage: isShadowClonePreviewActive
+                            ? "person.2.fill" : "person.2"
+                    )
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.plain)
+                .font(.system(size: 13, weight: .heavy))
+                .foregroundStyle(.white)
+                .padding(.vertical, 10)
+                .background(
+                    isShadowClonePreviewActive
+                        ? Color.purple.opacity(0.62)
+                        : Color.black.opacity(0.42)
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                Button {
+                    playSoundEffect("attack_manual")
+                    scene.playHeroAttackAnimation(move: selectedMove)
+                } label: {
+                    Label("Play", systemImage: "play.fill")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.plain)
+                .font(.system(size: 13, weight: .heavy))
+                .foregroundStyle(.black)
+                .padding(.vertical, 10)
+                .background(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .padding(.horizontal, 10)
+            .padding(.bottom, 10)
+        }
+        .background(.black.opacity(0.44))
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(.white.opacity(0.14), lineWidth: 1)
+        )
+    }
+
+    private func showcaseMoveButton(_ move: BattleCardMove) -> some View {
+        let isSelected = selectedMove == move
+
+        return Button {
+            playMove(move)
+        } label: {
+            VStack(spacing: 5) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 7)
+                        .fill(
+                            isSelected
+                                ? Color.white.opacity(0.22)
+                                : Color.white.opacity(0.08)
+                        )
+
+                    RemoteImage(
+                        name: imageName(for: move),
+                        placeholderColor: .white.opacity(0.08),
+                        fallbackSystemImage: "sparkles"
+                    )
+                    .frame(width: 32, height: 32)
+                }
+                .frame(width: 52, height: 42)
+
+                Text(move.showcaseTitle)
+                    .font(.system(size: 10, weight: .heavy))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.72)
+                    .frame(width: 68)
+            }
+            .foregroundStyle(.white)
+            .padding(.vertical, 7)
+            .padding(.horizontal, 5)
+            .background(
+                isSelected
+                    ? Color.white.opacity(0.14)
+                    : Color.clear
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(
+                        isSelected
+                            ? Color.white.opacity(0.44)
+                            : Color.white.opacity(0.08),
+                        lineWidth: 1
+                    )
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
     private var exportControls: some View {
         VStack(spacing: 8) {
             HStack(spacing: 10) {
@@ -227,10 +334,13 @@ struct ShowcaseView: View {
                 .equippedWeaponBattleAppearance
         )
 
+        let shortestSide = min(size.width, size.height)
+        let heroScale = max(0.24, min(0.31, shortestSide / 1350))
+
         scene.updateShowcaseLayout(
             heroXRatio: 0.5,
-            heroYRatio: 1.28,
-            heroScale: 0.34
+            heroYRatio: 1.14,
+            heroScale: heroScale
         )
 
         scene.updateShadowClone(
@@ -238,10 +348,10 @@ struct ShowcaseView: View {
         )
     }
 
-    private func playCard(_ card: BattleCardDefinition) {
+    private func playMove(_ move: BattleCardMove) {
         playSoundEffect("attack_manual")
-        selectedMove = card.move
-        scene.playHeroAttackAnimation(move: card.move)
+        selectedMove = move
+        scene.playHeroAttackAnimation(move: move)
     }
 
     private func runSelectedMoveLoop() async {
@@ -255,29 +365,18 @@ struct ShowcaseView: View {
         }
     }
 
-    private func playSkill(_ skill: BattleActiveSkill) {
-        playSoundEffect("ui_confirm")
-        activeSkillIDs.insert(skill.id)
-        scene.updateShadowClone(
-            animationID: skill.companionAnimationID
-                ?? progress.battleHeroAnimationID
-        )
+    private var activeShadowCloneAnimationID: String? {
+        guard isShadowClonePreviewActive else { return nil }
 
-        Task {
-            try? await Task.sleep(for: .milliseconds(3200))
-            await MainActor.run {
-                activeSkillIDs.remove(skill.id)
-                scene.updateShadowClone(
-                    animationID: activeShadowCloneAnimationID
-                )
-            }
-        }
+        return progress.activeBattleSkills.first {
+            $0.kind == .shadowClone
+        }?.companionAnimationID ?? "shadow_clone_nimbi"
     }
 
-    private var activeShadowCloneAnimationID: String? {
-        progress.activeBattleSkills.first {
-            activeSkillIDs.contains($0.id) && $0.kind == .shadowClone
-        }?.companionAnimationID
+    private func imageName(for move: BattleCardMove) -> String {
+        battleCards.cards.first { $0.move == move }?.imageName
+            ?? battleCards.cards.first { $0.move == move }?.cardImageName
+            ?? "icon_pixel_sword"
     }
 
     private func captureSnapshot() async {
@@ -362,50 +461,6 @@ struct ShowcaseView: View {
                 afterScreenUpdates: true
             )
         }
-    }
-}
-
-private struct CinematicShowcaseBackground: View {
-    var body: some View {
-        LinearGradient(
-            colors: [
-                Color(showcaseHex: "#020713"),
-                Color(showcaseHex: "#071D3A"),
-                Color(showcaseHex: "#0A4F9E"),
-                Color(showcaseHex: "#03152B"),
-                Color(showcaseHex: "#00040A"),
-            ],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-        .overlay(
-            LinearGradient(
-                colors: [
-                    .black.opacity(0.70),
-                    .black.opacity(0.08),
-                    .black.opacity(0.82),
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        )
-    }
-}
-
-extension Color {
-    fileprivate init(showcaseHex hex: String) {
-        let cleaned = hex.trimmingCharacters(
-            in: CharacterSet(charactersIn: "#")
-        )
-        let scanner = Scanner(string: cleaned)
-        var value: UInt64 = 0
-        scanner.scanHexInt64(&value)
-
-        let red = Double((value >> 16) & 0xff) / 255
-        let green = Double((value >> 8) & 0xff) / 255
-        let blue = Double(value & 0xff) / 255
-
-        self.init(red: red, green: green, blue: blue)
     }
 }
 

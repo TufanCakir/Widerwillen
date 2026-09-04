@@ -221,6 +221,7 @@ final class SpriteAnimationScene: SKScene {
             clone.name = "shadowClone"
             clone.alpha = 0.62
             clone.zPosition = 2_900
+            shadowCloneRig = rig
 
             // Shadow-Version der ausgerüsteten Waffe
             configureShadowCloneWeapon(
@@ -236,7 +237,6 @@ final class SpriteAnimationScene: SKScene {
             addChild(clone)
 
             shadowCloneNode = clone
-            shadowCloneRig = rig
 
         } else {
 
@@ -614,13 +614,15 @@ final class SpriteAnimationScene: SKScene {
             return
         }
 
-        guard
-            isVisible,
-            let shadowWeaponImageName = equippedWeaponShadowCloneImageName
-        else {
+        guard isVisible else {
             weaponBone.isHidden = true
             return
         }
+
+        let shadowWeaponImageName =
+            equippedWeaponShadowCloneImageName
+            ?? shadowCloneRig?.parts["weapon"]
+            ?? "shadow_clone_nimbi_sword"
 
         weaponBone.isHidden = false
 

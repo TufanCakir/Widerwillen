@@ -59,7 +59,7 @@ struct LaunchView: View {
                     }
 
                     launchProgress
-                        .frame(width: min(proxy.size.width - 72, 320))
+                        .frame(width: min(max(proxy.size.width - 72, 0), 320))
                         .padding(.top, 4)
 
                     Spacer()

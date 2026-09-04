@@ -1,5 +1,5 @@
 {
-    "contentVersion": 186,
+    "contentVersion": 191,
     "json": [
         {
             "name": "arena",
@@ -39,6 +39,10 @@
             "path": "daily_login.json"
         },
         {
+            "name": "deeplinks",
+            "path": "deeplinks.json"
+        },
+        {
             "name": "de",
             "path": "de.json"
         },
@@ -69,6 +73,10 @@
         {
             "name": "music",
             "path": "music.json"
+        },
+        {
+            "name": "menuBackground",
+            "path": "menuBackground.json"
         },
         {
             "name": "news",
@@ -187,6 +195,11 @@
             "name": "bg_birthday",
             "path": "assets/bg_birthday.png",
             "version": 2
+        },
+        {
+            "name": "widerwillen_bg",
+            "path": "assets/widerwillen_bg.png",
+            "version": 1
         },
         {
             "name": "icon_cookieman",

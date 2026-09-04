@@ -26,6 +26,17 @@ struct RootView: View {
     @State private var hasFinishedLaunchLoading = false
     @State private var hasStartedGame = false
     @State private var isFooterHiddenForActiveMode = false
+    @State private var homeResetSignal = 0
+    @State private var openBackgroundSignal = 0
+    @State private var deepLinkedEventID: String?
+
+    private let deepLinkConfiguration =
+        (try? DeepLinkConfiguration.load())
+        ?? DeepLinkConfiguration(
+            scheme: "widerwillen",
+            universalLinkHost: "remotewiderwillen.tufancakir.com",
+            links: []
+        )
 
     var body: some View {
         ZStack {
@@ -112,6 +123,9 @@ struct RootView: View {
 
         .onChange(of: soundEffectsVolume) { _, newValue in
             musicPlayer.setSoundEffectsVolume(newValue)
+        }
+        .onOpenURL { url in
+            handleDeepLink(url)
         }
         .onChange(of: selectedTab) { _, _ in
             Task {
@@ -227,6 +241,7 @@ struct RootView: View {
         case .event:
             EventView(
                 progress: progress,
+                initialEventID: deepLinkedEventID,
                 playSoundEffect: musicPlayer.playSoundEffect
             ) { isBattleActive in
                 isFooterHiddenForActiveMode = isBattleActive
@@ -278,7 +293,8 @@ struct RootView: View {
             Footer(
                 selectedTab: $selectedTab,
                 progress: progress,
-                playSoundEffect: musicPlayer.playSoundEffect
+                playSoundEffect: musicPlayer.playSoundEffect,
+                onTabTap: handleFooterTabTap
             )
             .ignoresSafeArea(edges: .bottom)
         }
@@ -340,7 +356,8 @@ struct RootView: View {
                         }
                     ),
                     progress: progress,
-                    playSoundEffect: musicPlayer.playSoundEffect
+                    playSoundEffect: musicPlayer.playSoundEffect,
+                    onTabTap: handleFooterTabTap
                 )
                 .ignoresSafeArea(edges: .bottom)
             }
@@ -363,7 +380,9 @@ struct RootView: View {
         case .home:
             MenuView(
                 progress: progress,
-                playSoundEffect: musicPlayer.playSoundEffect
+                playSoundEffect: musicPlayer.playSoundEffect,
+                homeResetSignal: homeResetSignal,
+                openBackgroundSignal: openBackgroundSignal
             ) { activeMode = $0 }
         case .sprites:
             SpriteListView(
@@ -385,6 +404,68 @@ struct RootView: View {
                 progress: progress,
                 playSoundEffect: musicPlayer.playSoundEffect
             )
+        }
+    }
+
+    private func handleFooterTabTap(_ tab: AppTab) {
+        if tab == .home {
+            activeMode = nil
+            homeResetSignal += 1
+        }
+    }
+
+    private func handleDeepLink(_ url: URL) {
+        let configuration =
+            (try? DeepLinkConfiguration.load()) ?? deepLinkConfiguration
+        guard let link = configuration.resolve(url) else { return }
+
+        hasStartedGame = true
+        isFooterHiddenForActiveMode = false
+
+        switch link.destination {
+        case .home:
+            activeMode = nil
+            selectedTab = .home
+            homeResetSignal += 1
+        case .battle:
+            activeMode = .battle
+        case .showcase:
+            activeMode = .showcase
+        case .event:
+            deepLinkedEventID = link.value
+            activeMode = .event
+        case .skills:
+            activeMode = .skills
+        case .settings:
+            activeMode = .settings
+        case .news:
+            activeMode = .news
+        case .gift:
+            activeMode = .gift
+        case .equipment:
+            activeMode = .equipment
+        case .warehouse:
+            activeMode = .warehouse
+        case .pass:
+            activeMode = .pass
+        case .dailyLogin:
+            activeMode = .dailyLogin
+        case .backgrounds:
+            activeMode = nil
+            selectedTab = .home
+            openBackgroundSignal += 1
+        case .sprites:
+            activeMode = nil
+            selectedTab = .sprites
+        case .summon:
+            activeMode = nil
+            selectedTab = .summon
+        case .shop:
+            activeMode = nil
+            selectedTab = .shop
+        case .trade:
+            activeMode = nil
+            selectedTab = .trade
         }
     }
 }

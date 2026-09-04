@@ -1,0 +1,72 @@
+{
+    "scheme": "widerwillen",
+    "universalLinkHost": "remotewiderwillen.tufancakir.com",
+    "links": [
+        {
+            "id": "release",
+            "title": "Release Rewards",
+            "path": "/event/release",
+            "aliases": [
+                "/release",
+                "/gift/release",
+                "/deeplink/release"
+            ],
+            "destination": "gift",
+            "value": null
+        },
+        {
+            "id": "birthday",
+            "title": "Birthday Nimbi Event",
+            "path": "/event/birthday",
+            "aliases": [
+                "/events/birthday",
+                "/deeplink/event/birthday"
+            ],
+            "destination": "event",
+            "value": "birthday_skin_event"
+        },
+        {
+            "id": "halloween",
+            "title": "Halloween Nimbi Event",
+            "path": "/event/halloween",
+            "aliases": [
+                "/events/halloween",
+                "/deeplink/event/halloween"
+            ],
+            "destination": "event",
+            "value": "halloween_skin_event"
+        },
+        {
+            "id": "backgrounds",
+            "title": "Background Collection",
+            "path": "/backgrounds",
+            "aliases": [
+                "/style",
+                "/deeplink/backgrounds"
+            ],
+            "destination": "backgrounds",
+            "value": null
+        },
+        {
+            "id": "daily_login",
+            "title": "Daily Login",
+            "path": "/daily-login",
+            "aliases": [
+                "/login",
+                "/deeplink/daily-login"
+            ],
+            "destination": "daily_login",
+            "value": null
+        },
+        {
+            "id": "shop",
+            "title": "Shop",
+            "path": "/shop",
+            "aliases": [
+                "/deeplink/shop"
+            ],
+            "destination": "shop",
+            "value": null
+        }
+    ]
+}

@@ -99,6 +99,9 @@ struct GameView: View {
                     .allowsHitTesting(true)
             }
         }
+        .onAppear {
+            progress.prepareStageForBattleStart()
+        }
     }
 
     private func startPrestigeTransition() {

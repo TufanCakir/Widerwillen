@@ -43,7 +43,7 @@ struct BattleTransitionView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
-                    .frame(maxWidth: proxy.size.width - 48)
+                    .frame(maxWidth: max(proxy.size.width - 48, 0))
                     .position(
                         x: proxy.size.width * 0.5,
                         y: proxy.size.height * 0.5

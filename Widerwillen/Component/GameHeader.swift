@@ -123,11 +123,14 @@ struct GameHeader: View {
                 AppBackground()
 
                 profilePickerPanel(
-                    width: min(proxy.size.width - 28, 316),
-                    maxHeight: proxy.size.height * 0.74
+                    width: min(max(proxy.size.width - 28, 0), 316),
+                    maxHeight: max(proxy.size.height * 0.74, 0)
                 )
             }
-            .frame(width: proxy.size.width, height: proxy.size.height)
+            .frame(
+                width: max(proxy.size.width, 0),
+                height: max(proxy.size.height, 0)
+            )
         }
     }
 

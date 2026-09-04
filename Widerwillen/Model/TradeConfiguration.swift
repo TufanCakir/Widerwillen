@@ -177,4 +177,7 @@ enum TradeUnlockKind: String, Codable {
     case skin
     case sprite
     case item
+    case appBackground = "app_background"
+    case menuBackground = "menu_background"
+    case menuButton = "menu_button"
 }

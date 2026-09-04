@@ -1,0 +1,44 @@
+{
+    "backgrounds": [
+        {
+            "id": "app_background_default",
+            "title": "Widerwillen Rings",
+            "imageName": null,
+            "usesAnimatedRings": true,
+            "darkening": 0.0
+        },
+        {
+            "id": "widerwillen_release_bg",
+            "title": "Release Background",
+            "imageName": "widerwillen_bg",
+            "usesAnimatedRings": true,
+            "darkening": 0.08
+        },
+        {
+            "id": "birthday_event_bg",
+            "title": "Birthday Background",
+            "imageName": "bg_birthday",
+            "usesAnimatedRings": false,
+            "darkening": 0.10
+        },
+        {
+            "id": "halloween_event_bg",
+            "title": "Halloween Background",
+            "imageName": "bg_halloween",
+            "usesAnimatedRings": false,
+            "darkening": 0.12
+        }
+    ],
+    "buttonLooks": [
+        {
+            "id": "menu_button_default",
+            "title": "Default Circles",
+            "imageName": null
+        },
+        {
+            "id": "pixel_menu_button",
+            "title": "Pixel Menu",
+            "imageName": "icon_pixel_menü"
+        }
+    ]
+}

@@ -134,10 +134,12 @@ struct BattleSceneView: View {
                 SpriteView(scene: scene, options: [.allowsTransparency])
 
                 Color.clear
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .contentShape(Rectangle())
                     .onTapGesture {
                         performTapAttack(in: viewSize)
                     }
+                    .zIndex(1)
 
                 BattleHUD(
                     progress: progress,

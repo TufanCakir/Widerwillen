@@ -39,6 +39,7 @@ struct Footer: View {
     @Binding var selectedTab: AppTab
     let progress: GameProgressStore
     var playSoundEffect: (String) -> Void = { _ in }
+    var onTabTap: (AppTab) -> Void = { _ in }
 
     var body: some View {
         HStack(spacing: 0) {
@@ -48,6 +49,7 @@ struct Footer: View {
                         selectedTab == tab ? "ui_tap" : "ui_navigation"
                     )
                     selectedTab = tab
+                    onTabTap(tab)
                 } label: {
                     VStack(spacing: 5) {
                         RemoteImage(name: tab.imageName)

@@ -1,20 +1,6 @@
 {
     "cards": [
         {
-            "id": "tap_attack",
-            "title": "Tap",
-            "move": "punch",
-            "style": "Strike",
-            "imageName": "icon_pixel_sword",
-            "cooldownSeconds": 0,
-            "staminaCost": 0,
-            "damageMultiplier": 1,
-            "gradientColors": [
-                "#101a3a",
-                "#207cff"
-            ]
-        },
-        {
             "id": "snap_kick",
             "title": "Snap Kick",
             "move": "kick",
