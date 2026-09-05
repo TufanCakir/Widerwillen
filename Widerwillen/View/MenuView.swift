@@ -20,7 +20,9 @@ struct MenuView: View {
     @State private var isDailyLoginPopupPresented = false
     @State private var didEvaluateDailyLoginPopup = false
     @State private var selectedMenuPage: MenuPage = .home
-    @State private var selectedShortcutIndex = 0
+
+    @AppStorage("selectedMenuShortcutIndex")
+    private var selectedShortcutIndex = 0
 
     init(
         progress: GameProgressStore,
@@ -51,6 +53,7 @@ struct MenuView: View {
             AppBackground()
         }
         .onAppear {
+            normalizeShortcutIndexIfNeeded()
             showDailyLoginPopupIfNeeded()
         }
         .onChange(of: homeResetSignal) { _, _ in
@@ -160,6 +163,17 @@ struct MenuView: View {
             selectedShortcutIndex = wrappedIndex
         }
         playSoundEffect("ui_select")
+    }
+
+    private func normalizeShortcutIndexIfNeeded() {
+        guard !shortcuts.isEmpty else {
+            selectedShortcutIndex = 0
+            return
+        }
+
+        if selectedShortcutIndex < 0 || selectedShortcutIndex >= shortcuts.count {
+            selectedShortcutIndex = safeShortcutIndex
+        }
     }
 
     private func handleShortcutTap(at index: Int) {
@@ -449,7 +463,12 @@ struct MenuView: View {
                         )
                         .frame(maxWidth: .infinity)
                         .frame(height: 60)
-                        .background(.black.opacity(0.38))
+                        .background {
+                            MenuButtonBackground(
+                                imageName: progress.selectedMenuButtonLook.imageName
+                            )
+                            .clipShape(Capsule())
+                        }
                         .overlay {
                             Capsule()
                                 .stroke(.blue, lineWidth: 1)

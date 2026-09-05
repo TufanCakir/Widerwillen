@@ -375,6 +375,18 @@
                     ],
                     "unlocks": [
                         {
+                            "id": "widerwillen_release_bg",
+                            "kind": "menu_background",
+                            "name": "Release Background",
+                            "imageName": "widerwillen_bg"
+                        },
+                        {
+                            "id": "pixel_menu_button",
+                            "kind": "menu_button",
+                            "name": "Pixel Menu",
+                            "imageName": "icon_pixel_menü"
+                        },
+                        {
                             "id": "launch_molc_sprite",
                             "kind": "sprite",
                             "spriteIndex": 24,
@@ -513,6 +525,12 @@
                     ],
                     "unlocks": [
                         {
+                            "id": "birthday_event_bg",
+                            "kind": "menu_background",
+                            "name": "Birthday Background",
+                            "imageName": "bg_birthday"
+                        },
+                        {
                             "id": "birthday_nimbi_skin",
                             "kind": "skin",
                             "skinID": "nimbi_birthday_skin",
@@ -647,6 +665,12 @@
                         }
                     ],
                     "unlocks": [
+                        {
+                            "id": "halloween_event_bg",
+                            "kind": "menu_background",
+                            "name": "Halloween Background",
+                            "imageName": "bg_halloween"
+                        },
                         {
                             "id": "halloween_nimbi_skin",
                             "kind": "skin",

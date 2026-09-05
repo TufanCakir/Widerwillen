@@ -118,13 +118,8 @@ struct EventView: View {
                         )
                 }
 
-                TabView(selection: $selectedCategory) {
-                    ForEach(eventCategories, id: \.self) { category in
-                        eventPage(for: category)
-                            .tag(category)
-                    }
-                }
-                .tabViewStyle(.page(indexDisplayMode: .never))
+                eventPage(for: selectedCategory)
+                    .animation(.snappy(duration: 0.22), value: selectedCategory)
             }
             .padding(.top, 18)
 
@@ -204,10 +199,8 @@ struct EventView: View {
                 Spacer()
                     .frame(height: 20)
 
-                // WHEEL NUR UNTEN
                 eventWheel(for: category)
-                    .frame(maxHeight: .infinity)
-                    .clipped()
+                    .frame(height: 238)
                     .zIndex(1)
 
             } else {
@@ -339,51 +332,80 @@ struct EventView: View {
     }
 
     private func eventWheel(for category: String) -> some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            LazyVStack(spacing: 0) {
+        let categoryEvents = events(in: category)
+        let selectedIndex = selectedEventIndex(in: category)
 
-                Color.clear
-                    .frame(height: 66)
+        return VStack(spacing: 8) {
+            wheelStepButton(systemName: "chevron.up") {
+                selectRelativeEvent(-1, in: category)
+            }
+            .opacity(categoryEvents.count > 1 ? 1 : 0)
+            .disabled(categoryEvents.count <= 1)
 
-                LazyVStack(spacing: 8) {
-                    ForEach(events(in: category)) { event in
-                        eventWheelButton(event)
-                            .id(event.id)
-                            .containerRelativeFrame(
-                                .vertical,
-                                count: 3,
-                                spacing: 8
-                            )
+            ZStack {
+                ForEach(Array(categoryEvents.enumerated()), id: \.element.id) {
+                    index,
+                    event in
+                    if let placement = EventWheelPlacement(
+                        index: index,
+                        selectedIndex: selectedIndex
+                    ) {
+                        eventWheelButton(event, placement: placement) {
+                            handleEventWheelTap(event, in: category)
+                        }
+                        .offset(y: placement.yOffset)
+                        .scaleEffect(placement.scale)
+                        .opacity(placement.opacity)
+                        .zIndex(placement.zIndex)
                     }
                 }
-                .scrollTargetLayout()
-
-                Color.clear
-                    .frame(height: 66)
             }
+            .frame(height: 158)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 18)
+                    .onEnded { value in
+                        guard abs(value.translation.height)
+                            > abs(value.translation.width)
+                        else { return }
+
+                        if value.translation.height < 0 {
+                            selectRelativeEvent(1, in: category)
+                        } else {
+                            selectRelativeEvent(-1, in: category)
+                        }
+                    }
+            )
+
+            wheelStepButton(systemName: "chevron.down") {
+                selectRelativeEvent(1, in: category)
+            }
+            .opacity(categoryEvents.count > 1 ? 1 : 0)
+            .disabled(categoryEvents.count <= 1)
         }
-        .scrollPosition(
-            id: $selectedPreviewEventID,
-            anchor: .center
-        )
-        .scrollTargetBehavior(.viewAligned)
-        .clipped()
+        .padding(.horizontal, 16)
     }
 
-    private func eventWheelButton(_ event: GameEvent) -> some View {
-        let isSelected = selectedPreviewEventID == event.id
+    private func eventWheelButton(
+        _ event: GameEvent,
+        placement: EventWheelPlacement,
+        action: @escaping () -> Void
+    ) -> some View {
+        let isSelected = placement == .active
         let remainingRuns = progress.remainingRuns(for: event)
 
-        return Button {
-            guard isSelected, remainingRuns > 0 else { return }
-
-            playSoundEffect("event_start")
-            selectedEvent = event
-            message = ""
-        } label: {
+        return Button(action: action) {
             HStack(spacing: 12) {
+                RemoteImage(name: event.bannerImageName)
+                    .frame(
+                        width: isSelected ? 40 : 30,
+                        height: isSelected ? 40 : 30
+                    )
+                    .padding(isSelected ? 6 : 4)
+                    .background(.black.opacity(0.24))
+                    .clipShape(Circle())
 
-                // Event Name
                 Text(localizedTitle(event))
                     .widerwillenFont(
                         size: isSelected ? 16 : 13,
@@ -397,7 +419,6 @@ struct EventView: View {
 
                 Spacer()
 
-                // Verbleibende Versuche
                 Text("\(remainingRuns)/\(event.dailyLimit)")
                     .widerwillenFont(
                         size: isSelected ? 13 : 11,
@@ -415,7 +436,7 @@ struct EventView: View {
             }
             .padding(.horizontal, 14)
             .frame(maxWidth: .infinity)
-            .frame(height: isSelected ? 58 : 48)
+            .frame(height: 58)
             .background {
                 RoundedRectangle(cornerRadius: 8)
                     .fill(
@@ -431,10 +452,77 @@ struct EventView: View {
                         lineWidth: isSelected ? 2 : 1
                     )
             }
-            .scaleEffect(isSelected ? 1 : 0.92)
         }
         .buttonStyle(.plain)
-        .disabled(remainingRuns == 0)
+    }
+
+    private func wheelStepButton(
+        systemName: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            Image(systemName: systemName)
+                .font(.system(size: 14, weight: .heavy))
+                .foregroundStyle(.white)
+                .frame(width: 42, height: 28)
+                .background(.black.opacity(0.28))
+                .clipShape(Capsule())
+                .overlay {
+                    Capsule()
+                        .stroke(.blue.opacity(0.55), lineWidth: 1)
+                }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func handleEventWheelTap(_ event: GameEvent, in category: String) {
+        guard selectedPreviewEventID == event.id else {
+            withAnimation(.snappy(duration: 0.18)) {
+                selectedCategory = category
+                selectedPreviewEventID = event.id
+            }
+            playSoundEffect("ui_select")
+            return
+        }
+
+        guard progress.remainingRuns(for: event) > 0 else {
+            playSoundEffect("ui_tap")
+            message = "No runs left"
+            return
+        }
+
+        playSoundEffect("event_start")
+        selectedEvent = event
+        message = ""
+    }
+
+    private func selectedEventIndex(in category: String) -> Int {
+        let categoryEvents = events(in: category)
+
+        guard let selectedPreviewEventID,
+            let index = categoryEvents.firstIndex(where: {
+                $0.id == selectedPreviewEventID
+            })
+        else {
+            return 0
+        }
+
+        return index
+    }
+
+    private func selectRelativeEvent(_ offset: Int, in category: String) {
+        let categoryEvents = events(in: category)
+        guard !categoryEvents.isEmpty else { return }
+
+        let currentIndex = selectedEventIndex(in: category)
+        let nextIndex = (
+            currentIndex + offset + categoryEvents.count
+        ) % categoryEvents.count
+
+        withAnimation(.snappy(duration: 0.18)) {
+            selectedPreviewEventID = categoryEvents[nextIndex].id
+        }
+        playSoundEffect("ui_select")
     }
 
     private func eventDetailPopup(for event: GameEvent) -> some View {
@@ -602,6 +690,63 @@ struct EventView: View {
         localizer.text(event.currencyNameKey, fallback: event.currencyName)
     }
 
+}
+
+private enum EventWheelPlacement {
+    case previous
+    case active
+    case next
+
+    init?(index: Int, selectedIndex: Int) {
+        switch index - selectedIndex {
+        case -1:
+            self = .previous
+        case 0:
+            self = .active
+        case 1:
+            self = .next
+        default:
+            return nil
+        }
+    }
+
+    var yOffset: CGFloat {
+        switch self {
+        case .previous:
+            return -54
+        case .active:
+            return 0
+        case .next:
+            return 54
+        }
+    }
+
+    var scale: CGFloat {
+        switch self {
+        case .active:
+            return 1
+        case .previous, .next:
+            return 0.92
+        }
+    }
+
+    var opacity: Double {
+        switch self {
+        case .active:
+            return 1
+        case .previous, .next:
+            return 0.52
+        }
+    }
+
+    var zIndex: Double {
+        switch self {
+        case .active:
+            return 3
+        case .previous, .next:
+            return 1
+        }
+    }
 }
 
 private struct EventShopView: View {

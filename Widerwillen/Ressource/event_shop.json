@@ -167,6 +167,30 @@
                     ]
                 },
                 {
+                    "id": "birthday_skin_event_bg_01",
+                    "title": "Birthday BG",
+                    "category": "Birthday Skin Event",
+                    "imageName": "bg_birthday",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "birthday_chips",
+                            "imageName": "icon_pixel_chip_birthday",
+                            "amount": 180
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "birthday_event_bg",
+                            "kind": "menu_background",
+                            "name": "Birthday Background",
+                            "imageName": "bg_birthday"
+                        }
+                    ]
+                },
+                {
                     "id": "birthday_skin_event_fun_edge_01",
                     "title": "Fun Edge",
                     "category": "Birthday Skin Event",
@@ -290,6 +314,30 @@
                             "name": "Halloween Nimbi",
                             "imageName": "icon_halloween_nimbi",
                             "rarity": "legendary"
+                        }
+                    ]
+                },
+                {
+                    "id": "halloween_skin_event_bg_01",
+                    "title": "Halloween BG",
+                    "category": "Halloween Skin Event",
+                    "imageName": "bg_halloween",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "halloween_chips",
+                            "imageName": "icon_pixel_chip_halloween",
+                            "amount": 220
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "halloween_event_bg",
+                            "kind": "menu_background",
+                            "name": "Halloween Background",
+                            "imageName": "bg_halloween"
                         }
                     ]
                 },

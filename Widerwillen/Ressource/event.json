@@ -431,6 +431,12 @@
             },
             "unlocks": [
                 {
+                    "id": "birthday_event_bg",
+                    "kind": "menu_background",
+                    "name": "Birthday Background",
+                    "imageName": "bg_birthday"
+                },
+                {
                     "id": "event_nimbi_birthday_skin",
                     "kind": "skin",
                     "skinID": "nimbi_birthday_skin",
@@ -467,6 +473,18 @@
                 "skillBooks": 5
             },
             "unlocks": [
+                {
+                    "id": "halloween_event_bg",
+                    "kind": "menu_background",
+                    "name": "Halloween Background",
+                    "imageName": "bg_halloween"
+                },
+                {
+                    "id": "pixel_menu_button",
+                    "kind": "menu_button",
+                    "name": "Pixel Menu",
+                    "imageName": "icon_pixel_menü"
+                },
                 {
                     "id": "event_nimbi_halloween_skin",
                     "kind": "skin",
