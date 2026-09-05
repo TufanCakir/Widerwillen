@@ -441,7 +441,7 @@
                     "kind": "skin",
                     "skinID": "nimbi_birthday_skin",
                     "name": "Nimbi Birthday",
-                    "imageName": "skin_birthday_nimbi_head"
+                    "imageName": "icon_birthday_nimbi"
                 }
             ]
         },
@@ -490,7 +490,7 @@
                     "kind": "skin",
                     "skinID": "nimbi_halloween_skin",
                     "name": "Nimbi Halloween",
-                    "imageName": "skin_halloween_nimbi_head"
+                    "imageName": "icon_halloween_nimbi"
                 }
             ]
         },

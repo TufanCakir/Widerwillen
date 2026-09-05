@@ -44,7 +44,7 @@ struct MenuView: View {
     var body: some View {
         ZStack {
             menuPageContent
-            
+
             if isDailyLoginPopupPresented {
                 dailyLoginPopup
             }
@@ -86,11 +86,6 @@ struct MenuView: View {
                     .frame(width: 104, height: 104)
                     .shadow(color: .black.opacity(0.9), radius: 8, y: 5)
             }
-
-            Text("Nimbi")
-                .widerwillenFont(size: 22, weight: .heavy)
-                .foregroundStyle(.white)
-                .shadow(color: .black.opacity(0.9), radius: 3)
         }
     }
 
@@ -171,7 +166,8 @@ struct MenuView: View {
             return
         }
 
-        if selectedShortcutIndex < 0 || selectedShortcutIndex >= shortcuts.count {
+        if selectedShortcutIndex < 0 || selectedShortcutIndex >= shortcuts.count
+        {
             selectedShortcutIndex = safeShortcutIndex
         }
     }
@@ -211,10 +207,16 @@ struct MenuView: View {
 
                     Circle()
                         .stroke(.blue.opacity(0.72), lineWidth: 1)
-                        .frame(width: placement.ringSize, height: placement.ringSize)
+                        .frame(
+                            width: placement.ringSize,
+                            height: placement.ringSize
+                        )
 
                     RemoteImage(name: shortcut.assetImage)
-                        .frame(width: placement.iconSize, height: placement.iconSize)
+                        .frame(
+                            width: placement.iconSize,
+                            height: placement.iconSize
+                        )
                 }
                 .shadow(color: .black.opacity(0.75), radius: 5, y: 3)
 
@@ -312,7 +314,7 @@ struct MenuView: View {
                 title: "Daily",
                 assetImage: "icon_pixel_calendar",
                 page: .dailyLogin
-            )
+            ),
         ]
     }
 
@@ -438,7 +440,7 @@ struct MenuView: View {
             isDailyLoginPopupPresented = true
         }
     }
-    
+
     private var homeView: some View {
         VStack(spacing: 0) {
             GameHeader(
@@ -465,7 +467,8 @@ struct MenuView: View {
                         .frame(height: 60)
                         .background {
                             MenuButtonBackground(
-                                imageName: progress.selectedMenuButtonLook.imageName
+                                imageName: progress.selectedMenuButtonLook
+                                    .imageName
                             )
                             .clipShape(Capsule())
                         }
@@ -490,7 +493,7 @@ struct MenuView: View {
             }
         }
     }
-    
+
     @ViewBuilder
     private var menuPageContent: some View {
         switch selectedMenuPage {

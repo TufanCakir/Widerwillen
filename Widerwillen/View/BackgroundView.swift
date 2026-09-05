@@ -29,7 +29,10 @@ struct BackgroundView: View {
                     }
                 }
 
-                sectionTitle("Menu Buttons", systemImage: "circle.grid.2x2.fill")
+                sectionTitle(
+                    "Menu Buttons",
+                    systemImage: "circle.grid.2x2.fill"
+                )
 
                 LazyVGrid(columns: columns, spacing: 12) {
                     ForEach(progress.availableMenuButtonLooks) { look in
@@ -56,7 +59,8 @@ struct BackgroundView: View {
         .shadow(color: .black.opacity(0.9), radius: 3, y: 2)
     }
 
-    private func sectionTitle(_ title: String, systemImage: String) -> some View {
+    private func sectionTitle(_ title: String, systemImage: String) -> some View
+    {
         HStack(spacing: 8) {
             Image(systemName: systemImage)
                 .font(.system(size: 13, weight: .heavy))

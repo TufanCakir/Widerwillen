@@ -35,7 +35,7 @@ struct GiftView: View {
         ZStack {
             AppBackground()
 
-            VStack(spacing: 12) {
+            VStack(spacing: 10) {
                 GameHeader(progress: progress)
                     .padding(.top, 18)
 
@@ -47,26 +47,27 @@ struct GiftView: View {
                     statusText(message)
                 }
 
-                if categories.isEmpty {
-                    emptyState
-                        .padding(.horizontal, 16)
-
-                    Spacer()
-                } else {
-                    TabView(selection: $selectedCategory) {
-                        ForEach(categories, id: \.self) { category in
-                            giftPage(for: category)
-                                .tag(category)
+                Group {
+                    if categories.isEmpty {
+                        emptyState
+                            .padding(.horizontal, 16)
+                    } else {
+                        TabView(selection: $selectedCategory) {
+                            ForEach(categories, id: \.self) { category in
+                                giftPage(for: category)
+                                    .tag(category)
+                            }
                         }
+                        .tabViewStyle(.page(indexDisplayMode: .never))
                     }
-                    .tabViewStyle(.page(indexDisplayMode: .never))
                 }
+                .frame(maxHeight: .infinity)
+
+                claimAllButton
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 92)
             }
-        }
-        .safeAreaInset(edge: .bottom) {
-            claimAllButton
-                .padding(.horizontal, 24)
-                .padding(.bottom, 8)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 
@@ -118,7 +119,7 @@ struct GiftView: View {
                     y: 0
                 )
                 .frame(maxWidth: .infinity)
-                .frame(height: 56)
+                .frame(height: 48)
                 .background(hasGifts ? .white : .black.opacity(0.28))
                 .overlay {
                     RoundedRectangle(cornerRadius: 8)
@@ -145,7 +146,7 @@ struct GiftView: View {
 
     private func giftPage(for category: String) -> some View {
         ScrollView {
-            LazyVStack(spacing: 14) {
+            LazyVStack(spacing: 10) {
                 let gifts = availableGifts.filter { $0.category == category }
 
                 if gifts.isEmpty {
@@ -157,19 +158,21 @@ struct GiftView: View {
                 }
             }
             .padding(.horizontal, 16)
-            .padding(.bottom, 110)
+            .padding(.bottom, 10)
         }
     }
 
     private func giftCard(_ gift: GiftReward) -> some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 10) {
             RemoteImage(name: gift.imageName)
-                .frame(width: 54, height: 54)
+                .frame(width: 46, height: 46)
 
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(localizedTitle(gift))
-                    .widerwillenFont(size: 18, weight: .heavy)
+                    .widerwillenFont(size: 15, weight: .heavy)
                     .foregroundStyle(.white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.68)
                     .shadow(
                         color: .black.opacity(0.9),
                         radius: 3,
@@ -177,7 +180,12 @@ struct GiftView: View {
                         y: 0
                     )
 
-                ResourceAmountRow(amounts: gift.rewards, prefix: "+")
+                ResourceAmountRow(
+                    amounts: gift.rewards,
+                    prefix: "+",
+                    iconSize: 16,
+                    fontSize: 10
+                )
 
                 if !gift.unlocks.isEmpty {
                     unlockPreviewRow(gift.unlocks)
@@ -186,7 +194,7 @@ struct GiftView: View {
 
             Spacer()
         }
-        .padding(14)
+        .padding(10)
         .background(.black.opacity(0.24))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
@@ -197,22 +205,24 @@ struct GiftView: View {
     }
 
     private func unlockPreviewRow(_ unlocks: [TradeUnlockReward]) -> some View {
-        HStack(spacing: 8) {
-            ForEach(unlocks) { unlock in
-                HStack(spacing: 5) {
-                    RemoteImage(name: unlock.imageName)
-                        .frame(width: 20, height: 20)
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 6) {
+                ForEach(unlocks) { unlock in
+                    HStack(spacing: 5) {
+                        RemoteImage(name: unlock.imageName)
+                            .frame(width: 16, height: 16)
 
-                    Text(unlock.name)
-                        .widerwillenFont(size: 11, weight: .heavy)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
+                        Text(unlock.name)
+                            .widerwillenFont(size: 9, weight: .heavy)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.62)
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 7)
+                    .frame(height: 23)
+                    .background(.black.opacity(0.34))
+                    .clipShape(Capsule())
                 }
-                .foregroundStyle(.white)
-                .padding(.horizontal, 8)
-                .frame(height: 28)
-                .background(.black.opacity(0.34))
-                .clipShape(Capsule())
             }
         }
     }

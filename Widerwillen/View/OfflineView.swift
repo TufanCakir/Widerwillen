@@ -14,18 +14,12 @@ struct OfflineView: View {
         ZStack {
             AppBackground()
 
-            VStack(spacing: 24) {
-                VStack(spacing: 18) {
+            VStack(spacing: 10) {
+                VStack(spacing: 10) {
                     Image(systemName: "wifi.slash")
                         .font(.system(size: 50, weight: .heavy))
                         .foregroundStyle(.white)
                         .frame(width: 92, height: 92)
-                        .background(.black.opacity(0.34))
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(.blue, lineWidth: 1)
-                        }
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
                         .shadow(
                             color: .black.opacity(0.9),
                             radius: 3,
@@ -58,19 +52,11 @@ struct OfflineView: View {
                     .foregroundStyle(.white.opacity(0.74))
                     .padding(.horizontal, 12)
                     .frame(height: 30)
-                    .background(.white.opacity(0.08))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
                 .foregroundStyle(.white)
                 .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
                 .padding(22)
                 .frame(maxWidth: 340)
-                .background(.black.opacity(0.42))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(.white.opacity(0.14), lineWidth: 1)
-                }
-                .clipShape(RoundedRectangle(cornerRadius: 8))
                 .shadow(color: .black.opacity(0.9), radius: 8, x: 0, y: 5)
 
                 Text("Reconnect to continue")

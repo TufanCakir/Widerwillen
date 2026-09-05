@@ -104,11 +104,13 @@ struct DailyLoginView: View {
     private var compactBody: some View {
         VStack(spacing: 10) {
             HStack(spacing: 10) {
-                Text(localizer.text("daily_login.title", fallback: "Daily Login"))
-                    .widerwillenFont(size: 20, weight: .heavy)
-                    .foregroundStyle(.white)
-                    .shadow(color: .black.opacity(0.9), radius: 3)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(
+                    localizer.text("daily_login.title", fallback: "Daily Login")
+                )
+                .widerwillenFont(size: 20, weight: .heavy)
+                .foregroundStyle(.white)
+                .shadow(color: .black.opacity(0.9), radius: 3)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
                 if let onClose {
                     Button {
@@ -206,15 +208,18 @@ struct DailyLoginView: View {
     private var compactPopupBackground: some View {
         ZStack {
             if let selectedLogin {
-                RemoteImage(name: selectedLogin.backgroundImageName, contentMode: .fill)
-                    .opacity(0.52)
+                RemoteImage(
+                    name: selectedLogin.backgroundImageName,
+                    contentMode: .fill
+                )
+                .opacity(0.52)
             }
 
             LinearGradient(
                 colors: [
                     .black.opacity(0.58),
                     .black.opacity(0.22),
-                    .black.opacity(0.64)
+                    .black.opacity(0.64),
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing

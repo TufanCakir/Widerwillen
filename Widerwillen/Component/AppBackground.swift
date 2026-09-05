@@ -57,8 +57,8 @@ struct AppBackground: View {
         configuration.backgrounds.first {
             $0.id == selectedMenuBackgroundID
         }
-        ?? configuration.backgrounds.first
-        ?? MenuBackgroundConfiguration.fallback.backgrounds[0]
+            ?? configuration.backgrounds.first
+            ?? MenuBackgroundConfiguration.fallback.backgrounds[0]
     }
 
     private var baseGradient: some View {
@@ -68,7 +68,7 @@ struct AppBackground: View {
                 Color(red: 0.027, green: 0.114, blue: 0.227),
                 Color(red: 0.039, green: 0.310, blue: 0.620),
                 Color(red: 0.012, green: 0.082, blue: 0.169),
-                Color(red: 0.000, green: 0.016, blue: 0.039)
+                Color(red: 0.000, green: 0.016, blue: 0.039),
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
@@ -85,7 +85,7 @@ struct AppBackground: View {
                         0.96,
                         0.82 + selectedBackground.darkening
                     )
-                )
+                ),
             ],
             startPoint: .top,
             endPoint: .bottom
@@ -115,7 +115,7 @@ struct AppBackground: View {
                             colors: [
                                 .cyan.opacity(0.20),
                                 .blue.opacity(0.04),
-                                .white.opacity(0.18)
+                                .white.opacity(0.18),
                             ]
                         )
                         .rotationEffect(.degrees(clockwiseDegrees))
@@ -129,7 +129,7 @@ struct AppBackground: View {
                             colors: [
                                 .blue.opacity(0.08),
                                 .purple.opacity(0.22),
-                                .white.opacity(0.12)
+                                .white.opacity(0.12),
                             ]
                         )
                         .rotationEffect(
@@ -168,7 +168,7 @@ struct AppBackground: View {
                         size * 0.34,
                         size * 0.12,
                         size * 0.08,
-                        size * 0.18
+                        size * 0.18,
                     ]
                 )
             )

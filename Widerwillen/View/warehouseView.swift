@@ -31,7 +31,7 @@ struct warehouseView: View {
         ZStack {
             AppBackground()
 
-            VStack(spacing: 12) {
+            VStack(spacing: 10) {
                 GameHeader(progress: progress)
                     .padding(.top, 18)
 
@@ -79,7 +79,7 @@ struct warehouseView: View {
 
     private var currenciesPage: some View {
         ScrollView {
-            LazyVStack(spacing: 12) {
+            LazyVStack(spacing: 10) {
                 idleRewardCard
 
                 currencyCard(
@@ -107,13 +107,13 @@ struct warehouseView: View {
                     amount: progress.skillBooks
                 )
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 14)
             .padding(.bottom, 110)
         }
     }
 
     private var idleRewardCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(
@@ -122,7 +122,7 @@ struct warehouseView: View {
                             fallback: "Idle Rewards"
                         )
                     )
-                    .widerwillenFont(size: 18, weight: .heavy)
+                    .widerwillenFont(size: 16, weight: .heavy)
 
                     Text(
                         localizer.text(
@@ -130,32 +130,32 @@ struct warehouseView: View {
                             fallback: "Rewards collected while away"
                         )
                     )
-                    .widerwillenFont(size: 11, weight: .bold)
+                    .widerwillenFont(size: 10, weight: .bold)
                     .opacity(0.72)
                 }
 
                 Spacer()
 
                 RemoteImage(name: "icon_pixel_box")
-                    .frame(width: 46, height: 46)
+                    .frame(width: 40, height: 40)
                     .opacity(progress.hasPendingRewards ? 1 : 0.42)
             }
 
-            HStack(spacing: 12) {
+            HStack(spacing: 10) {
                 AppResourceLabel(
                     imageName: "icon_pixel_coin",
                     value: progress.pendingCoins,
                     prefix: "+",
-                    iconSize: 24,
-                    fontSize: 14
+                    iconSize: 20,
+                    fontSize: 12
                 )
 
                 AppResourceLabel(
                     imageName: "icon_pixel_crystal",
                     value: progress.pendingCrystals,
                     prefix: "+",
-                    iconSize: 24,
-                    fontSize: 14
+                    iconSize: 20,
+                    fontSize: 12
                 )
 
                 Spacer()
@@ -176,7 +176,7 @@ struct warehouseView: View {
                     progress.hasPendingRewards ? .black : .white.opacity(0.52)
                 )
                 .frame(maxWidth: .infinity)
-                .frame(height: 38)
+                .frame(height: 34)
                 .background(
                     progress.hasPendingRewards ? .white : .black.opacity(0.28)
                 )
@@ -188,18 +188,18 @@ struct warehouseView: View {
         }
         .foregroundStyle(.white)
         .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
-        .padding(14)
+        .padding(11)
         .background(.black.opacity(0.28))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.blue, lineWidth: 1)
+                .stroke(.blue, lineWidth: 2)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 
     private var eventChipsPage: some View {
         ScrollView {
-            LazyVStack(spacing: 12) {
+            LazyVStack(spacing: 10) {
                 ForEach(uniqueChipEvents) { event in
                     currencyCard(
                         title: localizedCurrencyName(event),
@@ -212,7 +212,7 @@ struct warehouseView: View {
                     )
                 }
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 14)
             .padding(.bottom, 110)
         }
     }
@@ -227,7 +227,7 @@ struct warehouseView: View {
 
     private var relicsPage: some View {
         ScrollView {
-            LazyVStack(spacing: 12) {
+            LazyVStack(spacing: 10) {
                 if progress.ownedArtifacts.isEmpty {
                     emptyState(
                         imageName: "icon_pixel_relic",
@@ -249,14 +249,14 @@ struct warehouseView: View {
                     }
                 }
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 14)
             .padding(.bottom, 110)
         }
     }
 
     private var itemsPage: some View {
         ScrollView {
-            LazyVStack(spacing: 12) {
+            LazyVStack(spacing: 10) {
                 if progress.ownedItems.isEmpty {
                     emptyState(
                         imageName: "icon_pixel_box",
@@ -278,7 +278,7 @@ struct warehouseView: View {
                     }
                 }
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 14)
             .padding(.bottom, 110)
         }
     }
@@ -303,35 +303,38 @@ struct warehouseView: View {
         amount: Int,
         subtitle: String?
     ) -> some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 10) {
             RemoteImage(name: imageName)
-                .frame(width: 44, height: 44)
+                .frame(width: 38, height: 38)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .widerwillenFont(size: 18, weight: .heavy)
+                    .widerwillenFont(size: 15, weight: .heavy)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.72)
 
                 if let subtitle {
                     Text(subtitle)
-                        .widerwillenFont(size: 11, weight: .bold)
+                        .widerwillenFont(size: 9, weight: .bold)
                         .opacity(0.66)
+                        .lineLimit(1)
                 }
             }
 
             Spacer()
 
-            Text(amount.formatted())
-                .widerwillenFont(size: 19, weight: .heavy)
+            Text(amount.abbreviatedResourceText)
+                .widerwillenFont(size: 15, weight: .heavy)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
         }
         .foregroundStyle(.white)
         .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
-        .padding(14)
+        .padding(11)
         .background(.black.opacity(0.24))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.blue, lineWidth: 1)
+                .stroke(.blue, lineWidth: 2)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
@@ -346,25 +349,25 @@ struct warehouseView: View {
         actionTitle: String? = nil,
         action: (() -> Void)? = nil
     ) -> some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 10) {
             RemoteImage(name: imageName)
-                .frame(width: 46, height: 46)
+                .frame(width: 40, height: 40)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
-                    .widerwillenFont(size: 17, weight: .heavy)
+                    .widerwillenFont(size: 15, weight: .heavy)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)
 
                 Text(subtitle)
-                    .widerwillenFont(size: 11, weight: .bold)
+                    .widerwillenFont(size: 10, weight: .bold)
                     .opacity(0.68)
             }
 
             Spacer()
 
             Text(valueText)
-                .widerwillenFont(size: 15, weight: .heavy)
+                .widerwillenFont(size: 13, weight: .heavy)
 
             if let actionTitle {
                 Button {
@@ -386,7 +389,7 @@ struct warehouseView: View {
         }
         .foregroundStyle(.white)
         .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
-        .padding(14)
+        .padding(11)
         .background(isEquipped ? .white.opacity(0.12) : .black.opacity(0.18))
         .overlay {
             RoundedRectangle(cornerRadius: 8)

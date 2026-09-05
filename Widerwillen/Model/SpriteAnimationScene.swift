@@ -22,6 +22,7 @@ final class SpriteAnimationScene: SKScene {
     private var shadowCloneNode: SKNode?
     private var shadowCloneRig: SpriteRig?
     private var heroAnimationID = "nimbi_original"
+    private var heroPartImageOverrides: [String: String] = [:]
     private var equippedWeaponImageName: String?
     private var equippedWeaponShadowCloneImageName: String?
     private var equippedWeaponBattleAppearance: WeaponBattleAppearance?
@@ -103,11 +104,13 @@ final class SpriteAnimationScene: SKScene {
 
     func updateBattleCharacter(
         heroAnimationID: String,
+        heroPartImageOverrides: [String: String] = [:],
         equippedWeaponImageName: String?,
         equippedWeaponShadowCloneImageName: String?,
         equippedWeaponBattleAppearance: WeaponBattleAppearance?
     ) {
         self.heroAnimationID = heroAnimationID
+        self.heroPartImageOverrides = heroPartImageOverrides
         self.equippedWeaponImageName = equippedWeaponImageName
         self.equippedWeaponShadowCloneImageName =
             equippedWeaponShadowCloneImageName
@@ -116,6 +119,7 @@ final class SpriteAnimationScene: SKScene {
 
         setupCharactersIfNeeded()
         updateCharacterVisibility()
+        updateHeroRigPartOverrides()
         updateRigWeapons()
         layoutCharacters()
     }
@@ -438,6 +442,42 @@ final class SpriteAnimationScene: SKScene {
                 }
             }
         }
+    }
+
+    private func updateHeroRigPartOverrides() {
+        for character in characters {
+            guard let rig = character.rig else { continue }
+            let overrides =
+                isHeroAnimation(id: character.id) ? heroPartImageOverrides : [:]
+
+            for partName in CharacterBodyPart.allCases.map(\.rigPartName) {
+                guard
+                    let imageName = overrides[partName] ?? rig.parts[partName],
+                    let sprite = rigSpriteNode(
+                        named: partName,
+                        in: character.node
+                    )
+                else {
+                    continue
+                }
+
+                sprite.texture = texture(named: imageName)
+            }
+        }
+    }
+
+    private func rigSpriteNode(named partName: String, in node: SKNode)
+        -> SKSpriteNode?
+    {
+        guard let partNode = rigNode(named: partName, in: node) else {
+            return nil
+        }
+
+        if let spriteNode = partNode as? SKSpriteNode {
+            return spriteNode
+        }
+
+        return partNode.children.compactMap { $0 as? SKSpriteNode }.first
     }
 
     private func startAnimation(

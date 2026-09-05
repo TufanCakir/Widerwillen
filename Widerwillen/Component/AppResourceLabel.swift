@@ -20,7 +20,7 @@ struct AppResourceLabel: View {
             RemoteImage(name: imageName)
                 .frame(width: iconSize, height: iconSize)
 
-            Text("\(prefix)\(value)")
+            Text("\(prefix)\(value.abbreviatedResourceText)")
                 .widerwillenFont(size: fontSize, weight: .bold)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
@@ -32,6 +32,51 @@ struct AppResourceLabel: View {
             x: 0,
             y: 0
         )
+    }
+}
+
+extension Int {
+    var abbreviatedResourceText: String {
+        let sign = self < 0 ? "-" : ""
+        let amount = abs(self)
+
+        switch amount {
+        case 1_000_000_000...:
+            return sign
+                + Self.abbreviated(
+                    amount,
+                    divisor: 1_000_000_000,
+                    suffix: "bil"
+                )
+        case 1_000_000...:
+            return sign
+                + Self.abbreviated(amount, divisor: 1_000_000, suffix: "mil")
+        case 1_000...:
+            return sign + Self.abbreviated(amount, divisor: 1_000, suffix: "k")
+        default:
+            return "\(self)"
+        }
+    }
+
+    private static func abbreviated(_ amount: Int, divisor: Int, suffix: String)
+        -> String
+    {
+        let value = Double(amount) / Double(divisor)
+        let text: String
+
+        if value >= 100 {
+            text = String(format: "%.0f", value)
+        } else if value >= 10 {
+            text = String(format: "%.1f", value)
+        } else {
+            text = String(format: "%.2f", value)
+        }
+
+        return
+            text
+            .replacingOccurrences(of: ".00", with: "")
+            .replacingOccurrences(of: ".0", with: "")
+            + suffix
     }
 }
 

@@ -276,7 +276,7 @@ struct EventView: View {
                 LinearGradient(
                     colors: [
                         .black.opacity(0.10),
-                        .black.opacity(0.54)
+                        .black.opacity(0.54),
                     ],
                     startPoint: .top,
                     endPoint: .bottom
@@ -366,8 +366,9 @@ struct EventView: View {
             .gesture(
                 DragGesture(minimumDistance: 18)
                     .onEnded { value in
-                        guard abs(value.translation.height)
-                            > abs(value.translation.width)
+                        guard
+                            abs(value.translation.height)
+                                > abs(value.translation.width)
                         else { return }
 
                         if value.translation.height < 0 {
@@ -515,9 +516,9 @@ struct EventView: View {
         guard !categoryEvents.isEmpty else { return }
 
         let currentIndex = selectedEventIndex(in: category)
-        let nextIndex = (
-            currentIndex + offset + categoryEvents.count
-        ) % categoryEvents.count
+        let nextIndex =
+            (currentIndex + offset + categoryEvents.count)
+            % categoryEvents.count
 
         withAnimation(.snappy(duration: 0.18)) {
             selectedPreviewEventID = categoryEvents[nextIndex].id
@@ -616,7 +617,7 @@ struct EventView: View {
         }
         .zIndex(30)
     }
-    
+
     private func rewardDetailRow(
         imageName: String,
         title: String,
@@ -899,8 +900,10 @@ private struct EventShopView: View {
 
             VStack(spacing: 12) {
                 HStack(spacing: 10) {
-                    RemoteImage(name: shop?.currencyImageName ?? event.currencyImageName)
-                        .frame(width: 28, height: 28)
+                    RemoteImage(
+                        name: shop?.currencyImageName ?? event.currencyImageName
+                    )
+                    .frame(width: 28, height: 28)
 
                     Text(shop?.title ?? "\(localizedCurrencyName(event)) Shop")
                         .widerwillenFont(size: 18, weight: .heavy)

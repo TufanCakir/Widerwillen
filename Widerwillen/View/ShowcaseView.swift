@@ -111,6 +111,9 @@ struct ShowcaseView: View {
             .onChange(of: progress.battleHeroAnimationID) { _, _ in
                 configureScene(size: proxy.size)
             }
+            .onChange(of: progress.battleHeroPartImageOverrides) { _, _ in
+                configureScene(size: proxy.size)
+            }
             .onChange(of: progress.equippedWeaponImageName) { _, _ in
                 configureScene(size: proxy.size)
             }
@@ -229,7 +232,7 @@ struct ShowcaseView: View {
             .padding(.horizontal, 10)
             .padding(.bottom, 10)
         }
-          }
+    }
 
     private func showcaseMoveButton(_ move: BattleCardMove) -> some View {
         let isSelected = selectedMove == move
@@ -288,6 +291,7 @@ struct ShowcaseView: View {
 
         scene.updateBattleCharacter(
             heroAnimationID: progress.battleHeroAnimationID,
+            heroPartImageOverrides: progress.battleHeroPartImageOverrides,
             equippedWeaponImageName: progress.equippedWeaponImageName,
             equippedWeaponShadowCloneImageName: progress
                 .equippedWeaponShadowCloneImageName,

@@ -40,6 +40,8 @@ final class GameProgressStore {
     private static let summonConfiguration =
         (try? SummonConfiguration.load())
         ?? SummonConfiguration(banners: [])
+    private static let spriteRigs =
+        (try? SpriteRig.loadAll()) ?? []
     private static let menuBackgroundConfiguration =
         (try? MenuBackgroundConfiguration.load())
         ?? MenuBackgroundConfiguration.fallback
@@ -88,6 +90,7 @@ final class GameProgressStore {
     private(set) var selectedCharacterID = GameProgressStore.defaultCharacterID
     private(set) var selectedCharacterSkinID =
         GameProgressStore.defaultCharacterSkinID
+    private(set) var selectedCharacterPartSkinIDs: [String: String] = [:]
     private(set) var selectedWeaponItemID: String?
     private(set) var selectedMenuBackgroundID =
         MenuBackgroundConfiguration.defaultBackgroundID
@@ -101,6 +104,7 @@ final class GameProgressStore {
         unlockDefaultCharacterIfNeeded()
         unlockDefaultWeaponIfNeeded()
         normalizeSelectedCharacterIfNeeded()
+        normalizeSelectedSkinPartsIfNeeded()
         normalizeProfileIconSelectionIfNeeded()
         normalizeEquippedWeaponIfNeeded()
         normalizeMenuCosmeticsIfNeeded()
@@ -156,14 +160,18 @@ final class GameProgressStore {
         selectedProfileIconImageName = Self.defaultProfileIconImageName
         selectedCharacterID = Self.defaultCharacterID
         selectedCharacterSkinID = Self.defaultCharacterSkinID
+        selectedCharacterPartSkinIDs = [:]
         selectedWeaponItemID = nil
-        selectedMenuBackgroundID = MenuBackgroundConfiguration.defaultBackgroundID
-        selectedMenuButtonLookID = MenuBackgroundConfiguration.defaultButtonLookID
+        selectedMenuBackgroundID =
+            MenuBackgroundConfiguration.defaultBackgroundID
+        selectedMenuButtonLookID =
+            MenuBackgroundConfiguration.defaultButtonLookID
         lastIdleRewardUpdate = Date()
 
         unlockDefaultCharacterIfNeeded()
         unlockDefaultWeaponIfNeeded()
         normalizeSelectedCharacterIfNeeded()
+        normalizeSelectedSkinPartsIfNeeded()
         normalizeProfileIconSelectionIfNeeded()
         normalizeEquippedWeaponIfNeeded()
         normalizeMenuCosmeticsIfNeeded()
@@ -181,6 +189,28 @@ final class GameProgressStore {
 
     var battleHeroAnimationID: String {
         selectedCharacterSkin?.animationID ?? Self.defaultHeroAnimationID
+    }
+
+    var battleHeroPartImageOverrides: [String: String] {
+        selectedCharacterPartSkinIDs.reduce(into: [String: String]()) {
+            result,
+            entry in
+            guard
+                let part = CharacterBodyPart(rawValue: entry.key),
+                let skin = Self.characterConfiguration.skin(
+                    id: entry.value,
+                    for: selectedCharacterID
+                ),
+                let imageName = Self.rigPartImageName(
+                    for: part,
+                    skin: skin
+                )
+            else {
+                return
+            }
+
+            result[part.rigPartName] = imageName
+        }
     }
 
     var availableMenuBackgrounds: [MenuBackgroundDefinition] {
@@ -287,6 +317,7 @@ final class GameProgressStore {
         selectedCharacterSkinID =
             Self.characterConfiguration.defaultSkin(for: character.id)?.id
             ?? character.defaultSkinID
+        selectedCharacterPartSkinIDs = [:]
         saveProgress()
     }
 
@@ -307,6 +338,54 @@ final class GameProgressStore {
 
         selectedCharacterID = character.id
         selectedCharacterSkinID = skin.id
+        selectedCharacterPartSkinIDs = [:]
+        saveProgress()
+    }
+
+    func selectedSkin(for part: CharacterBodyPart) -> CharacterSkin? {
+        guard let skinID = selectedCharacterPartSkinIDs[part.rawValue] else {
+            return selectedCharacterSkin
+        }
+
+        return Self.characterConfiguration.skin(
+            id: skinID,
+            for: selectedCharacterID
+        ) ?? selectedCharacterSkin
+    }
+
+    func imageName(for part: CharacterBodyPart, skin: CharacterSkin? = nil)
+        -> String
+    {
+        let resolvedSkin = skin ?? selectedSkin(for: part)
+        return resolvedSkin.flatMap {
+            Self.rigPartImageName(for: part, skin: $0)
+        } ?? resolvedSkin?.imageName
+            ?? selectedCharacterSkin?.imageName
+            ?? "icon_nimpi"
+    }
+
+    func isSelectedSkin(_ skin: CharacterSkin, for part: CharacterBodyPart)
+        -> Bool
+    {
+        selectedCharacterPartSkinIDs[part.rawValue] == skin.id
+    }
+
+    func selectSkinPart(_ skin: CharacterSkin, for part: CharacterBodyPart) {
+        guard isSkinUnlocked(skin),
+            Self.characterConfiguration.skin(
+                id: skin.id,
+                for: selectedCharacterID
+            ) != nil
+        else {
+            return
+        }
+
+        selectedCharacterPartSkinIDs[part.rawValue] = skin.id
+        saveProgress()
+    }
+
+    func clearSkinPart(_ part: CharacterBodyPart) {
+        selectedCharacterPartSkinIDs.removeValue(forKey: part.rawValue)
         saveProgress()
     }
 
@@ -465,7 +544,8 @@ final class GameProgressStore {
     }
 
     var idleCoinsPerMinute: Int {
-        max(5, accountLevel * 4 + stage * 2 + battlePower)
+        let powerBonus = Int(sqrt(Double(max(battlePower, 0))) * 2.0)
+        return max(5, accountLevel * 4 + stage * 2 + powerBonus)
     }
 
     var idleCrystalsPerHour: Int {
@@ -682,7 +762,10 @@ final class GameProgressStore {
     }
 
     func refreshIdleRewards(now: Date = Date()) {
-        let elapsedSeconds = max(0, now.timeIntervalSince(lastIdleRewardUpdate))
+        let elapsedSeconds = min(
+            max(0, now.timeIntervalSince(lastIdleRewardUpdate)),
+            8 * 60 * 60
+        )
         guard elapsedSeconds >= 60 else { return }
 
         let wholeMinutes = Int(elapsedSeconds / 60)
@@ -1308,14 +1391,18 @@ final class GameProgressStore {
     }
 
     private func unlockMenuBackground(_ backgroundID: String) {
-        let knownIDs = Set(Self.menuBackgroundConfiguration.backgrounds.map(\.id))
+        let knownIDs = Set(
+            Self.menuBackgroundConfiguration.backgrounds.map(\.id)
+        )
         guard knownIDs.contains(backgroundID) else { return }
 
         unlockedMenuBackgroundIDs.insert(backgroundID)
     }
 
     private func unlockMenuButtonLook(_ buttonLookID: String) {
-        let knownIDs = Set(Self.menuBackgroundConfiguration.buttonLooks.map(\.id))
+        let knownIDs = Set(
+            Self.menuBackgroundConfiguration.buttonLooks.map(\.id)
+        )
         guard knownIDs.contains(buttonLookID) else { return }
 
         unlockedMenuButtonLookIDs.insert(buttonLookID)
@@ -1398,6 +1485,14 @@ final class GameProgressStore {
         }
     }
 
+    private static func rigPartImageName(
+        for part: CharacterBodyPart,
+        skin: CharacterSkin
+    ) -> String? {
+        spriteRigs.first { $0.id == skin.animationID }?
+            .parts[part.rigPartName]
+    }
+
     private func passRewardKey(
         _ reward: BattlePassReward,
         in pass: BattlePassDefinition
@@ -1465,14 +1560,14 @@ final class GameProgressStore {
         pendingCoins = snapshot.pendingCoins
         pendingCrystals = snapshot.pendingCrystals
         eventCurrencies = snapshot.eventCurrencies
-            eventRunsByID = snapshot.eventRunsByID
-            claimedGiftIDs = Set(snapshot.claimedGiftIDs)
-            unlockedMenuBackgroundIDs = Set(snapshot.unlockedMenuBackgroundIDs)
-            unlockedMenuButtonLookIDs = Set(snapshot.unlockedMenuButtonLookIDs)
-            lastDailyLoginClaimDay = snapshot.lastDailyLoginClaimDay
-            lastDailyLoginClaimDaysByID = snapshot.lastDailyLoginClaimDaysByID
-            dailyLoginClaimCountsByID = snapshot.dailyLoginClaimCountsByID
-            selectedProfileIconImageName = snapshot.selectedProfileIconImageName
+        eventRunsByID = snapshot.eventRunsByID
+        claimedGiftIDs = Set(snapshot.claimedGiftIDs)
+        unlockedMenuBackgroundIDs = Set(snapshot.unlockedMenuBackgroundIDs)
+        unlockedMenuButtonLookIDs = Set(snapshot.unlockedMenuButtonLookIDs)
+        lastDailyLoginClaimDay = snapshot.lastDailyLoginClaimDay
+        lastDailyLoginClaimDaysByID = snapshot.lastDailyLoginClaimDaysByID
+        dailyLoginClaimCountsByID = snapshot.dailyLoginClaimCountsByID
+        selectedProfileIconImageName = snapshot.selectedProfileIconImageName
         ownedSkillLevels = snapshot.ownedSkillLevels
         passPointsByID = snapshot.passPointsByID
         claimedPassRewardIDs = Set(snapshot.claimedPassRewardIDs)
@@ -1492,15 +1587,16 @@ final class GameProgressStore {
                 ($0.characterID, $0)
             }
         )
-            unlockedCharacterSkinIDs = Set(snapshot.unlockedCharacterSkinIDs)
-            selectedCharacterID = snapshot.selectedCharacterID
-            selectedCharacterSkinID = snapshot.selectedCharacterSkinID
-            selectedWeaponItemID = snapshot.selectedWeaponItemID
-            selectedMenuBackgroundID = snapshot.selectedMenuBackgroundID
-            selectedMenuButtonLookID = snapshot.selectedMenuButtonLookID
-            ownedArtifacts = Dictionary(
-                uniqueKeysWithValues: snapshot.ownedArtifacts.map {
-                    ($0.artifactID, $0)
+        unlockedCharacterSkinIDs = Set(snapshot.unlockedCharacterSkinIDs)
+        selectedCharacterID = snapshot.selectedCharacterID
+        selectedCharacterSkinID = snapshot.selectedCharacterSkinID
+        selectedCharacterPartSkinIDs = snapshot.selectedCharacterPartSkinIDs
+        selectedWeaponItemID = snapshot.selectedWeaponItemID
+        selectedMenuBackgroundID = snapshot.selectedMenuBackgroundID
+        selectedMenuButtonLookID = snapshot.selectedMenuButtonLookID
+        ownedArtifacts = Dictionary(
+            uniqueKeysWithValues: snapshot.ownedArtifacts.map {
+                ($0.artifactID, $0)
             }
         )
         ownedItems = Dictionary(
@@ -1542,6 +1638,7 @@ final class GameProgressStore {
             selectedProfileIconImageName: selectedProfileIconImageName,
             selectedCharacterID: selectedCharacterID,
             selectedCharacterSkinID: selectedCharacterSkinID,
+            selectedCharacterPartSkinIDs: selectedCharacterPartSkinIDs,
             selectedWeaponItemID: selectedWeaponItemID,
             selectedMenuBackgroundID: selectedMenuBackgroundID,
             selectedMenuButtonLookID: selectedMenuButtonLookID,
@@ -1640,6 +1737,23 @@ final class GameProgressStore {
         saveProgress()
     }
 
+    private func normalizeSelectedSkinPartsIfNeeded() {
+        selectedCharacterPartSkinIDs = selectedCharacterPartSkinIDs.filter {
+            entry in
+            guard let part = CharacterBodyPart(rawValue: entry.key),
+                unlockedCharacterSkinIDs.contains(entry.value),
+                let skin = Self.characterConfiguration.skin(
+                    id: entry.value,
+                    for: selectedCharacterID
+                )
+            else {
+                return false
+            }
+
+            return Self.rigPartImageName(for: part, skin: skin) != nil
+        }
+    }
+
     private func normalizeProfileIconSelectionIfNeeded() {
         let availableIcons =
             (try? ProfileIconConfiguration.load().icons) ?? []
@@ -1691,7 +1805,8 @@ final class GameProgressStore {
         if !didManuallySelectMenuBackground {
             selectedMenuBackgroundID =
                 MenuBackgroundConfiguration.defaultBackgroundID
-        } else if !unlockedMenuBackgroundIDs.contains(selectedMenuBackgroundID) {
+        } else if !unlockedMenuBackgroundIDs.contains(selectedMenuBackgroundID)
+        {
             selectedMenuBackgroundID =
                 MenuBackgroundConfiguration.defaultBackgroundID
         }
@@ -1699,7 +1814,8 @@ final class GameProgressStore {
         if !didManuallySelectMenuButtonLook {
             selectedMenuButtonLookID =
                 MenuBackgroundConfiguration.defaultButtonLookID
-        } else if !unlockedMenuButtonLookIDs.contains(selectedMenuButtonLookID) {
+        } else if !unlockedMenuButtonLookIDs.contains(selectedMenuButtonLookID)
+        {
             selectedMenuButtonLookID =
                 MenuBackgroundConfiguration.defaultButtonLookID
         }
@@ -1869,6 +1985,7 @@ final class GameProgressStore {
         let selectedProfileIconImageName: String
         let selectedCharacterID: String
         let selectedCharacterSkinID: String
+        let selectedCharacterPartSkinIDs: [String: String]
         let selectedWeaponItemID: String?
         let selectedMenuBackgroundID: String
         let selectedMenuButtonLookID: String
@@ -1909,6 +2026,7 @@ final class GameProgressStore {
             selectedProfileIconImageName: String,
             selectedCharacterID: String,
             selectedCharacterSkinID: String,
+            selectedCharacterPartSkinIDs: [String: String],
             selectedWeaponItemID: String?,
             selectedMenuBackgroundID: String,
             selectedMenuButtonLookID: String,
@@ -1948,6 +2066,7 @@ final class GameProgressStore {
             self.selectedProfileIconImageName = selectedProfileIconImageName
             self.selectedCharacterID = selectedCharacterID
             self.selectedCharacterSkinID = selectedCharacterSkinID
+            self.selectedCharacterPartSkinIDs = selectedCharacterPartSkinIDs
             self.selectedWeaponItemID = selectedWeaponItemID
             self.selectedMenuBackgroundID = selectedMenuBackgroundID
             self.selectedMenuButtonLookID = selectedMenuButtonLookID
@@ -2080,6 +2199,11 @@ final class GameProgressStore {
                     String.self,
                     forKey: .selectedCharacterSkinID
                 ) ?? GameProgressStore.defaultCharacterSkinID
+            selectedCharacterPartSkinIDs =
+                try container.decodeIfPresent(
+                    [String: String].self,
+                    forKey: .selectedCharacterPartSkinIDs
+                ) ?? [:]
             selectedWeaponItemID =
                 try container.decodeIfPresent(
                     String.self,

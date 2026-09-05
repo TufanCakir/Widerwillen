@@ -1,5 +1,5 @@
 {
-    "contentVersion": 191,
+    "contentVersion": 194,
     "json": [
         {
             "name": "arena",
@@ -20,7 +20,7 @@
         {
             "name": "background",
             "path": "background.json"
-            
+
         },
         {
             "name": "character",

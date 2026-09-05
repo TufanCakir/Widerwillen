@@ -53,3 +53,33 @@ struct CharacterSkin: Decodable, Identifiable {
     let animationID: String
     let unlockSource: String
 }
+
+enum CharacterBodyPart: String, CaseIterable, Codable, Identifiable {
+    case head
+    case body
+    case leftHand
+    case rightHand
+    case leftFoot
+    case rightFoot
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .head:
+            "Head"
+        case .body:
+            "Body"
+        case .leftHand:
+            "Left Hand"
+        case .rightHand:
+            "Right Hand"
+        case .leftFoot:
+            "Left Foot"
+        case .rightFoot:
+            "Right Foot"
+        }
+    }
+
+    var rigPartName: String { rawValue }
+}

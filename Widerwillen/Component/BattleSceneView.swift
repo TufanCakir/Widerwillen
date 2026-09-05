@@ -230,6 +230,9 @@ struct BattleSceneView: View {
         .onChange(of: heroAnimationID) { _, animationID in
             updateBattleCharacter(heroAnimationID: animationID)
         }
+        .onChange(of: progress.battleHeroPartImageOverrides) { _, _ in
+            updateBattleCharacter()
+        }
         .onChange(of: equippedWeaponImageName) { _, imageName in
             updateBattleCharacter(equippedWeaponImageName: imageName)
         }
@@ -258,6 +261,7 @@ struct BattleSceneView: View {
     ) {
         scene.updateBattleCharacter(
             heroAnimationID: heroAnimationID ?? self.heroAnimationID,
+            heroPartImageOverrides: progress.battleHeroPartImageOverrides,
             equippedWeaponImageName: equippedWeaponImageName
                 ?? self.equippedWeaponImageName,
             equippedWeaponShadowCloneImageName: progress

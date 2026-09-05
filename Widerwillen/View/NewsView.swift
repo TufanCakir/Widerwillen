@@ -134,7 +134,7 @@ struct NewsView: View {
         .background(.black.opacity(0.24))
         .overlay {
             RoundedRectangle(cornerRadius: 8)
-                .stroke(.blue, lineWidth: 1)
+                .stroke(.blue, lineWidth: 2)
         }
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)

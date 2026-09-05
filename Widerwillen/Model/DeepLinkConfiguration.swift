@@ -24,7 +24,10 @@ struct DeepLinkConfiguration: Decodable {
         return links.first { link in
             link.path == normalizedPath
                 || link.aliases.contains(normalizedPath)
-                || link.id == normalizedPath.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+                || link.id
+                    == normalizedPath.trimmingCharacters(
+                        in: CharacterSet(charactersIn: "/")
+                    )
         }
     }
 

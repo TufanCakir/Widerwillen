@@ -2,7 +2,7 @@
     "gifts": [
         {
             "id": "pre_register_10",
-            "title": "Pre-Register 10",
+            "title": "50 Crystals",
             "titleKey": "gift.pre_register_10.title",
             "category": "Release",
             "categoryKey": "gift.category.release",
@@ -16,7 +16,7 @@
         },
         {
             "id": "pre_register_20",
-            "title": "Pre-Register 20",
+            "title": "50 Relics",
             "titleKey": "gift.pre_register_20.title",
             "category": "Release",
             "categoryKey": "gift.category.release",
@@ -30,7 +30,7 @@
         },
         {
             "id": "pre_register_30",
-            "title": "Pre-Register 30",
+            "title": "50 Skill Books",
             "titleKey": "gift.pre_register_30.title",
             "category": "Release",
             "categoryKey": "gift.category.release",
@@ -44,7 +44,7 @@
         },
         {
             "id": "pre_register_40",
-            "title": "Pre-Register 40",
+            "title": "Pre-Register Reward",
             "titleKey": "gift.pre_register_40.title",
             "category": "Release",
             "categoryKey": "gift.category.release",
@@ -62,7 +62,7 @@
         },
         {
             "id": "pre_register_50",
-            "title": "Pre-Register 50",
+            "title": "Pre-Register Reward",
             "titleKey": "gift.pre_register_50.title",
             "category": "Release",
             "categoryKey": "gift.category.release",
