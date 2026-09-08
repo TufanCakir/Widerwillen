@@ -314,6 +314,87 @@ struct EquipmentView: View {
                     }
                 }
             }
+
+            sectionHeader("Weapon Skins")
+                .padding(.top, 4)
+
+            Button {
+                playSoundEffect("ui_confirm")
+                progress.clearWeaponSkin()
+            } label: {
+                HStack(spacing: 12) {
+                    RemoteImage(
+                        name: progress.equippedWeapon?.imageName
+                            ?? "icon_pixel_sword"
+                    )
+                    .frame(width: 36, height: 36)
+
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Use Weapon Look")
+                            .widerwillenFont(size: 14, weight: .heavy)
+
+                        Text(progress.equippedWeapon?.name ?? "Default")
+                            .widerwillenFont(size: 10, weight: .bold)
+                            .opacity(0.68)
+                    }
+
+                    Spacer()
+
+                    Text(
+                        progress.equippedWeaponSkin == nil ? "Equipped" : "Use"
+                    )
+                    .widerwillenFont(size: 10, weight: .heavy)
+                    .foregroundStyle(
+                        progress.equippedWeaponSkin == nil ? .black : .white
+                    )
+                    .padding(.horizontal, 10)
+                    .frame(height: 28)
+                    .background(
+                        progress.equippedWeaponSkin == nil
+                            ? .white
+                            : .white.opacity(0.14)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
+                .foregroundStyle(.white)
+                .padding(12)
+                .background(
+                    progress.equippedWeaponSkin == nil
+                        ? .white.opacity(0.12)
+                        : .black.opacity(0.18)
+                )
+                .overlay {
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(.blue.opacity(0.72), lineWidth: 1)
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .buttonStyle(.plain)
+            .disabled(progress.equippedWeaponSkin == nil)
+
+            if progress.ownedWeaponSkinList.isEmpty {
+                emptyState(
+                    imageName: "icon_pixel_sword",
+                    title: "No weapon skins"
+                )
+            } else {
+                ForEach(progress.ownedWeaponSkinList) { skin in
+                    equipmentCard(
+                        title: skin.name,
+                        imageName: skin.imageName,
+                        subtitle: "Cosmetic weapon look",
+                        valueText: "Skin",
+                        rarity: skin.rarity,
+                        isEquipped: progress.isEquippedWeaponSkin(skin),
+                        actionTitle: progress.isEquippedWeaponSkin(skin)
+                            ? "Equipped"
+                            : "Use"
+                    ) {
+                        playSoundEffect("ui_confirm")
+                        progress.equipWeaponSkin(skin)
+                    }
+                }
+            }
         }
     }
 

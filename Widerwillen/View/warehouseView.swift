@@ -257,7 +257,9 @@ struct warehouseView: View {
     private var itemsPage: some View {
         ScrollView {
             LazyVStack(spacing: 10) {
-                if progress.ownedItems.isEmpty {
+                if progress.ownedItems.isEmpty
+                    && progress.ownedWeaponSkinList.isEmpty
+                {
                     emptyState(
                         imageName: "icon_pixel_box",
                         titleKey: "warehouse.empty.items",
@@ -274,6 +276,18 @@ struct warehouseView: View {
                             subtitle: "Lv \(item.level)",
                             valueText: "+\(item.damageBonus)",
                             rarity: item.rarity
+                        )
+                    }
+                }
+
+                if !progress.ownedWeaponSkinList.isEmpty {
+                    ForEach(progress.ownedWeaponSkinList) { skin in
+                        inventoryCard(
+                            title: skin.name,
+                            imageName: skin.imageName,
+                            subtitle: "Weapon Skin",
+                            valueText: "Skin",
+                            rarity: skin.rarity
                         )
                     }
                 }

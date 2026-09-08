@@ -45,13 +45,18 @@ extension SpriteAnimationScene {
     }
 
     func texture(named imageName: String) -> SKTexture {
+        let texture: SKTexture
+
         if let url = RemoteContentCache.cachedAssetURL(named: imageName),
             let image = UIImage(contentsOfFile: url.path)
         {
-            return SKTexture(image: image)
+            texture = SKTexture(image: image)
+        } else {
+            texture = SKTexture(imageNamed: imageName)
         }
 
-        return SKTexture(imageNamed: imageName)
+        texture.filteringMode = .nearest
+        return texture
     }
 
     private func resolvedSpriteSheet(
@@ -106,13 +111,18 @@ extension SpriteAnimationScene {
     }
 
     private static func baseTexture(named imageName: String) -> SKTexture {
+        let texture: SKTexture
+
         if let url = RemoteContentCache.cachedAssetURL(named: imageName),
             let image = UIImage(contentsOfFile: url.path)
         {
-            return SKTexture(image: image)
+            texture = SKTexture(image: image)
+        } else {
+            texture = SKTexture(imageNamed: imageName)
         }
 
-        return SKTexture(imageNamed: imageName)
+        texture.filteringMode = .nearest
+        return texture
     }
 
     private static func slicedTextures(

@@ -164,6 +164,8 @@ struct TradeUnlockReward: Decodable, Identifiable {
     let kind: TradeUnlockKind
     let name: String
     let imageName: String
+    let shadowCloneImageName: String?
+    let battleAppearance: WeaponBattleAppearance?
     let characterID: String?
     let skinID: String?
     let itemID: String?
@@ -177,6 +179,7 @@ enum TradeUnlockKind: String, Codable {
     case skin
     case sprite
     case item
+    case weaponSkin = "weapon_skin"
     case appBackground = "app_background"
     case menuBackground = "menu_background"
     case menuButton = "menu_button"

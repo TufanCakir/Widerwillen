@@ -81,6 +81,7 @@ struct EventView: View {
         }
         .onAppear {
             progress.refreshDailyEventLimits(for: configuration.events)
+            ensureSelectedCategoryIsValid()
             selectDefaultPreviewEventIfNeeded(for: selectedCategory)
             onBattleStateChange(selectedEvent != nil)
         }
@@ -118,7 +119,7 @@ struct EventView: View {
                         )
                 }
 
-                eventPage(for: selectedCategory)
+                categoryPager
                     .animation(.snappy(duration: 0.22), value: selectedCategory)
             }
             .padding(.top, 18)
@@ -151,6 +152,16 @@ struct EventView: View {
             playSoundEffect: playSoundEffect,
             displayName: localizedCategory
         )
+    }
+
+    private var categoryPager: some View {
+        TabView(selection: $selectedCategory) {
+            ForEach(eventCategories, id: \.self) { category in
+                eventPage(for: category)
+                    .tag(category)
+            }
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
     }
 
     private var eventShopEntryButton: some View {
@@ -246,6 +257,18 @@ struct EventView: View {
         }
 
         selectedPreviewEventID = categoryEvents.first?.id
+    }
+
+    private func ensureSelectedCategoryIsValid() {
+        guard !eventCategories.isEmpty else {
+            selectedCategory = ""
+            selectedPreviewEventID = nil
+            return
+        }
+
+        if !eventCategories.contains(selectedCategory) {
+            selectedCategory = eventCategories[0]
+        }
     }
 
     private func selectInitialEvent(_ eventID: String?) {

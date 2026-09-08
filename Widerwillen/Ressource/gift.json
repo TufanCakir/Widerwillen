@@ -79,6 +79,21 @@
                     "kind": "menu_button",
                     "name": "Pixel Menu Button",
                     "imageName": "icon_pixel_menü"
+                },
+                {
+                    "id": "release_sword_skin",
+                    "kind": "weapon_skin",
+                    "itemID": "widerwillen_sword",
+                    "name": "Release Sword",
+                    "imageName": "icon_pixel_sword",
+                    "shadowCloneImageName": "shadow_clone_nimbi_sword",
+                    "rarity": "rare",
+                    "battleAppearance": {
+                        "scale": 1.0,
+                        "offsetX": 10,
+                        "offsetY": 10,
+                        "rotation": -10
+                    }
                 }
             ]
         },
@@ -112,6 +127,21 @@
                     "kind": "app_background",
                     "name": "Birthday Background",
                     "imageName": "bg_birthday"
+                },
+                {
+                    "id": "birthday_big_sword_skin",
+                    "kind": "weapon_skin",
+                    "itemID": "fun_edge",
+                    "name": "Birthday Blade",
+                    "imageName": "icon_pixel_big_sword",
+                    "shadowCloneImageName": "shadow_clone_nimbi_big_sword",
+                    "rarity": "epic",
+                    "battleAppearance": {
+                        "scale": 1.0,
+                        "offsetX": 10,
+                        "offsetY": 10,
+                        "rotation": -10
+                    }
                 }
             ]
         },
@@ -145,6 +175,21 @@
                     "kind": "app_background",
                     "name": "Halloween Background",
                     "imageName": "bg_halloween"
+                },
+                {
+                    "id": "halloween_slasher_skin",
+                    "kind": "weapon_skin",
+                    "itemID": "slasher",
+                    "name": "Halloween Slasher",
+                    "imageName": "icon_pixel_slasher",
+                    "shadowCloneImageName": "shadow_clone_nimbi_slasher",
+                    "rarity": "legendary",
+                    "battleAppearance": {
+                        "scale": 1.0,
+                        "offsetX": 10,
+                        "offsetY": 10,
+                        "rotation": -10
+                    }
                 }
             ]
         }

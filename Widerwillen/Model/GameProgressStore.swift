@@ -64,6 +64,7 @@ final class GameProgressStore {
     private(set) var unlockedCharacterSkinIDs: Set<String> = []
     private(set) var ownedArtifacts: [String: OwnedArtifact] = [:]
     private(set) var ownedItems: [String: OwnedItem] = [:]
+    private(set) var unlockedWeaponSkins: [String: OwnedWeaponSkin] = [:]
     private(set) var lastSummonResults: [SummonResult] = []
     private(set) var lastArtifactSummonResults: [ArtifactSummonResult] = []
     private(set) var lastItemSummonResults: [ItemSummonResult] = []
@@ -92,6 +93,7 @@ final class GameProgressStore {
         GameProgressStore.defaultCharacterSkinID
     private(set) var selectedCharacterPartSkinIDs: [String: String] = [:]
     private(set) var selectedWeaponItemID: String?
+    private(set) var selectedWeaponSkinID: String?
     private(set) var selectedMenuBackgroundID =
         MenuBackgroundConfiguration.defaultBackgroundID
     private(set) var selectedMenuButtonLookID =
@@ -136,6 +138,7 @@ final class GameProgressStore {
         unlockedCharacterSkinIDs = []
         ownedArtifacts = [:]
         ownedItems = [:]
+        unlockedWeaponSkins = [:]
         lastSummonResults = []
         lastArtifactSummonResults = []
         lastItemSummonResults = []
@@ -162,6 +165,7 @@ final class GameProgressStore {
         selectedCharacterSkinID = Self.defaultCharacterSkinID
         selectedCharacterPartSkinIDs = [:]
         selectedWeaponItemID = nil
+        selectedWeaponSkinID = nil
         selectedMenuBackgroundID =
             MenuBackgroundConfiguration.defaultBackgroundID
         selectedMenuButtonLookID =
@@ -260,7 +264,21 @@ final class GameProgressStore {
         return ownedItems[selectedWeaponItemID]
     }
 
+    var ownedWeaponSkinList: [OwnedWeaponSkin] {
+        Array(unlockedWeaponSkins.values)
+            .sorted { $0.name < $1.name }
+    }
+
+    var equippedWeaponSkin: OwnedWeaponSkin? {
+        guard let selectedWeaponSkinID else { return nil }
+        return unlockedWeaponSkins[selectedWeaponSkinID]
+    }
+
     var equippedWeaponShadowCloneImageName: String? {
+        if let equippedWeaponSkin {
+            return equippedWeaponSkin.shadowCloneImageName
+        }
+
         guard let selectedWeaponItemID else {
             return nil
         }
@@ -272,10 +290,16 @@ final class GameProgressStore {
     }
 
     var equippedWeaponImageName: String? {
-        equippedWeapon?.imageName
+        equippedWeaponSkin?.imageName ?? equippedWeapon?.imageName
     }
 
     var equippedWeaponBattleAppearance: WeaponBattleAppearance? {
+        if let equippedWeaponSkin,
+            let appearance = equippedWeaponSkin.battleAppearance
+        {
+            return appearance
+        }
+
         guard let selectedWeaponItemID else {
             return nil
         }
@@ -397,6 +421,22 @@ final class GameProgressStore {
         guard ownedItems[item.itemID] != nil else { return }
 
         selectedWeaponItemID = item.itemID
+        saveProgress()
+    }
+
+    func isEquippedWeaponSkin(_ skin: OwnedWeaponSkin) -> Bool {
+        selectedWeaponSkinID == skin.skinID
+    }
+
+    func equipWeaponSkin(_ skin: OwnedWeaponSkin) {
+        guard unlockedWeaponSkins[skin.skinID] != nil else { return }
+
+        selectedWeaponSkinID = skin.skinID
+        saveProgress()
+    }
+
+    func clearWeaponSkin() {
+        selectedWeaponSkinID = nil
         saveProgress()
     }
 
@@ -1383,6 +1423,8 @@ final class GameProgressStore {
             if selectedWeaponItemID == nil {
                 selectedWeaponItemID = itemID
             }
+        case .weaponSkin:
+            unlockWeaponSkin(unlock)
         case .appBackground, .menuBackground:
             unlockMenuBackground(unlock.id)
         case .menuButton:
@@ -1406,6 +1448,28 @@ final class GameProgressStore {
         guard knownIDs.contains(buttonLookID) else { return }
 
         unlockedMenuButtonLookIDs.insert(buttonLookID)
+    }
+
+    private func unlockWeaponSkin(_ unlock: TradeUnlockReward) {
+        let skinID = unlock.itemID ?? unlock.id
+        let sourceEntry = Self.summonConfiguration.banners
+            .filter { $0.kind == .item }
+            .flatMap(\.entries)
+            .first { $0.id == skinID }
+
+        unlockedWeaponSkins[skinID] = OwnedWeaponSkin(
+            skinID: skinID,
+            name: unlock.name.isEmpty
+                ? sourceEntry?.name ?? skinID : unlock.name,
+            imageName: unlock.imageName.isEmpty
+                ? sourceEntry?.imageName ?? "icon_pixel_sword"
+                : unlock.imageName,
+            shadowCloneImageName: unlock.shadowCloneImageName
+                ?? sourceEntry?.shadowCloneImageName,
+            battleAppearance: unlock.battleAppearance
+                ?? sourceEntry?.battleAppearance,
+            rarity: unlock.rarity ?? sourceEntry?.rarity ?? .rare
+        )
     }
 
     private func unlockSprite(
@@ -1564,6 +1628,11 @@ final class GameProgressStore {
         claimedGiftIDs = Set(snapshot.claimedGiftIDs)
         unlockedMenuBackgroundIDs = Set(snapshot.unlockedMenuBackgroundIDs)
         unlockedMenuButtonLookIDs = Set(snapshot.unlockedMenuButtonLookIDs)
+        unlockedWeaponSkins = Dictionary(
+            uniqueKeysWithValues: snapshot.unlockedWeaponSkins.map {
+                ($0.skinID, $0)
+            }
+        )
         lastDailyLoginClaimDay = snapshot.lastDailyLoginClaimDay
         lastDailyLoginClaimDaysByID = snapshot.lastDailyLoginClaimDaysByID
         dailyLoginClaimCountsByID = snapshot.dailyLoginClaimCountsByID
@@ -1592,6 +1661,7 @@ final class GameProgressStore {
         selectedCharacterSkinID = snapshot.selectedCharacterSkinID
         selectedCharacterPartSkinIDs = snapshot.selectedCharacterPartSkinIDs
         selectedWeaponItemID = snapshot.selectedWeaponItemID
+        selectedWeaponSkinID = snapshot.selectedWeaponSkinID
         selectedMenuBackgroundID = snapshot.selectedMenuBackgroundID
         selectedMenuButtonLookID = snapshot.selectedMenuButtonLookID
         ownedArtifacts = Dictionary(
@@ -1632,6 +1702,7 @@ final class GameProgressStore {
             claimedGiftIDs: Array(claimedGiftIDs),
             unlockedMenuBackgroundIDs: Array(unlockedMenuBackgroundIDs),
             unlockedMenuButtonLookIDs: Array(unlockedMenuButtonLookIDs),
+            unlockedWeaponSkins: Array(unlockedWeaponSkins.values),
             lastDailyLoginClaimDay: lastDailyLoginClaimDay,
             lastDailyLoginClaimDaysByID: lastDailyLoginClaimDaysByID,
             dailyLoginClaimCountsByID: dailyLoginClaimCountsByID,
@@ -1640,6 +1711,7 @@ final class GameProgressStore {
             selectedCharacterSkinID: selectedCharacterSkinID,
             selectedCharacterPartSkinIDs: selectedCharacterPartSkinIDs,
             selectedWeaponItemID: selectedWeaponItemID,
+            selectedWeaponSkinID: selectedWeaponSkinID,
             selectedMenuBackgroundID: selectedMenuBackgroundID,
             selectedMenuButtonLookID: selectedMenuButtonLookID,
             ownedSkillLevels: ownedSkillLevels,
@@ -1842,6 +1914,12 @@ final class GameProgressStore {
     private func normalizeEquippedWeaponIfNeeded() {
         unlockDefaultWeaponIfNeeded()
 
+        if let selectedWeaponSkinID,
+            unlockedWeaponSkins[selectedWeaponSkinID] == nil
+        {
+            self.selectedWeaponSkinID = nil
+        }
+
         if let selectedWeaponItemID,
             ownedItems[selectedWeaponItemID] != nil
         {
@@ -1979,6 +2057,7 @@ final class GameProgressStore {
         let claimedGiftIDs: [String]
         let unlockedMenuBackgroundIDs: [String]
         let unlockedMenuButtonLookIDs: [String]
+        let unlockedWeaponSkins: [OwnedWeaponSkin]
         let lastDailyLoginClaimDay: String
         let lastDailyLoginClaimDaysByID: [String: String]
         let dailyLoginClaimCountsByID: [String: Int]
@@ -1987,6 +2066,7 @@ final class GameProgressStore {
         let selectedCharacterSkinID: String
         let selectedCharacterPartSkinIDs: [String: String]
         let selectedWeaponItemID: String?
+        let selectedWeaponSkinID: String?
         let selectedMenuBackgroundID: String
         let selectedMenuButtonLookID: String
         let ownedSkillLevels: [String: Int]
@@ -2020,6 +2100,7 @@ final class GameProgressStore {
             claimedGiftIDs: [String],
             unlockedMenuBackgroundIDs: [String],
             unlockedMenuButtonLookIDs: [String],
+            unlockedWeaponSkins: [OwnedWeaponSkin],
             lastDailyLoginClaimDay: String,
             lastDailyLoginClaimDaysByID: [String: String],
             dailyLoginClaimCountsByID: [String: Int],
@@ -2028,6 +2109,7 @@ final class GameProgressStore {
             selectedCharacterSkinID: String,
             selectedCharacterPartSkinIDs: [String: String],
             selectedWeaponItemID: String?,
+            selectedWeaponSkinID: String?,
             selectedMenuBackgroundID: String,
             selectedMenuButtonLookID: String,
             ownedSkillLevels: [String: Int],
@@ -2060,6 +2142,7 @@ final class GameProgressStore {
             self.claimedGiftIDs = claimedGiftIDs
             self.unlockedMenuBackgroundIDs = unlockedMenuBackgroundIDs
             self.unlockedMenuButtonLookIDs = unlockedMenuButtonLookIDs
+            self.unlockedWeaponSkins = unlockedWeaponSkins
             self.lastDailyLoginClaimDay = lastDailyLoginClaimDay
             self.lastDailyLoginClaimDaysByID = lastDailyLoginClaimDaysByID
             self.dailyLoginClaimCountsByID = dailyLoginClaimCountsByID
@@ -2068,6 +2151,7 @@ final class GameProgressStore {
             self.selectedCharacterSkinID = selectedCharacterSkinID
             self.selectedCharacterPartSkinIDs = selectedCharacterPartSkinIDs
             self.selectedWeaponItemID = selectedWeaponItemID
+            self.selectedWeaponSkinID = selectedWeaponSkinID
             self.selectedMenuBackgroundID = selectedMenuBackgroundID
             self.selectedMenuButtonLookID = selectedMenuButtonLookID
             self.ownedSkillLevels = ownedSkillLevels
@@ -2169,6 +2253,11 @@ final class GameProgressStore {
                     [String].self,
                     forKey: .unlockedMenuButtonLookIDs
                 ) ?? [MenuBackgroundConfiguration.defaultButtonLookID]
+            unlockedWeaponSkins =
+                try container.decodeIfPresent(
+                    [OwnedWeaponSkin].self,
+                    forKey: .unlockedWeaponSkins
+                ) ?? []
             lastDailyLoginClaimDay =
                 try container.decodeIfPresent(
                     String.self,
@@ -2208,6 +2297,11 @@ final class GameProgressStore {
                 try container.decodeIfPresent(
                     String.self,
                     forKey: .selectedWeaponItemID
+                )
+            selectedWeaponSkinID =
+                try container.decodeIfPresent(
+                    String.self,
+                    forKey: .selectedWeaponSkinID
                 )
             selectedMenuBackgroundID =
                 try container.decodeIfPresent(
@@ -2327,6 +2421,17 @@ struct OwnedItem: Identifiable, Codable {
     let rarity: SpriteRarity
     let damageBonus: Int
     let level: Int
+}
+
+struct OwnedWeaponSkin: Identifiable, Codable {
+    var id: String { skinID }
+
+    let skinID: String
+    let name: String
+    let imageName: String
+    let shadowCloneImageName: String?
+    let battleAppearance: WeaponBattleAppearance?
+    let rarity: SpriteRarity
 }
 
 struct ItemSummonResult: Identifiable {
