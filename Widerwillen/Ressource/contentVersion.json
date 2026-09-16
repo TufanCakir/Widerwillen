@@ -1,5 +1,5 @@
 {
-    "contentVersion": 194,
+    "contentVersion": 198,
     "json": [
         {
             "name": "arena",
@@ -89,6 +89,10 @@
         {
             "name": "rig",
             "path": "rig.json"
+        },
+        {
+            "name": "rig_upgrades",
+            "path": "rig_upgrades.json"
         },
         {
             "name": "shop",
@@ -479,16 +483,6 @@
         {
             "name": "icon_nimbi_night",
             "path": "assets/icon_nimbi_night.png",
-            "version": 1
-        },
-        {
-            "name": "icon_nimbi_halloween",
-            "path": "assets/icon_nimbi_halloween.png",
-            "version": 1
-        },
-        {
-            "name": "icon_nimbi_birthday",
-            "path": "assets/icon_nimbi_birthday.png",
             "version": 1
         },
         {

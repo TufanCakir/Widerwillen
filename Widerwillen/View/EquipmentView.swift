@@ -154,6 +154,8 @@ struct EquipmentView: View {
             skinPartEquipmentSection
         case .weapons:
             weaponEquipmentSection
+        case .upgrades:
+            RigUpgradeView(progress: progress, playSoundEffect: playSoundEffect)
         }
     }
 
@@ -502,6 +504,7 @@ private enum EquipmentCategory: String, CaseIterable, Identifiable {
     case wardrobe
     case parts
     case weapons
+    case upgrades
 
     var id: String { rawValue }
 
@@ -513,6 +516,8 @@ private enum EquipmentCategory: String, CaseIterable, Identifiable {
             "Parts"
         case .weapons:
             "Weapons"
+        case .upgrades:
+            "Upgrades"
         }
     }
 }

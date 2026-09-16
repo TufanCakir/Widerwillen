@@ -108,7 +108,7 @@ struct ResourceAmountRow: View {
             ForEach(amounts) { amount in
                 AppResourceLabel(
                     imageName: amount.imageName ?? amount.resource.imageName,
-                    value: amount.amount,
+                    value: Double(amount.amount),
                     prefix: prefix,
                     iconSize: iconSize,
                     fontSize: fontSize,

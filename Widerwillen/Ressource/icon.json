@@ -1,4 +1,31 @@
 {
+    "titles": [
+        {
+            "id": "newcomer",
+            "title": "Neuling",
+            "requiredAccountLevel": 1
+        },
+        {
+            "id": "adventurer",
+            "title": "Abenteurer",
+            "requiredAccountLevel": 5
+        },
+        {
+            "id": "expert",
+            "title": "Experte",
+            "requiredAccountLevel": 15
+        },
+        {
+            "id": "veteran",
+            "title": "Veteran",
+            "requiredAccountLevel": 30
+        },
+        {
+            "id": "moon_legend",
+            "title": "Mondlegende",
+            "requiredAccountLevel": 45
+        }
+    ],
     "icons": [
         {
             "id": "widerwillen",
@@ -251,6 +278,42 @@
             "title": "Slasher",
             "imageName": "icon_pixel_slasher",
             "requiredAccountLevel": 46
+        },
+        {
+            "id": "nimbi_birthday",
+            "title": "Nimbi Birthday",
+            "imageName": "icon_birthday_nimbi",
+            "requiredAccountLevel": 15
+        },
+        {
+            "id": "nimbi_halloween",
+            "title": "Nimbi Halloween",
+            "imageName": "icon_halloween_nimbi",
+            "requiredAccountLevel": 16
+        },
+        {
+            "id": "slush",
+            "title": "Slush",
+            "imageName": "icon_slush",
+            "requiredAccountLevel": 18
+        },
+        {
+            "id": "chip_halloween",
+            "title": "Halloween Chip",
+            "imageName": "icon_pixel_chip_halloween",
+            "requiredAccountLevel": 30
+        },
+        {
+            "id": "chip_birthday",
+            "title": "Birthday Chip",
+            "imageName": "icon_pixel_chip_birthday",
+            "requiredAccountLevel": 30
+        },
+        {
+            "id": "prestige",
+            "title": "Prestige",
+            "imageName": "icon_pixel_prestige",
+            "requiredAccountLevel": 35
         }
     ]
 }

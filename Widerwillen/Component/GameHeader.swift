@@ -31,18 +31,41 @@ struct GameHeader: View {
             }
     }
 
+    private var resourceColumns: [GridItem] {
+        [
+            GridItem(.flexible(), spacing: 6),
+            GridItem(.flexible(), spacing: 6),
+        ]
+    }
+
     private var headerContent: some View {
-        HStack(alignment: .center, spacing: 10) {
-            VStack(alignment: .leading, spacing: 8) {
-                profileIconButton
+        HStack(alignment: .center, spacing: 12) {
+
+            // MARK: - Profil
+            profileIconButton
+
+            // MARK: - Level / Titel / XP
+            VStack(alignment: .center, spacing: 5) {
+
+                Text(selectedProfileTitle?.title ?? "Neuling")
+                    .widerwillenFont(size: 10, weight: .heavy)
+                    .foregroundStyle(.cyan.opacity(0.92))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
 
                 Text("LV \(progress.accountLevel)")
                     .widerwillenFont(size: 18, weight: .heavy)
                     .foregroundStyle(.white)
-                    .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+                    .shadow(
+                        color: .black.opacity(0.9),
+                        radius: 3,
+                        x: 0,
+                        y: 2
+                    )
 
                 GeometryReader { proxy in
                     ZStack(alignment: .leading) {
+
                         Capsule()
                             .fill(.black.opacity(0.28))
 
@@ -50,42 +73,53 @@ struct GameHeader: View {
                             .fill(.white.opacity(0.48))
                             .frame(
                                 width: proxy.size.width
-                                    * min(max(progress.accountXPProgress, 0), 1)
+                                    * min(
+                                        max(progress.accountXPProgress, 0),
+                                        1
+                                    )
                             )
                     }
                 }
-                .frame(width: 110, height: 8)
+                .frame(height: 8)
             }
+            .frame(maxWidth: .infinity)
 
-            Spacer()
+            // MARK: - Ressourcen 2 × 2
+            LazyVGrid(
+                columns: resourceColumns,
+                alignment: .leading,
+                spacing: 6
+            ) {
 
-            AppResourceLabel(
-                imageName: "icon_pixel_coin",
-                value: progress.coins,
-                iconSize: 24,
-                fontSize: 13
-            )
+                AppResourceLabel(
+                    imageName: "icon_pixel_coin",
+                    value: Double(progress.coins),
+                    iconSize: 22,
+                    fontSize: 11
+                )
 
-            AppResourceLabel(
-                imageName: "icon_pixel_crystal",
-                value: progress.crystals,
-                iconSize: 24,
-                fontSize: 13
-            )
+                AppResourceLabel(
+                    imageName: "icon_pixel_crystal",
+                    value: Double(progress.crystals),
+                    iconSize: 22,
+                    fontSize: 11
+                )
 
-            AppResourceLabel(
-                imageName: "icon_pixel_relic",
-                value: progress.artifactShards,
-                iconSize: 22,
-                fontSize: 12
-            )
+                AppResourceLabel(
+                    imageName: "icon_pixel_relic",
+                    value: Double(progress.artifactShards),
+                    iconSize: 20,
+                    fontSize: 10
+                )
 
-            AppResourceLabel(
-                imageName: "icon_pixel_skill_book",
-                value: progress.skillBooks,
-                iconSize: 22,
-                fontSize: 12
-            )
+                AppResourceLabel(
+                    imageName: "icon_pixel_skill_book",
+                    value: Double(progress.skillBooks),
+                    iconSize: 20,
+                    fontSize: 10
+                )
+            }
+            .frame(width: 130)
         }
     }
 
@@ -139,7 +173,7 @@ struct GameHeader: View {
     {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Profile Icon")
+                Text("Profil")
                     .widerwillenFont(size: 15, weight: .heavy)
                     .foregroundStyle(.white)
                     .shadow(
@@ -165,6 +199,8 @@ struct GameHeader: View {
                 }
                 .buttonStyle(.plain)
             }
+
+            titlePicker
 
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: pickerColumns, spacing: 8) {
@@ -200,6 +236,8 @@ struct GameHeader: View {
 
     private func iconChoice(_ icon: ProfileIcon) -> some View {
         let isSelected = progress.selectedProfileIconImageName == icon.imageName
+        let isUnlocked =
+            progress.accountLevel >= (icon.requiredAccountLevel ?? 1)
 
         return Button {
             progress.selectProfileIcon(icon)
@@ -208,7 +246,17 @@ struct GameHeader: View {
             }
         } label: {
             VStack(spacing: 6) {
-                profileIconImage(icon.imageName, size: 34)
+                ZStack {
+                    profileIconImage(icon.imageName, size: 34)
+                        .saturation(isUnlocked ? 1 : 0)
+                        .opacity(isUnlocked ? 1 : 0.45)
+
+                    if !isUnlocked {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 12, weight: .heavy))
+                            .foregroundStyle(.white)
+                    }
+                }
 
                 Text(icon.title)
                     .widerwillenFont(size: 8, weight: .heavy)
@@ -238,6 +286,53 @@ struct GameHeader: View {
             .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .buttonStyle(.plain)
+        .disabled(!isUnlocked)
+    }
+
+    private var selectedProfileTitle: ProfileTitle? {
+        iconConfiguration.titles.first {
+            $0.id == progress.selectedProfileTitleID
+        }
+    }
+
+    private var titlePicker: some View {
+        Menu {
+            ForEach(iconConfiguration.titles) { title in
+                let isUnlocked =
+                    progress.accountLevel >= title.requiredAccountLevel
+                Button {
+                    progress.selectProfileTitle(title)
+                } label: {
+                    Label(
+                        isUnlocked
+                            ? title.title
+                            : "\(title.title) · LV \(title.requiredAccountLevel)",
+                        systemImage: isUnlocked ? "checkmark.seal" : "lock.fill"
+                    )
+                }
+                .disabled(!isUnlocked)
+            }
+        } label: {
+            HStack(spacing: 8) {
+                Text("Titel")
+                    .foregroundStyle(.white.opacity(0.62))
+                Spacer()
+                Text(selectedProfileTitle?.title ?? "Neuling")
+                    .foregroundStyle(.cyan)
+                Image(systemName: "chevron.up.chevron.down")
+                    .font(.system(size: 10, weight: .heavy))
+                    .foregroundStyle(.white.opacity(0.7))
+            }
+            .widerwillenFont(size: 11, weight: .heavy)
+            .padding(.horizontal, 12)
+            .frame(height: 40)
+            .background(.black.opacity(0.24))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.cyan.opacity(0.45), lineWidth: 1)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
     }
 
     private func profileIconImage(_ imageName: String, size: CGFloat)

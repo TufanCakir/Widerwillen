@@ -466,7 +466,7 @@ struct DailyLoginView: View {
                 AppResourceLabel(
                     imageName: firstReward.imageName
                         ?? firstReward.resource.imageName,
-                    value: firstReward.amount,
+                    value: Double(firstReward.amount),
                     prefix: "+",
                     iconSize: 11,
                     fontSize: 8,

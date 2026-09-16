@@ -26,6 +26,10 @@ final class SpriteAnimationScene: SKScene {
     private var equippedWeaponImageName: String?
     private var equippedWeaponShadowCloneImageName: String?
     private var equippedWeaponBattleAppearance: WeaponBattleAppearance?
+    private var rigUpgradeLevels: [String: Int] = [:]
+    private let rigUpgradeConfiguration =
+        (try? RigUpgradeConfiguration.load())
+        ?? RigUpgradeConfiguration(parts: [])
     private var companionAnimationIDs: Set<String> = []
     private var currentEnemy: EnemyDefinition?
     private var isCurrentEnemyBoss = false
@@ -107,7 +111,8 @@ final class SpriteAnimationScene: SKScene {
         heroPartImageOverrides: [String: String] = [:],
         equippedWeaponImageName: String?,
         equippedWeaponShadowCloneImageName: String?,
-        equippedWeaponBattleAppearance: WeaponBattleAppearance?
+        equippedWeaponBattleAppearance: WeaponBattleAppearance?,
+        rigUpgradeLevels: [String: Int] = [:]
     ) {
         self.heroAnimationID = heroAnimationID
         self.heroPartImageOverrides = heroPartImageOverrides
@@ -116,11 +121,13 @@ final class SpriteAnimationScene: SKScene {
             equippedWeaponShadowCloneImageName
         self.equippedWeaponBattleAppearance =
             equippedWeaponBattleAppearance
+        self.rigUpgradeLevels = rigUpgradeLevels
 
         setupCharactersIfNeeded()
         updateCharacterVisibility()
         updateHeroRigPartOverrides()
         updateRigWeapons()
+        updateRigUpgradeEffects()
         layoutCharacters()
     }
 
@@ -639,6 +646,191 @@ final class SpriteAnimationScene: SKScene {
                 isVisible: true
             )
         }
+    }
+
+    private func updateRigUpgradeEffects() {
+        for character in characters
+        where character.rig != nil && isHeroAnimation(id: character.id) {
+            for part in rigUpgradeConfiguration.parts {
+                applyRigUpgradeEffect(part, to: character.node)
+            }
+        }
+    }
+
+    private func applyRigUpgradeEffect(_ part: RigUpgradePart, to root: SKNode)
+    {
+        guard
+            let partNode = rigNode(named: part.id, in: root),
+            let sprite = rigSpriteNode(named: part.id, in: root)
+        else {
+            return
+        }
+        let effectName = "rigUpgradeEffect_\(part.id)"
+        partNode.childNode(withName: effectName)?.removeFromParent()
+        rigSpriteNode(named: part.id, in: root)?.shader = nil
+
+        guard
+            let effect = part.levels.first(where: {
+                $0.level == rigUpgradeLevels[part.id, default: 0]
+            })
+        else {
+            return
+        }
+
+        let container = SKNode()
+        container.name = effectName
+        container.zPosition = 40
+
+        let glow = SKSpriteNode(texture: sprite.texture)
+        glow.size = sprite.size
+        glow.anchorPoint = sprite.anchorPoint
+        glow.position = sprite === partNode ? .zero : sprite.position
+        let levelProgress =
+            CGFloat(effect.level) / CGFloat(max(part.levels.count, 1))
+        let baseAlpha = min(CGFloat(0.35 + effect.glowIntensity * 0.25), 0.92)
+        let peakAlpha = min(baseAlpha + 0.22, 1)
+        let minimumScale = CGFloat(1.03 + effect.glowIntensity * 0.025)
+        let maximumScale = min(
+            CGFloat(1.10 + effect.glowIntensity * 0.08) + levelProgress * 0.08,
+            1.42
+        )
+        let pulseDuration = max(0.28, 0.72 - Double(levelProgress) * 0.36)
+
+        glow.color = color(from: effect.particleColorHex)
+        glow.colorBlendFactor = 1
+        glow.blendMode = .add
+        glow.alpha = baseAlpha
+        glow.setScale(minimumScale)
+        glow.run(
+            .repeatForever(
+                .sequence([
+                    .group([
+                        .scale(to: maximumScale, duration: pulseDuration),
+                        .fadeAlpha(to: peakAlpha, duration: pulseDuration),
+                    ]),
+                    .group([
+                        .scale(to: minimumScale, duration: pulseDuration),
+                        .fadeAlpha(to: baseAlpha, duration: pulseDuration),
+                    ]),
+                ])
+            )
+        )
+        container.addChild(glow)
+
+        let aura = SKSpriteNode(texture: sprite.texture)
+        aura.size = sprite.size
+        aura.anchorPoint = sprite.anchorPoint
+        aura.position = glow.position
+        aura.color = glow.color
+        aura.colorBlendFactor = 1
+        aura.blendMode = .add
+        aura.alpha = min(0.18 + levelProgress * 0.35, 0.5)
+        aura.setScale(maximumScale + 0.10)
+        aura.run(
+            .repeatForever(
+                .sequence([
+                    .fadeAlpha(to: 0.08, duration: pulseDuration),
+                    .fadeAlpha(
+                        to: min(0.18 + levelProgress * 0.35, 0.5),
+                        duration: pulseDuration
+                    ),
+                ])
+            )
+        )
+        container.addChild(aura)
+
+        let particles = makeRigUpgradeEmitter(effect)
+        particles.position = sprite === partNode ? .zero : sprite.position
+        container.addChild(particles)
+
+        if effect.level == part.levels.count {
+            let ring = SKShapeNode(
+                circleOfRadius: part.id == "weapon" ? 14 : 10
+            )
+            ring.position = particles.position
+            ring.strokeColor = color(from: effect.particleColorHex)
+            ring.lineWidth = 1.2
+            ring.glowWidth = 5
+            ring.blendMode = .add
+            ring.alpha = 0.8
+            ring.run(
+                .repeatForever(
+                    .group([
+                        .sequence([
+                            .scale(to: 1.65, duration: 0.62),
+                            .scale(to: 0.82, duration: 0),
+                        ]),
+                        .sequence([
+                            .fadeOut(withDuration: 0.62),
+                            .fadeAlpha(to: 0.8, duration: 0),
+                        ]),
+                    ])
+                )
+            )
+            container.addChild(ring)
+        }
+
+        partNode.addChild(container)
+    }
+
+    private func makeRigUpgradeEmitter(_ effect: RigUpgradeLevel)
+        -> SKEmitterNode
+    {
+        let levelProgress = min(CGFloat(effect.level) / 30, 1)
+        let emitter = SKEmitterNode()
+        emitter.particleTexture = rigUpgradeParticleTexture()
+        emitter.particleBirthRate = CGFloat(effect.particleBirthRate)
+        emitter.particleLifetime = 0.8 + levelProgress * 0.8
+        emitter.particleLifetimeRange = 0.28
+        emitter.particlePositionRange = CGVector(
+            dx: 10 + levelProgress * 24,
+            dy: 10 + levelProgress * 24
+        )
+        emitter.particleSpeed = 16 + levelProgress * 42
+        emitter.particleSpeedRange = 8 + levelProgress * 18
+        emitter.emissionAngle = .pi / 2
+        emitter.emissionAngleRange = .pi * 2
+        emitter.particleAlpha = 1
+        emitter.particleAlphaRange = 0.12
+        emitter.particleAlphaSpeed = -0.72
+        emitter.particleScale = 0.34 + levelProgress * 0.52
+        emitter.particleScaleRange = 0.22
+        emitter.particleScaleSpeed = -0.18
+        emitter.particleColor = color(from: effect.particleColorHex)
+        emitter.particleColorBlendFactor = 1
+        emitter.particleBlendMode = .add
+        emitter.zPosition = 2
+        return emitter
+    }
+
+    private func rigUpgradeParticleTexture() -> SKTexture {
+        let renderer = UIGraphicsImageRenderer(
+            size: CGSize(width: 12, height: 12)
+        )
+        let image = renderer.image { context in
+            let rectangle = CGRect(x: 2, y: 2, width: 8, height: 8)
+            context.cgContext.setShadow(
+                offset: .zero,
+                blur: 4,
+                color: UIColor.white.cgColor
+            )
+            UIColor.white.setFill()
+            context.cgContext.fillEllipse(in: rectangle)
+        }
+        return SKTexture(image: image)
+    }
+
+    private func color(from hex: String) -> UIColor {
+        let cleaned = hex.trimmingCharacters(
+            in: CharacterSet.alphanumerics.inverted
+        )
+        let value = UInt64(cleaned, radix: 16) ?? 0xFFFFFF
+        return UIColor(
+            red: CGFloat((value >> 16) & 0xFF) / 255,
+            green: CGFloat((value >> 8) & 0xFF) / 255,
+            blue: CGFloat(value & 0xFF) / 255,
+            alpha: 1
+        )
     }
 
     private func configureShadowCloneWeapon(

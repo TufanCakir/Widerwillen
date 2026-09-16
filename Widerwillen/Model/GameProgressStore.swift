@@ -13,6 +13,9 @@ import Observation
 final class GameProgressStore {
     private static let saveKey = "moonBeastGameProgress"
     private static let defaultProfileIconImageName = "widerwillen_logo"
+    private static let defaultProfileTitleID = "newcomer"
+    private static let profileTitleDefaultsKey = "selectedProfileTitleID"
+    private static let rigUpgradeLevelsDefaultsKey = "rigUpgradeLevels"
     private static let oldDefaultProfileIconImageName = "sprite_cookieman"
     private static let defaultCharacterID = "nimbi"
     private static let defaultCharacterSkinID = "nimbi_default"
@@ -88,6 +91,13 @@ final class GameProgressStore {
     private(set) var dailyLoginClaimCountsByID: [String: Int] = [:]
     private(set) var selectedProfileIconImageName =
         GameProgressStore.defaultProfileIconImageName
+    private(set) var selectedProfileTitleID =
+        UserDefaults.standard.string(
+            forKey: GameProgressStore.profileTitleDefaultsKey
+        )
+        ?? GameProgressStore.defaultProfileTitleID
+    private(set) var rigUpgradeLevels: [String: Int] =
+        GameProgressStore.loadRigUpgradeLevels()
     private(set) var selectedCharacterID = GameProgressStore.defaultCharacterID
     private(set) var selectedCharacterSkinID =
         GameProgressStore.defaultCharacterSkinID
@@ -119,6 +129,10 @@ final class GameProgressStore {
         let preservedPurchasedShopProductIDs = purchasedShopProductIDs
 
         UserDefaults.standard.removeObject(forKey: Self.saveKey)
+        UserDefaults.standard.removeObject(forKey: Self.profileTitleDefaultsKey)
+        UserDefaults.standard.removeObject(
+            forKey: Self.rigUpgradeLevelsDefaultsKey
+        )
 
         stage = 1
         stageHP = 12
@@ -161,6 +175,8 @@ final class GameProgressStore {
         lastDailyLoginClaimDaysByID = [:]
         dailyLoginClaimCountsByID = [:]
         selectedProfileIconImageName = Self.defaultProfileIconImageName
+        selectedProfileTitleID = Self.defaultProfileTitleID
+        rigUpgradeLevels = [:]
         selectedCharacterID = Self.defaultCharacterID
         selectedCharacterSkinID = Self.defaultCharacterSkinID
         selectedCharacterPartSkinIDs = [:]
@@ -797,8 +813,58 @@ final class GameProgressStore {
     }
 
     func selectProfileIcon(_ icon: ProfileIcon) {
+        guard accountLevel >= (icon.requiredAccountLevel ?? 1) else { return }
         selectedProfileIconImageName = icon.imageName
         saveProgress()
+    }
+
+    func selectProfileTitle(_ title: ProfileTitle) {
+        guard accountLevel >= title.requiredAccountLevel else { return }
+        selectedProfileTitleID = title.id
+        UserDefaults.standard.set(
+            title.id,
+            forKey: Self.profileTitleDefaultsKey
+        )
+    }
+
+    func rigUpgradeLevel(for partID: String) -> Int {
+        rigUpgradeLevels[partID, default: 0]
+    }
+
+    @discardableResult
+    func upgradeRigPart(_ part: RigUpgradePart) -> Bool {
+        let currentLevel = rigUpgradeLevel(for: part.id)
+        guard
+            let nextLevel = part.levels.first(where: {
+                $0.level == currentLevel + 1
+            }),
+            coins >= nextLevel.cost
+        else {
+            return false
+        }
+
+        coins -= nextLevel.cost
+        rigUpgradeLevels[part.id] = nextLevel.level
+        if let data = try? JSONEncoder().encode(rigUpgradeLevels) {
+            UserDefaults.standard.set(
+                data,
+                forKey: Self.rigUpgradeLevelsDefaultsKey
+            )
+        }
+        saveProgress()
+        return true
+    }
+
+    private static func loadRigUpgradeLevels() -> [String: Int] {
+        guard
+            let data = UserDefaults.standard.data(
+                forKey: rigUpgradeLevelsDefaultsKey
+            )
+        else {
+            return [:]
+        }
+        return (try? JSONDecoder().decode([String: Int].self, from: data))
+            ?? [:]
     }
 
     func refreshIdleRewards(now: Date = Date()) {

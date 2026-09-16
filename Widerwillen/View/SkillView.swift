@@ -38,7 +38,7 @@ struct SkillView: View {
             HStack {
                 AppResourceLabel(
                     imageName: "icon_pixel_skill_book",
-                    value: progress.skillBooks,
+                    value: Double(progress.skillBooks),
                     iconSize: 24,
                     fontSize: 14
                 )

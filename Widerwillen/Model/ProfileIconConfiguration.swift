@@ -9,6 +9,7 @@ import Foundation
 
 struct ProfileIconConfiguration: Decodable {
     let icons: [ProfileIcon]
+    let titles: [ProfileTitle]
 
     static func load(named resourceName: String = "icon") throws
         -> ProfileIconConfiguration

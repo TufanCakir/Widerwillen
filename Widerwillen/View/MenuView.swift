@@ -20,6 +20,14 @@ struct MenuView: View {
     @State private var isDailyLoginPopupPresented = false
     @State private var didEvaluateDailyLoginPopup = false
     @State private var selectedMenuPage: MenuPage = .home
+    @State private var selectedHomeSection: MenuHomeSection = .play
+    @State private var activeHomeItemID = "start"
+    @State private var isKeyArtPickerPresented = false
+
+    @AppStorage("selectedMenuKeyArtID")
+    private var selectedMenuKeyArtID = ""
+
+    private let menuAnimation = Animation.easeInOut(duration: 0.22)
 
     @AppStorage("selectedMenuShortcutIndex")
     private var selectedShortcutIndex = 0
@@ -54,6 +62,7 @@ struct MenuView: View {
         }
         .onAppear {
             normalizeShortcutIndexIfNeeded()
+            normalizeKeyArtSelectionIfNeeded()
             showDailyLoginPopupIfNeeded()
         }
         .onChange(of: homeResetSignal) { _, _ in
@@ -442,55 +451,505 @@ struct MenuView: View {
     }
 
     private var homeView: some View {
-        VStack(spacing: 0) {
-            GameHeader(
-                progress: progress
-            )
+        ZStack {
+            menuKeyArtLayer
 
-            Spacer(minLength: 18)
-
-            VStack(spacing: 18) {
-                nimbiCarouselStage
-
-                Button {
-                    playSoundEffect("ui_select")
-                    isModePickerPresented = true
-                } label: {
-                    Text("Start")
-                        .widerwillenFont(size: 26, weight: .bold)
-                        .foregroundStyle(.white)
-                        .shadow(
-                            color: .black.opacity(0.9),
-                            radius: 3
-                        )
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 60)
-                        .background {
-                            MenuButtonBackground(
-                                imageName: progress.selectedMenuButtonLook
-                                    .imageName
-                            )
-                            .clipShape(Capsule())
-                        }
-                        .overlay {
-                            Capsule()
-                                .stroke(.blue, lineWidth: 1)
-                        }
-                        .clipShape(Capsule())
-                }
-                .buttonStyle(.plain)
-                .padding(.horizontal)
-
-                shortcutPager
+            VStack(spacing: 14) {
+                GameHeader(progress: progress)
+                keyArtHeader
+                homeCategoryBar
+                homeMenuPager
             }
-            .frame(maxWidth: 420)
+            .frame(maxWidth: 440)
+            .padding(.horizontal, 16)
+            .padding(.top, 10)
+            .padding(.bottom, 94)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-            Spacer(minLength: 14)
+            if isKeyArtPickerPresented {
+                keyArtPicker
+            }
         }
         .overlay {
             if isModePickerPresented {
                 modePickerOverlay
             }
+        }
+    }
+
+    private var keyArtHeader: some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 5) {
+                Text("MAIN MENU")
+                    .widerwillenFont(size: 22, weight: .heavy)
+                    .foregroundStyle(.white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.72)
+
+                Button {
+                    withAnimation(menuAnimation) {
+                        isKeyArtPickerPresented = true
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "photo.fill")
+                        Text(selectedKeyArt.title.uppercased())
+                            .lineLimit(1)
+                    }
+                    .widerwillenFont(size: 9, weight: .heavy)
+                    .foregroundStyle(.cyan)
+                }
+                .buttonStyle(.plain)
+            }
+
+            Spacer()
+
+            Text("WISCHEN")
+                .widerwillenFont(size: 8, weight: .heavy)
+                .foregroundStyle(.white.opacity(0.54))
+                .padding(.horizontal, 9)
+                .padding(.vertical, 6)
+                .background(.black.opacity(0.32))
+                .overlay {
+                    Rectangle().stroke(.white.opacity(0.12), lineWidth: 1)
+                }
+        }
+    }
+
+    private var menuKeyArtLayer: some View {
+        RemoteImage(name: selectedKeyArt.imageName)
+
+            .id(selectedKeyArt.id)
+            .transition(.opacity)
+            .animation(menuAnimation, value: selectedKeyArt.id)
+            .allowsHitTesting(false)
+    }
+
+    private var homeCategoryBar: some View {
+        HStack(spacing: 0) {
+            ForEach(MenuHomeSection.allCases) { section in
+                Button {
+                    playSoundEffect("ui_select")
+                    withAnimation(menuAnimation) {
+                        selectedHomeSection = section
+                        activeHomeItemID =
+                            homeItems(for: section).first?.id ?? "start"
+                    }
+                } label: {
+                    VStack(spacing: 7) {
+                        Text(section.title)
+                            .widerwillenFont(size: 11, weight: .heavy)
+                            .foregroundStyle(
+                                selectedHomeSection == section
+                                    ? .white : .white.opacity(0.5)
+                            )
+                            .frame(maxWidth: .infinity)
+
+                        Rectangle()
+                            .fill(
+                                selectedHomeSection == section
+                                    ? .cyan : .white.opacity(0.15)
+                            )
+                            .frame(
+                                height: selectedHomeSection == section ? 3 : 1
+                            )
+                    }
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    private var homeMenuPager: some View {
+        TabView(
+            selection: Binding(
+                get: {
+                    MenuHomeSection.allCases.firstIndex(of: selectedHomeSection)
+                        ?? 0
+                },
+                set: { newIndex in
+                    guard MenuHomeSection.allCases.indices.contains(newIndex)
+                    else { return }
+                    let section = MenuHomeSection.allCases[newIndex]
+                    selectedHomeSection = section
+                    activeHomeItemID =
+                        homeItems(for: section).first?.id ?? "start"
+                }
+            )
+        ) {
+            ForEach(
+                Array(MenuHomeSection.allCases.enumerated()),
+                id: \.element.id
+            ) { index, section in
+                homeSectionPage(section)
+                    .tag(index)
+            }
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .contentShape(Rectangle())
+    }
+
+    private func homeSectionPage(_ section: MenuHomeSection) -> some View {
+        VStack(spacing: 8) {
+            homeMenuRows(for: section)
+            Spacer(minLength: 4)
+            homeQuickActions
+            activeHomePreview
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func homeMenuRows(for section: MenuHomeSection) -> some View {
+        VStack(spacing: 2) {
+            ForEach(homeItems(for: section)) { item in
+                homeMenuRow(item)
+            }
+        }
+    }
+
+    private func homeMenuRow(_ item: MenuHomeItem) -> some View {
+        let isSelected = activeHomeItemID == item.id
+        return Button {
+            if isSelected {
+                openHomeItem(item)
+            } else {
+                playSoundEffect("ui_select")
+                withAnimation(menuAnimation) {
+                    activeHomeItemID = item.id
+                }
+            }
+        } label: {
+            HStack(spacing: 12) {
+                RemoteImage(name: item.imageName)
+                    .frame(width: 34, height: 34)
+
+                Text(item.title)
+                    .widerwillenFont(size: 17, weight: .heavy)
+                    .foregroundStyle(isSelected ? .white : .white.opacity(0.68))
+
+                Spacer()
+
+                Image(systemName: isSelected ? "chevron.right" : "circle.fill")
+                    .font(.system(size: isSelected ? 12 : 4, weight: .heavy))
+                    .foregroundStyle(isSelected ? .white : .white.opacity(0.24))
+            }
+            .padding(.horizontal, 14)
+            .frame(height: 54)
+            .background {
+                if isSelected {
+                    LinearGradient(
+                        colors: [.blue.opacity(0.82), .cyan.opacity(0.42)],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                } else {
+                    Color.black.opacity(0.14)
+                }
+            }
+            .overlay(alignment: .leading) {
+                Rectangle().fill(isSelected ? .white : .clear).frame(width: 4)
+            }
+        }
+        .buttonStyle(.plain)
+        .animation(menuAnimation, value: isSelected)
+    }
+
+    private var homeQuickActions: some View {
+        HStack(spacing: 10) {
+            quickActionButton(title: "Start", imageName: "icon_pixel_sword") {
+                isModePickerPresented = true
+            }
+            quickActionButton(title: "Rig Upgrades", imageName: "icon_nimpi") {
+                selectedMenuPage = .rigUpgrades
+            }
+        }
+    }
+
+    private func quickActionButton(
+        title: String,
+        imageName: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button {
+            playSoundEffect("ui_navigation")
+            action()
+        } label: {
+            HStack(spacing: 9) {
+                RemoteImage(name: imageName).frame(width: 28, height: 28)
+                Text(title)
+                    .widerwillenFont(size: 10, weight: .heavy)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+            }
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity)
+            .frame(height: 52)
+            .background(.black.opacity(0.28))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.white.opacity(0.14), lineWidth: 1)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var activeHomePreview: some View {
+        let item = homeItems(for: selectedHomeSection).first {
+            $0.id == activeHomeItemID
+        }
+        return VStack(alignment: .leading, spacing: 6) {
+            Text(item?.title.uppercased() ?? selectedHomeSection.title)
+                .widerwillenFont(size: 10, weight: .heavy)
+                .foregroundStyle(.white.opacity(0.9))
+            Text(item?.description ?? "Wähle einen Menüpunkt aus.")
+                .widerwillenFont(size: 9, weight: .bold)
+                .foregroundStyle(.cyan.opacity(0.72))
+                .lineLimit(2)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 12)
+        .overlay(alignment: .top) {
+            Rectangle().fill(.white.opacity(0.13)).frame(height: 1)
+        }
+        .id(item?.id)
+        .transition(.opacity.combined(with: .move(edge: .bottom)))
+    }
+
+    private var availableKeyArts: [MenuKeyArt] {
+        let ownedCharacterIDs = Set(
+            progress.ownedCharacterList.map(\.characterID)
+        )
+        let unlocked = progress.characterDefinitions.flatMap { character in
+            character.skins.compactMap { skin -> MenuKeyArt? in
+                guard ownedCharacterIDs.contains(character.id),
+                    progress.isSkinUnlocked(skin)
+                else {
+                    return nil
+                }
+                return MenuKeyArt(
+                    id: skin.id,
+                    title: "\(character.name) · \(skin.name)",
+                    imageName: skin.imageName
+                )
+            }
+        }
+
+        if unlocked.isEmpty {
+            return [
+                MenuKeyArt(
+                    id: "nimbi_fallback",
+                    title: "Nimbi",
+                    imageName: "icon_nimpi"
+                )
+            ]
+        }
+        return unlocked
+    }
+
+    private var selectedKeyArt: MenuKeyArt {
+        availableKeyArts.first { $0.id == selectedMenuKeyArtID }
+            ?? availableKeyArts[0]
+    }
+
+    private var keyArtPicker: some View {
+        ZStack {
+            Color.black.opacity(0.72).ignoresSafeArea()
+
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("KEY ART")
+                        .widerwillenFont(size: 19, weight: .heavy)
+                        .foregroundStyle(.white)
+                    Spacer()
+                    Button {
+                        withAnimation(menuAnimation) {
+                            isKeyArtPickerPresented = false
+                        }
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 13, weight: .heavy))
+                            .foregroundStyle(.white)
+                            .frame(width: 34, height: 34)
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                ScrollView(showsIndicators: false) {
+                    LazyVStack(spacing: 8) {
+                        ForEach(availableKeyArts) { art in
+                            Button {
+                                selectedMenuKeyArtID = art.id
+                                playSoundEffect("ui_confirm")
+                                withAnimation(menuAnimation) {
+                                    isKeyArtPickerPresented = false
+                                }
+                            } label: {
+                                HStack(spacing: 12) {
+                                    RemoteImage(name: art.imageName)
+                                        .frame(width: 54, height: 54)
+                                    Text(art.title)
+                                        .widerwillenFont(
+                                            size: 12,
+                                            weight: .heavy
+                                        )
+                                        .foregroundStyle(.white)
+                                    Spacer()
+                                    if selectedKeyArt.id == art.id {
+                                        Image(systemName: "checkmark")
+                                            .font(
+                                                .system(
+                                                    size: 13,
+                                                    weight: .heavy
+                                                )
+                                            )
+                                            .foregroundStyle(.cyan)
+                                    }
+                                }
+                                .padding(9)
+                                .background(.black.opacity(0.42))
+                                .overlay {
+                                    Rectangle().stroke(
+                                        selectedKeyArt.id == art.id
+                                            ? .cyan.opacity(0.65)
+                                            : .white.opacity(0.12),
+                                        lineWidth: 1
+                                    )
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
+            }
+            .padding(18)
+            .frame(maxWidth: 360, maxHeight: 560)
+            .background(.black.opacity(0.88))
+            .overlay { Rectangle().stroke(.white.opacity(0.16), lineWidth: 1) }
+            .padding(22)
+        }
+        .zIndex(30)
+        .transition(.opacity)
+    }
+
+    private func normalizeKeyArtSelectionIfNeeded() {
+        guard
+            !availableKeyArts.contains(where: { $0.id == selectedMenuKeyArtID })
+        else {
+            return
+        }
+        selectedMenuKeyArtID = availableKeyArts[0].id
+    }
+
+    private func homeItems(for section: MenuHomeSection) -> [MenuHomeItem] {
+        switch section {
+        case .play:
+            [
+                MenuHomeItem(
+                    id: "start",
+                    title: "Start",
+                    description: "Starte einen Kampf oder ein Event.",
+                    imageName: "icon_pixel_sword",
+                    action: .start
+                ),
+                MenuHomeItem(
+                    id: "showcase",
+                    title: "Showcase",
+                    description: "Präsentiere deine Charaktere und Ausrüstung.",
+                    imageName: "icon_nimpi",
+                    action: .mode(.showcase)
+                ),
+            ]
+        case .forge:
+            [
+                MenuHomeItem(
+                    id: "equipment",
+                    title: "Equipment",
+                    description: "Wechsle Skins, Teile und Waffen.",
+                    imageName: "icon_pixel_sword",
+                    action: .page(.equipment)
+                ),
+                MenuHomeItem(
+                    id: "rig_upgrades",
+                    title: "Rig Upgrades",
+                    description:
+                        "Verstärke Bones, Metall-Shader und Partikeleffekte.",
+                    imageName: "icon_nimpi",
+                    action: .page(.rigUpgrades)
+                ),
+                MenuHomeItem(
+                    id: "skills",
+                    title: "Skills",
+                    description: "Verbessere deine aktiven Fähigkeiten.",
+                    imageName: "icon_pixel_skill_book",
+                    action: .page(.skills)
+                ),
+                MenuHomeItem(
+                    id: "warehouse",
+                    title: "Warehouse",
+                    description: "Sieh dir deine gesammelten Gegenstände an.",
+                    imageName: "icon_pixel_box",
+                    action: .page(.warehouse)
+                ),
+            ]
+        case .more:
+            [
+                MenuHomeItem(
+                    id: "daily",
+                    title: "Daily",
+                    description: "Hole deine täglichen Belohnungen ab.",
+                    imageName: "icon_pixel_calendar",
+                    action: .page(.dailyLogin)
+                ),
+                MenuHomeItem(
+                    id: "pass",
+                    title: "Pass",
+                    description: "Prüfe Fortschritt und Pass-Belohnungen.",
+                    imageName: "icon_pixel_pass",
+                    action: .page(.pass)
+                ),
+                MenuHomeItem(
+                    id: "gift",
+                    title: "Giftbox",
+                    description: "Öffne Geschenke und Nachrichten.",
+                    imageName: "icon_pixel_giftbox",
+                    action: .page(.gift)
+                ),
+                MenuHomeItem(
+                    id: "news",
+                    title: "News",
+                    description: "Lies die neuesten Spielmeldungen.",
+                    imageName: "icon_pixel_news",
+                    action: .page(.news)
+                ),
+                MenuHomeItem(
+                    id: "backgrounds",
+                    title: "Backgrounds",
+                    description: "Passe das Aussehen deines Menüs an.",
+                    imageName: "widerwillen_logo",
+                    action: .page(.backgrounds)
+                ),
+                MenuHomeItem(
+                    id: "settings",
+                    title: "Settings",
+                    description: "Ändere Sound und Spieleinstellungen.",
+                    imageName: "icon_pixel_settings",
+                    action: .page(.settings)
+                ),
+            ]
+        }
+    }
+
+    private func openHomeItem(_ item: MenuHomeItem) {
+        playSoundEffect("ui_navigation")
+        switch item.action {
+        case .start:
+            isModePickerPresented = true
+        case .mode(let mode):
+            openMode(mode)
+        case .page(let page):
+            selectedMenuPage = page
         }
     }
 
@@ -536,6 +995,23 @@ struct MenuView: View {
                 playSoundEffect: playSoundEffect
             )
 
+        case .rigUpgrades:
+            ZStack {
+                AppBackground()
+                ScrollView {
+                    VStack(spacing: 14) {
+                        GameHeader(progress: progress)
+                            .padding(.top, 18)
+                        RigUpgradeView(
+                            progress: progress,
+                            playSoundEffect: playSoundEffect
+                        )
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 110)
+                }
+            }
+
         case .warehouse:
             warehouseView(
                 progress: progress,
@@ -579,9 +1055,46 @@ private enum MenuPage {
     case news
     case gift
     case equipment
+    case rigUpgrades
     case warehouse
     case pass
     case dailyLogin
+}
+
+private enum MenuHomeSection: String, CaseIterable, Identifiable {
+    case play
+    case forge
+    case more
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .play: "PLAY"
+        case .forge: "FORGE"
+        case .more: "MORE"
+        }
+    }
+}
+
+private struct MenuKeyArt: Identifiable {
+    let id: String
+    let title: String
+    let imageName: String
+}
+
+private struct MenuHomeItem: Identifiable {
+    let id: String
+    let title: String
+    let description: String
+    let imageName: String
+    let action: MenuHomeAction
+}
+
+private enum MenuHomeAction {
+    case start
+    case mode(MenuMode)
+    case page(MenuPage)
 }
 
 private struct MenuShortcut: Identifiable {

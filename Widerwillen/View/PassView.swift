@@ -121,7 +121,7 @@ struct PassView: View {
                     ForEach(reward.rewards) { amount in
                         AppResourceLabel(
                             imageName: amount.resource.imageName,
-                            value: amount.amount,
+                            value: Double(amount.amount),
                             prefix: "+",
                             iconSize: 16,
                             fontSize: 10

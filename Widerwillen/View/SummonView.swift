@@ -104,7 +104,7 @@ struct SummonView: View {
             HStack {
                 AppResourceLabel(
                     imageName: banner.currencyImageName,
-                    value: currencyAmount(for: banner),
+                    value: Double(currencyAmount(for: banner)),
                     iconSize: 24,
                     fontSize: 13
                 )
@@ -304,7 +304,7 @@ struct SummonView: View {
 
                 AppResourceLabel(
                     imageName: pending.banner.currencyImageName,
-                    value: pending.cost,
+                    value: Double(pending.cost),
                     iconSize: 26,
                     fontSize: 16
                 )

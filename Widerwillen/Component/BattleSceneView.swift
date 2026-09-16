@@ -233,6 +233,9 @@ struct BattleSceneView: View {
         .onChange(of: progress.battleHeroPartImageOverrides) { _, _ in
             updateBattleCharacter()
         }
+        .onChange(of: progress.rigUpgradeLevels) { _, _ in
+            updateBattleCharacter()
+        }
         .onChange(of: equippedWeaponImageName) { _, imageName in
             updateBattleCharacter(equippedWeaponImageName: imageName)
         }
@@ -267,7 +270,8 @@ struct BattleSceneView: View {
             equippedWeaponShadowCloneImageName: progress
                 .equippedWeaponShadowCloneImageName,
             equippedWeaponBattleAppearance: equippedWeaponBattleAppearance
-                ?? self.equippedWeaponBattleAppearance
+                ?? self.equippedWeaponBattleAppearance,
+            rigUpgradeLevels: progress.rigUpgradeLevels
         )
     }
 

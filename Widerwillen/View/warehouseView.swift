@@ -144,7 +144,7 @@ struct warehouseView: View {
             HStack(spacing: 10) {
                 AppResourceLabel(
                     imageName: "icon_pixel_coin",
-                    value: progress.pendingCoins,
+                    value: Double(progress.pendingCoins),
                     prefix: "+",
                     iconSize: 20,
                     fontSize: 12
@@ -152,7 +152,7 @@ struct warehouseView: View {
 
                 AppResourceLabel(
                     imageName: "icon_pixel_crystal",
-                    value: progress.pendingCrystals,
+                    value: Double(progress.pendingCrystals),
                     prefix: "+",
                     iconSize: 20,
                     fontSize: 12
@@ -337,10 +337,10 @@ struct warehouseView: View {
 
             Spacer()
 
-            Text(amount.abbreviatedResourceText)
+            Text(Double(amount).abbreviatedResourceText)
                 .widerwillenFont(size: 15, weight: .heavy)
                 .lineLimit(1)
-                .minimumScaleFactor(0.7)
+                .minimumScaleFactor(0.7)    
         }
         .foregroundStyle(.white)
         .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)

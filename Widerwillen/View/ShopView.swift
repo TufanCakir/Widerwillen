@@ -335,7 +335,7 @@ struct ShopView: View {
                 HStack(spacing: 8) {
                     AppResourceLabel(
                         imageName: pack.imageName,
-                        value: pack.totalCrystals,
+                        value: Double(pack.totalCrystals),
                         prefix: "+",
                         iconSize: 18,
                         fontSize: 12
@@ -427,7 +427,7 @@ struct ShopView: View {
                     if pack.bonusCrystals > 0 {
                         AppResourceLabel(
                             imageName: "icon_pixel_crystal",
-                            value: pack.bonusCrystals,
+                            value: Double(pack.bonusCrystals),
                             prefix: "+",
                             iconSize: 18,
                             fontSize: 12
@@ -582,7 +582,7 @@ struct ShopView: View {
                         AppResourceLabel(
                             imageName: amount.imageName
                                 ?? amount.resource.imageName,
-                            value: amount.amount,
+                            value: Double(amount.amount),
                             prefix: "+",
                             iconSize: 15,
                             fontSize: 10

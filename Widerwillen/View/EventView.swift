@@ -1033,7 +1033,7 @@ private struct EventShopView: View {
             ForEach(amounts) { amount in
                 AppResourceLabel(
                     imageName: amount.imageName ?? amount.resource.imageName,
-                    value: amount.amount,
+                    value: Double(amount.amount),
                     prefix: prefix,
                     iconSize: 16,
                     fontSize: 9
@@ -1247,7 +1247,7 @@ private struct EventBattleView: View {
                 HStack(spacing: 12) {
                     AppResourceLabel(
                         imageName: event.currencyImageName,
-                        value: summary.rewards.chipAmount,
+                        value: Double(summary.rewards.chipAmount),
                         prefix: "+",
                         iconSize: 24,
                         fontSize: 13
@@ -1255,7 +1255,7 @@ private struct EventBattleView: View {
 
                     AppResourceLabel(
                         imageName: "icon_pixel_coin",
-                        value: summary.rewards.coins,
+                        value: Double(summary.rewards.coins),
                         prefix: "+",
                         iconSize: 24,
                         fontSize: 13
@@ -1263,7 +1263,7 @@ private struct EventBattleView: View {
 
                     AppResourceLabel(
                         imageName: "icon_pixel_crystal",
-                        value: summary.rewards.crystals,
+                        value: Double(summary.rewards.crystals),
                         prefix: "+",
                         iconSize: 24,
                         fontSize: 13
@@ -1271,7 +1271,7 @@ private struct EventBattleView: View {
 
                     AppResourceLabel(
                         imageName: "icon_pixel_relic",
-                        value: summary.rewards.relics,
+                        value: Double(summary.rewards.relics),
                         prefix: "+",
                         iconSize: 24,
                         fontSize: 13
@@ -1279,7 +1279,7 @@ private struct EventBattleView: View {
 
                     AppResourceLabel(
                         imageName: "icon_pixel_skill_book",
-                        value: summary.rewards.skillBooks,
+                        value: Double(summary.rewards.skillBooks),
                         prefix: "+",
                         iconSize: 24,
                         fontSize: 13

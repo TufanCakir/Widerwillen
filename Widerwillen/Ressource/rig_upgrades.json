@@ -1,0 +1,354 @@
+{
+    "parts": [
+        {
+            "id": "head",
+            "title": "Kopf",
+            "imageFallback": "icon_nimpi",
+            "maxLevel": 30,
+            "effectColors": [
+                "650000",
+                "B00020",
+                "C24100",
+                "071A52",
+                "174CFF"
+            ],
+            "levels": [
+                {
+                    "level": 1,
+                    "cost": 1500,
+                    "glowIntensity": 0.35,
+                    "particleBirthRate": 6,
+                    "particleColorHex": "650000"
+                },
+                {
+                    "level": 2,
+                    "cost": 6000,
+                    "glowIntensity": 0.60,
+                    "particleBirthRate": 12,
+                    "particleColorHex": "B00020"
+                },
+                {
+                    "level": 3,
+                    "cost": 22000,
+                    "glowIntensity": 0.90,
+                    "particleBirthRate": 20,
+                    "particleColorHex": "C24100"
+                },
+                {
+                    "level": 4,
+                    "cost": 75000,
+                    "glowIntensity": 1.25,
+                    "particleBirthRate": 32,
+                    "particleColorHex": "071A52"
+                },
+                {
+                    "level": 5,
+                    "cost": 260000,
+                    "glowIntensity": 1.65,
+                    "particleBirthRate": 50,
+                    "particleColorHex": "174CFF"
+                }
+            ]
+        },
+        {
+            "id": "body",
+            "title": "Körper",
+            "imageFallback": "icon_nimpi",
+            "maxLevel": 30,
+            "effectColors": [
+                "650000",
+                "B00020",
+                "C24100",
+                "071A52",
+                "174CFF"
+            ],
+            "levels": [
+                {
+                    "level": 1,
+                    "cost": 1800,
+                    "glowIntensity": 0.35,
+                    "particleBirthRate": 6,
+                    "particleColorHex": "650000"
+                },
+                {
+                    "level": 2,
+                    "cost": 7500,
+                    "glowIntensity": 0.60,
+                    "particleBirthRate": 12,
+                    "particleColorHex": "B00020"
+                },
+                {
+                    "level": 3,
+                    "cost": 27000,
+                    "glowIntensity": 0.90,
+                    "particleBirthRate": 20,
+                    "particleColorHex": "C24100"
+                },
+                {
+                    "level": 4,
+                    "cost": 90000,
+                    "glowIntensity": 1.25,
+                    "particleBirthRate": 32,
+                    "particleColorHex": "071A52"
+                },
+                {
+                    "level": 5,
+                    "cost": 320000,
+                    "glowIntensity": 1.65,
+                    "particleBirthRate": 50,
+                    "particleColorHex": "174CFF"
+                }
+            ]
+        },
+        {
+            "id": "leftHand",
+            "title": "Linke Hand",
+            "imageFallback": "icon_pixel_sword",
+            "maxLevel": 30,
+            "effectColors": [
+                "650000",
+                "B00020",
+                "C24100",
+                "071A52",
+                "174CFF"
+            ],
+            "levels": [
+                {
+                    "level": 1,
+                    "cost": 1200,
+                    "glowIntensity": 0.32,
+                    "particleBirthRate": 5,
+                    "particleColorHex": "650000"
+                },
+                {
+                    "level": 2,
+                    "cost": 5000,
+                    "glowIntensity": 0.56,
+                    "particleBirthRate": 10,
+                    "particleColorHex": "B00020"
+                },
+                {
+                    "level": 3,
+                    "cost": 18000,
+                    "glowIntensity": 0.84,
+                    "particleBirthRate": 17,
+                    "particleColorHex": "C24100"
+                },
+                {
+                    "level": 4,
+                    "cost": 60000,
+                    "glowIntensity": 1.16,
+                    "particleBirthRate": 27,
+                    "particleColorHex": "071A52"
+                },
+                {
+                    "level": 5,
+                    "cost": 210000,
+                    "glowIntensity": 1.55,
+                    "particleBirthRate": 42,
+                    "particleColorHex": "174CFF"
+                }
+            ]
+        },
+        {
+            "id": "rightHand",
+            "title": "Rechte Hand",
+            "imageFallback": "icon_pixel_sword",
+            "maxLevel": 30,
+            "effectColors": [
+                "650000",
+                "B00020",
+                "C24100",
+                "071A52",
+                "174CFF"
+            ],
+            "levels": [
+                {
+                    "level": 1,
+                    "cost": 1200,
+                    "glowIntensity": 0.32,
+                    "particleBirthRate": 5,
+                    "particleColorHex": "650000"
+                },
+                {
+                    "level": 2,
+                    "cost": 5000,
+                    "glowIntensity": 0.56,
+                    "particleBirthRate": 10,
+                    "particleColorHex": "B00020"
+                },
+                {
+                    "level": 3,
+                    "cost": 18000,
+                    "glowIntensity": 0.84,
+                    "particleBirthRate": 17,
+                    "particleColorHex": "C24100"
+                },
+                {
+                    "level": 4,
+                    "cost": 60000,
+                    "glowIntensity": 1.16,
+                    "particleBirthRate": 27,
+                    "particleColorHex": "071A52"
+                },
+                {
+                    "level": 5,
+                    "cost": 210000,
+                    "glowIntensity": 1.55,
+                    "particleBirthRate": 42,
+                    "particleColorHex": "174CFF"
+                }
+            ]
+        },
+        {
+            "id": "leftFoot",
+            "title": "Linker Fuß",
+            "imageFallback": "icon_nimpi",
+            "maxLevel": 30,
+            "effectColors": [
+                "650000",
+                "B00020",
+                "C24100",
+                "071A52",
+                "174CFF"
+            ],
+            "levels": [
+                {
+                    "level": 1,
+                    "cost": 1000,
+                    "glowIntensity": 0.30,
+                    "particleBirthRate": 4,
+                    "particleColorHex": "650000"
+                },
+                {
+                    "level": 2,
+                    "cost": 4000,
+                    "glowIntensity": 0.52,
+                    "particleBirthRate": 8,
+                    "particleColorHex": "B00020"
+                },
+                {
+                    "level": 3,
+                    "cost": 15000,
+                    "glowIntensity": 0.78,
+                    "particleBirthRate": 14,
+                    "particleColorHex": "C24100"
+                },
+                {
+                    "level": 4,
+                    "cost": 50000,
+                    "glowIntensity": 1.08,
+                    "particleBirthRate": 22,
+                    "particleColorHex": "071A52"
+                },
+                {
+                    "level": 5,
+                    "cost": 175000,
+                    "glowIntensity": 1.45,
+                    "particleBirthRate": 35,
+                    "particleColorHex": "174CFF"
+                }
+            ]
+        },
+        {
+            "id": "rightFoot",
+            "title": "Rechter Fuß",
+            "imageFallback": "icon_nimpi",
+            "maxLevel": 30,
+            "effectColors": [
+                "650000",
+                "B00020",
+                "C24100",
+                "071A52",
+                "174CFF"
+            ],
+            "levels": [
+                {
+                    "level": 1,
+                    "cost": 1000,
+                    "glowIntensity": 0.30,
+                    "particleBirthRate": 4,
+                    "particleColorHex": "650000"
+                },
+                {
+                    "level": 2,
+                    "cost": 4000,
+                    "glowIntensity": 0.52,
+                    "particleBirthRate": 8,
+                    "particleColorHex": "B00020"
+                },
+                {
+                    "level": 3,
+                    "cost": 15000,
+                    "glowIntensity": 0.78,
+                    "particleBirthRate": 14,
+                    "particleColorHex": "C24100"
+                },
+                {
+                    "level": 4,
+                    "cost": 50000,
+                    "glowIntensity": 1.08,
+                    "particleBirthRate": 22,
+                    "particleColorHex": "071A52"
+                },
+                {
+                    "level": 5,
+                    "cost": 175000,
+                    "glowIntensity": 1.45,
+                    "particleBirthRate": 35,
+                    "particleColorHex": "174CFF"
+                }
+            ]
+        },
+        {
+            "id": "weapon",
+            "title": "Waffe",
+            "imageFallback": "icon_pixel_sword",
+            "maxLevel": 30,
+            "effectColors": [
+                "650000",
+                "B00020",
+                "C24100",
+                "071A52",
+                "174CFF"
+            ],
+            "levels": [
+                {
+                    "level": 1,
+                    "cost": 2500,
+                    "glowIntensity": 0.40,
+                    "particleBirthRate": 8,
+                    "particleColorHex": "650000"
+                },
+                {
+                    "level": 2,
+                    "cost": 10000,
+                    "glowIntensity": 0.70,
+                    "particleBirthRate": 15,
+                    "particleColorHex": "B00020"
+                },
+                {
+                    "level": 3,
+                    "cost": 35000,
+                    "glowIntensity": 1.05,
+                    "particleBirthRate": 25,
+                    "particleColorHex": "C24100"
+                },
+                {
+                    "level": 4,
+                    "cost": 120000,
+                    "glowIntensity": 1.45,
+                    "particleBirthRate": 38,
+                    "particleColorHex": "071A52"
+                },
+                {
+                    "level": 5,
+                    "cost": 450000,
+                    "glowIntensity": 1.95,
+                    "particleBirthRate": 58,
+                    "particleColorHex": "174CFF"
+                }
+            ]
+        }
+    ]
+}
