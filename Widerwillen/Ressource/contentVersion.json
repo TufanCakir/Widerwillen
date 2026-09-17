@@ -1,5 +1,5 @@
 {
-    "contentVersion": 198,
+    "contentVersion": 214,
     "json": [
         {
             "name": "arena",
@@ -121,9 +121,34 @@
     ],
     "assets": [
         {
-            "name": "bg_app",
-            "path": "assets/bg_app.png",
-            "version": 1
+            "name": "bg_cosmic_nebula",
+            "path": "assets/bg_cosmic_nebula.png",
+            "version": 6
+        },
+        {
+            "name": "bg_enchanted_forest",
+            "path": "assets/bg_enchanted_forest.png",
+            "version": 6
+        },
+        {
+            "name": "bg_dragonfire",
+            "path": "assets/bg_dragonfire.png",
+            "version": 6
+        },
+        {
+            "name": "bg_aurora",
+            "path": "assets/bg_aurora.png",
+            "version": 6
+        },
+        {
+            "name": "bg_crystal_temple",
+            "path": "assets/bg_crystal_temple.png",
+            "version": 6
+        },
+        {
+            "name": "bg_void_portal",
+            "path": "assets/bg_void_portal.png",
+            "version": 6
         },
         {
             "name": "bg_summer",
@@ -166,44 +191,9 @@
             "version": 1
         },
         {
-            "name": "bg_bright_blue",
-            "path": "assets/bg_bright_blue.png",
-            "version": 1
-        },
-        {
-            "name": "arena_pixel_green",
-            "path": "assets/arena_pixel_green.png",
-            "version": 1
-        },
-        {
-            "name": "arena_pixel_yellow",
-            "path": "assets/arena_pixel_yellow.png",
-            "version": 1
-        },
-        {
-            "name": "arena_pixel_red",
-            "path": "assets/arena_pixel_red.png",
-            "version": 1
-        },
-        {
-            "name": "bg_halloween",
-            "path": "assets/bg_halloween.png",
-            "version": 2
-        },
-        {
-            "name": "bg_dark_blue",
-            "path": "assets/bg_dark_blue.png",
-            "version": 1
-        },
-        {
-            "name": "bg_birthday",
-            "path": "assets/bg_birthday.png",
-            "version": 2
-        },
-        {
-            "name": "widerwillen_bg",
-            "path": "assets/widerwillen_bg.png",
-            "version": 1
+            "name": "bg_widerwillen",
+            "path": "assets/bg_widerwillen.png",
+            "version": 3
         },
         {
             "name": "icon_cookieman",

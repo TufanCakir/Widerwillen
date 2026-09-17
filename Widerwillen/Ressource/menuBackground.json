@@ -10,21 +10,21 @@
         {
             "id": "widerwillen_release_bg",
             "title": "Release Background",
-            "imageName": "widerwillen_bg",
-            "usesAnimatedRings": true,
+            "imageName": "bg_widerwillen",
+            "usesAnimatedRings": false,
             "darkening": 0.08
         },
         {
             "id": "birthday_event_bg",
             "title": "Birthday Background",
-            "imageName": "bg_birthday",
+            "imageName": "bg_cosmic_nebula",
             "usesAnimatedRings": false,
             "darkening": 0.10
         },
         {
             "id": "halloween_event_bg",
             "title": "Halloween Background",
-            "imageName": "bg_halloween",
+            "imageName": "bg_dragonfire",
             "usesAnimatedRings": false,
             "darkening": 0.12
         }

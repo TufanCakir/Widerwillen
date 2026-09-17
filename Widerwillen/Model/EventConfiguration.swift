@@ -207,7 +207,7 @@ struct EventVictoryPresentation: Decodable {
         title: String = "Victory",
         titleKey: String? = "event.victory",
         imageName: String? = nil,
-        backgroundImageName: String = "bg_app",
+        backgroundImageName: String = "bg_widerwillen",
         dismissDelaySeconds: Double = 2.4
     ) {
         self.title = title
@@ -239,7 +239,7 @@ struct EventVictoryPresentation: Decodable {
             try container.decodeIfPresent(
                 String.self,
                 forKey: .backgroundImageName
-            ) ?? "bg_app"
+            ) ?? "bg_widerwillen"
         dismissDelaySeconds =
             try container.decodeIfPresent(
                 Double.self,

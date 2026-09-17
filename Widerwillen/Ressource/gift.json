@@ -72,7 +72,7 @@
                     "id": "widerwillen_release_bg",
                     "kind": "app_background",
                     "name": "Release Background",
-                    "imageName": "widerwillen_bg"
+                    "imageName": "bg_widerwillen"
                 },
                 {
                     "id": "pixel_menu_button",
@@ -126,15 +126,15 @@
                     "id": "birthday_event_bg",
                     "kind": "app_background",
                     "name": "Birthday Background",
-                    "imageName": "bg_birthday"
+                    "imageName": "bg_cosmic_nebula"
                 },
                 {
-                    "id": "birthday_big_sword_skin",
+                    "id": "birthday_sword",
                     "kind": "weapon_skin",
-                    "itemID": "fun_edge",
+                    "itemID": "widerwillen_sword",
                     "name": "Birthday Blade",
-                    "imageName": "icon_pixel_big_sword",
-                    "shadowCloneImageName": "shadow_clone_nimbi_big_sword",
+                    "imageName": "icon_pixel_sword",
+                    "shadowCloneImageName": "shadow_clone_nimbi_sword",
                     "rarity": "epic",
                     "battleAppearance": {
                         "scale": 1.0,
@@ -174,7 +174,7 @@
                     "id": "halloween_event_bg",
                     "kind": "app_background",
                     "name": "Halloween Background",
-                    "imageName": "bg_halloween"
+                    "imageName": "bg_dragonfire"
                 },
                 {
                     "id": "halloween_slasher_skin",

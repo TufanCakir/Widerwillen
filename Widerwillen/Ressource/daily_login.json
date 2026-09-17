@@ -6,7 +6,7 @@
             "titleKey": "daily_login.standard.title",
             "category": "Daily",
             "categoryKey": "daily_login.category.daily",
-            "backgroundImageName": "bg_blue",
+            "backgroundImageName": "bg_cosmic_nebula",
             "rewards": [
                 {
                     "day": 1,
@@ -258,7 +258,7 @@
             "titleKey": "daily_login.launch.title",
             "category": "Launch",
             "categoryKey": "daily_login.category.launch",
-            "backgroundImageName": "bg_white",
+            "backgroundImageName": "bg_void_portal",
             "rewards": [
                 {
                     "day": 1,
@@ -378,7 +378,7 @@
                             "id": "widerwillen_release_bg",
                             "kind": "menu_background",
                             "name": "Release Background",
-                            "imageName": "widerwillen_bg"
+                            "imageName": "bg_widerwillen"
                         },
                         {
                             "id": "pixel_menu_button",
@@ -404,7 +404,7 @@
             "titleKey": "daily_login.birthday.title",
             "category": "Birthday",
             "categoryKey": "daily_login.category.birthday",
-            "backgroundImageName": "bg_birthday",
+            "backgroundImageName": "bg_cosmic_nebula",
             "rewards": [
                 {
                     "day": 1,
@@ -528,7 +528,7 @@
                             "id": "birthday_event_bg",
                             "kind": "menu_background",
                             "name": "Birthday Background",
-                            "imageName": "bg_birthday"
+                            "imageName": "bg_cosmic_nebula"
                         },
                         {
                             "id": "birthday_nimbi_skin",
@@ -562,7 +562,7 @@
             "titleKey": "daily_login.halloween.title",
             "category": "Halloween",
             "categoryKey": "daily_login.category.halloween",
-            "backgroundImageName": "bg_halloween",
+            "backgroundImageName": "bg_dragonfire",
             "rewards": [
                 {
                     "day": 1,
@@ -684,7 +684,7 @@
                             "id": "halloween_event_bg",
                             "kind": "menu_background",
                             "name": "Halloween Background",
-                            "imageName": "bg_halloween"
+                            "imageName": "bg_dragonfire"
                         },
                         {
                             "id": "halloween_nimbi_skin",

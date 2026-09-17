@@ -7,17 +7,17 @@
     "looks": [
         {
             "name": "Area 1",
-            "groundImageName": "arena_pixel_green",
+            "groundImageName": "bg_cosmic_nebula",
             "groundDarkening": 0.1
         },
         {
             "name": "Area 2",
-            "groundImageName": "arena_pixel_yellow",
+            "groundImageName": "bg_cosmic_nebula",
             "groundDarkening": 0.1
         },
         {
             "name": "Area 3",
-            "groundImageName": "arena_pixel_red",
+            "groundImageName": "bg_cosmic_nebula",
             "groundDarkening": 0.1
         }
     ]

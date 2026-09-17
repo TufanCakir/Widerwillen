@@ -90,7 +90,7 @@ struct SkillView: View {
     }
 
     private var selectedTreeBackgroundImageName: String {
-        tree(for: selectedCategory)?.backgroundImageName ?? "bg_app"
+        tree(for: selectedCategory)?.backgroundImageName ?? "bg_widerwillen"
     }
 
     private var categories: [String] {
@@ -132,7 +132,7 @@ struct SkillView: View {
 
         return ZStack(alignment: .bottomLeading) {
             RemoteImage(
-                name: tree?.backgroundImageName ?? "bg_app",
+                name: tree?.backgroundImageName ?? "bg_widerwillen",
                 contentMode: .fill
             )
             .frame(height: 92)

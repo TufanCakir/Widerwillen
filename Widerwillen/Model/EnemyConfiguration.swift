@@ -45,7 +45,7 @@ struct EnemyConfiguration: Decodable {
                 id: "fallback_area",
                 name: "Arena",
                 startsAtStage: 1,
-                transitionImageName: "bg_app",
+                transitionImageName: "bg_widerwillen",
                 enemies: [],
                 bosses: []
             )

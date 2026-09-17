@@ -86,7 +86,7 @@ struct RemoteImage: View {
 
     private var systemImageName: String {
         switch name {
-        case "bg", "bg_app":
+        case "bg", "bg_widerwillen":
             "square.grid.3x3.fill"
         case _ where name.contains("coin"):
             "circle.fill"

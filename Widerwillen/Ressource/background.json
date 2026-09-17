@@ -7,7 +7,7 @@
                 "green": 0.015,
                 "blue": 0.04
             },
-            "backgroundImageName": "arena_pixel_green",
+            "backgroundImageName": "bg_cosmic_nebula",
             "backgroundDarkening": 0.15
         },
         {
@@ -17,7 +17,7 @@
                 "green": 0.015,
                 "blue": 0.04
             },
-            "backgroundImageName": "arena_pixel_yellow",
+            "backgroundImageName": "bg_cosmic_nebula",
             "backgroundDarkening": 0.15
         },
         {
@@ -27,7 +27,7 @@
                 "green": 0.015,
                 "blue": 0.04
             },
-            "backgroundImageName": "arena_pixel_red",
+            "backgroundImageName": "bg_cosmic_nebula",
             "backgroundDarkening": 0.15
         }
     ]
