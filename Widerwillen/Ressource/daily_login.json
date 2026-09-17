@@ -6,7 +6,7 @@
             "titleKey": "daily_login.standard.title",
             "category": "Daily",
             "categoryKey": "daily_login.category.daily",
-            "backgroundImageName": "bg_cosmic_nebula",
+            "backgroundImageName": "bg_widerwillen",
             "rewards": [
                 {
                     "day": 1,
@@ -377,7 +377,7 @@
                         {
                             "id": "widerwillen_release_bg",
                             "kind": "menu_background",
-                            "name": "Release Background",
+                            "name": "Widerwillen Background",
                             "imageName": "bg_widerwillen"
                         },
                         {
@@ -527,7 +527,7 @@
                         {
                             "id": "birthday_event_bg",
                             "kind": "menu_background",
-                            "name": "Birthday Background",
+                            "name": "Cosmic Nebula",
                             "imageName": "bg_cosmic_nebula"
                         },
                         {
@@ -538,13 +538,13 @@
                             "imageName": "icon_birthday_nimbi"
                         },
                         {
-                            "id": "birthday_big_sword_skin",
+                            "id": "birthday_sword_skin",
                             "kind": "weapon_skin",
-                            "itemID": "fun_edge",
-                            "name": "Birthday Blade",
-                            "imageName": "icon_pixel_big_sword",
-                            "shadowCloneImageName": "shadow_clone_nimbi_big_sword",
-                            "rarity": "epic",
+                            "itemID": "widewillen_sword",
+                            "name": "Widerwillen Sword",
+                            "imageName": "icon_pixel_sword",
+                            "shadowCloneImageName": "shadow_clone_nimbi_sword",
+                            "rarity": "legendary",
                             "battleAppearance": {
                                 "scale": 1.0,
                                 "offsetX": 10,
@@ -681,9 +681,9 @@
                     ],
                     "unlocks": [
                         {
-                            "id": "halloween_event_bg",
+                            "id": "bg_dragonfire",
                             "kind": "menu_background",
-                            "name": "Halloween Background",
+                            "name": "Dragonfire",
                             "imageName": "bg_dragonfire"
                         },
                         {
@@ -694,10 +694,10 @@
                             "imageName": "icon_halloween_nimbi"
                         },
                         {
-                            "id": "halloween_slasher_skin",
+                            "id": "sword_slasher",
                             "kind": "weapon_skin",
                             "itemID": "slasher",
-                            "name": "Halloween Slasher",
+                            "name": "Slasher",
                             "imageName": "icon_pixel_slasher",
                             "shadowCloneImageName": "shadow_clone_nimbi_slasher",
                             "rarity": "legendary",

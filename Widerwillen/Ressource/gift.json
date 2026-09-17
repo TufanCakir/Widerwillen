@@ -71,7 +71,7 @@
                 {
                     "id": "widerwillen_release_bg",
                     "kind": "app_background",
-                    "name": "Release Background",
+                    "name": "Widerwillen",
                     "imageName": "bg_widerwillen"
                 },
                 {
@@ -81,15 +81,15 @@
                     "imageName": "icon_pixel_menü"
                 },
                 {
-                    "id": "release_sword_skin",
+                    "id": "widerwillen_sword",
                     "kind": "weapon_skin",
                     "itemID": "widerwillen_sword",
-                    "name": "Release Sword",
+                    "name": "Widerwillen Sword",
                     "imageName": "icon_pixel_sword",
                     "shadowCloneImageName": "shadow_clone_nimbi_sword",
                     "rarity": "rare",
                     "battleAppearance": {
-                        "scale": 1.0,
+                        "scale": 1,
                         "offsetX": 10,
                         "offsetY": 10,
                         "rotation": -10
@@ -99,7 +99,7 @@
         },
         {
             "id": "skin_gift_nimbi_birthday_001",
-            "title": "Nimbi Birthday Skin Gift",
+            "title": "Birthday Nimbi",
             "titleKey": "gift.skin_gift_nimbi_birthday_001.title",
             "category": "Event",
             "categoryKey": "gift.category.event",
@@ -116,38 +116,23 @@
             ],
             "unlocks": [
                 {
-                    "id": "gift_nimbi_birthday_skin",
+                    "id": "nimbi_birthday_skin",
                     "kind": "skin",
                     "skinID": "nimbi_birthday_skin",
-                    "name": "Nimbi Birthday",
+                    "name": "Birthday Nimbi",
                     "imageName": "icon_birthday_nimbi"
                 },
                 {
                     "id": "birthday_event_bg",
                     "kind": "app_background",
-                    "name": "Birthday Background",
+                    "name": "Cosmic Nebula",
                     "imageName": "bg_cosmic_nebula"
-                },
-                {
-                    "id": "birthday_sword",
-                    "kind": "weapon_skin",
-                    "itemID": "widerwillen_sword",
-                    "name": "Birthday Blade",
-                    "imageName": "icon_pixel_sword",
-                    "shadowCloneImageName": "shadow_clone_nimbi_sword",
-                    "rarity": "epic",
-                    "battleAppearance": {
-                        "scale": 1.0,
-                        "offsetX": 10,
-                        "offsetY": 10,
-                        "rotation": -10
-                    }
                 }
             ]
         },
         {
             "id": "skin_gift_nimbi_halloween_001",
-            "title": "Nimbi Halloween Skin Gift",
+            "title": "Halloween Nimbi",
             "titleKey": "gift.skin_gift_nimbi_halloween_001.title",
             "category": "Event",
             "categoryKey": "gift.category.event",
@@ -164,28 +149,28 @@
             ],
             "unlocks": [
                 {
-                    "id": "gift_nimbi_halloween_skin",
+                    "id": "nimbi_halloween_skin",
                     "kind": "skin",
                     "skinID": "nimbi_halloween_skin",
-                    "name": "Nimbi Halloween",
+                    "name": "Halloween Nimbi",
                     "imageName": "icon_halloween_nimbi"
                 },
                 {
                     "id": "halloween_event_bg",
                     "kind": "app_background",
-                    "name": "Halloween Background",
+                    "name": "Dragonfire",
                     "imageName": "bg_dragonfire"
                 },
                 {
-                    "id": "halloween_slasher_skin",
+                    "id": "slasher",
                     "kind": "weapon_skin",
                     "itemID": "slasher",
-                    "name": "Halloween Slasher",
+                    "name": "Slasher",
                     "imageName": "icon_pixel_slasher",
                     "shadowCloneImageName": "shadow_clone_nimbi_slasher",
                     "rarity": "legendary",
                     "battleAppearance": {
-                        "scale": 1.0,
+                        "scale": 1,
                         "offsetX": 10,
                         "offsetY": 10,
                         "rotation": -10

@@ -5,28 +5,56 @@
             "title": "Widerwillen Rings",
             "imageName": null,
             "usesAnimatedRings": true,
-            "darkening": 0.0
+            "darkening": 0
         },
         {
             "id": "widerwillen_release_bg",
-            "title": "Release Background",
+            "title": "Widerwillen",
             "imageName": "bg_widerwillen",
             "usesAnimatedRings": false,
             "darkening": 0.08
         },
         {
             "id": "birthday_event_bg",
-            "title": "Birthday Background",
+            "title": "Cosmic Nebula",
             "imageName": "bg_cosmic_nebula",
             "usesAnimatedRings": false,
-            "darkening": 0.10
+            "darkening": 0.1
         },
         {
             "id": "halloween_event_bg",
-            "title": "Halloween Background",
+            "title": "Dragonfire",
             "imageName": "bg_dragonfire",
             "usesAnimatedRings": false,
             "darkening": 0.12
+        },
+        {
+            "id": "enchanted_forest",
+            "title": "Enchanted Forest",
+            "imageName": "bg_enchanted_forest",
+            "usesAnimatedRings": false,
+            "darkening": 0.1
+        },
+        {
+            "id": "aurora",
+            "title": "Aurora",
+            "imageName": "bg_aurora",
+            "usesAnimatedRings": false,
+            "darkening": 0.08
+        },
+        {
+            "id": "crystal_temple",
+            "title": "Crystal Temple",
+            "imageName": "bg_crystal_temple",
+            "usesAnimatedRings": false,
+            "darkening": 0.1
+        },
+        {
+            "id": "void_portal",
+            "title": "Void Portal",
+            "imageName": "bg_void_portal",
+            "usesAnimatedRings": false,
+            "darkening": 0.14
         }
     ],
     "buttonLooks": [

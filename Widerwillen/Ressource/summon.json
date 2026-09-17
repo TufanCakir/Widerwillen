@@ -125,7 +125,7 @@
                     "id": "yellow_crown",
                     "name": "Yellow Crown",
                     "imageName": "icon_pixel_coin",
-                    "rarity": "legendary",
+                    "rarity": "epic",
                     "damageBonus": 18,
                     "weight": 1
                 }
@@ -148,7 +148,7 @@
                     "name": "Widerwillen Sword",
                     "imageName": "icon_pixel_sword",
                     "shadowCloneImageName": "shadow_clone_nimbi_sword",
-                    "rarity": "common",
+                    "rarity": "legendary",
                     "damageBonus": 10,
                     "weight": 50,
                     "battleAppearance": {
@@ -175,7 +175,7 @@
                 },
                 {
                     "id": "moon_blaster",
-                    "name": "Moon Blster",
+                    "name": "Moon Blaster",
                     "imageName": "icon_pixel_gun",
                     "shadowCloneImageName": "shadow_clone_nimbi_moon_blaster",
                     "rarity": "rare",

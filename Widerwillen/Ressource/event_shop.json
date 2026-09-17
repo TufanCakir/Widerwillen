@@ -49,6 +49,59 @@
                         }
                     ],
                     "unlocks": []
+                },
+                {
+                    "id": "blue_chip_run_moon_blaster_01",
+                    "title": "Moon Blaster",
+                    "category": "Blue Chip Run",
+                    "imageName": "icon_pixel_gun",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "blue_chips",
+                            "imageName": "icon_pixel_chip_blue",
+                            "amount": 260
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "blue_chip_shop_moon_blaster",
+                            "kind": "item",
+                            "itemID": "moon_blaster",
+                            "name": "Moon Blaster",
+                            "imageName": "icon_pixel_gun",
+                            "rarity": "rare",
+                            "damageBonus": 14
+                        }
+                    ]
+                },
+                {
+                    "id": "blue_chip_run_cookieman_01",
+                    "title": "Cookieman",
+                    "category": "Blue Chip Run",
+                    "imageName": "icon_cookieman",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "blue_chips",
+                            "imageName": "icon_pixel_chip_blue",
+                            "amount": 140
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "blue_chip_shop_cookieman",
+                            "kind": "sprite",
+                            "spriteIndex": 0,
+                            "name": "Cookieman",
+                            "imageName": "icon_cookieman",
+                            "rarity": "common"
+                        }
+                    ]
                 }
             ]
         },
@@ -101,6 +154,59 @@
                         }
                     ],
                     "unlocks": []
+                },
+                {
+                    "id": "yellow_chip_run_fun_edge_01",
+                    "title": "Fun Edge",
+                    "category": "Yellow Chip Run",
+                    "imageName": "icon_pixel_big_sword",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "yellow_chips",
+                            "imageName": "icon_pixel_chip_yellow",
+                            "amount": 320
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "yellow_chip_shop_fun_edge",
+                            "kind": "item",
+                            "itemID": "fun_edge",
+                            "name": "Fun Edge",
+                            "imageName": "icon_pixel_big_sword",
+                            "rarity": "epic",
+                            "damageBonus": 14
+                        }
+                    ]
+                },
+                {
+                    "id": "yellow_chip_run_dazzle_01",
+                    "title": "Dazzle",
+                    "category": "Yellow Chip Run",
+                    "imageName": "icon_dazzle",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "yellow_chips",
+                            "imageName": "icon_pixel_chip_yellow",
+                            "amount": 260
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "yellow_chip_shop_dazzle",
+                            "kind": "sprite",
+                            "spriteIndex": 23,
+                            "name": "Dazzle",
+                            "imageName": "icon_dazzle",
+                            "rarity": "epic"
+                        }
+                    ]
                 }
             ]
         },
@@ -131,6 +237,81 @@
                         }
                     ],
                     "unlocks": []
+                },
+                {
+                    "id": "red_chip_raid_slasher_01",
+                    "title": "Slasher",
+                    "category": "Red Chip Raid",
+                    "imageName": "icon_pixel_slasher",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "red_chips",
+                            "imageName": "icon_pixel_chip_red",
+                            "amount": 480
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "red_chip_shop_slasher",
+                            "kind": "item",
+                            "itemID": "slasher",
+                            "name": "Slasher",
+                            "imageName": "icon_pixel_slasher",
+                            "rarity": "legendary",
+                            "damageBonus": 20
+                        }
+                    ]
+                },
+                {
+                    "id": "red_chip_raid_molc_01",
+                    "title": "Molc",
+                    "category": "Red Chip Raid",
+                    "imageName": "icon_molc",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "red_chips",
+                            "imageName": "icon_pixel_chip_red",
+                            "amount": 440
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "red_chip_shop_molc",
+                            "kind": "sprite",
+                            "spriteIndex": 24,
+                            "name": "Molc",
+                            "imageName": "icon_molc",
+                            "rarity": "legendary"
+                        }
+                    ]
+                },
+                {
+                    "id": "red_chip_raid_crystals_01",
+                    "title": "Raid Crystals",
+                    "category": "Red Chip Raid",
+                    "imageName": "icon_pixel_crystal",
+                    "limit": 3,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "red_chips",
+                            "imageName": "icon_pixel_chip_red",
+                            "amount": 220
+                        }
+                    ],
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 20
+                        }
+                    ],
+                    "unlocks": []
                 }
             ]
         },
@@ -142,7 +323,7 @@
             "offers": [
                 {
                     "id": "birthday_skin_event_skin_01",
-                    "title": "Birthday Nimbi Skin",
+                    "title": "Birthday Nimbi",
                     "category": "Birthday Skin Event",
                     "imageName": "icon_birthday_nimbi",
                     "limit": 1,
@@ -168,9 +349,9 @@
                 },
                 {
                     "id": "birthday_skin_event_bg_01",
-                    "title": "Birthday BG",
+                    "title": "Cosmic Nebula",
                     "category": "Birthday Skin Event",
-                    "imageName": "bg_birthday",
+                    "imageName": "bg_cosmic_nebula",
                     "limit": 1,
                     "costs": [
                         {
@@ -184,17 +365,17 @@
                     "unlocks": [
                         {
                             "id": "birthday_event_bg",
-                            "kind": "menu_background",
-                            "name": "Birthday Background",
-                            "imageName": "bg_birthday"
+                            "kind": "app_background",
+                            "name": "Cosmic Nebula",
+                            "imageName": "bg_cosmic_nebula"
                         }
                     ]
                 },
                 {
-                    "id": "birthday_skin_event_fun_edge_01",
-                    "title": "Fun Edge",
+                    "id": "birthday_skin_event_widerwillen_sword_01",
+                    "title": "Widerwillen Sword",
                     "category": "Birthday Skin Event",
-                    "imageName": "icon_pixel_big_sword",
+                    "imageName": "icon_pixel_sword",
                     "limit": 1,
                     "costs": [
                         {
@@ -207,13 +388,13 @@
                     "rewards": [],
                     "unlocks": [
                         {
-                            "id": "birthday_shop_fun_edge",
+                            "id": "birthday_shop_widerwillen_sword",
                             "kind": "item",
-                            "itemID": "fun_edge",
-                            "name": "Fun Edge",
-                            "imageName": "icon_pixel_big_sword",
-                            "rarity": "epic",
-                            "damageBonus": 14
+                            "itemID": "widerwillen_sword",
+                            "name": "Widerwillen Sword",
+                            "imageName": "icon_pixel_sword",
+                            "rarity": "legendary",
+                            "damageBonus": 15
                         }
                     ]
                 },
@@ -282,6 +463,59 @@
                         }
                     ],
                     "unlocks": []
+                },
+                {
+                    "id": "birthday_skin_event_fun_edge_01",
+                    "title": "Fun Edge",
+                    "category": "Birthday Skin Event",
+                    "imageName": "icon_pixel_big_sword",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "birthday_chips",
+                            "imageName": "icon_pixel_chip_birthday",
+                            "amount": 360
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "fun_edge",
+                            "kind": "item",
+                            "itemID": "fun_edge",
+                            "name": "Fun Edge",
+                            "imageName": "icon_pixel_big_sword",
+                            "rarity": "epic",
+                            "damageBonus": 14
+                        }
+                    ]
+                },
+                {
+                    "id": "birthday_skin_event_dazzle_01",
+                    "title": "Dazzle",
+                    "category": "Birthday Skin Event",
+                    "imageName": "icon_dazzle",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "birthday_chips",
+                            "imageName": "icon_pixel_chip_birthday",
+                            "amount": 280
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "birthday_shop_dazzle",
+                            "kind": "sprite",
+                            "spriteIndex": 23,
+                            "name": "Dazzle",
+                            "imageName": "icon_dazzle",
+                            "rarity": "epic"
+                        }
+                    ]
                 }
             ]
         },
@@ -293,7 +527,7 @@
             "offers": [
                 {
                     "id": "halloween_skin_event_skin_01",
-                    "title": "Halloween Nimbi Skin",
+                    "title": "Halloween Nimbi",
                     "category": "Halloween Skin Event",
                     "imageName": "icon_halloween_nimbi",
                     "limit": 1,
@@ -319,9 +553,9 @@
                 },
                 {
                     "id": "halloween_skin_event_bg_01",
-                    "title": "Halloween BG",
+                    "title": "Dragonfire",
                     "category": "Halloween Skin Event",
-                    "imageName": "bg_halloween",
+                    "imageName": "bg_dragonfire",
                     "limit": 1,
                     "costs": [
                         {
@@ -335,9 +569,9 @@
                     "unlocks": [
                         {
                             "id": "halloween_event_bg",
-                            "kind": "menu_background",
-                            "name": "Halloween Background",
-                            "imageName": "bg_halloween"
+                            "kind": "app_background",
+                            "name": "Dragonfire",
+                            "imageName": "bg_dragonfire"
                         }
                     ]
                 },
@@ -438,6 +672,58 @@
                         }
                     ],
                     "unlocks": []
+                },
+                {
+                    "id": "halloween_skin_event_blunt_01",
+                    "title": "Blunt",
+                    "category": "Halloween Skin Event",
+                    "imageName": "icon_blunt",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "halloween_chips",
+                            "imageName": "icon_pixel_chip_halloween",
+                            "amount": 220
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "halloween_shop_blunt",
+                            "kind": "sprite",
+                            "spriteIndex": 21,
+                            "name": "Blunt",
+                            "imageName": "icon_blunt",
+                            "rarity": "common"
+                        }
+                    ]
+                },
+                {
+                    "id": "halloween_skin_event_molc_01",
+                    "title": "Molc",
+                    "category": "Halloween Skin Event",
+                    "imageName": "icon_molc",
+                    "limit": 1,
+                    "costs": [
+                        {
+                            "resource": "event_chip",
+                            "chipID": "halloween_chips",
+                            "imageName": "icon_pixel_chip_halloween",
+                            "amount": 460
+                        }
+                    ],
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "halloween_shop_molc",
+                            "kind": "sprite",
+                            "spriteIndex": 24,
+                            "name": "Molc",
+                            "imageName": "icon_molc",
+                            "rarity": "legendary"
+                        }
+                    ]
                 }
             ]
         }

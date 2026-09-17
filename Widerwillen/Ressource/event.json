@@ -433,21 +433,21 @@
                 {
                     "id": "birthday_event_bg",
                     "kind": "menu_background",
-                    "name": "Birthday Background",
+                    "name": "Cosmic Nebula",
                     "imageName": "bg_cosmic_nebula"
                 },
                 {
                     "id": "event_nimbi_birthday_skin",
                     "kind": "skin",
                     "skinID": "nimbi_birthday_skin",
-                    "name": "Nimbi Birthday",
+                    "name": "Birthday Nimbi",
                     "imageName": "icon_birthday_nimbi"
                 },
                 {
                     "id": "birthday_big_sword_skin",
                     "kind": "weapon_skin",
                     "itemID": "widerwillen",
-                    "name": "Birthday Blade",
+                    "name": "Widerwillen Sword",
                     "imageName": "icon_pixel_sword",
                     "shadowCloneImageName": "shadow_clone_nimbi_sword",
                     "rarity": "epic",
@@ -491,7 +491,7 @@
                 {
                     "id": "halloween_event_bg",
                     "kind": "menu_background",
-                    "name": "Halloween Background",
+                    "name": "Dragonfire",
                     "imageName": "bg_dragonfire"
                 },
                 {
@@ -504,14 +504,14 @@
                     "id": "event_nimbi_halloween_skin",
                     "kind": "skin",
                     "skinID": "nimbi_halloween_skin",
-                    "name": "Nimbi Halloween",
+                    "name": "Halloween Nimbi",
                     "imageName": "icon_halloween_nimbi"
                 },
                 {
                     "id": "halloween_slasher_skin",
                     "kind": "weapon_skin",
                     "itemID": "slasher",
-                    "name": "Halloween Slasher",
+                    "name": "Slasher",
                     "imageName": "icon_pixel_slasher",
                     "shadowCloneImageName": "shadow_clone_nimbi_slasher",
                     "rarity": "legendary",

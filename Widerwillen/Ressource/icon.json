@@ -24,25 +24,34 @@
             "id": "moon_legend",
             "title": "Mondlegende",
             "requiredAccountLevel": 45
+        },
+        {
+            "id": "event_champion",
+            "title": "Event-Champion",
+            "requiredAccountLevel": 60
+        },
+        {
+            "id": "rift_master",
+            "title": "Rissmeister",
+            "requiredAccountLevel": 75
+        },
+        {
+            "id": "widerwillen_legend",
+            "title": "Widerwillen-Legende",
+            "requiredAccountLevel": 100
         }
     ],
     "icons": [
         {
-            "id": "widerwillen",
-            "title": "Widerwillen",
-            "imageName": "widerwillen_logo",
-            "requiredAccountLevel": 1
-        },
-        {
-            "id": "widerwillen_font",
-            "title": "Widerwillen Font",
-            "imageName": "widerwillen_font_logo",
-            "requiredAccountLevel": 5
-        },
-        {
             "id": "coin",
             "title": "Coin",
             "imageName": "icon_pixel_coin",
+            "requiredAccountLevel": 1
+        },
+        {
+            "id": "house",
+            "title": "Home",
+            "imageName": "icon_pixel_house",
             "requiredAccountLevel": 1
         },
         {
@@ -52,9 +61,9 @@
             "requiredAccountLevel": 1
         },
         {
-            "id": "house",
-            "title": "Home",
-            "imageName": "icon_pixel_house",
+            "id": "widerwillen",
+            "title": "Widerwillen",
+            "imageName": "widerwillen_logo",
             "requiredAccountLevel": 1
         },
         {
@@ -70,15 +79,15 @@
             "requiredAccountLevel": 2
         },
         {
-            "id": "news",
-            "title": "News",
-            "imageName": "icon_pixel_news",
-            "requiredAccountLevel": 3
-        },
-        {
             "id": "box",
             "title": "Box",
             "imageName": "icon_pixel_box",
+            "requiredAccountLevel": 3
+        },
+        {
+            "id": "news",
+            "title": "News",
+            "imageName": "icon_pixel_news",
             "requiredAccountLevel": 3
         },
         {
@@ -94,6 +103,12 @@
             "requiredAccountLevel": 5
         },
         {
+            "id": "widerwillen_font",
+            "title": "Widerwillen Font",
+            "imageName": "widerwillen_font_logo",
+            "requiredAccountLevel": 5
+        },
+        {
             "id": "sprite",
             "title": "Sprite",
             "imageName": "icon_pixel_sprite",
@@ -106,15 +121,15 @@
             "requiredAccountLevel": 7
         },
         {
-            "id": "trade",
-            "title": "Trade",
-            "imageName": "icon_pixel_trade",
-            "requiredAccountLevel": 8
-        },
-        {
             "id": "menu",
             "title": "Menu",
             "imageName": "icon_pixel_menü",
+            "requiredAccountLevel": 8
+        },
+        {
+            "id": "trade",
+            "title": "Trade",
+            "imageName": "icon_pixel_trade",
             "requiredAccountLevel": 8
         },
         {
@@ -160,10 +175,28 @@
             "requiredAccountLevel": 14
         },
         {
+            "id": "nimbi_birthday",
+            "title": "Birthday Nimbi",
+            "imageName": "icon_birthday_nimbi",
+            "requiredAccountLevel": 15
+        },
+        {
+            "id": "nimbi_halloween",
+            "title": "Halloween Nimbi",
+            "imageName": "icon_halloween_nimbi",
+            "requiredAccountLevel": 16
+        },
+        {
             "id": "blunt",
             "title": "Blunt",
             "imageName": "icon_blunt",
             "requiredAccountLevel": 17
+        },
+        {
+            "id": "slush",
+            "title": "Slush",
+            "imageName": "icon_slush",
+            "requiredAccountLevel": 18
         },
         {
             "id": "shadow_clone",
@@ -184,15 +217,27 @@
             "requiredAccountLevel": 24
         },
         {
-            "id": "alchemist_rare",
-            "title": "Rare Formula",
-            "imageName": "icon_pixel_alchemist_rare",
+            "id": "chip_birthday",
+            "title": "Birthday Chip",
+            "imageName": "icon_pixel_chip_birthday",
             "requiredAccountLevel": 30
         },
         {
             "id": "chip_blue",
             "title": "Blue Chip",
             "imageName": "icon_pixel_chip_blue",
+            "requiredAccountLevel": 30
+        },
+        {
+            "id": "chip_halloween",
+            "title": "Halloween Chip",
+            "imageName": "icon_pixel_chip_halloween",
+            "requiredAccountLevel": 30
+        },
+        {
+            "id": "alchemist_rare",
+            "title": "Rare Formula",
+            "imageName": "icon_pixel_alchemist_rare",
             "requiredAccountLevel": 30
         },
         {
@@ -214,6 +259,12 @@
             "requiredAccountLevel": 33
         },
         {
+            "id": "prestige",
+            "title": "Prestige",
+            "imageName": "icon_pixel_prestige",
+            "requiredAccountLevel": 35
+        },
+        {
             "id": "dimension_rift",
             "title": "Stage Rift",
             "imageName": "icon_pixel_dimension_rift",
@@ -232,6 +283,30 @@
             "requiredAccountLevel": 45
         },
         {
+            "id": "dazzle",
+            "title": "Dazzle",
+            "imageName": "icon_dazzle",
+            "requiredAccountLevel": 46
+        },
+        {
+            "id": "big_sword",
+            "title": "Fun Edge",
+            "imageName": "icon_pixel_big_sword",
+            "requiredAccountLevel": 46
+        },
+        {
+            "id": "molc",
+            "title": "Molc",
+            "imageName": "icon_molc",
+            "requiredAccountLevel": 46
+        },
+        {
+            "id": "moon_blaster",
+            "title": "Moon Blaster",
+            "imageName": "icon_pixel_gun",
+            "requiredAccountLevel": 46
+        },
+        {
             "id": "nimbi_night",
             "title": "Nimbi Night",
             "imageName": "icon_nimbi_night",
@@ -244,21 +319,9 @@
             "requiredAccountLevel": 46
         },
         {
-            "id": "big_sword",
-            "title": "Big Sword",
-            "imageName": "icon_pixel_big_sword",
-            "requiredAccountLevel": 46
-        },
-        {
-            "id": "dazzle",
-            "title": "Dazzle",
-            "imageName": "icon_dazzle",
-            "requiredAccountLevel": 46
-        },
-        {
-            "id": "molc",
-            "title": "Molc",
-            "imageName": "icon_molc",
+            "id": "slasher",
+            "title": "Slasher",
+            "imageName": "icon_pixel_slasher",
             "requiredAccountLevel": 46
         },
         {
@@ -266,54 +329,6 @@
             "title": "Thusax",
             "imageName": "icon_thusax",
             "requiredAccountLevel": 46
-        },
-        {
-            "id": "moon_blaster",
-            "title": "Moon Blaster",
-            "imageName": "icon_pixel_gun",
-            "requiredAccountLevel": 46
-        },
-        {
-            "id": "slasher",
-            "title": "Slasher",
-            "imageName": "icon_pixel_slasher",
-            "requiredAccountLevel": 46
-        },
-        {
-            "id": "nimbi_birthday",
-            "title": "Nimbi Birthday",
-            "imageName": "icon_birthday_nimbi",
-            "requiredAccountLevel": 15
-        },
-        {
-            "id": "nimbi_halloween",
-            "title": "Nimbi Halloween",
-            "imageName": "icon_halloween_nimbi",
-            "requiredAccountLevel": 16
-        },
-        {
-            "id": "slush",
-            "title": "Slush",
-            "imageName": "icon_slush",
-            "requiredAccountLevel": 18
-        },
-        {
-            "id": "chip_halloween",
-            "title": "Halloween Chip",
-            "imageName": "icon_pixel_chip_halloween",
-            "requiredAccountLevel": 30
-        },
-        {
-            "id": "chip_birthday",
-            "title": "Birthday Chip",
-            "imageName": "icon_pixel_chip_birthday",
-            "requiredAccountLevel": 30
-        },
-        {
-            "id": "prestige",
-            "title": "Prestige",
-            "imageName": "icon_pixel_prestige",
-            "requiredAccountLevel": 35
         }
     ]
 }
