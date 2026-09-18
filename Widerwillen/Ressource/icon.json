@@ -56,13 +56,13 @@
         },
         {
             "id": "sword",
-            "title": "Sword",
+            "title": "Widerwillen Sword",
             "imageName": "icon_pixel_sword",
             "requiredAccountLevel": 1
         },
         {
             "id": "widerwillen",
-            "title": "Widerwillen",
+            "title": "Widerwillen Logo",
             "imageName": "widerwillen_logo",
             "requiredAccountLevel": 1
         },

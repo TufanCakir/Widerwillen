@@ -264,7 +264,7 @@
                     "day": 1,
                     "title": "Day 1",
                     "titleKey": "daily_login.day.1",
-                    "imageName": "widerwillen_logo",
+                    "imageName": "icon_pixel_crystal",
                     "rewards": [
                         {
                             "resource": "crystals",

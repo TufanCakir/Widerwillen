@@ -13,7 +13,7 @@
                 {
                     "id": "moon_pass_01_free_001",
                     "requiredPoints": 20,
-                    "title": "Starter Coins",
+                    "title": "Coins",
                     "imageName": "icon_pixel_coin",
                     "premium": false,
                     "rewards": [
@@ -24,9 +24,26 @@
                     ]
                 },
                 {
+                    "id": "moon_pass_01_premium_bonus_020",
+                    "requiredPoints": 20,
+                    "title": "Premium Coins",
+                    "imageName": "icon_pixel_coin",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 1000
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 10
+                        }
+                    ]
+                },
+                {
                     "id": "moon_pass_01_free_002",
                     "requiredPoints": 60,
-                    "title": "Crystal Drop",
+                    "title": "Crystal",
                     "imageName": "icon_pixel_crystal",
                     "premium": false,
                     "rewards": [
@@ -37,9 +54,39 @@
                     ]
                 },
                 {
+                    "id": "moon_pass_01_premium_bonus_060",
+                    "requiredPoints": 60,
+                    "title": "Premium Crystals",
+                    "imageName": "icon_pixel_crystal",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 25
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 3
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_bonus_100",
+                    "requiredPoints": 100,
+                    "title": "Skill Books",
+                    "imageName": "icon_pixel_skill_book",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "skill_books",
+                            "amount": 3
+                        }
+                    ]
+                },
+                {
                     "id": "moon_pass_01_premium_001",
                     "requiredPoints": 100,
-                    "title": "Premium Crystals",
+                    "title": "Crystals",
                     "imageName": "icon_pixel_crystal",
                     "premium": true,
                     "rewards": [
@@ -52,7 +99,7 @@
                 {
                     "id": "moon_pass_01_free_003",
                     "requiredPoints": 160,
-                    "title": "Relic Cache",
+                    "title": "Relic",
                     "imageName": "icon_pixel_relic",
                     "premium": false,
                     "rewards": [
@@ -63,9 +110,39 @@
                     ]
                 },
                 {
+                    "id": "moon_pass_01_premium_bonus_160",
+                    "requiredPoints": 160,
+                    "title": "Premium Relics",
+                    "imageName": "icon_pixel_relic",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "relics",
+                            "amount": 18
+                        },
+                        {
+                            "resource": "coins",
+                            "amount": 2000
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_bonus_240",
+                    "requiredPoints": 240,
+                    "title": "Coin Cache",
+                    "imageName": "icon_pixel_coin",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 1000
+                        }
+                    ]
+                },
+                {
                     "id": "moon_pass_01_premium_002",
                     "requiredPoints": 240,
-                    "title": "Premium Relics",
+                    "title": "Relics",
                     "imageName": "icon_pixel_relic",
                     "premium": true,
                     "rewards": [
@@ -82,7 +159,7 @@
                 {
                     "id": "moon_pass_01_free_004",
                     "requiredPoints": 320,
-                    "title": "Skill Book Pack",
+                    "title": "Skill Books",
                     "imageName": "icon_pixel_skill_book",
                     "premium": false,
                     "rewards": [
@@ -93,10 +170,40 @@
                     ]
                 },
                 {
+                    "id": "moon_pass_01_premium_bonus_320",
+                    "requiredPoints": 320,
+                    "title": "Premium Skill Books",
+                    "imageName": "icon_pixel_skill_book",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "skill_books",
+                            "amount": 12
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 25
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_bonus_400",
+                    "requiredPoints": 400,
+                    "title": "Crystals",
+                    "imageName": "icon_pixel_crystal",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 10
+                        }
+                    ]
+                },
+                {
                     "id": "moon_pass_01_premium_003",
                     "requiredPoints": 400,
-                    "title": "Battle Cache",
-                    "imageName": "icon_pixel_big_sword",
+                    "title": "Premium Supply Cache",
+                    "imageName": "icon_pixel_box",
                     "premium": true,
                     "rewards": [
                         {
@@ -106,6 +213,32 @@
                         {
                             "resource": "skill_books",
                             "amount": 5
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_premium_fun_edge_400",
+                    "requiredPoints": 400,
+                    "title": "Fun Edge",
+                    "imageName": "icon_pixel_big_sword",
+                    "premium": true,
+                    "rewards": [],
+                    "unlocks": [
+                        {
+                            "id": "moon_pass_01_fun_edge_unlock",
+                            "kind": "item",
+                            "itemID": "fun_edge",
+                            "name": "Fun Edge",
+                            "imageName": "icon_pixel_big_sword",
+                            "shadowCloneImageName": "shadow_clone_nimbi_big_sword",
+                            "rarity": "epic",
+                            "damageBonus": 14,
+                            "battleAppearance": {
+                                "scale": 1,
+                                "offsetX": 10,
+                                "offsetY": 10,
+                                "rotation": -10
+                            }
                         }
                     ]
                 },
@@ -125,10 +258,44 @@
                     ]
                 },
                 {
+                    "id": "moon_pass_01_premium_bonus_500",
+                    "requiredPoints": 500,
+                    "title": "Premium Moon Cache",
+                    "imageName": "icon_pixel_box",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 4000
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 45
+                        },
+                        {
+                            "resource": "relics",
+                            "amount": 20
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_bonus_620",
+                    "requiredPoints": 620,
+                    "title": "Relics",
+                    "imageName": "icon_pixel_relic",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "relics",
+                            "amount": 8
+                        }
+                    ]
+                },
+                {
                     "id": "moon_pass_01_premium_004",
                     "requiredPoints": 620,
-                    "title": "Dazzle",
-                    "imageName": "icon_dazzle",
+                    "title": "Premium Crystal Cache",
+                    "imageName": "icon_pixel_crystal",
                     "premium": true,
                     "rewards": [
                         {
@@ -157,10 +324,48 @@
                     ]
                 },
                 {
+                    "id": "moon_pass_01_premium_bonus_760",
+                    "requiredPoints": 760,
+                    "title": "Premium Resource Cache",
+                    "imageName": "icon_pixel_box",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 6000
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 65
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 18
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_bonus_900",
+                    "requiredPoints": 900,
+                    "title": "Skill Book Cache",
+                    "imageName": "icon_pixel_skill_book",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "skill_books",
+                            "amount": 8
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 10
+                        }
+                    ]
+                },
+                {
                     "id": "moon_pass_01_premium_005",
                     "requiredPoints": 900,
-                    "title": "Molc",
-                    "imageName": "icon_molc",
+                    "title": "Moon Pass Grand Cache",
+                    "imageName": "icon_pixel_chip_red",
                     "premium": true,
                     "rewards": [
                         {
@@ -180,6 +385,174 @@
                             "chipID": "red_chips",
                             "imageName": "icon_pixel_chip_red",
                             "amount": 45
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_1050",
+                    "requiredPoints": 1050,
+                    "title": "Relic Cache",
+                    "imageName": "icon_pixel_relic",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "relics",
+                            "amount": 12
+                        },
+                        {
+                            "resource": "coins",
+                            "amount": 1500
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_premium_1050",
+                    "requiredPoints": 1050,
+                    "title": "Premium Relic Vault",
+                    "imageName": "icon_pixel_relic",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "relics",
+                            "amount": 35
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 75
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 15
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_1200",
+                    "requiredPoints": 1200,
+                    "title": "Crystal Cache",
+                    "imageName": "icon_pixel_crystal",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 18
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 5
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_premium_1200",
+                    "requiredPoints": 1200,
+                    "title": "Premium Crystal Vault",
+                    "imageName": "icon_pixel_crystal",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 100
+                        },
+                        {
+                            "resource": "coins",
+                            "amount": 7500
+                        },
+                        {
+                            "resource": "relics",
+                            "amount": 30
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_1350",
+                    "requiredPoints": 1350,
+                    "title": "Moon Supplies",
+                    "imageName": "icon_pixel_skill_book",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 2500
+                        },
+                        {
+                            "resource": "relics",
+                            "amount": 15
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 6
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_premium_1350",
+                    "requiredPoints": 1350,
+                    "title": "Premium Moon Vault",
+                    "imageName": "icon_pixel_coin",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 10000
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 125
+                        },
+                        {
+                            "resource": "relics",
+                            "amount": 40
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 25
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_free_1500",
+                    "requiredPoints": 1500,
+                    "title": "Season Finale",
+                    "imageName": "icon_pixel_crystal",
+                    "premium": false,
+                    "rewards": [
+                        {
+                            "resource": "crystals",
+                            "amount": 25
+                        },
+                        {
+                            "resource": "relics",
+                            "amount": 20
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 10
+                        }
+                    ]
+                },
+                {
+                    "id": "moon_pass_01_premium_1500",
+                    "requiredPoints": 1500,
+                    "title": "Premium Season Finale",
+                    "imageName": "icon_pixel_crystal",
+                    "premium": true,
+                    "rewards": [
+                        {
+                            "resource": "coins",
+                            "amount": 15000
+                        },
+                        {
+                            "resource": "crystals",
+                            "amount": 200
+                        },
+                        {
+                            "resource": "relics",
+                            "amount": 60
+                        },
+                        {
+                            "resource": "skill_books",
+                            "amount": 40
                         }
                     ]
                 }

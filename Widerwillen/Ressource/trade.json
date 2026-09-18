@@ -76,7 +76,7 @@
             "id": "relic_cache",
             "title": "Relic Cache",
             "category": "Relics",
-            "imageName": "icon_pixel_box",
+            "imageName": "icon_pixel_relic",
             "costs": [
                 {
                     "resource": "coins",
@@ -158,32 +158,6 @@
             ]
         },
         {
-            "id": "crystal_hunt_moon_sword",
-            "title": "Moon Event Sword",
-            "category": "Crystal Hunt",
-            "imageName": "icon_pixel_sword",
-            "limit": 1,
-            "costs": [
-                {
-                    "resource": "event_chip",
-                    "chipID": "blue_chips",
-                    "imageName": "icon_pixel_chip_blue",
-                    "amount": 260
-                }
-            ],
-            "unlocks": [
-                {
-                    "id": "moon_event_sword",
-                    "kind": "item",
-                    "itemID": "moon_event_sword",
-                    "name": "Moon Event Sword",
-                    "imageName": "icon_pixel_sword",
-                    "rarity": "epic",
-                    "damageBonus": 18
-                }
-            ]
-        },
-        {
             "id": "skill_book_coin_bundle",
             "title": "Skill Book Bundle",
             "category": "Exchange",
@@ -239,6 +213,433 @@
                 {
                     "resource": "skill_books",
                     "amount": 5
+                }
+            ]
+        },
+        {
+            "id": "coin_pack_medium",
+            "title": "Medium Coin Pack",
+            "category": "Buy",
+            "imageName": "icon_pixel_coin",
+            "costs": [
+                {
+                    "resource": "crystals",
+                    "amount": 10
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "coins",
+                    "amount": 1150
+                }
+            ]
+        },
+        {
+            "id": "relic_bundle_large",
+            "title": "Large Relic Cache",
+            "category": "Relics",
+            "imageName": "icon_pixel_relic",
+            "limit": 6,
+            "costs": [
+                {
+                    "resource": "coins",
+                    "amount": 6500
+                },
+                {
+                    "resource": "crystals",
+                    "amount": 18
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 30
+                }
+            ]
+        },
+        {
+            "id": "skill_book_relic_bundle",
+            "title": "Relic Skill Books",
+            "category": "Exchange",
+            "imageName": "icon_pixel_skill_book",
+            "limit": 10,
+            "costs": [
+                {
+                    "resource": "relics",
+                    "amount": 15
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "skill_books",
+                    "amount": 8
+                }
+            ]
+        },
+        {
+            "id": "crystal_relic_bundle",
+            "title": "Crystal Relics",
+            "category": "Exchange",
+            "imageName": "icon_pixel_relic",
+            "limit": 8,
+            "costs": [
+                {
+                    "resource": "crystals",
+                    "amount": 24
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 15
+                }
+            ]
+        },
+        {
+            "id": "trade_widerwillen_sword",
+            "title": "Widerwillen Sword",
+            "category": "Items",
+            "imageName": "icon_pixel_sword",
+            "limit": 1,
+            "costs": [
+                {
+                    "resource": "relics",
+                    "amount": 120
+                },
+                {
+                    "resource": "crystals",
+                    "amount": 50
+                }
+            ],
+            "unlocks": [
+                {
+                    "id": "trade_widerwillen_sword_unlock",
+                    "kind": "item",
+                    "itemID": "widerwillen_sword",
+                    "name": "Widerwillen Sword",
+                    "imageName": "icon_pixel_sword",
+                    "rarity": "rare",
+                    "damageBonus": 10
+                }
+            ]
+        },
+        {
+            "id": "trade_moon_blaster",
+            "title": "Moon Blaster",
+            "category": "Items",
+            "imageName": "icon_pixel_gun",
+            "limit": 1,
+            "costs": [
+                {
+                    "resource": "relics",
+                    "amount": 180
+                },
+                {
+                    "resource": "crystals",
+                    "amount": 80
+                }
+            ],
+            "unlocks": [
+                {
+                    "id": "trade_moon_blaster_unlock",
+                    "kind": "item",
+                    "itemID": "moon_blaster",
+                    "name": "Moon Blaster",
+                    "imageName": "icon_pixel_gun",
+                    "rarity": "rare",
+                    "damageBonus": 14
+                }
+            ]
+        },
+        {
+            "id": "trade_fun_edge",
+            "title": "Fun Edge",
+            "category": "Items",
+            "imageName": "icon_pixel_big_sword",
+            "limit": 1,
+            "costs": [
+                {
+                    "resource": "relics",
+                    "amount": 320
+                },
+                {
+                    "resource": "crystals",
+                    "amount": 120
+                }
+            ],
+            "unlocks": [
+                {
+                    "id": "trade_fun_edge_unlock",
+                    "kind": "item",
+                    "itemID": "fun_edge",
+                    "name": "Fun Edge",
+                    "imageName": "icon_pixel_big_sword",
+                    "rarity": "epic",
+                    "damageBonus": 14
+                }
+            ]
+        },
+        {
+            "id": "trade_slasher",
+            "title": "Slasher",
+            "category": "Items",
+            "imageName": "icon_pixel_slasher",
+            "limit": 1,
+            "costs": [
+                {
+                    "resource": "relics",
+                    "amount": 600
+                },
+                {
+                    "resource": "crystals",
+                    "amount": 180
+                }
+            ],
+            "unlocks": [
+                {
+                    "id": "trade_slasher_unlock",
+                    "kind": "item",
+                    "itemID": "slasher",
+                    "name": "Slasher",
+                    "imageName": "icon_pixel_slasher",
+                    "rarity": "legendary",
+                    "damageBonus": 20
+                }
+            ]
+        },
+        {
+            "id": "blue_chip_moon_blaster",
+            "title": "Blue Chip Moon Blaster",
+            "category": "Blue Chips",
+            "imageName": "icon_pixel_gun",
+            "limit": 1,
+            "costs": [
+                {
+                    "resource": "event_chip",
+                    "chipID": "blue_chips",
+                    "imageName": "icon_pixel_chip_blue",
+                    "amount": 260
+                }
+            ],
+            "unlocks": [
+                {
+                    "id": "blue_chip_trade_moon_blaster",
+                    "kind": "item",
+                    "itemID": "moon_blaster",
+                    "name": "Moon Blaster",
+                    "imageName": "icon_pixel_gun",
+                    "rarity": "rare",
+                    "damageBonus": 14
+                }
+            ]
+        },
+        {
+            "id": "yellow_chip_coin_bundle",
+            "title": "Yellow Chip Coins",
+            "category": "Yellow Chips",
+            "imageName": "icon_pixel_coin",
+            "limit": 10,
+            "costs": [
+                {
+                    "resource": "event_chip",
+                    "chipID": "yellow_chips",
+                    "imageName": "icon_pixel_chip_yellow",
+                    "amount": 70
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "coins",
+                    "amount": 1500
+                }
+            ]
+        },
+        {
+            "id": "yellow_chip_skill_book_bundle",
+            "title": "Yellow Chip Skill Books",
+            "category": "Yellow Chips",
+            "imageName": "icon_pixel_skill_book",
+            "limit": 6,
+            "costs": [
+                {
+                    "resource": "event_chip",
+                    "chipID": "yellow_chips",
+                    "imageName": "icon_pixel_chip_yellow",
+                    "amount": 110
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "skill_books",
+                    "amount": 6
+                }
+            ]
+        },
+        {
+            "id": "green_chip_relic_bundle",
+            "title": "Green Chip Relics",
+            "category": "Green Chips",
+            "imageName": "icon_pixel_relic",
+            "limit": 6,
+            "costs": [
+                {
+                    "resource": "event_chip",
+                    "chipID": "green_chips",
+                    "imageName": "icon_pixel_chip_green",
+                    "amount": 120
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 12
+                }
+            ]
+        },
+        {
+            "id": "green_chip_crystal_bundle",
+            "title": "Green Chip Crystals",
+            "category": "Green Chips",
+            "imageName": "icon_pixel_crystal",
+            "limit": 5,
+            "costs": [
+                {
+                    "resource": "event_chip",
+                    "chipID": "green_chips",
+                    "imageName": "icon_pixel_chip_green",
+                    "amount": 150
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "crystals",
+                    "amount": 14
+                }
+            ]
+        },
+        {
+            "id": "red_chip_relic_bundle",
+            "title": "Red Chip Relics",
+            "category": "Red Chips",
+            "imageName": "icon_pixel_relic",
+            "limit": 5,
+            "costs": [
+                {
+                    "resource": "event_chip",
+                    "chipID": "red_chips",
+                    "imageName": "icon_pixel_chip_red",
+                    "amount": 140
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 16
+                }
+            ]
+        },
+        {
+            "id": "red_chip_skill_book_bundle",
+            "title": "Red Chip Skill Books",
+            "category": "Red Chips",
+            "imageName": "icon_pixel_skill_book",
+            "limit": 5,
+            "costs": [
+                {
+                    "resource": "event_chip",
+                    "chipID": "red_chips",
+                    "imageName": "icon_pixel_chip_red",
+                    "amount": 130
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "skill_books",
+                    "amount": 8
+                }
+            ]
+        },
+        {
+            "id": "birthday_chip_crystal_bundle",
+            "title": "Birthday Crystals",
+            "category": "Birthday Chips",
+            "imageName": "icon_pixel_crystal",
+            "limit": 5,
+            "costs": [
+                {
+                    "resource": "event_chip",
+                    "chipID": "birthday_chips",
+                    "imageName": "icon_pixel_chip_birthday",
+                    "amount": 160
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "crystals",
+                    "amount": 18
+                }
+            ]
+        },
+        {
+            "id": "birthday_chip_skill_book_bundle",
+            "title": "Birthday Skill Books",
+            "category": "Birthday Chips",
+            "imageName": "icon_pixel_skill_book",
+            "limit": 5,
+            "costs": [
+                {
+                    "resource": "event_chip",
+                    "chipID": "birthday_chips",
+                    "imageName": "icon_pixel_chip_birthday",
+                    "amount": 130
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "skill_books",
+                    "amount": 8
+                }
+            ]
+        },
+        {
+            "id": "halloween_chip_relic_bundle",
+            "title": "Halloween Relics",
+            "category": "Halloween Chips",
+            "imageName": "icon_pixel_relic",
+            "limit": 5,
+            "costs": [
+                {
+                    "resource": "event_chip",
+                    "chipID": "halloween_chips",
+                    "imageName": "icon_pixel_chip_halloween",
+                    "amount": 160
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "relics",
+                    "amount": 18
+                }
+            ]
+        },
+        {
+            "id": "halloween_chip_skill_book_bundle",
+            "title": "Halloween Skill Books",
+            "category": "Halloween Chips",
+            "imageName": "icon_pixel_skill_book",
+            "limit": 5,
+            "costs": [
+                {
+                    "resource": "event_chip",
+                    "chipID": "halloween_chips",
+                    "imageName": "icon_pixel_chip_halloween",
+                    "amount": 140
+                }
+            ],
+            "rewards": [
+                {
+                    "resource": "skill_books",
+                    "amount": 9
                 }
             ]
         }

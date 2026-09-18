@@ -1,5 +1,5 @@
 {
-    "contentVersion": 220,
+    "contentVersion": 228,
     "json": [
         {
             "name": "arena",
@@ -151,11 +151,6 @@
             "version": 6
         },
         {
-            "name": "bg_summer",
-            "path": "assets/bg_summer.png",
-            "version": 3
-        },
-        {
             "name": "bg_blue",
             "path": "assets/bg_blue.png",
             "version": 1
@@ -173,21 +168,6 @@
         {
             "name": "bg_white",
             "path": "assets/bg_white.png",
-            "version": 1
-        },
-        {
-            "name": "bg_yellow",
-            "path": "assets/bg_yellow.png",
-            "version": 1
-        },
-        {
-            "name": "bg_red",
-            "path": "assets/bg_red.png",
-            "version": 1
-        },
-        {
-            "name": "bg_green",
-            "path": "assets/bg_green.png",
             "version": 1
         },
         {

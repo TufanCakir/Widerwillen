@@ -87,7 +87,7 @@
                     "name": "Widerwillen Sword",
                     "imageName": "icon_pixel_sword",
                     "shadowCloneImageName": "shadow_clone_nimbi_sword",
-                    "rarity": "rare",
+                    "rarity": "legendary",
                     "battleAppearance": {
                         "scale": 1,
                         "offsetX": 10,

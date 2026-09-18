@@ -8,7 +8,7 @@
             "offers": [
                 {
                     "id": "blue_chip_run_coins_01",
-                    "title": "Blue Chip Coins",
+                    "title": "Coins",
                     "category": "Blue Chip Run",
                     "imageName": "icon_pixel_coin",
                     "limit": 8,
@@ -30,7 +30,7 @@
                 },
                 {
                     "id": "blue_chip_run_skill_books_01",
-                    "title": "Blue Chip Skill Books",
+                    "title": "Skill Books",
                     "category": "Blue Chip Run",
                     "imageName": "icon_pixel_skill_book",
                     "limit": 4,
@@ -113,7 +113,7 @@
             "offers": [
                 {
                     "id": "yellow_chip_run_coins_01",
-                    "title": "Yellow Chip Coins",
+                    "title": "Coins",
                     "category": "Yellow Chip Run",
                     "imageName": "icon_pixel_coin",
                     "limit": 8,
@@ -135,7 +135,7 @@
                 },
                 {
                     "id": "yellow_chip_run_crystals_01",
-                    "title": "Yellow Chip Crystals",
+                    "title": "Crystals",
                     "category": "Yellow Chip Run",
                     "imageName": "icon_pixel_crystal",
                     "limit": 3,
@@ -218,7 +218,7 @@
             "offers": [
                 {
                     "id": "red_chip_raid_relics_01",
-                    "title": "Red Chip Relics",
+                    "title": "Relics",
                     "category": "Red Chip Raid",
                     "imageName": "icon_pixel_relic",
                     "limit": 5,
@@ -293,7 +293,7 @@
                 },
                 {
                     "id": "red_chip_raid_crystals_01",
-                    "title": "Raid Crystals",
+                    "title": "Crystals",
                     "category": "Red Chip Raid",
                     "imageName": "icon_pixel_crystal",
                     "limit": 3,
@@ -400,7 +400,7 @@
                 },
                 {
                     "id": "birthday_skin_event_skill_books_01",
-                    "title": "Birthday Skill Books",
+                    "title": "Skill Books",
                     "category": "Birthday Skin Event",
                     "imageName": "icon_pixel_skill_book",
                     "limit": 3,
@@ -422,7 +422,7 @@
                 },
                 {
                     "id": "birthday_skin_event_crystals_01",
-                    "title": "Birthday Crystals",
+                    "title": "Crystals",
                     "category": "Birthday Skin Event",
                     "imageName": "icon_pixel_crystal",
                     "limit": 2,
@@ -444,7 +444,7 @@
                 },
                 {
                     "id": "birthday_skin_event_coin_burst_01",
-                    "title": "Birthday Coin Burst",
+                    "title": "Coin",
                     "category": "Birthday Skin Event",
                     "imageName": "icon_pixel_coin",
                     "limit": 5,
@@ -631,7 +631,7 @@
                 },
                 {
                     "id": "halloween_skin_event_relics_01",
-                    "title": "Halloween Relics",
+                    "title": "Relics",
                     "category": "Halloween Skin Event",
                     "imageName": "icon_pixel_relic",
                     "limit": 3,
@@ -653,7 +653,7 @@
                 },
                 {
                     "id": "halloween_skin_event_skill_books_01",
-                    "title": "Halloween Skill Books",
+                    "title": "Skill Books",
                     "category": "Halloween Skin Event",
                     "imageName": "icon_pixel_skill_book",
                     "limit": 2,

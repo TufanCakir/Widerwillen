@@ -221,7 +221,7 @@
     },
     {
         "id": "legacy_pixel_sword",
-        "title": "Legacy Pixel Sword",
+        "title": "Widerwillen Sword",
         "canvasSize": 32,
         "parts": {
             "weapon": "icon_pixel_sword"

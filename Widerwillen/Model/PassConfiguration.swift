@@ -40,4 +40,5 @@ struct BattlePassReward: Decodable, Identifiable {
     let imageName: String
     let premium: Bool
     let rewards: [TradeResourceAmount]
+    let unlocks: [TradeUnlockReward]?
 }

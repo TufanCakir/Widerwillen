@@ -1073,6 +1073,10 @@ final class GameProgressStore {
             change(amount, by: amount.amount)
         }
 
+        for unlock in reward.unlocks ?? [] {
+            applyTradeUnlock(unlock)
+        }
+
         claimedPassRewardIDs.insert(passRewardKey(reward, in: pass))
         saveProgress()
         return true
