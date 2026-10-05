@@ -5,7 +5,7 @@
             "name": "Cookieman",
             "imageName": "icon_cookieman",
             "animationID": "cookieman_original",
-            "rarity": "common",
+            "rarity": "legendary",
             "baseDPS": 6,
             "maxStars": 14,
             "legacySpriteIndex": 0
@@ -35,7 +35,7 @@
             "name": "Blunt",
             "imageName": "icon_blunt",
             "animationID": "blunt_original",
-            "rarity": "legendary",
+            "rarity": "common",
             "baseDPS": 82,
             "maxStars": 14,
             "legacySpriteIndex": 21
@@ -45,7 +45,7 @@
             "name": "Dazzle",
             "imageName": "icon_dazzle",
             "animationID": "dazzle_original",
-            "rarity": "legendary",
+            "rarity": "epic",
             "baseDPS": 86,
             "maxStars": 14,
             "legacySpriteIndex": 23
@@ -55,7 +55,7 @@
             "name": "Molc",
             "imageName": "icon_molc",
             "animationID": "molc_original",
-            "rarity": "legendary",
+            "rarity": "common",
             "baseDPS": 90,
             "maxStars": 14,
             "legacySpriteIndex": 24

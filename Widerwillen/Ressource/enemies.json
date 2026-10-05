@@ -4,7 +4,7 @@
             "id": "moon_gate",
             "name": "Moon Gate",
             "startsAtStage": 1,
-            "transitionImageName": "arena_pixel_green",
+            "transitionImageName": "bg_cosmic_nebula",
             "enemies": [
                 {
                     "id": "moon_cookieman",
@@ -69,7 +69,7 @@
             "id": "relic_depths",
             "name": "Relic Depths",
             "startsAtStage": 21,
-            "transitionImageName": "arena_pixel_yellow",
+            "transitionImageName": "bg_cosmic_nebula",
             "enemies": [
                 {
                     "id": "relic_blunt",
@@ -134,28 +134,17 @@
             "id": "red_rift",
             "name": "Red Rift",
             "startsAtStage": 41,
-            "transitionImageName": "arena_pixel_red",
+            "transitionImageName": "bg_cosmic_nebula",
             "enemies": [
                 {
-                    "id": "rift_nimbi",
-                    "name": "Nimbi",
-                    "imageName": "nimbi_original",
-                    "animationID": "nimbi_original",
-                    "scale": 0.32,
-                    "columns": 3,
-                    "rows": 1,
-                    "frameCount": 3,
-                    "fps": 8
-                },
-                {
-                    "id": "rift_nimbi_night",
-                    "name": "Nimbi Night",
-                    "imageName": "nimbi_night",
-                    "animationID": "nimbi_night",
+                    "id": "rift_thusax",
+                    "name": "Thusax",
+                    "imageName": "thusax_original",
+                    "animationID": "thusax_original",
                     "scale": 0.34,
-                    "columns": 3,
+                    "columns": 5,
                     "rows": 1,
-                    "frameCount": 3,
+                    "frameCount": 5,
                     "fps": 8
                 },
                 {

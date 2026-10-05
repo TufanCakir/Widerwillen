@@ -99,7 +99,7 @@
                             "spriteIndex": 0,
                             "name": "Cookieman",
                             "imageName": "icon_cookieman",
-                            "rarity": "common"
+                            "rarity": "legendary"
                         }
                     ]
                 }
@@ -287,7 +287,7 @@
                             "spriteIndex": 24,
                             "name": "Molc",
                             "imageName": "icon_molc",
-                            "rarity": "legendary"
+                            "rarity": "common"
                         }
                     ]
                 },
@@ -721,7 +721,7 @@
                             "spriteIndex": 24,
                             "name": "Molc",
                             "imageName": "icon_molc",
-                            "rarity": "legendary"
+                            "rarity": "common"
                         }
                     ]
                 }

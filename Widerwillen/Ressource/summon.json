@@ -18,9 +18,9 @@
                     "spriteIndex": 0,
                     "companionID": "cookieman",
                     "imageName": "icon_cookieman",
-                    "rarity": "common",
+                    "rarity": "legendary",
                     "damageBonus": 1,
-                    "weight": 50
+                    "weight": 1
                 },
                 {
                     "id": "klempi_front",
@@ -79,9 +79,9 @@
                     "spriteIndex": 24,
                     "companionID": "molc",
                     "imageName": "icon_molc",
-                    "rarity": "legendary",
-                    "damageBonus": 18,
-                    "weight": 1
+                    "rarity": "common",
+                    "damageBonus": 10,
+                    "weight": 50
                 }
             ]
         },
@@ -150,7 +150,7 @@
                     "shadowCloneImageName": "shadow_clone_nimbi_sword",
                     "rarity": "legendary",
                     "damageBonus": 10,
-                    "weight": 50,
+                    "weight": 1,
                     "battleAppearance": {
                         "scale": 1.0,
                         "offsetX": 10,
@@ -163,9 +163,9 @@
                     "name": "Fun Edge",
                     "imageName": "icon_pixel_big_sword",
                     "shadowCloneImageName": "shadow_clone_nimbi_big_sword",
-                    "rarity": "epic",
+                    "rarity": "common",
                     "damageBonus": 14,
-                    "weight": 10,
+                    "weight": 50,
                     "battleAppearance": {
                         "scale": 1.0,
                         "offsetX": 10,
