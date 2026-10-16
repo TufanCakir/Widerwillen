@@ -409,15 +409,15 @@
             "category": "Special Events",
             "categoryKey": "event.category.special",
             "bannerImageName": "icon_birthday_nimbi",
-            "cardBackgroundImageName": "bg_cosmic_nebula",
-            "battleBackgroundImageName": "bg_cosmic_nebula",
-            "battleGroundImageName": "bg_cosmic_nebula",
+            "cardBackgroundImageName": "bg_birthday",
+            "battleBackgroundImageName": "bg_birthday",
+            "battleGroundImageName": "bg_birthday",
             "chipID": "birthday_chips",
             "victory": {
                 "title": "Skin Unlocked",
                 "titleKey": "event.victory.skin_unlocked",
                 "imageName": "icon_birthday_nimbi",
-                "backgroundImageName": "bg_cosmic_nebula",
+                "backgroundImageName": "bg_birthday",
                 "dismissDelaySeconds": 2.6
             },
             "dailyLimit": 1,
@@ -433,8 +433,8 @@
                 {
                     "id": "birthday_event_bg",
                     "kind": "menu_background",
-                    "name": "Cosmic Nebula",
-                    "imageName": "bg_cosmic_nebula"
+                    "name": "Birthday",
+                    "imageName": "bg_birthday"
                 },
                 {
                     "id": "event_nimbi_birthday_skin",
@@ -467,15 +467,15 @@
             "category": "Special Events",
             "categoryKey": "event.category.special",
             "bannerImageName": "icon_halloween_nimbi",
-            "cardBackgroundImageName": "bg_dragonfire",
-            "battleBackgroundImageName": "bg_dragonfire",
-            "battleGroundImageName": "bg_dragonfire",
+            "cardBackgroundImageName": "bg_halloween",
+            "battleBackgroundImageName": "bg_halloween",
+            "battleGroundImageName": "bg_halloween",
             "chipID": "halloween_chips",
             "victory": {
                 "title": "Skin Unlocked",
                 "titleKey": "event.victory.skin_unlocked",
                 "imageName": "icon_halloween_nimbi",
-                "backgroundImageName": "bg_dragonfire",
+                "backgroundImageName": "bg_halloween",
                 "dismissDelaySeconds": 2.6
             },
             "dailyLimit": 1,
@@ -491,8 +491,8 @@
                 {
                     "id": "halloween_event_bg",
                     "kind": "menu_background",
-                    "name": "Dragonfire",
-                    "imageName": "bg_dragonfire"
+                    "name": "Halloween",
+                    "imageName": "bg_halloween"
                 },
                 {
                     "id": "pixel_menu_button",

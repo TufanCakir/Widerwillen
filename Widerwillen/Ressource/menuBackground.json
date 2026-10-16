@@ -9,22 +9,22 @@
         },
         {
             "id": "widerwillen_release_bg",
-            "title": "Widerwillen",
-            "imageName": "bg_widerwillen",
+            "title": "Start",
+            "imageName": "bg_start",
             "usesAnimatedRings": false,
             "darkening": 0.08
         },
         {
             "id": "birthday_event_bg",
-            "title": "Cosmic Nebula",
-            "imageName": "bg_cosmic_nebula",
+            "title": "Birthday",
+            "imageName": "bg_birthday",
             "usesAnimatedRings": false,
             "darkening": 0.1
         },
         {
             "id": "halloween_event_bg",
-            "title": "Dragonfire",
-            "imageName": "bg_dragonfire",
+            "title": "Halloween",
+            "imageName": "bg_halloween",
             "usesAnimatedRings": false,
             "darkening": 0.12
         },

@@ -7,17 +7,17 @@
     "looks": [
         {
             "name": "Area 1",
-            "groundImageName": "bg_cosmic_nebula",
+            "groundImageName": "bg_start",
             "groundDarkening": 0.1
         },
         {
             "name": "Area 2",
-            "groundImageName": "bg_cosmic_nebula",
+            "groundImageName": "bg_start",
             "groundDarkening": 0.1
         },
         {
             "name": "Area 3",
-            "groundImageName": "bg_cosmic_nebula",
+            "groundImageName": "bg_start",
             "groundDarkening": 0.1
         }
     ]

@@ -1,5 +1,5 @@
 {
-    "contentVersion": 234,
+    "contentVersion": 254,
     "json": [
         {
             "name": "arena",
@@ -124,6 +124,21 @@
             "name": "bg_cosmic_nebula",
             "path": "assets/bg_cosmic_nebula.png",
             "version": 6
+        },
+        {
+            "name": "bg_start",
+            "path": "assets/bg_start.png",
+            "version": 6
+        },
+        {
+            "name": "bg_birthday",
+            "path": "assets/bg_birthday.png",
+            "version": 9
+        },
+        {
+            "name": "bg_halloween",
+            "path": "assets/bg_halloween.png",
+            "version": 9
         },
         {
             "name": "bg_enchanted_forest",

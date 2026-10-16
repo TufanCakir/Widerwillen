@@ -7,7 +7,7 @@
                 "green": 0.015,
                 "blue": 0.04
             },
-            "backgroundImageName": "bg_cosmic_nebula",
+            "backgroundImageName": "bg_start",
             "backgroundDarkening": 0.15
         },
         {
@@ -17,7 +17,7 @@
                 "green": 0.015,
                 "blue": 0.04
             },
-            "backgroundImageName": "bg_cosmic_nebula",
+            "backgroundImageName": "bg_start",
             "backgroundDarkening": 0.15
         },
         {
@@ -27,7 +27,7 @@
                 "green": 0.015,
                 "blue": 0.04
             },
-            "backgroundImageName": "bg_cosmic_nebula",
+            "backgroundImageName": "bg_start",
             "backgroundDarkening": 0.15
         }
     ]

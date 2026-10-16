@@ -6,7 +6,7 @@
             "titleKey": "daily_login.standard.title",
             "category": "Daily",
             "categoryKey": "daily_login.category.daily",
-            "backgroundImageName": "bg_widerwillen",
+            "backgroundImageName": "bg_start",
             "rewards": [
                 {
                     "day": 1,
@@ -377,8 +377,8 @@
                         {
                             "id": "widerwillen_release_bg",
                             "kind": "menu_background",
-                            "name": "Widerwillen Background",
-                            "imageName": "bg_widerwillen"
+                            "name": "Start",
+                            "imageName": "bg_start"
                         },
                         {
                             "id": "pixel_menu_button",
@@ -404,7 +404,7 @@
             "titleKey": "daily_login.birthday.title",
             "category": "Birthday",
             "categoryKey": "daily_login.category.birthday",
-            "backgroundImageName": "bg_cosmic_nebula",
+            "backgroundImageName": "bg_birthday",
             "rewards": [
                 {
                     "day": 1,
@@ -562,7 +562,7 @@
             "titleKey": "daily_login.halloween.title",
             "category": "Halloween",
             "categoryKey": "daily_login.category.halloween",
-            "backgroundImageName": "bg_dragonfire",
+            "backgroundImageName": "bg_halloween",
             "rewards": [
                 {
                     "day": 1,
@@ -681,10 +681,10 @@
                     ],
                     "unlocks": [
                         {
-                            "id": "bg_dragonfire",
+                            "id": "bg_halloween",
                             "kind": "menu_background",
-                            "name": "Dragonfire",
-                            "imageName": "bg_dragonfire"
+                            "name": "Halloween",
+                            "imageName": "bg_halloween"
                         },
                         {
                             "id": "halloween_nimbi_skin",

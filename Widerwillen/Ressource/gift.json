@@ -71,8 +71,8 @@
                 {
                     "id": "widerwillen_release_bg",
                     "kind": "app_background",
-                    "name": "Widerwillen",
-                    "imageName": "bg_widerwillen"
+                    "name": "Start",
+                    "imageName": "bg_start"
                 },
                 {
                     "id": "pixel_menu_button",
@@ -125,8 +125,8 @@
                 {
                     "id": "birthday_event_bg",
                     "kind": "app_background",
-                    "name": "Cosmic Nebula",
-                    "imageName": "bg_cosmic_nebula"
+                    "name": "Birthday",
+                    "imageName": "bg_birthday"
                 }
             ]
         },
@@ -158,8 +158,8 @@
                 {
                     "id": "halloween_event_bg",
                     "kind": "app_background",
-                    "name": "Dragonfire",
-                    "imageName": "bg_dragonfire"
+                    "name": "Halloween",
+                    "imageName": "bg_halloween"
                 },
                 {
                     "id": "slasher",
