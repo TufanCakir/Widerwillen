@@ -186,7 +186,7 @@
                     "imageName": "gal_original",
                     "animationID": "gal_original",
                     "scale": 0.34,
-                    "columns": 4,
+                    "columns": 2,
                     "rows": 2,
                     "frameCount": 4,
                     "fps": 8
@@ -254,7 +254,7 @@
                     "imageName": "relyks_original",
                     "animationID": "relyks_original",
                     "scale": 0.39,
-                    "columns": 7,
+                    "columns": 3,
                     "rows": 3,
                     "frameCount": 7,
                     "fps": 8
@@ -265,7 +265,7 @@
                     "imageName": "dameystir_original",
                     "animationID": "dameystir_original",
                     "scale": 0.40,
-                    "columns": 10,
+                    "columns": 5,
                     "rows": 2,
                     "frameCount": 10,
                     "fps": 8
