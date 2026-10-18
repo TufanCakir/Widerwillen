@@ -913,8 +913,15 @@ private struct EventShopView: View {
 
                 Spacer()
 
-                Text(chipBalance.formatted())
-                    .widerwillenFont(size: 16, weight: .heavy)
+                VStack(alignment: .trailing, spacing: 5) {
+                    AvailabilityCountdownView(
+                        startDate: event.startDate,
+                        endDate: event.endDate
+                    )
+
+                    Text(chipBalance.formatted())
+                        .widerwillenFont(size: 16, weight: .heavy)
+                }
 
                 Image(systemName: "chevron.right")
                     .font(.system(size: 12, weight: .heavy))
@@ -966,10 +973,21 @@ private struct EventShopView: View {
                     .buttonStyle(.plain)
                 }
 
-                ScrollView {
-                    LazyVStack(spacing: 10) {
-                        ForEach(offers) { offer in
-                            offerCard(offer)
+                AvailabilityCountdownView(
+                    startDate: event.startDate,
+                    endDate: event.endDate
+                )
+
+                TimelineView(.periodic(from: .now, by: 1)) { context in
+                    ScrollView {
+                        LazyVStack(spacing: 10) {
+                            ForEach(offers) { offer in
+                                offerCard(
+                                    offer,
+                                    for: event,
+                                    at: context.date
+                                )
+                            }
                         }
                     }
                 }
@@ -989,8 +1007,14 @@ private struct EventShopView: View {
         }
     }
 
-    private func offerCard(_ offer: TradeOffer) -> some View {
-        let canBuy = progress.canApplyTradeOffer(offer)
+    private func offerCard(
+        _ offer: TradeOffer,
+        for event: GameEvent,
+        at date: Date
+    ) -> some View {
+        let isShopActive = event.isActive(at: date)
+        let canBuy =
+            isShopActive && progress.canApplyTradeOffer(offer)
         let boughtCount = progress.tradeOfferPurchaseCounts[
             offer.id,
             default: 0
@@ -1025,9 +1049,13 @@ private struct EventShopView: View {
 
             Button {
                 playSoundEffect("ui_confirm")
-                apply(offer)
+                apply(offer, for: event)
             } label: {
-                Text(canBuy ? "Buy" : "Need")
+                Text(
+                    canBuy
+                        ? "Buy"
+                        : isShopActive ? "Need" : "Closed"
+                )
                     .widerwillenFont(size: 10, weight: .heavy)
                     .foregroundStyle(canBuy ? .black : .white.opacity(0.54))
                     .frame(width: 54, height: 28)
@@ -1073,9 +1101,26 @@ private struct EventShopView: View {
         }
     }
 
-    private func apply(_ offer: TradeOffer) {
+    private func apply(_ offer: TradeOffer, for event: GameEvent) {
+        guard event.isActive() else {
+            playSoundEffect("ui_tap")
+            message =
+                event.availability() == .upcoming
+                ? localizer.text(
+                    "event.not_started",
+                    fallback: "Event has not started yet"
+                )
+                : localizer.text("event.ended", fallback: "Event has ended")
+            clearMessageAfterDelay()
+            return
+        }
+
         let didApply = progress.applyTradeOffer(offer)
         message = didApply ? "Bought" : "Not enough chips"
+        clearMessageAfterDelay()
+    }
+
+    private func clearMessageAfterDelay() {
 
         Task {
             try? await Task.sleep(for: .seconds(1.1))

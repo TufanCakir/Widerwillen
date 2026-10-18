@@ -964,7 +964,8 @@ final class GameProgressStore {
     }
 
     func canClaimDailyLogin(for login: DailyLoginCampaign) -> Bool {
-        lastDailyLoginClaimDaysByID[login.id] != Self.todayKey()
+        login.isActive()
+            && lastDailyLoginClaimDaysByID[login.id] != Self.todayKey()
     }
 
     func hasClaimableDailyLogin(in configuration: DailyLoginConfiguration)

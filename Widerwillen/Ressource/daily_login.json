@@ -4,6 +4,8 @@
             "id": "standard_daily",
             "title": "Daily Login",
             "titleKey": "daily_login.standard.title",
+            "startDate": "01.01.2026 00:00",
+            "endDate": "31.12.2027 23:59",
             "category": "Daily",
             "categoryKey": "daily_login.category.daily",
             "backgroundImageName": "bg_start",
@@ -256,6 +258,8 @@
             "id": "launch_bonus",
             "title": "Launch Login",
             "titleKey": "daily_login.launch.title",
+            "startDate": "01.10.2026 00:00",
+            "endDate": "30.11.2026 23:59",
             "category": "Launch",
             "categoryKey": "daily_login.category.launch",
             "backgroundImageName": "bg_void_portal",
@@ -402,6 +406,8 @@
             "id": "birthday_login",
             "title": "Birthday Login",
             "titleKey": "daily_login.birthday.title",
+            "startDate": "01.10.2026 00:00",
+            "endDate": "31.10.2026 23:59",
             "category": "Birthday",
             "categoryKey": "daily_login.category.birthday",
             "backgroundImageName": "bg_birthday",
@@ -527,8 +533,8 @@
                         {
                             "id": "birthday_event_bg",
                             "kind": "menu_background",
-                            "name": "Cosmic Nebula",
-                            "imageName": "bg_cosmic_nebula"
+                            "name": "Birthday",
+                            "imageName": "bg_birthday"
                         },
                         {
                             "id": "birthday_nimbi_skin",
@@ -560,6 +566,8 @@
             "id": "halloween_login",
             "title": "Halloween Login",
             "titleKey": "daily_login.halloween.title",
+            "startDate": "15.10.2026 00:00",
+            "endDate": "05.11.2026 23:59",
             "category": "Halloween",
             "categoryKey": "daily_login.category.halloween",
             "backgroundImageName": "bg_halloween",

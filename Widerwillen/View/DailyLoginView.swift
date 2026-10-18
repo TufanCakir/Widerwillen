@@ -130,6 +130,15 @@ struct DailyLoginView: View {
             .padding(.horizontal, 14)
             .padding(.top, 14)
 
+            if let selectedLogin {
+                AvailabilityCountdownView(
+                    startDate: selectedLogin.startDate,
+                    endDate: selectedLogin.endDate,
+                    emphasized: false
+                )
+                .padding(.horizontal, 14)
+            }
+
             if !message.isEmpty {
                 statusText(message)
                     .frame(height: 20)
@@ -316,6 +325,11 @@ struct DailyLoginView: View {
 
                 Spacer()
 
+                AvailabilityCountdownView(
+                    startDate: login.startDate,
+                    endDate: login.endDate
+                )
+
                 if progress.canClaimDailyLogin(for: login) {
                     Text(localizer.text("daily_login.ready", fallback: "Ready"))
                         .widerwillenFont(size: 11, weight: .heavy)
@@ -368,7 +382,9 @@ struct DailyLoginView: View {
         let currentReward = progress.currentDailyLoginReward(in: login)
         let isToday = currentReward?.day == reward.day
         let canClaim = isToday && progress.canClaimDailyLogin(for: login)
-        let isClaimed = isToday && !progress.canClaimDailyLogin(for: login)
+        let isClaimed =
+            isToday && login.isActive()
+            && !progress.canClaimDailyLogin(for: login)
 
         return VStack(spacing: isCompactPresentation ? 4 : 5) {
             RemoteImage(name: reward.imageName)
@@ -448,7 +464,9 @@ struct DailyLoginView: View {
         let currentReward = progress.currentDailyLoginReward(in: login)
         let isToday = currentReward?.day == reward.day
         let canClaim = isToday && progress.canClaimDailyLogin(for: login)
-        let isClaimed = isToday && !progress.canClaimDailyLogin(for: login)
+        let isClaimed =
+            isToday && login.isActive()
+            && !progress.canClaimDailyLogin(for: login)
         let firstReward = reward.rewards.first
 
         return VStack(spacing: 5) {
