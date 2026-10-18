@@ -376,7 +376,7 @@
             "category": "Items",
             "kind": "item",
             "startDate": "01.10.2026 00:00",
-            "endDate": "31.12.2026 23:59",
+            "endDate": "30.10.2026 23:59",
             "bannerImageName": "icon_pixel_sword",
             "currencyImageName": "icon_pixel_crystal",
             "singleCost": 5,
