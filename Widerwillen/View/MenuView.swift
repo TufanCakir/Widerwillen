@@ -13,6 +13,7 @@ struct MenuView: View {
     let openMode: (MenuMode) -> Void
     let homeResetSignal: Int
     let openBackgroundSignal: Int
+    let onTutorialTriggerChange: (TutorialTrigger) -> Void
 
     private let dailyLoginConfiguration: DailyLoginConfiguration
 
@@ -39,6 +40,7 @@ struct MenuView: View {
         openBackgroundSignal: Int = 0,
         dailyLoginConfiguration: DailyLoginConfiguration =
             try! DailyLoginConfiguration.load(),
+        onTutorialTriggerChange: @escaping (TutorialTrigger) -> Void = { _ in },
         openMode: @escaping (MenuMode) -> Void
     ) {
         self.progress = progress
@@ -46,6 +48,7 @@ struct MenuView: View {
         self.homeResetSignal = homeResetSignal
         self.openBackgroundSignal = openBackgroundSignal
         self.dailyLoginConfiguration = dailyLoginConfiguration
+        self.onTutorialTriggerChange = onTutorialTriggerChange
         self.openMode = openMode
     }
 
@@ -64,6 +67,10 @@ struct MenuView: View {
             normalizeShortcutIndexIfNeeded()
             normalizeKeyArtSelectionIfNeeded()
             showDailyLoginPopupIfNeeded()
+            onTutorialTriggerChange(selectedMenuPage.tutorialTrigger)
+        }
+        .onChange(of: selectedMenuPage) { _, page in
+            onTutorialTriggerChange(page.tutorialTrigger)
         }
         .onChange(of: homeResetSignal) { _, _ in
             selectedMenuPage = .home
@@ -1059,6 +1066,33 @@ private enum MenuPage {
     case warehouse
     case pass
     case dailyLogin
+
+    var tutorialTrigger: TutorialTrigger {
+        switch self {
+        case .home:
+            .launch
+        case .backgrounds:
+            .backgrounds
+        case .skills:
+            .skills
+        case .settings:
+            .settings
+        case .news:
+            .news
+        case .gift:
+            .gift
+        case .equipment:
+            .equipment
+        case .rigUpgrades:
+            .rigUpgrades
+        case .warehouse:
+            .warehouse
+        case .pass:
+            .pass
+        case .dailyLogin:
+            .dailyLogin
+        }
+    }
 }
 
 private enum MenuHomeSection: String, CaseIterable, Identifiable {

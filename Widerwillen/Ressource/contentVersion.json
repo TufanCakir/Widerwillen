@@ -1,5 +1,5 @@
 {
-    "contentVersion": 254,
+    "contentVersion": 255,
     "json": [
         {
             "name": "arena",
@@ -189,6 +189,46 @@
             "name": "bg_widerwillen",
             "path": "assets/bg_widerwillen.png",
             "version": 3
+        },
+        {
+            "name": "icon_dameystir",
+            "path": "assets/icon_dameystir.png",
+            "version": 1
+        },
+        {
+            "name": "icon_relyks",
+            "path": "assets/icon_relyks.png",
+            "version": 1
+        },
+        {
+            "name": "icon_gal",
+            "path": "assets/icon_gal.png",
+            "version": 1
+        },
+        {
+            "name": "icon_sheka",
+            "path": "assets/icon_sheka.png",
+            "version": 1
+        },
+        {
+            "name": "icon_gekon",
+            "path": "assets/icon_gekon.png",
+            "version": 1
+        },
+        {
+            "name": "icon_dump",
+            "path": "assets/icon_dump.png",
+            "version": 1
+        },
+        {
+            "name": "icon_blam",
+            "path": "assets/icon_blam.png",
+            "version": 1
+        },
+        {
+            "name": "icon_dollo",
+            "path": "assets/icon_dollo.png",
+            "version": 1
         },
         {
             "name": "icon_cookieman",
@@ -593,6 +633,46 @@
         {
             "name": "skin_birthday_nimbi_right_foot",
             "path": "assets/skin_birthday_nimbi_right_foot.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_dameystir",
+            "path": "assets/sprite_dameystir.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_relyks",
+            "path": "assets/sprite_relyks.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_sheka",
+            "path": "assets/sprite_sheka.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_gekon",
+            "path": "assets/sprite_gekon.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_dump",
+            "path": "assets/sprite_dump.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_dollo",
+            "path": "assets/sprite_dollo.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_blam",
+            "path": "assets/sprite_blam.png",
+            "version": 1
+        },
+        {
+            "name": "sprite_gal",
+            "path": "assets/sprite_gal.png",
             "version": 1
         },
         {

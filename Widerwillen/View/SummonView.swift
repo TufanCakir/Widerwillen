@@ -139,6 +139,11 @@ struct SummonView: View {
                     .widerwillenFont(size: 26, weight: .heavy)
                     .foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 2)
+
+                AvailabilityCountdownView(
+                    startDate: banner.startDate,
+                    endDate: banner.endDate
+                )
             }
 
             HStack(spacing: 10) {
@@ -166,6 +171,8 @@ struct SummonView: View {
                     )
                 }
             }
+            .disabled(!banner.schedule.isActive())
+            .opacity(banner.schedule.isActive() ? 1 : 0.45)
         }
         .padding()
     }
@@ -386,7 +393,7 @@ struct SummonView: View {
 
     private func currencyAmount(for banner: SummonBanner) -> Int {
         switch banner.kind {
-        case .sprite, .item:
+        case .character, .sprite, .item:
             progress.crystals
         case .relic:
             progress.artifactShards

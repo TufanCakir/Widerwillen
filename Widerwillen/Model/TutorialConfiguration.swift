@@ -44,4 +44,9 @@ enum TutorialTrigger: String, Codable {
     case news
     case gift
     case dailyLogin
+    case showcase
+    case equipment
+    case pass
+    case backgrounds
+    case rigUpgrades
 }

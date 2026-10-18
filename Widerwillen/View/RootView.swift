@@ -16,6 +16,7 @@ struct RootView: View {
     @AppStorage("isTutorialEnabled") private var isTutorialEnabled = true
     @AppStorage("musicVolume") private var musicVolume = 0.8
     @AppStorage("soundEffectsVolume") private var soundEffectsVolume = 0.9
+    @AppStorage("appLanguage") private var appLanguageCode = AppLanguage.de.rawValue
 
     @State private var progress = GameProgressStore()
     @State private var musicPlayer = MusicPlayer()
@@ -29,6 +30,7 @@ struct RootView: View {
     @State private var homeResetSignal = 0
     @State private var openBackgroundSignal = 0
     @State private var deepLinkedEventID: String?
+    @State private var homeTutorialTrigger: TutorialTrigger = .launch
 
     private let deepLinkConfiguration =
         (try? DeepLinkConfiguration.load())
@@ -72,6 +74,7 @@ struct RootView: View {
                 )
             }
         }
+        .environment(\.locale, Locale(identifier: appLanguageCode))
         .statusBarHidden(true)
         .animation(.easeInOut(duration: 0.25), value: hasFinishedLaunchLoading)
         .animation(
@@ -306,7 +309,7 @@ struct RootView: View {
             case .battle:
                 return .battle
             case .showcase:
-                return .launch
+                return .showcase
             case .event:
                 return .event
             case .skills:
@@ -314,7 +317,7 @@ struct RootView: View {
             case .warehouse:
                 return .warehouse
             case .pass:
-                return .shop
+                return .pass
             case .settings:
                 return .settings
             case .news:
@@ -322,7 +325,7 @@ struct RootView: View {
             case .gift:
                 return .gift
             case .equipment:
-                return .warehouse
+                return .equipment
             case .dailyLogin:
                 return .dailyLogin
             }
@@ -330,7 +333,7 @@ struct RootView: View {
 
         switch selectedTab {
         case .home:
-            return .launch
+            return homeTutorialTrigger
         case .sprites:
             return .sprites
         case .summon:
@@ -382,7 +385,8 @@ struct RootView: View {
                 progress: progress,
                 playSoundEffect: musicPlayer.playSoundEffect,
                 homeResetSignal: homeResetSignal,
-                openBackgroundSignal: openBackgroundSignal
+                openBackgroundSignal: openBackgroundSignal,
+                onTutorialTriggerChange: { homeTutorialTrigger = $0 }
             ) { activeMode = $0 }
         case .sprites:
             SpriteListView(

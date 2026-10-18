@@ -329,6 +329,54 @@
             "title": "Thusax",
             "imageName": "icon_thusax",
             "requiredAccountLevel": 46
+        },
+        {
+            "id": "dameystir",
+            "title": "Dameystir",
+            "imageName": "icon_dameystir",
+            "requiredAccountLevel": 47
+        },
+        {
+            "id": "relyks",
+            "title": "Relyks",
+            "imageName": "icon_relyks",
+            "requiredAccountLevel": 47
+        },
+        {
+            "id": "sheka",
+            "title": "Sheka",
+            "imageName": "icon_sheka",
+            "requiredAccountLevel": 47
+        },
+        {
+            "id": "gekon",
+            "title": "Gekon",
+            "imageName": "icon_gekon",
+            "requiredAccountLevel": 47
+        },
+        {
+            "id": "dump",
+            "title": "Dump",
+            "imageName": "icon_dump",
+            "requiredAccountLevel": 47
+        },
+        {
+            "id": "gal",
+            "title": "Gal",
+            "imageName": "icon_gal",
+            "requiredAccountLevel": 47
+        },
+        {
+            "id": "blam",
+            "title": "Blam",
+            "imageName": "icon_blam",
+            "requiredAccountLevel": 47
+        },
+        {
+            "id": "dollo",
+            "title": "Dollo",
+            "imageName": "icon_dollo",
+            "requiredAccountLevel": 46
         }
     ]
 }

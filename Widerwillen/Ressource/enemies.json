@@ -4,7 +4,7 @@
             "id": "moon_gate",
             "name": "Moon Gate",
             "startsAtStage": 1,
-            "transitionImageName": "bg_cosmic_nebula",
+            "transitionImageName": "bg_start",
             "enemies": [
                 {
                     "id": "moon_cookieman",
@@ -69,7 +69,7 @@
             "id": "relic_depths",
             "name": "Relic Depths",
             "startsAtStage": 21,
-            "transitionImageName": "bg_cosmic_nebula",
+            "transitionImageName": "bg_start",
             "enemies": [
                 {
                     "id": "relic_blunt",
@@ -134,7 +134,7 @@
             "id": "red_rift",
             "name": "Red Rift",
             "startsAtStage": 41,
-            "transitionImageName": "bg_cosmic_nebula",
+            "transitionImageName": "bg_start",
             "enemies": [
                 {
                     "id": "rift_thusax",
@@ -153,6 +153,72 @@
                     "imageName": "slenderize_original",
                     "animationID": "slenderize_original",
                     "scale": 0.33,
+                    "columns": 5,
+                    "rows": 1,
+                    "frameCount": 5,
+                    "fps": 8
+                },
+                {
+                    "id": "rift_dollo",
+                    "name": "Dollo",
+                    "imageName": "dollo_original",
+                    "animationID": "dollo_original",
+                    "scale": 0.33,
+                    "columns": 4,
+                    "rows": 1,
+                    "frameCount": 4,
+                    "fps": 8
+                },
+                {
+                    "id": "rift_sheka",
+                    "name": "Sheka",
+                    "imageName": "sheka_original",
+                    "animationID": "sheka_original",
+                    "scale": 0.33,
+                    "columns": 4,
+                    "rows": 1,
+                    "frameCount": 4,
+                    "fps": 8
+                },
+                {
+                    "id": "rift_gal",
+                    "name": "Gal",
+                    "imageName": "gal_original",
+                    "animationID": "gal_original",
+                    "scale": 0.34,
+                    "columns": 4,
+                    "rows": 2,
+                    "frameCount": 4,
+                    "fps": 8
+                },
+                {
+                    "id": "rift_blam",
+                    "name": "Blam",
+                    "imageName": "blam_original",
+                    "animationID": "blam_original",
+                    "scale": 0.34,
+                    "columns": 3,
+                    "rows": 1,
+                    "frameCount": 3,
+                    "fps": 8
+                },
+                {
+                    "id": "rift_dump",
+                    "name": "Dump",
+                    "imageName": "dump_original",
+                    "animationID": "dump_original",
+                    "scale": 0.35,
+                    "columns": 4,
+                    "rows": 1,
+                    "frameCount": 4,
+                    "fps": 8
+                },
+                {
+                    "id": "rift_gekon",
+                    "name": "Gekon",
+                    "imageName": "gekon_original",
+                    "animationID": "gekon_original",
+                    "scale": 0.35,
                     "columns": 5,
                     "rows": 1,
                     "frameCount": 5,
@@ -180,6 +246,28 @@
                     "columns": 5,
                     "rows": 1,
                     "frameCount": 5,
+                    "fps": 8
+                },
+                {
+                    "id": "red_rift_relyks",
+                    "name": "Relyks",
+                    "imageName": "relyks_original",
+                    "animationID": "relyks_original",
+                    "scale": 0.39,
+                    "columns": 7,
+                    "rows": 3,
+                    "frameCount": 7,
+                    "fps": 8
+                },
+                {
+                    "id": "red_rift_dameystir",
+                    "name": "Dameystir",
+                    "imageName": "dameystir_original",
+                    "animationID": "dameystir_original",
+                    "scale": 0.40,
+                    "columns": 10,
+                    "rows": 2,
+                    "frameCount": 10,
                     "fps": 8
                 }
             ]

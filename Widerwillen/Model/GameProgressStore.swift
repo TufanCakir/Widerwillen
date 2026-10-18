@@ -1233,7 +1233,11 @@ final class GameProgressStore {
     private func summon(count: Int, cost: Int, from banner: SummonBanner)
         -> Bool
     {
-        guard canPay(cost: cost, for: banner.kind), count > 0 else {
+        guard
+            banner.schedule.isActive(),
+            canPay(cost: cost, for: banner.kind),
+            count > 0
+        else {
             return false
         }
 
@@ -1311,12 +1315,13 @@ final class GameProgressStore {
         -> SummonResult
     {
         switch kind {
-        case .sprite:
+        case .character, .sprite:
             if let characterID = entry.characterID {
                 let character =
                     Self.characterConfiguration.character(id: characterID)
                 let oldStars = ownedCharacters[characterID]?.stars ?? 0
-                let newStars = oldStars + 1
+                let maxStars = character?.maxStars ?? 14
+                let newStars = min(oldStars + 1, maxStars)
                 let imageName =
                     character?.skins.first { $0.id == entry.skinID }?.imageName
                     ?? character?.skins.first?.imageName
@@ -1406,7 +1411,7 @@ final class GameProgressStore {
 
     private func canPay(cost: Int, for kind: SummonKind) -> Bool {
         switch kind {
-        case .sprite, .item:
+        case .character, .sprite, .item:
             crystals >= cost
         case .relic:
             artifactShards >= cost
@@ -1415,7 +1420,7 @@ final class GameProgressStore {
 
     private func pay(cost: Int, for kind: SummonKind) {
         switch kind {
-        case .sprite, .item:
+        case .character, .sprite, .item:
             crystals -= cost
         case .relic:
             artifactShards -= cost

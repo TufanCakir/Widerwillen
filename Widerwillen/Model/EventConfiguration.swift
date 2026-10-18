@@ -36,6 +36,8 @@ struct GameEvent: Decodable, Identifiable {
     let id: String
     let title: String
     let titleKey: String?
+    let startDate: Date?
+    let endDate: Date?
     let category: String
     let categoryKey: String?
     let bannerImageName: String
@@ -57,6 +59,8 @@ struct GameEvent: Decodable, Identifiable {
         case id
         case title
         case titleKey
+        case startDate
+        case endDate
         case category
         case categoryKey
         case bannerImageName
@@ -78,6 +82,8 @@ struct GameEvent: Decodable, Identifiable {
         id: String,
         title: String,
         titleKey: String?,
+        startDate: Date?,
+        endDate: Date?,
         category: String,
         categoryKey: String?,
         bannerImageName: String,
@@ -97,6 +103,8 @@ struct GameEvent: Decodable, Identifiable {
         self.id = id
         self.title = title
         self.titleKey = titleKey
+        self.startDate = startDate
+        self.endDate = endDate
         self.category = category
         self.categoryKey = categoryKey
         self.bannerImageName = bannerImageName
@@ -119,6 +127,8 @@ struct GameEvent: Decodable, Identifiable {
         id = try container.decode(String.self, forKey: .id)
         title = try container.decode(String.self, forKey: .title)
         titleKey = try container.decodeIfPresent(String.self, forKey: .titleKey)
+        startDate = try container.decodeGermanDateIfPresent(forKey: .startDate)
+        endDate = try container.decodeGermanDateIfPresent(forKey: .endDate)
         category =
             try container.decodeIfPresent(String.self, forKey: .category)
             ?? "Featured"
@@ -177,6 +187,8 @@ struct GameEvent: Decodable, Identifiable {
             id: id,
             title: title,
             titleKey: titleKey,
+            startDate: startDate,
+            endDate: endDate,
             category: category,
             categoryKey: categoryKey,
             bannerImageName: bannerImageName,
@@ -245,6 +257,40 @@ struct EventVictoryPresentation: Decodable {
                 Double.self,
                 forKey: .dismissDelaySeconds
             ) ?? 2.4
+    }
+}
+
+extension GameEvent {
+    var schedule: ContentSchedule {
+        ContentSchedule(startDate: startDate, endDate: endDate)
+    }
+
+    func availability(at date: Date = .now) -> ContentAvailability {
+        schedule.availability(at: date)
+    }
+
+    func isActive(at date: Date = .now) -> Bool {
+        schedule.isActive(at: date)
+    }
+}
+
+extension KeyedDecodingContainer {
+    fileprivate func decodeGermanDateIfPresent(forKey key: Key) throws -> Date?
+    {
+        guard let value = try decodeIfPresent(String.self, forKey: key) else {
+            return nil
+        }
+
+        guard let date = GermanDateParser.parse(value) else {
+            throw DecodingError.dataCorruptedError(
+                forKey: key,
+                in: self,
+                debugDescription:
+                    "Ungültiges Datum '\(value)'. Erwartet: TT.MM.JJJJ HH:mm"
+            )
+        }
+
+        return date
     }
 }
 

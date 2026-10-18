@@ -3,6 +3,9 @@
         "common.next": "Next",
         "common.ok": "OK",
         "common.cancel": "Cancel",
+        "event.not_started": "The event has not started yet",
+        "event.ended": "The event has ended",
+        "event.no_runs_left": "No runs left",
         "settings.title": "Settings",
         "settings.language": "Language",
         "settings.music": "Music",
@@ -93,6 +96,21 @@
             "Daily login rewards help you progress even with short sessions.",
         "tutorial.daily_login.message.2":
             "Come back each day to keep collecting the next reward.",
+        "tutorial.showcase.title": "Showcase",
+        "tutorial.showcase.message.1":
+            "Preview your character, equipment and animations here.",
+        "tutorial.equipment.title": "Equipment",
+        "tutorial.equipment.message.1":
+            "Equip unlocked skins and weapon looks before entering battle.",
+        "tutorial.pass.title": "Pass",
+        "tutorial.pass.message.1":
+            "Collect pass points and claim rewards from each unlocked tier.",
+        "tutorial.backgrounds.title": "Backgrounds",
+        "tutorial.backgrounds.message.1":
+            "Choose the background and visual style used by the menu.",
+        "tutorial.rig_upgrades.title": "Rig Upgrades",
+        "tutorial.rig_upgrades.message.1":
+            "Upgrade individual body parts to improve their battle effects.",
         "event.category.daily": "Daily",
         "event.category.recommended": "Recommended",
         "event.category.daily_raid": "Daily Raid",

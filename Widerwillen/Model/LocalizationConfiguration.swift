@@ -36,22 +36,42 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 struct AppLocalizer {
     let language: AppLanguage
 
-    private let configuration: LocalizationConfiguration
+    private let localizedBundle: Bundle
+    private let legacyConfiguration: LocalizationConfiguration
 
     init(languageCode: String) {
         let language = AppLanguage(rawValue: languageCode) ?? .de
         self.language = language
-        configuration =
+        localizedBundle = Bundle.main.localizedBundle(for: language)
+        legacyConfiguration =
             (try? LocalizationConfiguration.load(named: language.rawValue))
             ?? LocalizationConfiguration(strings: [:])
     }
 
     func text(_ key: String?, fallback: String) -> String {
         guard let key, !key.isEmpty else { return fallback }
-        return configuration.strings[key] ?? fallback
+        return text(key, fallback: fallback)
     }
 
     func text(_ key: String, fallback: String) -> String {
-        configuration.strings[key] ?? fallback
+        let legacyFallback = legacyConfiguration.strings[key] ?? fallback
+        return localizedBundle.localizedString(
+            forKey: key,
+            value: legacyFallback,
+            table: nil
+        )
+    }
+}
+
+extension Bundle {
+    fileprivate func localizedBundle(for language: AppLanguage) -> Bundle {
+        guard
+            let path = path(forResource: language.rawValue, ofType: "lproj"),
+            let bundle = Bundle(path: path)
+        else {
+            return self
+        }
+
+        return bundle
     }
 }

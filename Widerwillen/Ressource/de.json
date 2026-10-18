@@ -3,6 +3,9 @@
         "common.next": "Weiter",
         "common.ok": "OK",
         "common.cancel": "Abbrechen",
+        "event.not_started": "Das Event hat noch nicht begonnen",
+        "event.ended": "Das Event ist beendet",
+        "event.no_runs_left": "Keine Versuche mehr übrig",
         "settings.title": "Einstellungen",
         "settings.language": "Sprache",
         "settings.music": "Musik",
@@ -95,6 +98,21 @@
             "Tägliche Login-Belohnungen helfen dir auch bei kurzen Spielrunden weiter.",
         "tutorial.daily_login.message.2":
             "Komm jeden Tag zurück, um die nächste Belohnung zu sammeln.",
+        "tutorial.showcase.title": "Showcase",
+        "tutorial.showcase.message.1":
+            "Sieh dir hier deinen Charakter, seine Ausrüstung und Animationen an.",
+        "tutorial.equipment.title": "Ausrüstung",
+        "tutorial.equipment.message.1":
+            "Rüste freigeschaltete Skins und Waffenoptiken vor dem Kampf aus.",
+        "tutorial.pass.title": "Pass",
+        "tutorial.pass.message.1":
+            "Sammle Passpunkte und hole die Belohnungen freigeschalteter Stufen ab.",
+        "tutorial.backgrounds.title": "Hintergründe",
+        "tutorial.backgrounds.message.1":
+            "Wähle den Hintergrund und den visuellen Stil des Menüs.",
+        "tutorial.rig_upgrades.title": "Rig-Verbesserungen",
+        "tutorial.rig_upgrades.message.1":
+            "Verbessere einzelne Körperteile, um ihre Effekte im Kampf zu verstärken.",
         "event.category.daily": "Täglich",
         "event.category.recommended": "Empfohlen",
         "event.category.daily_raid": "Daily Raid",

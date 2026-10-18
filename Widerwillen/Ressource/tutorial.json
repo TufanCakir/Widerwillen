@@ -235,6 +235,86 @@
                 "tutorial.daily_login.message.1",
                 "tutorial.daily_login.message.2"
             ]
+        },
+        {
+            "id": "showcase_first_open",
+            "trigger": "showcase",
+            "requiredAccountLevel": 1,
+            "speakerName": "Blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
+            "title": "Showcase",
+            "titleKey": "tutorial.showcase.title",
+            "messages": [
+                "Preview your character, equipment and animations here."
+            ],
+            "messageKeys": [
+                "tutorial.showcase.message.1"
+            ]
+        },
+        {
+            "id": "equipment_first_open",
+            "trigger": "equipment",
+            "requiredAccountLevel": 1,
+            "speakerName": "Blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
+            "title": "Equipment",
+            "titleKey": "tutorial.equipment.title",
+            "messages": [
+                "Equip unlocked skins and weapon looks before entering battle."
+            ],
+            "messageKeys": [
+                "tutorial.equipment.message.1"
+            ]
+        },
+        {
+            "id": "pass_first_open",
+            "trigger": "pass",
+            "requiredAccountLevel": 1,
+            "speakerName": "Blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
+            "title": "Pass",
+            "titleKey": "tutorial.pass.title",
+            "messages": [
+                "Collect pass points and claim rewards from each unlocked tier."
+            ],
+            "messageKeys": [
+                "tutorial.pass.message.1"
+            ]
+        },
+        {
+            "id": "backgrounds_first_open",
+            "trigger": "backgrounds",
+            "requiredAccountLevel": 1,
+            "speakerName": "Blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
+            "title": "Backgrounds",
+            "titleKey": "tutorial.backgrounds.title",
+            "messages": [
+                "Choose the background and visual style used by the menu."
+            ],
+            "messageKeys": [
+                "tutorial.backgrounds.message.1"
+            ]
+        },
+        {
+            "id": "rig_upgrades_first_open",
+            "trigger": "rigUpgrades",
+            "requiredAccountLevel": 1,
+            "speakerName": "Blunt",
+            "speakerNameKey": "tutorial.speaker.blunt",
+            "speakerImageName": "icon_blunt",
+            "title": "Rig Upgrades",
+            "titleKey": "tutorial.rig_upgrades.title",
+            "messages": [
+                "Upgrade individual body parts to improve their battle effects."
+            ],
+            "messageKeys": [
+                "tutorial.rig_upgrades.message.1"
+            ]
         }
     ]
 }

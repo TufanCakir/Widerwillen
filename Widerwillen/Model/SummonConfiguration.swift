@@ -23,6 +23,8 @@ struct SummonBanner: Decodable, Identifiable {
     let title: String
     let category: String
     let kind: SummonKind
+    let startDate: Date?
+    let endDate: Date?
     let bannerImageName: String
     let currencyImageName: String
     let singleCost: Int
@@ -36,6 +38,8 @@ struct SummonBanner: Decodable, Identifiable {
         case title
         case category
         case kind
+        case startDate
+        case endDate
         case bannerImageName
         case currencyImageName
         case singleCost
@@ -55,6 +59,8 @@ struct SummonBanner: Decodable, Identifiable {
         kind =
             try container.decodeIfPresent(SummonKind.self, forKey: .kind)
             ?? .sprite
+        startDate = try container.decodeGermanDateIfPresent(forKey: .startDate)
+        endDate = try container.decodeGermanDateIfPresent(forKey: .endDate)
         bannerImageName = try container.decode(
             String.self,
             forKey: .bannerImageName
@@ -172,7 +178,32 @@ struct SummonEntry: Decodable, Identifiable {
     }
 }
 
+extension SummonBanner {
+    var schedule: ContentSchedule {
+        ContentSchedule(startDate: startDate, endDate: endDate)
+    }
+}
+
+private extension KeyedDecodingContainer {
+    func decodeGermanDateIfPresent(forKey key: Key) throws -> Date? {
+        guard let value = try decodeIfPresent(String.self, forKey: key) else {
+            return nil
+        }
+
+        guard let date = GermanDateParser.parse(value) else {
+            throw DecodingError.dataCorruptedError(
+                forKey: key,
+                in: self,
+                debugDescription: "Ungültiges Datum '\(value)'. Erwartet: TT.MM.JJJJ HH:mm"
+            )
+        }
+
+        return date
+    }
+}
+
 enum SummonKind: String, Codable {
+    case character
     case sprite
     case relic
     case item

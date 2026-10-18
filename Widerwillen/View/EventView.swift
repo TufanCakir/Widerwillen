@@ -443,20 +443,28 @@ struct EventView: View {
 
                 Spacer()
 
-                Text("\(remainingRuns)/\(event.dailyLimit)")
-                    .widerwillenFont(
-                        size: isSelected ? 13 : 11,
-                        weight: .heavy
+                VStack(alignment: .trailing, spacing: 4) {
+                    AvailabilityCountdownView(
+                        startDate: event.startDate,
+                        endDate: event.endDate,
+                        emphasized: isSelected
                     )
-                    .foregroundStyle(
-                        remainingRuns > 0
-                            ? .white.opacity(isSelected ? 0.9 : 0.45)
-                            : .red.opacity(0.75)
-                    )
-                    .padding(.horizontal, 9)
-                    .frame(height: 26)
-                    .background(.black.opacity(0.32))
-                    .clipShape(Capsule())
+
+                    Text("\(remainingRuns)/\(event.dailyLimit)")
+                        .widerwillenFont(
+                            size: isSelected ? 13 : 11,
+                            weight: .heavy
+                        )
+                        .foregroundStyle(
+                            remainingRuns > 0
+                                ? .white.opacity(isSelected ? 0.9 : 0.45)
+                                : .red.opacity(0.75)
+                        )
+                        .padding(.horizontal, 9)
+                        .frame(height: 22)
+                        .background(.black.opacity(0.32))
+                        .clipShape(Capsule())
+                }
             }
             .padding(.horizontal, 14)
             .frame(maxWidth: .infinity)
@@ -509,9 +517,23 @@ struct EventView: View {
             return
         }
 
+        guard event.isActive() else {
+            playSoundEffect("ui_tap")
+            message = event.availability() == .upcoming
+                ? localizer.text(
+                    "event.not_started",
+                    fallback: "Event has not started yet"
+                )
+                : localizer.text("event.ended", fallback: "Event has ended")
+            return
+        }
+
         guard progress.remainingRuns(for: event) > 0 else {
             playSoundEffect("ui_tap")
-            message = "No runs left"
+            message = localizer.text(
+                "event.no_runs_left",
+                fallback: "No runs left"
+            )
             return
         }
 

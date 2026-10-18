@@ -86,7 +86,7 @@ struct SummonResultView: View {
                 .minimumScaleFactor(0.7)
                 .shadow(color: .black.opacity(0.9), radius: 3, x: 0, y: 0)
 
-            if result.kind == .sprite {
+            if result.kind == .character || result.kind == .sprite {
                 StarRatingView(stars: result.level, maxVisibleStars: 7, size: 8)
             } else {
                 Text(

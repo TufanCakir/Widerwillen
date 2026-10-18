@@ -69,6 +69,86 @@
             "baseDPS": 90,
             "maxStars": 14,
             "legacySpriteIndex": 25
+        },
+        {
+            "id": "dollo",
+            "name": "Dollo",
+            "imageName": "icon_dollo",
+            "animationID": "dollo_original",
+            "rarity": "common",
+            "baseDPS": 94,
+            "maxStars": 14,
+            "legacySpriteIndex": 26
+        },
+        {
+            "id": "sheka",
+            "name": "Sheka",
+            "imageName": "icon_sheka",
+            "animationID": "sheka_original",
+            "rarity": "rare",
+            "baseDPS": 98,
+            "maxStars": 14,
+            "legacySpriteIndex": 27
+        },
+        {
+            "id": "gal",
+            "name": "Gal",
+            "imageName": "icon_gal",
+            "animationID": "gal_original",
+            "rarity": "common",
+            "baseDPS": 102,
+            "maxStars": 14,
+            "legacySpriteIndex": 28
+        },
+        {
+            "id": "blam",
+            "name": "Blam",
+            "imageName": "icon_blam",
+            "animationID": "blam_original",
+            "rarity": "rare",
+            "baseDPS": 106,
+            "maxStars": 14,
+            "legacySpriteIndex": 29
+        },
+        {
+            "id": "dump",
+            "name": "Dump",
+            "imageName": "icon_dump",
+            "animationID": "dump_original",
+            "rarity": "common",
+            "baseDPS": 110,
+            "maxStars": 14,
+            "legacySpriteIndex": 30
+        },
+        {
+            "id": "gekon",
+            "name": "Gekon",
+            "imageName": "icon_gekon",
+            "animationID": "gekon_original",
+            "rarity": "rare",
+            "baseDPS": 114,
+            "maxStars": 14,
+            "legacySpriteIndex": 31
+        },
+        {
+            "id": "relyks",
+            "name": "Relyks",
+            "imageName": "icon_relyks",
+            "animationID": "relyks_original",
+            "rarity": "epic",
+            "baseDPS": 120,
+            "maxStars": 14,
+            "legacySpriteIndex": 32
+        },
+        {
+            "id": "dameystir",
+            "name": "Dameystir",
+            "imageName": "icon_dameystir",
+            "animationID": "dameystir_original",
+            "rarity": "legendary",
+            "baseDPS": 130,
+            "maxStars": 14,
+            "legacySpriteIndex": 33
         }
     ]
 }

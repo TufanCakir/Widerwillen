@@ -320,10 +320,6 @@ struct SpriteListView: View {
             }
         }
         .foregroundStyle(.white)
-        .opacity(
-            item.canSelect || item.stars != nil || item.levelTitle != "Locked"
-                ? 1 : 0.45
-        )
         .frame(maxWidth: .infinity)
         .frame(height: 145)
         .background {

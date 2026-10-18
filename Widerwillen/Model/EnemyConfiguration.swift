@@ -36,7 +36,49 @@ struct EnemyConfiguration: Decodable {
             )
         }
 
-        return fallbackList[(safeStage - 1) % fallbackList.count]
+        let index = randomIndex(
+            for: safeStage,
+            areaID: area.id,
+            count: fallbackList.count
+        )
+        return fallbackList[index]
+    }
+
+    private func randomIndex(for stage: Int, areaID: String, count: Int) -> Int
+    {
+        guard count > 1 else { return 0 }
+
+        var seed = UInt(stage) &* 1_103_515_245 &+ 12_345
+        for scalar in areaID.unicodeScalars {
+            seed = (seed &* 31) &+ UInt(scalar.value)
+        }
+
+        var index = Int(seed % UInt(count))
+        let previousStage = stage - 1
+        if previousStage > 0, !stage.isMultiple(of: 10) {
+            let previousIndex = randomIndexWithoutRepeatCheck(
+                for: previousStage,
+                areaID: areaID,
+                count: count
+            )
+            if index == previousIndex {
+                index = (index + 1) % count
+            }
+        }
+
+        return index
+    }
+
+    private func randomIndexWithoutRepeatCheck(
+        for stage: Int,
+        areaID: String,
+        count: Int
+    ) -> Int {
+        var seed = UInt(stage) &* 1_103_515_245 &+ 12_345
+        for scalar in areaID.unicodeScalars {
+            seed = (seed &* 31) &+ UInt(scalar.value)
+        }
+        return Int(seed % UInt(count))
     }
 
     func area(for stage: Int) -> EnemyArea {

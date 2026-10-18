@@ -135,5 +135,93 @@
         "frameCount": 5,
         "fps": 8,
         "scale": 0.14
+    },
+    {
+        "id": "dameystir_original",
+        "imageName": "sprite_dameystir",
+        "columns": 10,
+        "rows": 2,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 10,
+        "fps": 8,
+        "scale": 0.14
+    },
+    {
+        "id": "sheka_original",
+        "imageName": "sprite_sheka",
+        "columns": 4,
+        "rows": 1,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 4,
+        "fps": 8,
+        "scale": 0.14
+    },
+    {
+        "id": "gal_original",
+        "imageName": "sprite_gal",
+        "columns": 4,
+        "rows": 2,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 4,
+        "fps": 8,
+        "scale": 0.14
+    },
+    {
+        "id": "blam_original",
+        "imageName": "sprite_blam",
+        "columns": 3,
+        "rows": 1,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 3,
+        "fps": 8,
+        "scale": 0.14
+    },
+    {
+        "id": "dump_original",
+        "imageName": "sprite_dump",
+        "columns": 4,
+        "rows": 1,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 4,
+        "fps": 8,
+        "scale": 0.14
+    },
+    {
+        "id": "gekon_original",
+        "imageName": "sprite_gekon",
+        "columns": 5,
+        "rows": 1,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 5,
+        "fps": 8,
+        "scale": 0.14
+    },
+    {
+        "id": "relyks_original",
+        "imageName": "sprite_relyks",
+        "columns": 7,
+        "rows": 3,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 7,
+        "fps": 8,
+        "scale": 0.14
+    },
+    {
+        "id": "dollo_original",
+        "imageName": "sprite_dollo",
+        "columns": 4,
+        "rows": 1,
+        "spacing": 0,
+        "margin": 0,
+        "frameCount": 4,
+        "fps": 8,
+        "scale": 0.14
     }
 ]

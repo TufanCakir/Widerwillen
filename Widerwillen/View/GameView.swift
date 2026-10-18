@@ -13,6 +13,8 @@ struct GameView: View {
     let onExit: (() -> Void)?
     let stopSoundEffects: () -> Void
 
+    private let arena: ArenaConfiguration
+
     @State private var isPrestigeTransitionVisible = false
     @State private var isPrestigeTransitionRunning = false
 
@@ -20,12 +22,14 @@ struct GameView: View {
         progress: GameProgressStore,
         playSoundEffect: @escaping (String) -> Void = { _ in },
         stopSoundEffects: @escaping () -> Void = {},
-        onExit: (() -> Void)? = nil
+        onExit: (() -> Void)? = nil,
+        arena: ArenaConfiguration = try! ArenaConfiguration.load()
     ) {
         self.progress = progress
         self.playSoundEffect = playSoundEffect
         self.stopSoundEffects = stopSoundEffects
         self.onExit = onExit
+        self.arena = arena
     }
 
     var body: some View {
@@ -88,7 +92,8 @@ struct GameView: View {
                     stopSoundEffects()
                     playSoundEffect("ui_back")
                     onExit?()
-                }
+                },
+                arena: arena
             )
 
             if isPrestigeTransitionVisible {
@@ -138,7 +143,22 @@ struct GameView: View {
     }
 
     private func lookIndex(for stage: Int) -> Int {
-        stage / 10
+        let count = arena.looks.count
+        guard count > 1 else { return 0 }
+
+        let safeStage = max(stage, 1)
+        let seed = UInt(safeStage) &* 2_654_435_761
+        var index = Int(seed % UInt(count))
+
+        if safeStage > 1 {
+            let previousSeed = UInt(safeStage - 1) &* 2_654_435_761
+            let previousIndex = Int(previousSeed % UInt(count))
+            if index == previousIndex {
+                index = (index + 1) % count
+            }
+        }
+
+        return index
     }
 }
 
