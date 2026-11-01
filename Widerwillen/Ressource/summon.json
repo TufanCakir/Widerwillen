@@ -1,7 +1,7 @@
 {
     "banners": [
         {
-            "id": "moon_beast_starter",
+            "id": "moon_beast_cookieman_oktober",
             "title": "Widerwillen Gate",
             "category": "Sprites",
             "kind": "sprite",
@@ -157,7 +157,163 @@
             ]
         },
         {
-            "id": "widerwillen_heroes",
+            "id": "moon_beast_klempi_november",
+            "title": "Widerwillen Gate",
+            "category": "Sprites",
+            "kind": "sprite",
+            "startDate": "01.11.2026 00:00",
+            "endDate": "01.12.2026 00:00",
+            "bannerImageName": "icon_klempi",
+            "currencyImageName": "icon_pixel_crystal",
+            "singleCost": 5,
+            "multiCost": 50,
+            "multiCount": 10,
+            "requiredAccountLevel": 1,
+            "entries": [
+                {
+                    "id": "cookieman_front",
+                    "name": "Cookieman",
+                    "spriteIndex": 0,
+                    "companionID": "cookieman",
+                    "imageName": "icon_cookieman",
+                    "rarity": "legendary",
+                    "damageBonus": 1,
+                    "weight": 1
+                },
+                {
+                    "id": "klempi_front",
+                    "name": "Klempi",
+                    "spriteIndex": 1,
+                    "companionID": "klempi",
+                    "imageName": "icon_klempi",
+                    "rarity": "rare",
+                    "damageBonus": 3,
+                    "weight": 30
+                },
+                {
+                    "id": "dompi_front",
+                    "name": "Dompi",
+                    "spriteIndex": 2,
+                    "companionID": "dompi",
+                    "imageName": "icon_dompi",
+                    "rarity": "epic",
+                    "damageBonus": 8,
+                    "weight": 20
+                },
+                {
+                    "id": "blunt_front",
+                    "name": "Blunt",
+                    "spriteIndex": 21,
+                    "companionID": "blunt",
+                    "imageName": "icon_blunt",
+                    "rarity": "common",
+                    "damageBonus": 18,
+                    "weight": 50
+                },
+                {
+                    "id": "dazzle_front",
+                    "name": "Dazzle",
+                    "spriteIndex": 23,
+                    "companionID": "dazzle",
+                    "imageName": "icon_dazzle",
+                    "rarity": "epic",
+                    "damageBonus": 18,
+                    "weight": 20
+                },
+                {
+                    "id": "molc_front",
+                    "name": "Molc",
+                    "spriteIndex": 24,
+                    "companionID": "molc",
+                    "imageName": "icon_molc",
+                    "rarity": "common",
+                    "damageBonus": 10,
+                    "weight": 50
+                },
+                {
+                    "id": "dollo_front",
+                    "name": "Dollo",
+                    "spriteIndex": 26,
+                    "companionID": "dollo",
+                    "imageName": "icon_dollo",
+                    "rarity": "rare",
+                    "damageBonus": 10,
+                    "weight": 30
+                },
+                {
+                    "id": "sheka_front",
+                    "name": "Sheka",
+                    "spriteIndex": 27,
+                    "companionID": "sheka",
+                    "imageName": "icon_sheka",
+                    "rarity": "rare",
+                    "damageBonus": 12,
+                    "weight": 30
+                },
+                {
+                    "id": "gal_front",
+                    "name": "Gal",
+                    "spriteIndex": 28,
+                    "companionID": "gal",
+                    "imageName": "icon_gal",
+                    "rarity": "rare",
+                    "damageBonus": 11,
+                    "weight": 30
+                },
+                {
+                    "id": "blam_front",
+                    "name": "Blam",
+                    "spriteIndex": 29,
+                    "companionID": "blam",
+                    "imageName": "icon_blam",
+                    "rarity": "common",
+                    "damageBonus": 14,
+                    "weight": 50
+                },
+                {
+                    "id": "dump_front",
+                    "name": "Dump",
+                    "spriteIndex": 30,
+                    "companionID": "dump",
+                    "imageName": "icon_dump",
+                    "rarity": "common",
+                    "damageBonus": 12,
+                    "weight": 50
+                },
+                {
+                    "id": "gekon_front",
+                    "name": "Gekon",
+                    "spriteIndex": 31,
+                    "companionID": "gekon",
+                    "imageName": "icon_gekon",
+                    "rarity": "epic",
+                    "damageBonus": 16,
+                    "weight": 20
+                },
+                {
+                    "id": "relyks_front",
+                    "name": "Relyks",
+                    "spriteIndex": 32,
+                    "companionID": "relyks",
+                    "imageName": "icon_relyks",
+                    "rarity": "legendary",
+                    "damageBonus": 20,
+                    "weight": 1
+                },
+                {
+                    "id": "dameystir_front",
+                    "name": "Dameystir",
+                    "spriteIndex": 33,
+                    "companionID": "dameystir",
+                    "imageName": "icon_dameystir",
+                    "rarity": "legendary",
+                    "damageBonus": 28,
+                    "weight": 1
+                }
+            ]
+        },
+        {
+            "id": "widerwillen_heroes_nimbi_oktober",
             "title": "Widerwillen Heroes",
             "category": "Characters",
             "kind": "character",
@@ -323,7 +479,173 @@
             ]
         },
         {
-            "id": "ancient_relics",
+            "id": "widerwillen_heroes_november",
+            "title": "Widerwillen Heroes",
+            "category": "Characters",
+            "kind": "character",
+            "startDate": "01.11.2026 00:00",
+            "endDate": "01.12.2026 00:00",
+            "bannerImageName": "icon_nimpi",
+            "currencyImageName": "icon_pixel_crystal",
+            "singleCost": 5,
+            "multiCost": 50,
+            "multiCount": 10,
+            "requiredAccountLevel": 1,
+            "entries": [
+                {
+                    "id": "nimbi_front",
+                    "name": "Nimbi",
+                    "characterID": "nimbi",
+                    "skinID": "nimbi_default",
+                    "imageName": "icon_nimpi",
+                    "rarity": "legendary",
+                    "damageBonus": 18,
+                    "weight": 1
+                },
+                {
+                    "id": "cookieman_front",
+                    "name": "Cookieman",
+                    "spriteIndex": 0,
+                    "companionID": "cookieman",
+                    "imageName": "icon_cookieman",
+                    "rarity": "legendary",
+                    "damageBonus": 1,
+                    "weight": 1
+                },
+                {
+                    "id": "klempi_front",
+                    "name": "Klempi",
+                    "spriteIndex": 1,
+                    "companionID": "klempi",
+                    "imageName": "icon_klempi",
+                    "rarity": "rare",
+                    "damageBonus": 3,
+                    "weight": 30
+                },
+                {
+                    "id": "dompi_front",
+                    "name": "Dompi",
+                    "spriteIndex": 2,
+                    "companionID": "dompi",
+                    "imageName": "icon_dompi",
+                    "rarity": "epic",
+                    "damageBonus": 8,
+                    "weight": 20
+                },
+                {
+                    "id": "blunt_front",
+                    "name": "Blunt",
+                    "spriteIndex": 21,
+                    "companionID": "blunt",
+                    "imageName": "icon_blunt",
+                    "rarity": "common",
+                    "damageBonus": 18,
+                    "weight": 50
+                },
+                {
+                    "id": "dazzle_front",
+                    "name": "Dazzle",
+                    "spriteIndex": 23,
+                    "companionID": "dazzle",
+                    "imageName": "icon_dazzle",
+                    "rarity": "epic",
+                    "damageBonus": 18,
+                    "weight": 20
+                },
+                {
+                    "id": "molc_front",
+                    "name": "Molc",
+                    "spriteIndex": 24,
+                    "companionID": "molc",
+                    "imageName": "icon_molc",
+                    "rarity": "common",
+                    "damageBonus": 10,
+                    "weight": 50
+                },
+                {
+                    "id": "dollo_front",
+                    "name": "Dollo",
+                    "spriteIndex": 26,
+                    "companionID": "dollo",
+                    "imageName": "icon_dollo",
+                    "rarity": "rare",
+                    "damageBonus": 10,
+                    "weight": 30
+                },
+                {
+                    "id": "sheka_front",
+                    "name": "Sheka",
+                    "spriteIndex": 27,
+                    "companionID": "sheka",
+                    "imageName": "icon_sheka",
+                    "rarity": "rare",
+                    "damageBonus": 12,
+                    "weight": 30
+                },
+                {
+                    "id": "gal_front",
+                    "name": "Gal",
+                    "spriteIndex": 28,
+                    "companionID": "gal",
+                    "imageName": "icon_gal",
+                    "rarity": "rare",
+                    "damageBonus": 11,
+                    "weight": 30
+                },
+                {
+                    "id": "blam_front",
+                    "name": "Blam",
+                    "spriteIndex": 29,
+                    "companionID": "blam",
+                    "imageName": "icon_blam",
+                    "rarity": "common",
+                    "damageBonus": 14,
+                    "weight": 50
+                },
+                {
+                    "id": "dump_front",
+                    "name": "Dump",
+                    "spriteIndex": 30,
+                    "companionID": "dump",
+                    "imageName": "icon_dump",
+                    "rarity": "common",
+                    "damageBonus": 12,
+                    "weight": 50
+                },
+                {
+                    "id": "gekon_front",
+                    "name": "Gekon",
+                    "spriteIndex": 31,
+                    "companionID": "gekon",
+                    "imageName": "icon_gekon",
+                    "rarity": "epic",
+                    "damageBonus": 16,
+                    "weight": 20
+                },
+                {
+                    "id": "relyks_front",
+                    "name": "Relyks",
+                    "spriteIndex": 32,
+                    "companionID": "relyks",
+                    "imageName": "icon_relyks",
+                    "rarity": "legendary",
+                    "damageBonus": 20,
+                    "weight": 1
+                },
+                {
+                    "id": "dameystir_front",
+                    "name": "Dameystir",
+                    "spriteIndex": 33,
+                    "companionID": "dameystir",
+                    "imageName": "icon_dameystir",
+                    "rarity": "legendary",
+                    "damageBonus": 28,
+                    "weight": 1
+                }
+            ]
+        },
+        {
+            "id": "ancient_relics_oktober",
             "title": "Ancient Relics",
             "category": "Relics",
             "kind": "relic",
@@ -371,12 +693,136 @@
             ]
         },
         {
-            "id": "weapon_cache",
+            "id": "ancient_relics_november",
+            "title": "Ancient Relics",
+            "category": "Relics",
+            "kind": "relic",
+            "startDate": "01.11.2026 00:00",
+            "endDate": "01.12.2026 00:00",
+            "bannerImageName": "icon_pixel_relic",
+            "currencyImageName": "icon_pixel_relic",
+            "singleCost": 5,
+            "multiCost": 50,
+            "multiCount": 10,
+            "requiredAccountLevel": 1,
+            "entries": [
+                {
+                    "id": "moon_totem",
+                    "name": "Moon Totem",
+                    "imageName": "icon_pixel_relic",
+                    "rarity": "common",
+                    "damageBonus": 2,
+                    "weight": 50
+                },
+                {
+                    "id": "void_core",
+                    "name": "Void Core",
+                    "imageName": "icon_pixel_crystal",
+                    "rarity": "rare",
+                    "damageBonus": 5,
+                    "weight": 30
+                },
+                {
+                    "id": "crystal_crown",
+                    "name": "Crystal Crown",
+                    "imageName": "icon_pixel_crystal",
+                    "rarity": "epic",
+                    "damageBonus": 10,
+                    "weight": 10
+                },
+                {
+                    "id": "yellow_crown",
+                    "name": "Yellow Crown",
+                    "imageName": "icon_pixel_coin",
+                    "rarity": "epic",
+                    "damageBonus": 18,
+                    "weight": 1
+                }
+            ]
+        },
+        {
+            "id": "weapon_cache_oktober",
             "title": "Weapon Cache",
             "category": "Items",
             "kind": "item",
             "startDate": "01.10.2026 00:00",
             "endDate": "30.10.2026 23:59",
+            "bannerImageName": "icon_pixel_sword",
+            "currencyImageName": "icon_pixel_crystal",
+            "singleCost": 5,
+            "multiCost": 50,
+            "multiCount": 10,
+            "requiredAccountLevel": 1,
+            "entries": [
+                {
+                    "id": "widerwillen_sword",
+                    "name": "Widerwillen Sword",
+                    "imageName": "icon_pixel_sword",
+                    "shadowCloneImageName": "shadow_clone_nimbi_sword",
+                    "rarity": "legendary",
+                    "damageBonus": 10,
+                    "weight": 1,
+                    "battleAppearance": {
+                        "scale": 1.0,
+                        "offsetX": 10,
+                        "offsetY": 10,
+                        "rotation": -10
+                    }
+                },
+                {
+                    "id": "fun_edge",
+                    "name": "Fun Edge",
+                    "imageName": "icon_pixel_big_sword",
+                    "shadowCloneImageName": "shadow_clone_nimbi_big_sword",
+                    "rarity": "common",
+                    "damageBonus": 14,
+                    "weight": 50,
+                    "battleAppearance": {
+                        "scale": 1.0,
+                        "offsetX": 10,
+                        "offsetY": 10,
+                        "rotation": -10
+                    }
+                },
+                {
+                    "id": "moon_blaster",
+                    "name": "Moon Blaster",
+                    "imageName": "icon_pixel_gun",
+                    "shadowCloneImageName": "shadow_clone_nimbi_moon_blaster",
+                    "rarity": "rare",
+                    "damageBonus": 14,
+                    "weight": 30,
+                    "battleAppearance": {
+                        "scale": 1.0,
+                        "offsetX": 20,
+                        "offsetY": 10,
+                        "rotation": -10
+                    }
+                },
+                {
+                    "id": "slasher",
+                    "name": "Slasher",
+                    "imageName": "icon_pixel_slasher",
+                    "shadowCloneImageName": "shadow_clone_nimbi_slasher",
+                    "rarity": "legendary",
+                    "damageBonus": 20,
+                    "weight": 1,
+                    "battleAppearance": {
+                        "scale": 1.0,
+                        "offsetX": 10,
+                        "offsetY": 10,
+                        "rotation": -10
+                    }
+                }
+            ]
+        },
+        {
+            "id": "weapon_cache_november",
+            "title": "Weapon Cache",
+            "category": "Items",
+            "kind": "item",
+            "startDate": "01.11.2026 00:00",
+            "endDate": "01.12.2026 00:00",
             "bannerImageName": "icon_pixel_sword",
             "currencyImageName": "icon_pixel_crystal",
             "singleCost": 5,
