@@ -23,7 +23,7 @@ Dateien werden alphabetisch geladen. Doppelte IDs behalten den ersten Eintrag un
 
 Der Server kann nicht automatisch aufgelistet werden. Jede neue Remote-Datei muss deshalb im `json`-Array der serverseitigen `contentVersion.json` stehen, mit `name` ohne `.json` und dem tatsächlichen `path`. Die `contentVersion` erhöhen und alle Dateien gemeinsam veröffentlichen.
 
-Eine vollständig heruntergeladene, neuere Remote-Gruppe ersetzt die gebündelte Gruppe. Deshalb müssen im Manifest alle weiterhin benötigten Monatsdateien dieser Gruppe stehen. Alte, nicht mehr gelistete Cache-Dateien werden nicht wieder eingeblendet. Das bisherige einzelne `event.json` bzw. `summon.json` bleibt als Remote-Format unterstützt. Die Änderungen hier veröffentlichen keine Dateien auf dem Server.
+Eine vollständig heruntergeladene, neuere Remote-Gruppe mit einzelnen Inhaltsdateien ersetzt die gebündelte Gruppe. Deshalb müssen im Manifest alle weiterhin benötigten Monatsdateien dieser Gruppe stehen. Alte, nicht mehr gelistete Cache-Dateien werden nicht wieder eingeblendet. Liefert ein älterer Server nur `event.json` bzw. `summon.json`, werden die lokalen Monatsdateien zusätzlich geladen. Das gilt auch für alte Caches ohne Ressourcenindex, damit die Umstellung keine neuen Monate ausblendet. Die Änderungen hier veröffentlichen keine Dateien auf dem Server.
 
 ## Zeiträume und Gifts
 

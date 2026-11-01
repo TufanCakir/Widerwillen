@@ -47,14 +47,19 @@ extension JSONLoader {
                     RemoteContentCache.hasCachedJSON(named: $0)
                 })
             {
-                // A complete remote group replaces the bundled group. Removed files
-                // must not reappear from old cache files or bundled monthly content.
-                names = remoteNames
+                if remoteNames == [group.rawValue] {
+                    // Legacy servers only know the original file. Keep monthly files
+                    // bundled with newer app versions during the format migration.
+                    names.formUnion(remoteNames)
+                } else {
+                    // Only an explicitly modular remote group replaces all bundle files.
+                    names = remoteNames
+                }
             } else if RemoteContentCache.activeJSONResourceNames.isEmpty,
                 RemoteContentCache.hasCachedJSON(named: group.rawValue)
             {
                 // Compatibility with caches created before the resource index existed.
-                names = [group.rawValue]
+                names.insert(group.rawValue)
             }
         }
 

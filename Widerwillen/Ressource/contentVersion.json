@@ -1,5 +1,5 @@
 {
-    "contentVersion": 266,
+    "contentVersion": 268,
     "json": [
         {
             "name": "arena",
@@ -57,6 +57,14 @@
         {
             "name": "event",
             "path": "event.json"
+        },
+        {
+            "name": "event_2026_10",
+            "path": "event_2026_10.json"
+        },
+        {
+            "name": "event_2026_11",
+            "path": "event_2026_11.json"
         },
         {
             "name": "event_shop",
