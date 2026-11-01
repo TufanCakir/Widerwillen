@@ -19,6 +19,7 @@ struct SummonView: View {
     @State private var resultScreenResults: [SummonResult] = []
     @State private var isShowingResultScreen = false
     @State private var message = ""
+    @State private var contentDate = Date.now
 
     init(
         progress: GameProgressStore,
@@ -41,6 +42,11 @@ struct SummonView: View {
                 GameHeader(progress: progress)
 
                 categoryBar
+                if visibleBanners.isEmpty {
+                    Text("No banners available").foregroundStyle(
+                        .white.opacity(0.7)
+                    )
+                }
 
                 TabView(selection: $selectedCategory) {
                     ForEach(categories, id: \.self) { category in
@@ -63,6 +69,18 @@ struct SummonView: View {
                 messageOverlay
             }
         }
+        .refreshContentDate($contentDate)
+        .onChange(of: visibleBanners.map(\.id), initial: true) { _, ids in
+            if !categories.contains(selectedCategory) {
+                selectedCategory = categories.first ?? ""
+            }
+            if let ratesBanner, !ids.contains(ratesBanner.id) {
+                self.ratesBanner = nil
+            }
+            if let pendingSummon, !ids.contains(pendingSummon.banner.id) {
+                self.pendingSummon = nil
+            }
+        }
         .fullScreenCover(isPresented: $isShowingResultScreen) {
             SummonResultView(results: resultScreenResults) {
                 isShowingResultScreen = false
@@ -70,10 +88,14 @@ struct SummonView: View {
         }
     }
 
+    private var visibleBanners: [SummonBanner] {
+        configuration.banners.filter { $0.schedule.isVisible(at: contentDate) }
+    }
+
     private var categories: [String] {
         var values: [String] = []
 
-        for banner in configuration.banners
+        for banner in visibleBanners
         where !values.contains(banner.category) {
             values.append(banner.category)
         }
@@ -91,7 +113,7 @@ struct SummonView: View {
 
     private func bannerPage(for category: String) -> some View {
         TabView {
-            ForEach(configuration.banners.filter { $0.category == category }) {
+            ForEach(visibleBanners.filter { $0.category == category }) {
                 banner in
                 bannerCard(banner)
             }
@@ -115,7 +137,7 @@ struct SummonView: View {
                     playSoundEffect("ui_select")
                     ratesBanner = banner
                 } label: {
-                    Image(systemName: "info.circle")
+                    Label("Banner contents", systemImage: "square.stack.3d.up")
                         .font(.system(size: 22, weight: .bold))
                         .foregroundStyle(.white)
                         .shadow(
@@ -171,7 +193,11 @@ struct SummonView: View {
                     )
                 }
             }
-            .disabled(!banner.schedule.isActive())
+            .disabled(
+                !banner.schedule.isActive()
+                    || progress.accountLevel < banner.requiredAccountLevel
+                    || !SummonDistribution(entries: banner.entries).canDraw
+            )
             .opacity(banner.schedule.isActive() ? 1 : 0.45)
         }
         .padding()
@@ -222,76 +248,11 @@ struct SummonView: View {
     }
 
     private func ratesOverlayView(_ banner: SummonBanner) -> some View {
-        ZStack {
-            Color.black.opacity(0.55)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    playSoundEffect("ui_back")
-                    ratesBanner = nil
-                }
-
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Text("Rates")
-                        .widerwillenFont(size: 22, weight: .heavy)
-                        .shadow(
-                            color: .black.opacity(0.9),
-                            radius: 3,
-                            x: 0,
-                            y: 0
-                        )
-
-                    Spacer()
-
-                    Button {
-                        playSoundEffect("ui_back")
-                        ratesBanner = nil
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 16, weight: .heavy))
-                    }
-                    .buttonStyle(.plain)
-                }
-
-                ForEach(banner.entries) { entry in
-                    HStack(spacing: 10) {
-                        RemoteImage(name: entry.imageName)
-                            .frame(width: 28, height: 28)
-
-                        Text(entry.name)
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 0
-                            )
-                        Spacer()
-                        Text(entry.rarity.title)
-                            .foregroundStyle(entry.rarity.color)
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 0
-                            )
-                        Text(percentageText(for: entry.weight))
-                            .frame(width: 42, alignment: .trailing)
-                            .shadow(
-                                color: .black.opacity(0.9),
-                                radius: 3,
-                                x: 0,
-                                y: 0
-                            )
-                    }
-                    .widerwillenFont(size: 13, weight: .bold)
-                }
-            }
-            .foregroundStyle(.white)
-            .padding(18)
-            .background(.black.opacity(0.82))
-            .clipShape(RoundedRectangle(cornerRadius: 18))
-            .padding(.horizontal, 26)
+        SummonRatesOverlay(banner: banner) {
+            playSoundEffect("ui_back")
+            ratesBanner = nil
         }
+        .id(banner.id)
     }
 
     private func confirmOverlay(_ pending: PendingSummon) -> some View {
@@ -400,13 +361,6 @@ struct SummonView: View {
         }
     }
 
-    private func percentageText(for weight: Double) -> String {
-        if weight.rounded() == weight {
-            return "\(Int(weight))%"
-        }
-
-        return String(format: "%.1f%%", weight)
-    }
 }
 
 private struct PendingSummon {

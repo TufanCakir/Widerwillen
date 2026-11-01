@@ -19,15 +19,21 @@ struct ContentSchedule: Equatable {
     let endDate: Date?
 
     func availability(at date: Date = .now) -> ContentAvailability {
+        if let startDate, let endDate, endDate <= startDate {
+            return .ended
+        }
+        if let endDate, date >= endDate {
+            return .ended
+        }
         if let startDate, date < startDate {
             return .upcoming
         }
 
-        if let endDate, date >= endDate {
-            return .ended
-        }
-
         return .active
+    }
+
+    func isVisible(at date: Date = .now) -> Bool {
+        availability(at: date) != .ended
     }
 
     func isActive(at date: Date = .now) -> Bool {

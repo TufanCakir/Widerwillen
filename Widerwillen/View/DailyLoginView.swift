@@ -19,6 +19,7 @@ struct DailyLoginView: View {
         .rawValue
     @State private var selectedLoginID = ""
     @State private var message = ""
+    @State private var contentDate = Date.now
 
     init(
         progress: GameProgressStore,
@@ -39,10 +40,18 @@ struct DailyLoginView: View {
     }
 
     var body: some View {
-        if isCompactPresentation {
-            compactBody
-        } else {
-            fullBody
+        Group {
+            if isCompactPresentation {
+                compactBody
+            } else {
+                fullBody
+            }
+        }
+        .refreshContentDate($contentDate)
+        .onChange(of: loginIDs, initial: true) { _, ids in
+            if !ids.contains(selectedLoginID) {
+                selectedLoginID = ids.first ?? ""
+            }
         }
     }
 
@@ -90,8 +99,13 @@ struct DailyLoginView: View {
                     statusText(message)
                 }
 
+                if visibleLogins.isEmpty {
+                    Text("No daily logins available").foregroundStyle(
+                        .white.opacity(0.7)
+                    )
+                }
                 TabView(selection: $selectedLoginID) {
-                    ForEach(configuration.logins) { login in
+                    ForEach(visibleLogins) { login in
                         loginPage(for: login)
                             .tag(login.id)
                     }
@@ -144,6 +158,11 @@ struct DailyLoginView: View {
                     .frame(height: 20)
             }
 
+            if visibleLogins.isEmpty {
+                Text("No daily logins available")
+                    .foregroundStyle(.white.opacity(0.7))
+                    .padding()
+            }
             HStack(alignment: .top, spacing: 8) {
                 compactLoginTabs
 
@@ -158,8 +177,12 @@ struct DailyLoginView: View {
         .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 
+    private var visibleLogins: [DailyLoginCampaign] {
+        configuration.logins.filter { $0.schedule.isVisible(at: contentDate) }
+    }
+
     private var loginIDs: [String] {
-        configuration.logins.map(\.id)
+        visibleLogins.map(\.id)
     }
 
     private var columns: [GridItem] {
@@ -183,7 +206,7 @@ struct DailyLoginView: View {
     }
 
     private func localizedLoginTitle(_ id: String) -> String {
-        guard let login = configuration.logins.first(where: { $0.id == id })
+        guard let login = visibleLogins.first(where: { $0.id == id })
         else {
             return id
         }
@@ -210,8 +233,8 @@ struct DailyLoginView: View {
     }
 
     private var selectedLogin: DailyLoginCampaign? {
-        configuration.logins.first { $0.id == selectedLoginID }
-            ?? configuration.logins.first
+        visibleLogins.first { $0.id == selectedLoginID }
+            ?? visibleLogins.first
     }
 
     private var compactPopupBackground: some View {
@@ -239,7 +262,7 @@ struct DailyLoginView: View {
     private var compactLoginTabs: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 8) {
-                ForEach(configuration.logins) { login in
+                ForEach(visibleLogins) { login in
                     compactLoginTab(login)
                 }
             }

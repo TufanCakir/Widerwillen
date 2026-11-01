@@ -473,19 +473,23 @@ final class GameProgressStore {
                 Self.defaultHeroBasePower
             }
 
-        let artifactPower = ownedArtifacts.values.reduce(0) {
+        let artifactPower = ownedArtifacts.values.reduce(0.0) {
             $0
-                + Self.scaledPower(
-                    base: $1.damageBonus,
-                    level: $1.level
+                + Double(
+                    Self.scaledPower(
+                        base: $1.damageBonus,
+                        level: $1.level
+                    )
                 )
         }
 
-        let itemPower = ownedItems.values.reduce(0) {
+        let itemPower = ownedItems.values.reduce(0.0) {
             $0
-                + Self.scaledPower(
-                    base: $1.damageBonus,
-                    level: $1.level
+                + Double(
+                    Self.scaledPower(
+                        base: $1.damageBonus,
+                        level: $1.level
+                    )
                 )
         }
 
@@ -493,16 +497,16 @@ final class GameProgressStore {
         let prestigePower = prestigeCount * 4
 
         let rawPower =
-            heroPower
-            + passiveCompanionPower
+            Double(heroPower)
+            + Double(passiveCompanionPower)
             + artifactPower
             + itemPower
-            + accountPower
-            + prestigePower
+            + Double(accountPower)
+            + Double(prestigePower)
 
         return max(
             1,
-            Int(
+            GameNumber.integer(
                 (Double(rawPower)
                     * (1.0 + skillBonus(for: .damage))).rounded()
             )
@@ -521,7 +525,7 @@ final class GameProgressStore {
                 level: sprite.stars
             )
 
-            return total + power
+            return GameNumber.adding(total, power)
         }
     }
 
@@ -530,7 +534,7 @@ final class GameProgressStore {
 
         return max(
             1,
-            Int(
+            GameNumber.integer(
                 (Double(characterAttackPower) * multiplier)
                     .rounded()
             )
@@ -570,7 +574,7 @@ final class GameProgressStore {
                 1.0 - min(skillBonus(for: .attackSpeed), 0.75)
             let damage = max(
                 1,
-                Int(
+                GameNumber.integer(
                     (Double(characterAttackPower) * damageMultiplier)
                         .rounded()
                 )
@@ -600,7 +604,9 @@ final class GameProgressStore {
     }
 
     var idleCoinsPerMinute: Int {
-        let powerBonus = Int(sqrt(Double(max(battlePower, 0))) * 2.0)
+        let powerBonus = GameNumber.integer(
+            sqrt(Double(max(battlePower, 0))) * 2.0
+        )
         return max(5, accountLevel * 4 + stage * 2 + powerBonus)
     }
 
@@ -635,7 +641,7 @@ final class GameProgressStore {
             isCriticalHit
             ? max(
                 baseDamageValue,
-                Int(
+                GameNumber.integer(
                     (Double(baseDamageValue)
                         * criticalDamageMultiplier).rounded()
                 )
@@ -672,7 +678,7 @@ final class GameProgressStore {
         let extraStages = max(extraClears, 0)
         let reachedStage = nextStage + skippedStages + extraStages
         let stageDropMultiplier = 1.0 + Double(reachedStage) * 0.015
-        let earnedCoins = Int(
+        let earnedCoins = GameNumber.integer(
             (Double(28 + reachedStage * 4)
                 * stageDropMultiplier
                 * (1.0 + skillBonus(for: .coinDrop))
@@ -697,7 +703,7 @@ final class GameProgressStore {
         let earnedSkillBooks = rollSkillBookDrop(for: reachedStage)
 
         stage = reachedStage
-        coins += earnedCoins
+        coins = GameNumber.adding(coins, earnedCoins)
         skillBooks += earnedSkillBooks
         addAccountXP(12 + reachedStage * 2 + (skippedStages + extraStages) * 5)
         maxStageHP = Self.maxHP(for: reachedStage, accountLevel: accountLevel)
@@ -735,7 +741,7 @@ final class GameProgressStore {
 
         let maxExtraClears = max(
             1,
-            Int(skillBonus(for: .multiHitCount).rounded(.down))
+            GameNumber.integer(skillBonus(for: .multiHitCount).rounded(.down))
         )
         return Int.random(in: 1...min(maxExtraClears, 4))
     }
@@ -771,12 +777,13 @@ final class GameProgressStore {
         let levelMultiplier = pow(1.12, Double(max(accountLevel - 1, 0)))
         return max(
             event.hp,
-            Int((Double(event.hp) * levelMultiplier).rounded())
+            GameNumber.integer((Double(event.hp) * levelMultiplier).rounded())
         )
     }
 
     @discardableResult
     func fightEvent(_ event: GameEvent) -> Bool {
+        guard event.isActive() else { return false }
         resetEventIfNeeded(eventID: event.id)
 
         guard remainingRuns(for: event) > 0 else { return false }
@@ -874,7 +881,7 @@ final class GameProgressStore {
         )
         guard elapsedSeconds >= 60 else { return }
 
-        let wholeMinutes = Int(elapsedSeconds / 60)
+        let wholeMinutes = GameNumber.integer(elapsedSeconds / 60)
         let earnedCoins = wholeMinutes * idleCoinsPerMinute
         let earnedCrystals = wholeMinutes * idleCrystalsPerHour / 60
 
@@ -894,7 +901,7 @@ final class GameProgressStore {
     }
 
     func canClaimGift(_ gift: GiftReward) -> Bool {
-        !claimedGiftIDs.contains(gift.id)
+        gift.schedule.isActive() && !claimedGiftIDs.contains(gift.id)
     }
 
     @discardableResult
@@ -1166,7 +1173,7 @@ final class GameProgressStore {
 
         let earnedShards = max(
             1,
-            Int(
+            GameNumber.integer(
                 (Double(stage / 10)
                     * (1.0 + skillBonus(for: .prestigeRelics))).rounded()
             )
@@ -1236,6 +1243,9 @@ final class GameProgressStore {
     {
         guard
             banner.schedule.isActive(),
+            accountLevel >= banner.requiredAccountLevel,
+            cost >= 0,
+            SummonDistribution(entries: banner.entries).canDraw,
             canPay(cost: cost, for: banner.kind),
             count > 0
         else {
@@ -1260,20 +1270,7 @@ final class GameProgressStore {
     }
 
     private func rollEntry(from entries: [SummonEntry]) -> SummonEntry? {
-        let totalWeight = entries.reduce(0) { $0 + max($1.weight, 0) }
-        guard totalWeight > 0 else { return entries.randomElement() }
-
-        var roll = Double.random(in: 0..<totalWeight)
-
-        for entry in entries {
-            roll -= max(entry.weight, 0)
-
-            if roll <= 0 {
-                return entry
-            }
-        }
-
-        return entries.last
+        SummonDistribution(entries: entries).draw()
     }
 
     private func summonArtifact(
@@ -2056,7 +2053,10 @@ final class GameProgressStore {
         let baseHP = 12.0 * pow(1.24, Double(stageValue))
         let levelMultiplier = pow(1.10, Double(levelValue - 1))
         let variance = hpVarianceMultiplier(for: stageValue)
-        return max(12, Int((baseHP * levelMultiplier * variance).rounded()))
+        return max(
+            12,
+            GameNumber.integer((baseHP * levelMultiplier * variance).rounded())
+        )
     }
 
     private static func hpVarianceMultiplier(for stage: Int) -> Double {
@@ -2066,7 +2066,9 @@ final class GameProgressStore {
     }
 
     private static func xpToNextLevel(for level: Int) -> Int {
-        Int((90.0 * pow(1.24, Double(max(level - 1, 0)))).rounded())
+        GameNumber.integer(
+            (90.0 * pow(1.24, Double(max(level - 1, 0)))).rounded()
+        )
     }
 
     private static func rarityPower(_ rarity: SpriteRarity) -> Int {
@@ -2084,7 +2086,10 @@ final class GameProgressStore {
 
     private static func scaledPower(base: Int, level: Int) -> Int {
         let multiplier = pow(1.46, Double(max(level - 1, 0)))
-        return max(base, Int((Double(max(base, 1)) * multiplier).rounded()))
+        return max(
+            base,
+            GameNumber.integer((Double(max(base, 1)) * multiplier).rounded())
+        )
     }
 
     private func skillBonus(for effect: SkillEffect) -> Double {

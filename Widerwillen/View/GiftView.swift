@@ -17,6 +17,7 @@ struct GiftView: View {
         .rawValue
     @State private var selectedCategory = ""
     @State private var message = ""
+    @State private var contentDate = Date.now
 
     init(
         progress: GameProgressStore,
@@ -69,6 +70,10 @@ struct GiftView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .refreshContentDate($contentDate)
+        .onChange(of: categories, initial: true) { _, _ in
+            syncSelectedCategory()
+        }
     }
 
     private var categories: [String] {
@@ -98,7 +103,9 @@ struct GiftView: View {
     }
 
     private var availableGifts: [GiftReward] {
-        configuration.gifts.filter { progress.canClaimGift($0) }
+        configuration.gifts.filter {
+            $0.schedule.isActive(at: contentDate) && progress.canClaimGift($0)
+        }
     }
 
     private var claimAllButton: some View {
@@ -179,6 +186,11 @@ struct GiftView: View {
                         x: 0,
                         y: 0
                     )
+
+                AvailabilityCountdownView(
+                    startDate: gift.startDate,
+                    endDate: gift.endDate
+                )
 
                 ResourceAmountRow(
                     amounts: gift.rewards,

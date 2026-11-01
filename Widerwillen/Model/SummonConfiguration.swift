@@ -14,7 +14,16 @@ struct SummonConfiguration: Decodable {
     static func load(named resourceName: String = "summon") throws
         -> SummonConfiguration
     {
-        try JSONLoader.load(named: resourceName)
+        if resourceName == "summon" {
+            return SummonConfiguration(
+                banners: try JSONLoader.loadCollection(
+                    Self.self,
+                    group: .summons,
+                    entries: \.banners
+                )
+            )
+        }
+        return try JSONLoader.load(named: resourceName)
     }
 }
 
@@ -184,8 +193,9 @@ extension SummonBanner {
     }
 }
 
-private extension KeyedDecodingContainer {
-    func decodeGermanDateIfPresent(forKey key: Key) throws -> Date? {
+extension KeyedDecodingContainer {
+    fileprivate func decodeGermanDateIfPresent(forKey key: Key) throws -> Date?
+    {
         guard let value = try decodeIfPresent(String.self, forKey: key) else {
             return nil
         }
@@ -194,7 +204,8 @@ private extension KeyedDecodingContainer {
             throw DecodingError.dataCorruptedError(
                 forKey: key,
                 in: self,
-                debugDescription: "Ungültiges Datum '\(value)'. Erwartet: TT.MM.JJJJ HH:mm"
+                debugDescription:
+                    "Ungültiges Datum '\(value)'. Erwartet: TT.MM.JJJJ HH:mm"
             )
         }
 

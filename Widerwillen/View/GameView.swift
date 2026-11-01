@@ -66,7 +66,7 @@ struct GameView: View {
 
                     let damage = max(
                         1,
-                        Int(
+                        GameNumber.integer(
                             (Double(progress.tapDamage) * card.damageMultiplier)
                                 .rounded()
                         )

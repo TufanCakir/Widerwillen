@@ -56,7 +56,11 @@ struct BattleHUD: View {
             HStack {
                 Text(healthTitle)
                 Spacer()
-                Text("\(currentHP)/\(maxHP)")
+                Text(
+                    "\(Double(currentHP).abbreviatedResourceText) / \(Double(maxHP).abbreviatedResourceText)"
+                )
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
             }
             .widerwillenFont(size: 10, weight: .bold)
             .foregroundStyle(.white)

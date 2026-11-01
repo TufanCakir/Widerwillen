@@ -37,7 +37,7 @@ enum JSONLoader {
         return try decoder.decode(T.self, from: data)
     }
 
-    private static func shouldUseCachedRemoteContent(bundle: Bundle) -> Bool {
+    static func shouldUseCachedRemoteContent(bundle: Bundle) -> Bool {
         let storedRemoteVersion = UserDefaults.standard.integer(
             forKey: "remoteContentVersion"
         )

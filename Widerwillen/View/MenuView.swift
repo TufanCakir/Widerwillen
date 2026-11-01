@@ -52,6 +52,8 @@ struct MenuView: View {
         self.openMode = openMode
     }
 
+    @State private var contentDate = Date.now
+
     var body: some View {
         ZStack {
             menuPageContent
@@ -62,6 +64,14 @@ struct MenuView: View {
         }
         .background {
             AppBackground()
+        }
+        .refreshContentDate($contentDate)
+        .onChange(
+            of: dailyLoginConfiguration.logins.contains {
+                $0.schedule.isVisible(at: contentDate)
+            }
+        ) { _, hasVisibleLogins in
+            if !hasVisibleLogins { isDailyLoginPopupPresented = false }
         }
         .onAppear {
             normalizeShortcutIndexIfNeeded()
@@ -336,7 +346,8 @@ struct MenuView: View {
 
     private var claimableDailyLogins: [DailyLoginCampaign] {
         dailyLoginConfiguration.logins.filter {
-            progress.canClaimDailyLogin(for: $0)
+            $0.schedule.isActive(at: contentDate)
+                && progress.canClaimDailyLogin(for: $0)
         }
     }
 

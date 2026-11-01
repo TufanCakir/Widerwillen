@@ -23,9 +23,15 @@ struct GiftReward: Decodable, Identifiable {
     let titleKey: String?
     let category: String
     let categoryKey: String?
+    let startDate: Date?
+    let endDate: Date?
     let imageName: String
     let rewards: [TradeResourceAmount]
     let unlocks: [TradeUnlockReward]
+
+    var schedule: ContentSchedule {
+        ContentSchedule(startDate: startDate, endDate: endDate)
+    }
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -33,6 +39,8 @@ struct GiftReward: Decodable, Identifiable {
         case titleKey
         case category
         case categoryKey
+        case startDate
+        case endDate
         case imageName
         case rewards
         case unlocks
@@ -48,6 +56,14 @@ struct GiftReward: Decodable, Identifiable {
             String.self,
             forKey: .categoryKey
         )
+        // Legacy gifts without an expiry are deliberately unavailable.
+        let start = try container.decodeIfPresent(
+            String.self,
+            forKey: .startDate
+        )
+        let end = try container.decodeIfPresent(String.self, forKey: .endDate)
+        startDate = start.map { GermanDateParser.parse($0) ?? .distantFuture }
+        endDate = end.flatMap(GermanDateParser.parse) ?? .distantPast
         imageName = try container.decode(String.self, forKey: .imageName)
         rewards =
             try container.decodeIfPresent(

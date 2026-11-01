@@ -21,6 +21,7 @@ struct EventView: View {
     private var appLanguageCode = AppLanguage.de.rawValue
 
     @State private var message = ""
+    @State private var contentDate = Date.now
     @State private var selectedEvent: GameEvent?
     @State private var selectedCategory = ""
     @State private var selectedPreviewEventID: String?
@@ -69,7 +70,7 @@ struct EventView: View {
             } else if isEventShopPresented {
                 EventShopView(
                     progress: progress,
-                    events: configuration.events,
+                    events: visibleEvents,
                     eventShopConfiguration: eventShopConfiguration,
                     playSoundEffect: playSoundEffect
                 ) {
@@ -79,8 +80,19 @@ struct EventView: View {
                 eventList
             }
         }
+        .refreshContentDate($contentDate)
+        .onChange(of: visibleEvents.map(\.id), initial: true) { _, ids in
+            ensureSelectedCategoryIsValid()
+            selectDefaultPreviewEventIfNeeded(for: selectedCategory)
+            if let selectedEvent, !ids.contains(selectedEvent.id) {
+                self.selectedEvent = nil
+            }
+            if let rewardDetailEvent, !ids.contains(rewardDetailEvent.id) {
+                self.rewardDetailEvent = nil
+            }
+        }
         .onAppear {
-            progress.refreshDailyEventLimits(for: configuration.events)
+            progress.refreshDailyEventLimits(for: visibleEvents)
             ensureSelectedCategoryIsValid()
             selectDefaultPreviewEventIfNeeded(for: selectedCategory)
             onBattleStateChange(selectedEvent != nil)
@@ -97,6 +109,10 @@ struct EventView: View {
         .onDisappear {
             onBattleStateChange(false)
         }
+    }
+
+    private var visibleEvents: [GameEvent] {
+        configuration.events.filter { $0.schedule.isVisible(at: contentDate) }
     }
 
     private var eventList: some View {
@@ -119,6 +135,9 @@ struct EventView: View {
                         )
                 }
 
+                if visibleEvents.isEmpty {
+                    Text("No Events").foregroundStyle(.white.opacity(0.7))
+                }
                 categoryPager
                     .animation(.snappy(duration: 0.22), value: selectedCategory)
             }
@@ -137,7 +156,7 @@ struct EventView: View {
     private var eventCategories: [String] {
         var categories: [String] = []
 
-        for event in configuration.events
+        for event in visibleEvents
         where !categories.contains(event.category) {
             categories.append(event.category)
         }
@@ -273,7 +292,7 @@ struct EventView: View {
 
     private func selectInitialEvent(_ eventID: String?) {
         guard let eventID,
-            let event = configuration.events.first(where: { $0.id == eventID })
+            let event = visibleEvents.first(where: { $0.id == eventID })
         else {
             return
         }
@@ -519,7 +538,8 @@ struct EventView: View {
 
         guard event.isActive() else {
             playSoundEffect("ui_tap")
-            message = event.availability() == .upcoming
+            message =
+                event.availability() == .upcoming
                 ? localizer.text(
                     "event.not_started",
                     fallback: "Event has not started yet"
@@ -719,11 +739,11 @@ struct EventView: View {
     }
 
     private func events(in category: String) -> [GameEvent] {
-        configuration.events.filter { $0.category == category }
+        visibleEvents.filter { $0.category == category }
     }
 
     private func localizedCategory(_ category: String) -> String {
-        let key = configuration.events.first { $0.category == category }?
+        let key = visibleEvents.first { $0.category == category }?
             .categoryKey
         return localizer.text(key, fallback: category)
     }
@@ -806,6 +826,7 @@ private struct EventShopView: View {
     @AppStorage("appLanguage") private var appLanguageCode =
         AppLanguage.de.rawValue
     @State private var selectedShopEvent: GameEvent?
+    @State private var contentDate = Date.now
     @State private var message = ""
 
     var body: some View {
@@ -829,6 +850,11 @@ private struct EventShopView: View {
 
                 ScrollView {
                     LazyVStack(spacing: 12) {
+                        if shopEvents.isEmpty {
+                            Text("No event shops available")
+                                .foregroundStyle(.white.opacity(0.7))
+                                .padding()
+                        }
                         ForEach(shopEvents) { event in
                             shopButton(for: event)
                         }
@@ -839,8 +865,16 @@ private struct EventShopView: View {
             }
             .padding(.top, 18)
 
-            if let selectedShopEvent {
+            if let selectedShopEvent,
+                selectedShopEvent.schedule.isVisible(at: contentDate)
+            {
                 shopWindow(for: selectedShopEvent)
+            }
+        }
+        .refreshContentDate($contentDate)
+        .onChange(of: shopEvents.map(\.id)) { _, ids in
+            if let selectedShopEvent, !ids.contains(selectedShopEvent.id) {
+                self.selectedShopEvent = nil
             }
         }
     }
@@ -876,6 +910,9 @@ private struct EventShopView: View {
 
     private var shopEvents: [GameEvent] {
         events.filter { event in
+            guard event.schedule.isVisible(at: contentDate) else {
+                return false
+            }
             guard let shop = eventShopConfiguration.shop(for: event.id) else {
                 return false
             }
@@ -1056,11 +1093,11 @@ private struct EventShopView: View {
                         ? "Buy"
                         : isShopActive ? "Need" : "Closed"
                 )
-                    .widerwillenFont(size: 10, weight: .heavy)
-                    .foregroundStyle(canBuy ? .black : .white.opacity(0.54))
-                    .frame(width: 54, height: 28)
-                    .background(canBuy ? .white : .black.opacity(0.34))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                .widerwillenFont(size: 10, weight: .heavy)
+                .foregroundStyle(canBuy ? .black : .white.opacity(0.54))
+                .frame(width: 54, height: 28)
+                .background(canBuy ? .white : .black.opacity(0.34))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
             }
             .buttonStyle(.plain)
             .disabled(!canBuy)
@@ -1186,7 +1223,7 @@ private struct EventBattleView: View {
                 onBattleCardAttack: { card in
                     let damage = max(
                         1,
-                        Int(
+                        GameNumber.integer(
                             (Double(progress.tapDamage) * card.damageMultiplier)
                                 .rounded()
                         )
@@ -1243,7 +1280,7 @@ private struct EventBattleView: View {
 
         let damageValue = max(damage, 1)
         let actualDamage = min(damageValue, currentHP)
-        damageDealt += actualDamage
+        damageDealt = GameNumber.adding(damageDealt, actualDamage)
         currentHP = max(currentHP - damageValue, 0)
 
         guard currentHP == 0 else {
@@ -1302,7 +1339,7 @@ private struct EventBattleView: View {
                     )
 
                 Text(
-                    "\(localizer.text("event.damage", fallback: "Damage")): \(summary.damageDealt)"
+                    "\(localizer.text("event.damage", fallback: "Damage")): \(Double(summary.damageDealt).abbreviatedResourceText)"
                 )
                 .widerwillenFont(size: 14, weight: .bold)
                 .shadow(

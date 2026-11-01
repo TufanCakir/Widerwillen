@@ -40,7 +40,13 @@ extension Double {
 
     var abbreviatedResourceText: String {
 
+        guard isFinite else { return isNaN ? "0" : "∞" }
         let amount = abs(self)
+        if amount >= 1e66 {
+            return formatted(
+                .number.notation(.scientific).precision(.fractionLength(0...2))
+            )
+        }
         let sign = self < 0 ? "-" : ""
 
         let units: [(value: Double, suffix: String)] = [
@@ -98,10 +104,11 @@ extension Double {
             text = String(format: "%.2f", value)
         }
 
-        return
-            text
-            .replacingOccurrences(of: ".00", with: "")
-            .replacingOccurrences(of: ".0", with: "")
+        guard text.contains(".") else { return text }
+        var trimmed = text
+        while trimmed.last == "0" { trimmed.removeLast() }
+        if trimmed.last == "." { trimmed.removeLast() }
+        return trimmed
     }
 
     private static func cleanNumber(

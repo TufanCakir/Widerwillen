@@ -407,8 +407,8 @@ struct BattleSceneView: View {
 
         addPopup(
             text: result.isCriticalHit
-                ? "CRIT -\(result.damageDealt)"
-                : "-\(result.damageDealt)",
+                ? "CRIT -\(Double(result.damageDealt).abbreviatedResourceText)"
+                : "-\(Double(result.damageDealt).abbreviatedResourceText)",
             color: result.isCriticalHit ? .yellow : .white,
             xRatio: Double.random(in: 0.34...0.66),
             yRatio: Double.random(in: 0.36...0.52)

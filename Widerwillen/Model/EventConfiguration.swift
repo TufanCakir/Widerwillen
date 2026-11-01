@@ -13,10 +13,18 @@ struct EventConfiguration: Decodable {
     static func load(named resourceName: String = "event") throws
         -> EventConfiguration
     {
-        let configuration = try JSONLoader.load(
-            EventConfiguration.self,
-            named: resourceName
-        )
+        let configuration: EventConfiguration
+        if resourceName == "event" {
+            configuration = EventConfiguration(
+                events: try JSONLoader.loadCollection(
+                    Self.self,
+                    group: .events,
+                    entries: \.events
+                )
+            )
+        } else {
+            configuration = try JSONLoader.load(Self.self, named: resourceName)
+        }
         let chips = try? ChipConfiguration.load()
         return configuration.resolved(with: chips)
     }
@@ -176,7 +184,10 @@ struct GameEvent: Decodable, Identifiable {
             ) ?? EventVictoryPresentation()
         dailyLimit = try container.decode(Int.self, forKey: .dailyLimit)
         hp = try container.decode(Int.self, forKey: .hp)
-        enemy = try container.decodeIfPresent(EnemyDefinition.self, forKey: .enemy)
+        enemy = try container.decodeIfPresent(
+            EnemyDefinition.self,
+            forKey: .enemy
+        )
         rewards = try container.decode(EventRewards.self, forKey: .rewards)
         unlocks =
             try container.decodeIfPresent(

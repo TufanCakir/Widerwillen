@@ -219,6 +219,18 @@ final class RemoteContentStore {
                 return
             }
 
+            guard
+                !summary.failedResources.contains(where: {
+                    $0.hasPrefix("json:")
+                })
+            else {
+                statusText = "Content update incomplete"
+                return
+            }
+            UserDefaults.standard.set(
+                manifest.json.map(\.name),
+                forKey: "activeRemoteJSONResourceNames"
+            )
             contentVersion = manifest.contentVersion
             UserDefaults.standard.set(
                 manifest.contentVersion,
@@ -570,6 +582,12 @@ enum RemoteContentCache {
                 "music"
             }
         }
+    }
+
+    static var activeJSONResourceNames: [String] {
+        UserDefaults.standard.stringArray(
+            forKey: "activeRemoteJSONResourceNames"
+        ) ?? []
     }
 
     static func cachedJSONData(named resourceName: String) -> Data? {

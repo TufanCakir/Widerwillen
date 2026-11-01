@@ -2,6 +2,8 @@
     "gifts": [
         {
             "id": "pre_register_10",
+            "startDate": "01.10.2026 00:00",
+            "endDate": "01.12.2026 00:00",
             "title": "50 Crystals",
             "titleKey": "gift.pre_register_10.title",
             "category": "Release",
@@ -16,6 +18,8 @@
         },
         {
             "id": "pre_register_20",
+            "startDate": "01.10.2026 00:00",
+            "endDate": "01.12.2026 00:00",
             "title": "50 Relics",
             "titleKey": "gift.pre_register_20.title",
             "category": "Release",
@@ -30,6 +34,8 @@
         },
         {
             "id": "pre_register_30",
+            "startDate": "01.10.2026 00:00",
+            "endDate": "01.12.2026 00:00",
             "title": "50 Skill Books",
             "titleKey": "gift.pre_register_30.title",
             "category": "Release",
@@ -44,6 +50,8 @@
         },
         {
             "id": "pre_register_40",
+            "startDate": "01.10.2026 00:00",
+            "endDate": "01.12.2026 00:00",
             "title": "Pre-Register Reward",
             "titleKey": "gift.pre_register_40.title",
             "category": "Release",
@@ -62,6 +70,8 @@
         },
         {
             "id": "pre_register_50",
+            "startDate": "01.10.2026 00:00",
+            "endDate": "01.12.2026 00:00",
             "title": "Pre-Register Reward",
             "titleKey": "gift.pre_register_50.title",
             "category": "Release",
@@ -99,6 +109,8 @@
         },
         {
             "id": "skin_gift_nimbi_birthday_001",
+            "startDate": "01.10.2026 00:00",
+            "endDate": "01.12.2026 00:00",
             "title": "Birthday Nimbi",
             "titleKey": "gift.skin_gift_nimbi_birthday_001.title",
             "category": "Event",
@@ -132,6 +144,8 @@
         },
         {
             "id": "skin_gift_nimbi_halloween_001",
+            "startDate": "01.10.2026 00:00",
+            "endDate": "01.12.2026 00:00",
             "title": "Halloween Nimbi",
             "titleKey": "gift.skin_gift_nimbi_halloween_001.title",
             "category": "Event",
@@ -180,6 +194,8 @@
         },
         {
             "id": "compensation_november_2026",
+            "startDate": "01.11.2026 00:00",
+            "endDate": "01.12.2026 00:00",
             "title": "100 Crystals Compensation",
             "titleKey": "gift.compensation_november_2026.title",
             "category": "Compensation",
