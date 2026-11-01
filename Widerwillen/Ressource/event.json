@@ -435,7 +435,7 @@
             "title": "Birthday Skin Event",
             "titleKey": "event.birthday_skin_event.title",
             "startDate": "01.10.2026 00:00",
-            "endDate": "31.10.2026 23:59",
+            "endDate": "07.11.2026 23:59",
             "category": "Special Events",
             "categoryKey": "event.category.special",
             "bannerImageName": "icon_birthday_nimbi",
@@ -482,7 +482,7 @@
                     "shadowCloneImageName": "shadow_clone_nimbi_sword",
                     "rarity": "epic",
                     "battleAppearance": {
-                        "scale": 1.0,
+                        "scale": 1,
                         "offsetX": 10,
                         "offsetY": 10,
                         "rotation": -10
@@ -495,7 +495,7 @@
             "title": "Halloween Skin Event",
             "titleKey": "event.halloween_skin_event.title",
             "startDate": "01.10.2026 00:00",
-            "endDate": "31.10.2026 23:59",
+            "endDate": "07.11.2026 23:59",
             "category": "Special Events",
             "categoryKey": "event.category.special",
             "bannerImageName": "icon_halloween_nimbi",
@@ -548,7 +548,7 @@
                     "shadowCloneImageName": "shadow_clone_nimbi_slasher",
                     "rarity": "legendary",
                     "battleAppearance": {
-                        "scale": 1.0,
+                        "scale": 1,
                         "offsetX": 10,
                         "offsetY": 10,
                         "rotation": -10
@@ -583,6 +583,287 @@
                 "coins": 10,
                 "crystals": 8,
                 "relics": 10
+            }
+        },
+        {
+            "id": "november_2026_coin_raid",
+            "title": "Coin Raid",
+            "titleKey": "event.november_2026_coin_raid.title",
+            "startDate": "01.11.2026 00:00",
+            "endDate": "01.12.2026 00:00",
+            "category": "Daily Raid",
+            "categoryKey": "event.category.daily_raid",
+            "bannerImageName": "icon_pixel_coin",
+            "cardBackgroundImageName": "bg_aurora",
+            "battleBackgroundImageName": "bg_aurora",
+            "battleGroundImageName": "bg_aurora",
+            "chipID": "yellow_chips",
+            "victory": {
+                "title": "Victory",
+                "titleKey": "event.victory",
+                "imageName": "icon_pixel_coin",
+                "backgroundImageName": "bg_aurora",
+                "dismissDelaySeconds": 2.4
+            },
+            "dailyLimit": 5,
+            "hp": 58,
+            "rewards": {
+                "chipAmount": 45,
+                "coins": 680,
+                "crystals": 1,
+                "relics": 1
+            },
+            "enemy": {
+                "id": "blade_dompi",
+                "name": "Dompi",
+                "imageName": "dompi_original",
+                "animationID": "dompi_original",
+                "scale": 0.32,
+                "columns": 4,
+                "rows": 1,
+                "frameCount": 4,
+                "fps": 8
+            }
+        },
+        {
+            "id": "november_2026_crystal_raid",
+            "title": "Crystal Raid",
+            "titleKey": "event.november_2026_crystal_raid.title",
+            "startDate": "01.11.2026 00:00",
+            "endDate": "01.12.2026 00:00",
+            "category": "Daily Raid",
+            "categoryKey": "event.category.daily_raid",
+            "bannerImageName": "icon_pixel_crystal",
+            "cardBackgroundImageName": "bg_crystal_temple",
+            "battleBackgroundImageName": "bg_crystal_temple",
+            "battleGroundImageName": "bg_crystal_temple",
+            "chipID": "blue_chips",
+            "victory": {
+                "title": "Victory",
+                "titleKey": "event.victory",
+                "imageName": "icon_pixel_crystal",
+                "backgroundImageName": "bg_crystal_temple",
+                "dismissDelaySeconds": 2.4
+            },
+            "dailyLimit": 3,
+            "hp": 118,
+            "rewards": {
+                "chipAmount": 90,
+                "coins": 50,
+                "crystals": 10,
+                "relics": 1
+            },
+            "enemy": {
+                "id": "depth_crown",
+                "name": "Klempi",
+                "imageName": "klempi_original",
+                "animationID": "klempi_original",
+                "scale": 0.34,
+                "columns": 4,
+                "rows": 1,
+                "frameCount": 4,
+                "fps": 8
+            }
+        },
+        {
+            "id": "november_2026_skill_book_raid",
+            "title": "Skill Book Raid",
+            "titleKey": "event.november_2026_skill_book_raid.title",
+            "startDate": "01.11.2026 00:00",
+            "endDate": "01.12.2026 00:00",
+            "category": "Daily Raid",
+            "categoryKey": "event.category.daily_raid",
+            "bannerImageName": "icon_pixel_skill_book",
+            "cardBackgroundImageName": "bg_crystal_temple",
+            "battleBackgroundImageName": "bg_crystal_temple",
+            "battleGroundImageName": "bg_crystal_temple",
+            "chipID": "green_chips",
+            "victory": {
+                "title": "Books Secured",
+                "titleKey": "event.victory.books_secured",
+                "imageName": "icon_pixel_skill_book",
+                "backgroundImageName": "bg_crystal_temple",
+                "dismissDelaySeconds": 2.4
+            },
+            "dailyLimit": 3,
+            "hp": 126,
+            "rewards": {
+                "chipAmount": 70,
+                "coins": 120,
+                "crystals": 2,
+                "relics": 1,
+                "skillBooks": 5
+            },
+            "enemy": {
+                "id": "rift_blam",
+                "name": "Blam",
+                "imageName": "blam_original",
+                "animationID": "blam_original",
+                "scale": 0.34,
+                "columns": 3,
+                "rows": 1,
+                "frameCount": 3,
+                "fps": 8
+            }
+        },
+        {
+            "id": "november_2026_blue_chip_raid",
+            "title": "Blue Chip Raid",
+            "titleKey": "event.november_2026_blue_chip_raid.title",
+            "startDate": "01.11.2026 00:00",
+            "endDate": "01.12.2026 00:00",
+            "category": "Daily Raid",
+            "categoryKey": "event.category.daily_raid",
+            "bannerImageName": "icon_pixel_chip_blue",
+            "cardBackgroundImageName": "bg_cosmic_nebula",
+            "battleBackgroundImageName": "bg_cosmic_nebula",
+            "battleGroundImageName": "bg_cosmic_nebula",
+            "chipID": "blue_chips",
+            "victory": {
+                "title": "Chips Secured",
+                "titleKey": "event.victory.chips",
+                "imageName": "icon_pixel_chip_blue",
+                "backgroundImageName": "bg_cosmic_nebula",
+                "dismissDelaySeconds": 2.2
+            },
+            "dailyLimit": 6,
+            "hp": 38,
+            "rewards": {
+                "chipAmount": 45,
+                "coins": 80,
+                "crystals": 2,
+                "relics": 0
+            },
+            "enemy": {
+                "id": "blade_dompi",
+                "name": "Dompi",
+                "imageName": "dompi_original",
+                "animationID": "dompi_original",
+                "scale": 0.32,
+                "columns": 4,
+                "rows": 1,
+                "frameCount": 4,
+                "fps": 8
+            }
+        },
+        {
+            "id": "november_2026_red_chip_raid",
+            "title": "Red Chip Raid",
+            "titleKey": "event.november_2026_red_chip_raid.title",
+            "startDate": "01.11.2026 00:00",
+            "endDate": "01.12.2026 00:00",
+            "category": "Daily Raid",
+            "categoryKey": "event.category.daily_raid",
+            "bannerImageName": "icon_pixel_chip_red",
+            "cardBackgroundImageName": "bg_dragonfire",
+            "battleBackgroundImageName": "bg_dragonfire",
+            "battleGroundImageName": "bg_dragonfire",
+            "chipID": "red_chips",
+            "victory": {
+                "title": "Chips Secured",
+                "titleKey": "event.victory.chips",
+                "imageName": "icon_pixel_chip_red",
+                "backgroundImageName": "bg_dragonfire",
+                "dismissDelaySeconds": 2.2
+            },
+            "dailyLimit": 2,
+            "hp": 150,
+            "rewards": {
+                "chipAmount": 110,
+                "coins": 100,
+                "crystals": 5,
+                "relics": 6
+            },
+            "enemy": {
+                "id": "depth_crown",
+                "name": "Klempi",
+                "imageName": "klempi_original",
+                "animationID": "klempi_original",
+                "scale": 0.34,
+                "columns": 4,
+                "rows": 1,
+                "frameCount": 4,
+                "fps": 8
+            }
+        },
+        {
+            "id": "november_2026_yellow_chip_raid",
+            "title": "Yellow Chip Raid",
+            "titleKey": "event.november_2026_yellow_chip_raid.title",
+            "startDate": "01.11.2026 00:00",
+            "endDate": "01.12.2026 00:00",
+            "category": "Daily Raid",
+            "categoryKey": "event.category.daily_raid",
+            "bannerImageName": "icon_pixel_chip_yellow",
+            "cardBackgroundImageName": "bg_enchanted_forest",
+            "battleBackgroundImageName": "bg_enchanted_forest",
+            "battleGroundImageName": "bg_enchanted_forest",
+            "chipID": "yellow_chips",
+            "victory": {
+                "title": "Chips Secured",
+                "titleKey": "event.victory.chips",
+                "imageName": "icon_pixel_chip_yellow",
+                "backgroundImageName": "bg_enchanted_forest",
+                "dismissDelaySeconds": 2.2
+            },
+            "dailyLimit": 6,
+            "hp": 46,
+            "rewards": {
+                "chipAmount": 50,
+                "coins": 410,
+                "crystals": 1,
+                "relics": 0
+            },
+            "enemy": {
+                "id": "rift_blam",
+                "name": "Blam",
+                "imageName": "blam_original",
+                "animationID": "blam_original",
+                "scale": 0.34,
+                "columns": 3,
+                "rows": 1,
+                "frameCount": 3,
+                "fps": 8
+            }
+        },
+        {
+            "id": "november_2026_green_chip_raid",
+            "title": "Green Chip Raid",
+            "titleKey": "event.november_2026_green_chip_raid.title",
+            "startDate": "01.11.2026 00:00",
+            "endDate": "01.12.2026 00:00",
+            "category": "Daily Raid",
+            "categoryKey": "event.category.daily_raid",
+            "bannerImageName": "icon_pixel_chip_green",
+            "cardBackgroundImageName": "bg_enchanted_forest",
+            "battleBackgroundImageName": "bg_enchanted_forest",
+            "battleGroundImageName": "bg_enchanted_forest",
+            "chipID": "green_chips",
+            "victory": {
+                "title": "Chips Secured",
+                "titleKey": "event.victory.chips",
+                "imageName": "icon_pixel_chip_green",
+                "backgroundImageName": "bg_enchanted_forest",
+                "dismissDelaySeconds": 2.2
+            },
+            "dailyLimit": 4,
+            "hp": 86,
+            "rewards": {
+                "chipAmount": 70,
+                "coins": 80,
+                "crystals": 2,
+                "relics": 4
+            },
+            "enemy": {
+                "id": "blade_dompi",
+                "name": "Dompi",
+                "imageName": "dompi_original",
+                "animationID": "dompi_original",
+                "scale": 0.32,
+                "columns": 4,
+                "rows": 1,
+                "frameCount": 4,
+                "fps": 8
             }
         }
     ]

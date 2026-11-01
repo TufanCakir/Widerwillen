@@ -177,6 +177,20 @@
                     }
                 }
             ]
+        },
+        {
+            "id": "compensation_november_2026",
+            "title": "100 Crystals Compensation",
+            "titleKey": "gift.compensation_november_2026.title",
+            "category": "Compensation",
+            "categoryKey": "gift.category.compensation",
+            "imageName": "icon_pixel_crystal",
+            "rewards": [
+                {
+                    "resource": "crystals",
+                    "amount": 100
+                }
+            ]
         }
     ]
 }

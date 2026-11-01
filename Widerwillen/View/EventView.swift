@@ -1175,6 +1175,7 @@ private struct EventBattleView: View {
                 activeSkills: progress.activeBattleSkills,
                 backgroundImageName: event.battleBackgroundImageName,
                 groundImageName: event.battleGroundImageName,
+                eventEnemy: event.enemy,
                 onTapAttack: {
                     let result = attackEvent(damage: progress.tapDamage)
                     playSoundEffect(

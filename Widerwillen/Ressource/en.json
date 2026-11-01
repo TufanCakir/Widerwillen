@@ -1,5 +1,16 @@
 {
     "strings": {
+        "event.november_2026_coin_raid.title": "Coin Raid",
+        "event.november_2026_crystal_raid.title": "Crystal Raid",
+        "event.november_2026_skill_book_raid.title": "Skill Book Raid",
+        "event.november_2026_blue_chip_raid.title": "Blue Chip Raid",
+        "event.november_2026_red_chip_raid.title": "Red Chip Raid",
+        "event.november_2026_yellow_chip_raid.title": "Yellow Chip Raid",
+        "event.november_2026_green_chip_raid.title": "Green Chip Raid",
+        "gift.compensation_november_2026.title": "100 Crystals Compensation",
+        "gift.category.compensation": "Compensation",
+        "news.november_2026_events.title": "November Events & Compensation",
+        "news.november_2026_events.body": "From November 1–30, 2026, take on Dompi, Klempi and Blam in Coin, Crystal, Skill Book and Blue, Red, Yellow and Green Chip Raids. Halloween and Birthday events are extended by one week until November 7, 2026 at 23:59 (Berlin time). Claim 100 crystals as compensation in Gifts.",
         "common.next": "Next",
         "common.ok": "OK",
         "common.cancel": "Cancel",

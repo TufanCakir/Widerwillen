@@ -51,6 +51,7 @@ struct GameEvent: Decodable, Identifiable {
     let victory: EventVictoryPresentation
     let dailyLimit: Int
     let hp: Int
+    let enemy: EnemyDefinition?
     let rewards: EventRewards
     let unlocks: [TradeUnlockReward]
     var currencyStorageID: String { chipID ?? id }
@@ -74,6 +75,7 @@ struct GameEvent: Decodable, Identifiable {
         case victory
         case dailyLimit
         case hp
+        case enemy
         case rewards
         case unlocks
     }
@@ -97,6 +99,7 @@ struct GameEvent: Decodable, Identifiable {
         victory: EventVictoryPresentation,
         dailyLimit: Int,
         hp: Int,
+        enemy: EnemyDefinition? = nil,
         rewards: EventRewards,
         unlocks: [TradeUnlockReward]
     ) {
@@ -118,6 +121,7 @@ struct GameEvent: Decodable, Identifiable {
         self.victory = victory
         self.dailyLimit = dailyLimit
         self.hp = hp
+        self.enemy = enemy
         self.rewards = rewards
         self.unlocks = unlocks
     }
@@ -172,6 +176,7 @@ struct GameEvent: Decodable, Identifiable {
             ) ?? EventVictoryPresentation()
         dailyLimit = try container.decode(Int.self, forKey: .dailyLimit)
         hp = try container.decode(Int.self, forKey: .hp)
+        enemy = try container.decodeIfPresent(EnemyDefinition.self, forKey: .enemy)
         rewards = try container.decode(EventRewards.self, forKey: .rewards)
         unlocks =
             try container.decodeIfPresent(
@@ -202,6 +207,7 @@ struct GameEvent: Decodable, Identifiable {
             victory: victory,
             dailyLimit: dailyLimit,
             hp: hp,
+            enemy: enemy,
             rewards: rewards,
             unlocks: unlocks
         )

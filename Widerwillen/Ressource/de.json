@@ -1,5 +1,16 @@
 {
     "strings": {
+        "event.november_2026_coin_raid.title": "Münzen-Raid",
+        "event.november_2026_crystal_raid.title": "Kristall-Raid",
+        "event.november_2026_skill_book_raid.title": "Skillbuch-Raid",
+        "event.november_2026_blue_chip_raid.title": "Blauer Chip-Raid",
+        "event.november_2026_red_chip_raid.title": "Roter Chip-Raid",
+        "event.november_2026_yellow_chip_raid.title": "Gelber Chip-Raid",
+        "event.november_2026_green_chip_raid.title": "Grüner Chip-Raid",
+        "gift.compensation_november_2026.title": "100 Kristalle Entschädigung",
+        "gift.category.compensation": "Entschädigung",
+        "news.november_2026_events.title": "November-Events & Entschädigung",
+        "news.november_2026_events.body": "Vom 1. bis 30. November 2026 erwarten dich Dompi, Klempi und Blam in Münzen-, Kristall- und Skillbuch-Raids sowie Chip-Raids in Blau, Rot, Gelb und Grün. Halloween und Birthday werden um eine Woche bis zum 7. November 2026 um 23:59 Uhr (Berliner Zeit) verlängert. Hole dir als Entschädigung 100 Kristalle unter Geschenke ab.",
         "common.next": "Weiter",
         "common.ok": "OK",
         "common.cancel": "Abbrechen",

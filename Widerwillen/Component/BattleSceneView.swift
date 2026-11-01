@@ -21,6 +21,7 @@ struct BattleSceneView: View {
     let activeSkills: [BattleActiveSkill]
     let backgroundImageName: String?
     let groundImageName: String?
+    let eventEnemy: EnemyDefinition?
     let onTapAttack: () -> BattleAttackResult
     let onBattleCardAttack: ((BattleCardDefinition) -> BattleAttackResult)?
     let onActiveSkillAttack: (BattleActiveSkill) -> BattleAttackResult
@@ -60,6 +61,7 @@ struct BattleSceneView: View {
         activeSkills: [BattleActiveSkill] = [],
         backgroundImageName: String? = nil,
         groundImageName: String? = nil,
+        eventEnemy: EnemyDefinition? = nil,
         onTapAttack: @escaping () -> BattleAttackResult,
         onBattleCardAttack: ((BattleCardDefinition) -> BattleAttackResult)? =
             nil,
@@ -89,6 +91,7 @@ struct BattleSceneView: View {
         self.activeSkills = activeSkills
         self.backgroundImageName = backgroundImageName
         self.groundImageName = groundImageName
+        self.eventEnemy = eventEnemy
         self.onTapAttack = onTapAttack
         self.onBattleCardAttack = onBattleCardAttack
         self.onActiveSkillAttack = onActiveSkillAttack
@@ -576,7 +579,7 @@ struct BattleSceneView: View {
     }
 
     private var currentEnemy: EnemyDefinition {
-        enemies.enemy(for: currentStage)
+        eventEnemy ?? enemies.enemy(for: currentStage)
     }
 
     private var isBossStage: Bool {
